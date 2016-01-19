@@ -1,0 +1,40 @@
+apply plugin: 'java'
+sourceCompatibility = 1.7
+version = 'r2'
+
+task copyRuntimeLibs(type: Copy) {
+	into "build/libs/lib"
+	from configurations.runtime
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://updates.jmonkeyengine.org/maven'
+    }
+}
+
+def jmonkeyengine_version = '3.0'
+dependencies {
+    compile "com.jme3:jme3-core:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-effects:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-networking:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-plugins:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-jogg:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-terrain:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-blender:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-jbullet:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-niftygui:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-desktop:$jmonkeyengine_version.+"
+    compile "com.jme3:jme3-lwjgl:$jmonkeyengine_version.+"
+	compile files('libs/SkyControl.jar', 'libs/SkyControl-assets.jar')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.codebetyars.skyhussars.SkyHussars',
+		           'Implementation-Title': 'SkyHussarsR2',
+                   'Implementation-Version': version,
+				   'Class-Path': configurations.compile.collect { 'lib/' + it.getName() }.join(' ') + ' lib/assets.jar'
+    }
+}
