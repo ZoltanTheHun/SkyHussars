@@ -34,6 +34,6 @@ public interface PlanePhysics {
     public String getInfo();
     public void setThrust(float thrust);
     public void setSpeedForward(Spatial model,float kmh);
-    public void setAileron(int i);
+    public void setAileron(float aileron);
     public String getSpeedKmH();
 }

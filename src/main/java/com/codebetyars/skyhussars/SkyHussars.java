@@ -23,12 +23,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.GameControls;
-import com.codebetyars.skyhussars.engine.Controls;
+import com.codebetyars.skyhussars.engine.controls.FlowControls;
+import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
 import com.codebetyars.skyhussars.engine.Game;
@@ -36,13 +35,30 @@ import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
 import com.codebetyars.skyhussars.engine.TerrainManager;
+import com.codebetyars.skyhussars.engine.data.Engine;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import java.io.File;
 
 public class SkyHussars extends SimpleApplication {
 
     public static void main(String[] args) {
+        ObjectMapper mapper = new ObjectMapper();
+        Engine obj = new Engine();
+        obj.setName("TestEngine");
+
+        //Object to JSON in file
+        try {
+            mapper.writeValue(new File("./file.json"), obj);
+
+            //Object to JSON in String
+            String jsonInString = mapper.writeValueAsString(obj);
+            System.out.println("results: " + jsonInString);
+        } catch (Exception ex) {
+            System.out.println("scheise");
+        }
         SkyHussars app = new SkyHussars();
         AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");
@@ -52,9 +68,8 @@ public class SkyHussars extends SimpleApplication {
     }
     private TerrainManager terrainManager;
     private DayLightWeatherManager dayLightWeatherManager;
-    private Controls controls;
+    private ControlsMapper controlsMapper;
     private CameraManager cameraManager;
-    private GameControls commonControls = new GameControls();
     private GuiManager guiManager;
     private GameState currentState;
     private Game game;
@@ -68,7 +83,7 @@ public class SkyHussars extends SimpleApplication {
 
     private void instantiateResources() {
         DataManager dataManager = new DataManager(assetManager);
-        controls = new Controls(inputManager);
+        controlsMapper = new ControlsMapper(inputManager);
         cameraManager = new CameraManager(this.cam, flyCam);
         guiManager = new GuiManager(assetManager, inputManager,
                 audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager);
@@ -76,8 +91,9 @@ public class SkyHussars extends SimpleApplication {
         rootNode.attachChild(terrainManager.getTerrain());
         cameraManager.initializeCamera();
         dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
-        game = new Game(dataManager, controls, cameraManager, terrainManager,
-                guiManager, rootNode, commonControls, dayLightWeatherManager);
+
+        game = new Game(dataManager, cameraManager, terrainManager,
+                guiManager, rootNode, dayLightWeatherManager, controlsMapper);
         mainMenu = new MainMenu(guiManager, game);
     }
 
@@ -87,7 +103,6 @@ public class SkyHussars extends SimpleApplication {
         guiManager.createGUI();
         currentState = mainMenu;
         currentState.initialize();
-        controls.setUpCommonControls(commonControls);
     }
 
     @Override

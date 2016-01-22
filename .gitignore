@@ -10,3 +10,6 @@ lwjgl64.dll
 .gradle/2.10/taskArtifacts/fileHashes.bin
 .gradle/2.10/taskArtifacts/fileSnapshots.bin
 .gradle/2.10/taskArtifacts/taskArtifacts.bin
+jackson-annotations-2.7.0.jar
+jackson-databind-2.7.0.jar
+jackson-core-2.7.0.jar

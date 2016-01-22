@@ -23,29 +23,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine;
 
-package com.codebetyars.skyhussars.engine.physics;
+import com.codebetyars.skyhussars.engine.plane.Plane;
 
-import com.jme3.math.Vector3f;
+public class Pilot {
 
-public class Engine implements ThrustProducer,RigidBody{
-    private Vector3f centerOfGravity;    
-    private Vector3f vMaxThrust;
-    private float throttle = 0.0f;
-    public Engine(Vector3f centerOfGravity,Vector3f vMaxThrust){
-        this.centerOfGravity = centerOfGravity;
-        this.vMaxThrust = vMaxThrust;
+    private Plane plane;
+
+    public Pilot(Plane plane) {
+        this.plane = plane;
     }
-    public Vector3f getCenterOfGravity() {
-        return centerOfGravity;
+
+    public void setThrottle(float throttle) {
+        plane.setThrottle(throttle);
     }
-    /*throttle between 0 and 1*/
-    public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle);
+
+    public void firing(boolean firing) {
     }
-    
-    public void setThrottle(float throttle){
-        this.throttle = throttle;
+
+    /**
+     *
+     * @param aileron must be between -1.0 and 1.0
+     */
+    public void setAileron(float aileron) {
+        plane.setAileron(aileron);
     }
-    
+
+    /**
+     *
+     * @param elevator must be between -1.0 and 1.0
+     */
+    public void setElevator(float elevator) {
+        plane.setElevator(elevator);
+    }
+
+    /**
+     *
+     * @param rudder must be between -1.0 and 1.0
+     */
+    public void setRudder(float rudder) {
+    }
 }

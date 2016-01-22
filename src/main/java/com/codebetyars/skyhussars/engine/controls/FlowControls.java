@@ -23,29 +23,27 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.controls;
 
-package com.codebetyars.skyhussars.engine.physics;
+import com.codebetyars.skyhussars.engine.Game;
+import com.jme3.input.controls.ActionListener;
 
-import com.jme3.math.Vector3f;
+public class FlowControls implements ActionListener {
 
-public class Engine implements ThrustProducer,RigidBody{
-    private Vector3f centerOfGravity;    
-    private Vector3f vMaxThrust;
-    private float throttle = 0.0f;
-    public Engine(Vector3f centerOfGravity,Vector3f vMaxThrust){
-        this.centerOfGravity = centerOfGravity;
-        this.vMaxThrust = vMaxThrust;
+    private Game game;
+
+    public FlowControls(Game game) {
+        this.game = game;
     }
-    public Vector3f getCenterOfGravity() {
-        return centerOfGravity;
+
+    @Override
+    public void onAction(String name, boolean isPressed, float tpf) {
+        if (name.equals("Pause") && isPressed) {
+            game.paused(!game.isPaused());
+        } else if (name.equals("Camera") && isPressed) {
+            // followCamera = !followCamera;
+        } else if (name.equals("Reset") && isPressed) {
+            game.initializeScene();
+        }
     }
-    /*throttle between 0 and 1*/
-    public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle);
-    }
-    
-    public void setThrottle(float throttle){
-        this.throttle = throttle;
-    }
-    
 }

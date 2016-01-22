@@ -24,8 +24,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.codebetyars.skyhussars.engine.plane;
+package com.codebetyars.skyhussars.engine.data;
 
-public class Engine {
+public class Ammunation {
+    
+    private String name;
 
 }

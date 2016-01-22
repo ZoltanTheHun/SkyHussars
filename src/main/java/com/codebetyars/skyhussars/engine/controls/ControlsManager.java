@@ -24,28 +24,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.codebetyars.skyhussars.engine.physics;
+package com.codebetyars.skyhussars.engine.controls;
 
-import com.jme3.math.Vector3f;
+import com.codebetyars.skyhussars.engine.Game;
+import com.codebetyars.skyhussars.engine.Pilot;
 
-public class Engine implements ThrustProducer,RigidBody{
-    private Vector3f centerOfGravity;    
-    private Vector3f vMaxThrust;
-    private float throttle = 0.0f;
-    public Engine(Vector3f centerOfGravity,Vector3f vMaxThrust){
-        this.centerOfGravity = centerOfGravity;
-        this.vMaxThrust = vMaxThrust;
-    }
-    public Vector3f getCenterOfGravity() {
-        return centerOfGravity;
-    }
-    /*throttle between 0 and 1*/
-    public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle);
+public class ControlsManager {
+    
+    private FlightKeyboardControls inFlightKeyboardControls;
+    private FlowControls gameFlowControls;
+    
+    public ControlsManager(ControlsMapper controlsMapper,Pilot pilot,Game game){
+        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
+        gameFlowControls = new FlowControls(game);
+        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);   
+        controlsMapper.setupFlowControls(gameFlowControls);
+        
     }
     
-    public void setThrottle(float throttle){
-        this.throttle = throttle;
+    public void setPilot(Pilot pilot){
+        inFlightKeyboardControls.setPilot(pilot);
     }
-    
+
 }

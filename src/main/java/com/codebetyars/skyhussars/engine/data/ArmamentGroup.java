@@ -23,29 +23,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.data;
 
-package com.codebetyars.skyhussars.engine.physics;
+import java.util.List;
 
-import com.jme3.math.Vector3f;
-
-public class Engine implements ThrustProducer,RigidBody{
-    private Vector3f centerOfGravity;    
-    private Vector3f vMaxThrust;
-    private float throttle = 0.0f;
-    public Engine(Vector3f centerOfGravity,Vector3f vMaxThrust){
-        this.centerOfGravity = centerOfGravity;
-        this.vMaxThrust = vMaxThrust;
-    }
-    public Vector3f getCenterOfGravity() {
-        return centerOfGravity;
-    }
-    /*throttle between 0 and 1*/
-    public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle);
-    }
+public class ArmamentGroup {
     
-    public void setThrottle(float throttle){
-        this.throttle = throttle;
-    }
+    private String name;
+    private List<Armament> armaments;
     
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return name;
+    }
+    public List<Armament> getArmaments(){
+        return armaments;
+    }
+    public void setArmaments(List<Armament> armaments){
+        this.armaments = armaments;
+    }
 }

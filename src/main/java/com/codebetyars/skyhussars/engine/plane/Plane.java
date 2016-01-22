@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
+import com.codebetyars.skyhussars.engine.data.Engine;
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.TerrainManager;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
@@ -53,6 +54,7 @@ public class Plane {
     private List<Missile> missiles;
     private List<Bomb> bombs;
     private List<Engine> engines;
+    private boolean fireTriggerPushed = false;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, model);
@@ -85,43 +87,33 @@ public class Plane {
     public AudioNode getEngineSound() {
         return engineSound;
     }
-    private AnalogListener analogListener = new AnalogListener() {
-        public void onAnalog(String name, float value, float tpf) {
-            if (name.equals("Speed0")) {
-                physics.setThrust(0.0f);
-                engineSound.setPitch(0.5f);
-            }
-            if (name.equals("Speed20")) {
-                physics.setThrust(0.2f);
-                engineSound.setPitch(0.7f);
-            }
-            if (name.equals("Speed40")) {
-                physics.setThrust(0.4f);
-                engineSound.setPitch(0.8f);
-            }
-            if (name.equals("Speed60")) {
-                physics.setThrust(0.6f);
-                engineSound.setPitch(1.0f);
-            }
-            if (name.equals("Speed80")) {
-                physics.setThrust(0.8f);
-                engineSound.setPitch(1.3f);
-            }
-            if (name.equals("Speed100")) {
-                physics.setThrust(1.0f);
-                engineSound.setPitch(1.5f);
-            }
 
+    /**
+     * This method provides throttle controls for the airplane
+     * 
+     * @param throttle - Amount of throttle applied, should be between 0.0f and
+     * 1.0f
+     */
+    public void setThrottle(float throttle) {
+        /* maybe it would be better to normalize instead of throwing an exception*/
+        if(throttle < 0.0f || throttle > 1.0f){
+            throw new IllegalArgumentException();
         }
-    };
-
-    public AnalogListener getAnalogListener() {
-        return analogListener;
+        physics.setThrust(throttle);
+        engineSound.setPitch(0.5f + throttle);
     }
-
-    public void tempTerrainCollisionMechanics(TerrainManager terrain) {
-        //terrain.collideWith(model, null); 
+    
+    public void setAileron(float aileron){
+         physics.setAileron(aileron);
     }
+    
+    public void setElevator(float elevator){
+        physics.setElevator(elevator);
+    }
+    
+    public void setRudder(float rudder){
+    }
+       
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean isPressed, float tpf) {
             System.out.println(name + isPressed);

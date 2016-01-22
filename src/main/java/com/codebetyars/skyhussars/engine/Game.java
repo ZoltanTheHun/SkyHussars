@@ -23,66 +23,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
+import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.scene.Node;
 
 public class Game extends GameState {
 
-    private Plane playerPlane;
+    private Pilot player;
+    private Plane activePlane;
     private DataManager dataManager;
     private CameraManager cameraManager;
     private TerrainManager terrainManager;
     private GuiManager guiManager;
-    private GameControls gameControls;
     private DayLightWeatherManager dayLightWeatherManager;
+    private ControlsManager controlsManager;
+    private boolean paused = false;
+    private boolean ended = false;
 
-    public Game(DataManager dataManager, Controls controls,
+    public Game(DataManager dataManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            GuiManager guiManager, Node node, GameControls commonControls, DayLightWeatherManager dayLightWeatherManager) {
+            GuiManager guiManager, Node node, DayLightWeatherManager dayLightWeatherManager, ControlsMapper controlsMapper) {
         this.dataManager = dataManager;
         this.cameraManager = cameraManager;
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
-        this.gameControls = commonControls;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        playerPlane = new Plane(dataManager);
-        node.attachChild(playerPlane.getModel());
-        node.attachChild(playerPlane.getEngineSound());
-        initializeScene();
-        controls.setUpControls(playerPlane);
+        activePlane = new Plane(dataManager);
+        player = new Pilot(activePlane);
+        /*not finished object creation?*/
+        this.controlsManager = new ControlsManager(controlsMapper, player, this);
+        node.attachChild(activePlane.getModel());
+        node.attachChild(activePlane.getEngineSound());
+        initiliazePlayer();
     }
 
-    private void initializeScene() {
+    /**
+     * This method is used to initialize a scene
+     */
+    public void initializeScene() {
         initiliazePlayer();
     }
 
     private void initiliazePlayer() {
-        playerPlane.setLocation(0, 0);
-        playerPlane.setHeight(3000);
-        cameraManager.moveCameraTo(playerPlane.getLocation());
-        cameraManager.followWithCamera(playerPlane.getModel());
+        activePlane.setLocation(0, 0);
+        activePlane.setHeight(3000);
+        cameraManager.moveCameraTo(activePlane.getLocation());
+        cameraManager.followWithCamera(activePlane.getModel());
     }
 
+    @Override
     public GameState update(float tpf) {
-        if (gameControls.reset()) {
-            gameControls.reset(false);
-            initializeScene();
-            gameControls.freezed(false);
-        }
-        if (!gameControls.paused()) {
-            playerPlane.getEngineSound().play();
-            playerPlane.update(tpf);
-            cameraManager.followWithCamera(playerPlane.getModel());
-            if (terrainManager.checkCollisionWithGround(playerPlane)) {
-                gameControls.freezed(true);
+        if (!paused && !ended) {
+            activePlane.getEngineSound().play();
+            activePlane.update(tpf);
+            cameraManager.followWithCamera(activePlane.getModel());
+            if (terrainManager.checkCollisionWithGround(activePlane)) {
+                ended = true;
             }
-            guiManager.update(playerPlane.getSpeedKmH());
+            guiManager.update(activePlane.getSpeedKmH());
         } else {
-            playerPlane.getEngineSound().pause();
+            activePlane.getEngineSound().pause();
         }
         return this;
     }
@@ -96,6 +99,14 @@ public class Game extends GameState {
         initializeScene();
         guiManager.switchScreen("main");
         guiManager.cursor(false);
-        gameControls.paused(false);
+        ended = false;
+    }
+
+    public void paused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 }

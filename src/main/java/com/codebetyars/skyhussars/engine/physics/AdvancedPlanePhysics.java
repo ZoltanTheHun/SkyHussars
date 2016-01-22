@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.physics;
 
 import com.jme3.math.FastMath;
@@ -61,8 +60,8 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private Matrix3f momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
             0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
             0f, 0f, (mass / 2) * (rPlane * rPlane));
-    private List<Airfoil> airfoils = new ArrayList<Airfoil>();
-    private List<Engine> engines = new ArrayList<Engine>();
+    private List<Airfoil> airfoils = new ArrayList<>();
+    private List<Engine> engines = new ArrayList<>();
     SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
     SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
     SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
@@ -77,6 +76,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         engines.add(engine);
     }
 
+    @Override
     public void update(float tpf, Spatial model) {
         updateAuxiliary(model);
         Vector3f vLinearAcceleration = Vector3f.ZERO;
@@ -175,12 +175,14 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         airDensity = WorldPhysicsData.getAirDensity((int) height);
     }
 
+    @Override
     public void setThrust(float throttle) {
         for (Engine engine : engines) {
             engine.setThrottle(throttle);
         }
     }
 
+    @Override
     public String getSpeedKmH() {
         NumberFormat fractionless = NumberFormat.getInstance();
         fractionless.setMaximumFractionDigits(0);
@@ -191,6 +193,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         return fractionless.format(vVelocity.length() * 3.6);
     }
 
+    @Override
     public String getInfo() {
         NumberFormat fraction2Format = NumberFormat.getInstance();
         fraction2Format.setMaximumFractionDigits(2);
@@ -219,41 +222,23 @@ public class AdvancedPlanePhysics implements PlanePhysics {
                 + ", AngularAcceleration: " + fraction2Format.format(vAngularAcceleration.length());
     }
 
-    public void setElevator(float i) {
-        if (i == 1) {
-            horizontalStabilizer.controlAileron(-5);
-        } else if (i == -1) {
-            horizontalStabilizer.controlAileron(5);
-        } else if (i == 0) {
-            horizontalStabilizer.controlAileron(0);
-        }
+    @Override
+    public void setElevator(float aileron) {
+        horizontalStabilizer.controlAileron(5f * aileron);
     }
 
+    @Override
     public void setSpeedForward(Spatial model, float kmh) {
         vVelocity = model.getLocalRotation().mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
     }
 
-    public void setAileron(int i) {
-        System.out.println("Aileron: " + i);
-        if (i == -1) {
-            leftWing.controlAileron(-1);
-            rightWing.controlAileron(1);
-        } else if (i == 1) {
-            leftWing.controlAileron(1);
-            rightWing.controlAileron(-1);
-        } else if (i == 0) {
-            leftWing.controlAileron(0);
-            rightWing.controlAileron(0);
-        }
+    @Override
+    public void setAileron(float aileron) {
+        leftWing.controlAileron(aileron);
+        rightWing.controlAileron(-1f * aileron);
     }
 
-    public void setRudder(int i) {
-        if (i == 1) {
-            verticalStabilizer.controlAileron(1);
-        } else if (i == -1) {
-            verticalStabilizer.controlAileron(-1);
-        } else if (i == 0) {
-            verticalStabilizer.controlAileron(0);
-        }
+    public void setRudder(float aileron) {
+        verticalStabilizer.controlAileron(aileron);
     }
 }

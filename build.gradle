@@ -28,6 +28,7 @@ dependencies {
     compile "com.jme3:jme3-desktop:$jmonkeyengine_version.+"
     compile "com.jme3:jme3-lwjgl:$jmonkeyengine_version.+"
 	compile files('libs/SkyControl.jar', 'libs/SkyControl-assets.jar')
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
 }
 
 jar {
