@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.Pilot;
 import com.jme3.input.controls.ActionListener;
+import com.codebetyars.skyhussars.engine.controls.ControlsMapper.*;
 
 public class FlightKeyboardControls implements ActionListener {
 
@@ -43,6 +44,7 @@ public class FlightKeyboardControls implements ActionListener {
     private boolean noseUp = false;
     private boolean rotateLeft = false;
     private boolean rotateRight = false;
+    private boolean fire = false;
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
@@ -78,6 +80,9 @@ public class FlightKeyboardControls implements ActionListener {
                 case "RotateRight":
                     rotateRight = true;
                     break;
+                case ControlsMapper.FIRE:
+                    fire = true;
+                    break;          
             }
         } else {
             switch (name) {
@@ -93,10 +98,14 @@ public class FlightKeyboardControls implements ActionListener {
                 case "RotateRight":
                     rotateRight = false;
                     break;
+                case ControlsMapper.FIRE:
+                    fire = false;
+                    break;
             }
         }
         setNoseControl();
         setRotationControl();
+        setFire();
 
     }
 
@@ -118,5 +127,9 @@ public class FlightKeyboardControls implements ActionListener {
         } else {
             pilot.setAileron(1f);
         }
+    }
+    
+    private void setFire(){
+        pilot.firing(fire);
     }
 }

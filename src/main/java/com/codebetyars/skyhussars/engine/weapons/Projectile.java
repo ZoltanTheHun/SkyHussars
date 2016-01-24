@@ -26,6 +26,7 @@
 
 package com.codebetyars.skyhussars.engine.weapons;
 
-public class Projectile {
+public abstract class Projectile {
 
+    public abstract void update();
 }

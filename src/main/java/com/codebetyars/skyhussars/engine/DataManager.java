@@ -26,12 +26,15 @@
 
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.TestData;
+import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.asset.AssetManager;
 
 public class DataManager {
 
     private SoundManager soundManager;
     private ModelManager modelManager;
+    private TestData testData = new TestData();
 
     public DataManager(AssetManager assetManager) {
         this.modelManager = new ModelManager(assetManager);
@@ -44,5 +47,9 @@ public class DataManager {
     }
     public SoundManager soundManager(){
         return soundManager;
+    }
+    
+    public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId){
+        return testData.getPlaneDescriptor(planeDescriptorId);
     }
 }

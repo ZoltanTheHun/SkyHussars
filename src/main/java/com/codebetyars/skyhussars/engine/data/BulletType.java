@@ -23,46 +23,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
+package com.codebetyars.skyhussars.engine.data;
 
-public class Pilot {
+public class BulletType {
 
-    private Plane plane;
-
-    public Pilot(Plane plane) {
-        this.plane = plane;
-    }
-
-    public void setThrottle(float throttle) {
-        plane.setThrottle(throttle);
-    }
-
-    public void firing(boolean firing) {
-        plane.setFireTrigger(firing);
-    }
-
-    /**
-     *
-     * @param aileron must be between -1.0 and 1.0
-     */
-    public void setAileron(float aileron) {
-        plane.setAileron(aileron);
-    }
-
-    /**
-     *
-     * @param elevator must be between -1.0 and 1.0
-     */
-    public void setElevator(float elevator) {
-        plane.setElevator(elevator);
-    }
-
-    /**
-     *
-     * @param rudder must be between -1.0 and 1.0
-     */
-    public void setRudder(float rudder) {
-    }
 }

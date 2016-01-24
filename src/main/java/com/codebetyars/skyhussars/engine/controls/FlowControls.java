@@ -25,14 +25,14 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.Game;
+import com.codebetyars.skyhussars.engine.Mission;
 import com.jme3.input.controls.ActionListener;
 
 public class FlowControls implements ActionListener {
 
-    private Game game;
+    private Mission game;
 
-    public FlowControls(Game game) {
+    public FlowControls(Mission game) {
         this.game = game;
     }
 

@@ -23,46 +23,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
+package com.codebetyars.skyhussars.engine.plane;
 
-public class Pilot {
+import com.jme3.math.Vector3f;
 
-    private Plane plane;
+public class EngineLocation {
+    private EngineDescriptor engineDescriptor;
+    private Vector3f location;
 
-    public Pilot(Plane plane) {
-        this.plane = plane;
+    public EngineDescriptor getEngineDescriptor() {
+        return engineDescriptor;
     }
 
-    public void setThrottle(float throttle) {
-        plane.setThrottle(throttle);
+    public void setEngineDescriptor(EngineDescriptor engineDescriptor) {
+        this.engineDescriptor = engineDescriptor;
     }
 
-    public void firing(boolean firing) {
-        plane.setFireTrigger(firing);
+    public Vector3f getLocation() {
+        return location;
     }
 
-    /**
-     *
-     * @param aileron must be between -1.0 and 1.0
-     */
-    public void setAileron(float aileron) {
-        plane.setAileron(aileron);
+    public void setLocation(Vector3f location) {
+        this.location = location;
     }
-
-    /**
-     *
-     * @param elevator must be between -1.0 and 1.0
-     */
-    public void setElevator(float elevator) {
-        plane.setElevator(elevator);
-    }
-
-    /**
-     *
-     * @param rudder must be between -1.0 and 1.0
-     */
-    public void setRudder(float rudder) {
-    }
+    
 }

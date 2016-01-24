@@ -32,11 +32,11 @@ import de.lessvoid.nifty.screen.ScreenController;
 
 public class MainMenu extends GameState implements ScreenController {
 
-    public MainMenu(GuiManager guiManager, GameState game) {
-        this.game = game;
+    public MainMenu(GuiManager guiManager, GameState state) {
+        this.state = state;
         this.guiManager = guiManager;
     }
-    private GameState game;
+    private GameState state;
     private GuiManager guiManager;
     private float time = 0;
     //private boolean startGame = false;
@@ -46,7 +46,7 @@ public class MainMenu extends GameState implements ScreenController {
         GameState nextState = this;
         System.out.println("Start game" + guiManager.startGame);
         if (guiManager.startGame) {
-            nextState = game;
+            nextState = state;
             guiManager.startGame = false;
         }
         return nextState;

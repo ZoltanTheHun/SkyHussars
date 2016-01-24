@@ -24,29 +24,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.codebetyars.skyhussars.engine.data;
+package com.codebetyars.skyhussars.engine.plane;
 
-public class Gun implements Armament {
-    
-    private String name;
-    private float rateOfFire;
-    private Ammunation ammunation;
-    private int rounds;
+import com.jme3.math.Vector3f;
 
-    public String getName() {
-        return name;
+public class GunLocation {
+
+    private GunDescriptor gunDescriptor;
+    private int roundsMax;
+    private Vector3f location;
+
+    public GunDescriptor getGunDescriptor() {
+        return gunDescriptor;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGunDescriptor(GunDescriptor gunDescriptor) {
+        this.gunDescriptor = gunDescriptor;
     }
 
-    public float getRateOfFire() {
-        return rateOfFire;
+    public int getRoundsMax() {
+        return roundsMax;
     }
 
-    public void setRateOfFire(float rateOfFire) {
-        this.rateOfFire = rateOfFire;
+    public void setRoundsMax(int roundsMax) {
+        this.roundsMax = roundsMax;
     }
-    
+
+    public Vector3f getLocation() {
+        return location;
+    }
+
+    public void setLocation(Vector3f location) {
+        this.location = location;
+    }
 }

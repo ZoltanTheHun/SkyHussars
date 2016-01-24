@@ -26,12 +26,24 @@
 
 package com.codebetyars.skyhussars.engine.weapons;
 
-/**
- *
- * @author ZoltanTheHun
- */
-public class Gun {
-    
-    public String name;
+import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
+import java.util.LinkedList;
+import java.util.List;
 
+public class Gun {
+    //M3 shoots 1200 bullets per minute -> 20 per second
+    //rate of fire is in second
+    private GunDescriptor gunType;
+    public Gun(GunDescriptor gunType){
+        this.gunType = gunType;
+    }
+    /*bullets procuded since last update*/
+    private float bpslu = 0;
+
+    public List<Projectile> update(float tpf){
+        bpslu = gunType.getRateOfFire() * tpf;
+        List<Projectile> projectiles = new LinkedList<>();
+        return null;
+        
+    }
 }

@@ -23,11 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.weapons;
-
-import com.codebetyars.skyhussars.engine.weapons.Projectile;
 
 public class Missile extends Projectile {
 
+    @Override
+    public void update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

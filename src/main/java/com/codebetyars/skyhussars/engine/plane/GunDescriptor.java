@@ -23,68 +23,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.codebetyars.skyhussars.engine.plane;
 
-import java.util.List;
+import com.codebetyars.skyhussars.engine.data.Ammunation;
+import com.codebetyars.skyhussars.engine.data.Armament;
 
-public class PlaneDescriptor {
-
+public class GunDescriptor implements Armament {
+    
     private String name;
-    private List<EngineLocation> engineLocations;
-    private float massEmpty;
-    private float massTakeOffMax;
-    private float massGross;
-    //lets use liter for now, density: 	775.0-840.0 g/L average: 0.8 kg/l
-    private float internalTank;
-    private List<GunGroup> gunGroups;
-
-    public List<GunGroup> getGunGroups() {
-        return gunGroups;
-    }
-
-    public void setGunGroups(List<GunGroup> gunGroups) {
-        this.gunGroups = gunGroups;
-    }
-
-    public float getInternalTank() {
-        return internalTank;
-    }
-
-    public void setInternalTank(float internalTank) {
-        this.internalTank = internalTank;
-    }
-
-    public float getMassEmpty() {
-        return massEmpty;
-    }
-
-    public void setMassEmpty(float emptyMass) {
-        this.massEmpty = emptyMass;
-    }
-
-    public float getMassTakeOffMax() {
-        return massTakeOffMax;
-    }
-
-    public void setMassTakeOffMax(float takeOffMassMax) {
-        this.massTakeOffMax = takeOffMassMax;
-    }
-
-    public float getMassGross() {
-        return massGross;
-    }
-
-    public void setMassGross(float grossMass) {
-        this.massGross = grossMass;
-    }
-
-    public List<EngineLocation> getEngineLocations() {
-        return engineLocations;
-    }
-
-    public void setEngineLocations(List<EngineLocation> engineLocations) {
-        this.engineLocations = engineLocations;
-    }
+    private float rateOfFire;
+    private Ammunation ammunation;
+    private float muzzleVelocity;
 
     public String getName() {
         return name;
@@ -93,4 +43,13 @@ public class PlaneDescriptor {
     public void setName(String name) {
         this.name = name;
     }
+
+    public float getRateOfFire() {
+        return rateOfFire;
+    }
+
+    public void setRateOfFire(float rateOfFire) {
+        this.rateOfFire = rateOfFire;
+    }
+    
 }

@@ -23,46 +23,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
+package com.codebetyars.skyhussars.engine.weapons;
 
-public class Pilot {
-
-    private Plane plane;
-
-    public Pilot(Plane plane) {
-        this.plane = plane;
+public class Bullet extends Projectile{
+    
+    public Bullet(){
+        
     }
 
-    public void setThrottle(float throttle) {
-        plane.setThrottle(throttle);
+    @Override
+    public void update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void firing(boolean firing) {
-        plane.setFireTrigger(firing);
-    }
-
-    /**
-     *
-     * @param aileron must be between -1.0 and 1.0
-     */
-    public void setAileron(float aileron) {
-        plane.setAileron(aileron);
-    }
-
-    /**
-     *
-     * @param elevator must be between -1.0 and 1.0
-     */
-    public void setElevator(float elevator) {
-        plane.setElevator(elevator);
-    }
-
-    /**
-     *
-     * @param rudder must be between -1.0 and 1.0
-     */
-    public void setRudder(float rudder) {
-    }
 }

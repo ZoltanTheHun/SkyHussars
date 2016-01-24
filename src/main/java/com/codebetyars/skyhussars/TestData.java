@@ -25,49 +25,89 @@
  */
 package com.codebetyars.skyhussars;
 
-import com.codebetyars.skyhussars.engine.data.Armament;
-import com.codebetyars.skyhussars.engine.data.ArmamentGroup;
-import com.codebetyars.skyhussars.engine.data.Engine;
-import com.codebetyars.skyhussars.engine.data.Gun;
-import com.codebetyars.skyhussars.engine.data.Plane;
+import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
+import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
+import com.codebetyars.skyhussars.engine.plane.EngineLocation;
+import com.codebetyars.skyhussars.engine.plane.GunGroup;
+import com.codebetyars.skyhussars.engine.plane.GunLocation;
+import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
+import com.jme3.math.Vector3f;
 import java.util.ArrayList;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TestData {
 
-    private Engine engine1;
-    private Engine engine2;
-    private Plane plane1;
-    private Plane plane2;
-    private Gun gun;
+    private Map<String, PlaneDescriptor> planes = new HashMap<>();
+    private Map<String, EngineDescriptor> engines = new HashMap<>();
 
     public TestData() {
-        gun = new Gun();
-        gun.setName(".50 M3 Browning");
-        ArmamentGroup gunGroup = new ArmamentGroup();
-        List<Armament> armaments = new ArrayList<>();
-        armaments.add(gun);
-        armaments.add(gun);
-        armaments.add(gun);
-        armaments.add(gun);
-        armaments.add(gun);
-        armaments.add(gun);
-        List<ArmamentGroup> armamentGroups = new ArrayList<>();
-        gunGroup.setName("6x .50 M3 Browning");
-        gunGroup.setArmaments(armaments);
-        engine1 = new Engine();
-        engine1.setName("Allison J33-A-9");
-        engine1.setThrustMax(17125);
-        engine2.setName("Allison J33-A-17");
-        engine2.setThrustMax(17792);
-        plane1 = new Plane();
-        plane2 = new Plane();
-        plane1.setName("Lockheed P-80A-1-LO Shooting Star");
-        plane1.setEngine(engine1);
-        plane1.setArmamentGroups(armamentGroups);
-        plane2.setName("Lockheed P-80A-5-LO Shooting Star");
-        plane2.setEngine(engine2);
-        plane2.setArmamentGroups(armamentGroups);
+        EngineDescriptor engine = new EngineDescriptor();
+        engine.setName("Allison J33-A-9");
+        engine.setThrustMax(17125);
+        engines.put(engine.getName(), engine);
+        engine = new EngineDescriptor();
+        engine.setName("Allison J33-A-17");
+        engine.setThrustMax(17792);
+        engines.put(engine.getName(), engine);
 
+        GunDescriptor gun = new GunDescriptor();
+        gun.setName(".50 M3 Browning");
+        gun.setRateOfFire(20);
+        List<GunLocation> guns = new ArrayList<>();
+        GunLocation gun1 = new GunLocation();
+        gun1.setGunDescriptor(gun);
+        gun1.setRoundsMax(300);
+        gun1.setLocation(new Vector3f(0.5f, 0.0f, 2.0f));
+        guns.add(gun1);
+        GunLocation gun2 = new GunLocation();
+        gun2.setGunDescriptor(gun);
+        gun2.setRoundsMax(300);
+        gun2.setLocation(new Vector3f(-0.5f, 0.0f, 2.0f));
+        guns.add(gun2);
+        GunGroup gunGroup = new GunGroup();
+        gunGroup.setName("6x .50 M3 Browning");
+        gunGroup.setGunLocations(guns);
+
+        List<GunGroup> gunGroups = new ArrayList<>();
+        gunGroups.add(gunGroup);
+
+        EngineLocation engineLocation = new EngineLocation();
+        engineLocation.setEngineDescriptor(engines.get("Allison J33-A-9"));
+        engineLocation.setLocation(new Vector3f(0f, 0f, -2f));
+        List<EngineLocation> engineLocations = new LinkedList<>();
+        engineLocations.add(engineLocation);
+        PlaneDescriptor planeDescriptor = new PlaneDescriptor();
+        planeDescriptor.setName("Lockheed P-80A-1-LO Shooting Star");
+        planeDescriptor.setEngineLocations(engineLocations);
+        planeDescriptor.setMassEmpty(3593);
+        planeDescriptor.setMassGross(5307);
+        planeDescriptor.setMassTakeOffMax(6350);
+        planeDescriptor.setInternalTank(1609);
+        planeDescriptor.setGunGroups(gunGroups);
+        planes.put(planeDescriptor.getName(), planeDescriptor);
+
+
+        engineLocation = new EngineLocation();
+        engineLocation.setEngineDescriptor(engines.get("Allison J33-A-17"));
+        engineLocation.setLocation(new Vector3f(0f, 0f, -2f));
+        engineLocations = new LinkedList<>();
+        engineLocations.add(engineLocation);
+        planeDescriptor = new PlaneDescriptor();
+        planeDescriptor.setName("Lockheed P-80A-5-LO Shooting Star");
+        planeDescriptor.setEngineLocations(engineLocations);
+        planeDescriptor.setMassEmpty(3593);
+        planeDescriptor.setMassGross(5307);
+        planeDescriptor.setMassTakeOffMax(6350);
+        planeDescriptor.setInternalTank(1609);
+        planeDescriptor.setGunGroups(gunGroups);
+        planes.put(planeDescriptor.getName(), planeDescriptor);
+    }
+
+    public PlaneDescriptor getPlaneDescriptor(String planeName) {
+        return planes.get(planeName);
     }
 }

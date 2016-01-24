@@ -26,6 +26,7 @@
 
 package com.codebetyars.skyhussars.engine.data;
 
+import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
 import java.util.List;
 
 public class Plane {
@@ -40,7 +41,7 @@ public class Plane {
     public void setArmamentGroups(List<ArmamentGroup> armamentGroups) {
         this.armamentGroups = armamentGroups;
     }
-    private Gun gun;
+    private GunDescriptor gun;
     private Engine engine;
 
     public String getName() {
@@ -51,11 +52,11 @@ public class Plane {
         this.name = name;
     }
 
-    public Gun getGun() {
+    public GunDescriptor getGun() {
         return gun;
     }
 
-    public void setGun(Gun gun) {
+    public void setGun(GunDescriptor gun) {
         this.gun = gun;
     }
 

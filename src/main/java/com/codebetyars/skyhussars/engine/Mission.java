@@ -30,7 +30,7 @@ import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.scene.Node;
 
-public class Game extends GameState {
+public class Mission extends GameState {
 
     private Pilot player;
     private Plane activePlane;
@@ -43,7 +43,7 @@ public class Game extends GameState {
     private boolean paused = false;
     private boolean ended = false;
 
-    public Game(DataManager dataManager,
+    public Mission(DataManager dataManager,
             CameraManager cameraManager, TerrainManager terrainManager,
             GuiManager guiManager, Node node, DayLightWeatherManager dayLightWeatherManager, ControlsMapper controlsMapper) {
         this.dataManager = dataManager;
@@ -65,6 +65,7 @@ public class Game extends GameState {
      */
     public void initializeScene() {
         initiliazePlayer();
+        ended = false;
     }
 
     private void initiliazePlayer() {

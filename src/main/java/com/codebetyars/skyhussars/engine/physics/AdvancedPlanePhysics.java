@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.physics;
 
+import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -37,7 +38,7 @@ import java.util.List;
 public class AdvancedPlanePhysics implements PlanePhysics {
 
     private static final Vector3f GRAVITY = new Vector3f(0f, -10f, 0f);
-    private float maxThrust = 20460;
+    private float maxThrust;
     private float currentThrust = 0;
     private float airDensity = 1.2745f;
     private float planeFactor = 0.2566f; // cross section and drag coeff together
@@ -67,8 +68,10 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
     SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public AdvancedPlanePhysics(Spatial model) {
+    public AdvancedPlanePhysics(Spatial model,PlaneDescriptor planeDescriptor) {
         airfoils.add(leftWing);
+        maxThrust = planeDescriptor.getEngineLocations().get(0).getEngineDescriptor().getThrustMax();
+        mass = planeDescriptor.getMassGross();
         airfoils.add(rightWing);
         airfoils.add(horizontalStabilizer);
         airfoils.add(verticalStabilizer);

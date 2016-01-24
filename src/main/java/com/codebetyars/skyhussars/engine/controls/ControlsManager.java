@@ -26,7 +26,7 @@
 
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.Game;
+import com.codebetyars.skyhussars.engine.Mission;
 import com.codebetyars.skyhussars.engine.Pilot;
 
 public class ControlsManager {
@@ -34,7 +34,7 @@ public class ControlsManager {
     private FlightKeyboardControls inFlightKeyboardControls;
     private FlowControls gameFlowControls;
     
-    public ControlsManager(ControlsMapper controlsMapper,Pilot pilot,Game game){
+    public ControlsManager(ControlsMapper controlsMapper,Pilot pilot,Mission game){
         inFlightKeyboardControls = new FlightKeyboardControls(pilot);
         gameFlowControls = new FlowControls(game);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);   

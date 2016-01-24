@@ -23,46 +23,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
+package com.codebetyars.skyhussars.engine.plane;
 
-public class Pilot {
+public class EngineDescriptor {
+    
+    private String name;
+    private int thrustMax;
 
-    private Plane plane;
-
-    public Pilot(Plane plane) {
-        this.plane = plane;
+    public String getName() {
+        return name;
     }
 
-    public void setThrottle(float throttle) {
-        plane.setThrottle(throttle);
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void firing(boolean firing) {
-        plane.setFireTrigger(firing);
+    public int getThrustMax() {
+        return thrustMax;
     }
 
-    /**
-     *
-     * @param aileron must be between -1.0 and 1.0
-     */
-    public void setAileron(float aileron) {
-        plane.setAileron(aileron);
+    public void setThrustMax(int thrustMax) {
+        this.thrustMax = thrustMax;
     }
 
-    /**
-     *
-     * @param elevator must be between -1.0 and 1.0
-     */
-    public void setElevator(float elevator) {
-        plane.setElevator(elevator);
-    }
-
-    /**
-     *
-     * @param rudder must be between -1.0 and 1.0
-     */
-    public void setRudder(float rudder) {
-    }
 }

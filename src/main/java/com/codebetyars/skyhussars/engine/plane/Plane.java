@@ -27,15 +27,12 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.data.Engine;
 import com.codebetyars.skyhussars.engine.DataManager;
-import com.codebetyars.skyhussars.engine.TerrainManager;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
 import com.jme3.audio.AudioNode;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -54,7 +51,7 @@ public class Plane {
     private List<Missile> missiles;
     private List<Bomb> bombs;
     private List<Engine> engines;
-    private boolean fireTriggerPushed = false;
+    private boolean fireTrigger = false;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, model);
@@ -69,7 +66,8 @@ public class Plane {
 
     public Plane(DataManager dataManager) {
         this.model = dataManager.modelManager().model("p80", "p80_material");
-        this.physics = new AdvancedPlanePhysics(model);
+        this.planeDescriptor = dataManager.getPlaneDescriptor("Lockheed P-80A-1-LO Shooting Star");
+        this.physics = new AdvancedPlanePhysics(model, planeDescriptor);
         this.engineSound = dataManager.soundManager().sound("engine");
         this.physics.setThrust(1.0f);
         this.physics.setSpeedForward(model, 300f);
@@ -90,63 +88,28 @@ public class Plane {
 
     /**
      * This method provides throttle controls for the airplane
-     * 
+     *
      * @param throttle - Amount of throttle applied, should be between 0.0f and
      * 1.0f
      */
     public void setThrottle(float throttle) {
         /* maybe it would be better to normalize instead of throwing an exception*/
-        if(throttle < 0.0f || throttle > 1.0f){
+        if (throttle < 0.0f || throttle > 1.0f) {
             throw new IllegalArgumentException();
         }
         physics.setThrust(throttle);
         engineSound.setPitch(0.5f + throttle);
     }
-    
-    public void setAileron(float aileron){
-         physics.setAileron(aileron);
+
+    public void setAileron(float aileron) {
+        physics.setAileron(aileron);
     }
-    
-    public void setElevator(float elevator){
+
+    public void setElevator(float elevator) {
         physics.setElevator(elevator);
     }
-    
-    public void setRudder(float rudder){
-    }
-       
-    private ActionListener actionListener = new ActionListener() {
-        public void onAction(String name, boolean isPressed, float tpf) {
-            System.out.println(name + isPressed);
-            if (name.equals("NoseUp") && isPressed) {
-                physics.setElevator(-1f);
-            } else if (name.equals("NoseUp") && !isPressed) {
-                physics.setElevator(0f);
-            }
-            if (name.equals("NoseDown") && isPressed) {
-                physics.setElevator(1f);
-            } else if (name.equals("NoseDown") && !isPressed) {
-                physics.setElevator(0f);
-            }
-            if (name.equals("RotateLeft") && isPressed) {
-                physics.setAileron(-1);
-            } else if (name.equals("RotateLeft") && !isPressed) {
-                physics.setAileron(0);
-            }
-            if (name.equals("RotateRight") && isPressed) {
-                physics.setAileron(1);
-            } else if (name.equals("RotateRight") && !isPressed) {
-                physics.setAileron(0);
-            }
-            if (name.equals("Fire") && isPressed) {
-                firing = true;
-            } else if (name.equals("Fire") && !isPressed) {
-                firing = false;
-            }
-        }
-    };
 
-    public ActionListener getActionListener() {
-        return actionListener;
+    public void setRudder(float rudder) {
     }
 
     public void setHeight(int height) {
@@ -171,5 +134,9 @@ public class Plane {
 
     public String getSpeedKmH() {
         return physics.getSpeedKmH();
+    }
+
+    public void setFireTrigger(boolean trigger) {
+        fireTrigger = trigger;
     }
 }

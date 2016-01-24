@@ -31,6 +31,8 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 
 public class ControlsMapper {
+    
+    public static final String FIRE = "Fire";
 
     private InputManager inputManager;
 
@@ -56,8 +58,9 @@ public class ControlsMapper {
         inputManager.addMapping("Throttle60%", new KeyTrigger(KeyInput.KEY_4));
         inputManager.addMapping("Throttle80%", new KeyTrigger(KeyInput.KEY_5));
         inputManager.addMapping("Throttle100%", new KeyTrigger(KeyInput.KEY_6));
+        inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addListener(flightKeyboardControls, "Throttle0%",
                 "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
-                "NoseDown", "NoseUp", "RotateLeft", "RotateRight", "Fire");
+                "NoseDown", "NoseUp", "RotateLeft", "RotateRight", FIRE);
     }
 }
