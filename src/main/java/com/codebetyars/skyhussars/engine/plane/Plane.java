@@ -32,6 +32,8 @@ import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
+import com.codebetyars.skyhussars.engine.weapons.Bullet;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -46,17 +48,16 @@ public class Plane {
     private Spatial model;
     private PlanePhysics physics;
     private AudioNode engineSound;
-    private boolean firing;
     private List<Gun> guns;
     private List<Missile> missiles;
     private List<Bomb> bombs;
     private List<Engine> engines;
-    private boolean fireTrigger = false;
+    private boolean firing = false;
+    private ProjectileManager projectileManager;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, model);
         System.out.println(getInfo());
-
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 
@@ -64,7 +65,7 @@ public class Plane {
         return physics.getInfo();
     }
 
-    public Plane(DataManager dataManager) {
+    public Plane(DataManager dataManager, ProjectileManager projectileManager) {
         this.model = dataManager.modelManager().model("p80", "p80_material");
         this.planeDescriptor = dataManager.getPlaneDescriptor("Lockheed P-80A-1-LO Shooting Star");
         this.physics = new AdvancedPlanePhysics(model, planeDescriptor);
@@ -72,6 +73,7 @@ public class Plane {
         this.physics.setThrust(1.0f);
         this.physics.setSpeedForward(model, 300f);
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
+        this.projectileManager = projectileManager;
     }
 
     public Spatial getModel() {
@@ -80,6 +82,10 @@ public class Plane {
 
     public void update(float tpf) {
         updatePlanePhysics(tpf);
+        if (firing) {
+            Bullet bullet = new Bullet(model.getLocalTranslation(), Vector3f.ZERO, null);
+            projectileManager.addProjectile(bullet);
+        }
     }
 
     public AudioNode getEngineSound() {
@@ -120,6 +126,10 @@ public class Plane {
         model.move(x, model.getLocalTranslation().y, z);
     }
 
+    public void setLocation(int x, int y, int z) {
+        model.move(x, y, z);
+    }
+
     public float getHeight() {
         return model.getLocalTranslation().y;
     }
@@ -136,7 +146,7 @@ public class Plane {
         return physics.getSpeedKmH();
     }
 
-    public void setFireTrigger(boolean trigger) {
-        fireTrigger = trigger;
+    public void setFiring(boolean trigger) {
+        firing = trigger;
     }
 }

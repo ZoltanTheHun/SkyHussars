@@ -23,27 +23,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.Mission;
 import com.codebetyars.skyhussars.engine.Pilot;
 
 public class ControlsManager {
-    
+
     private FlightKeyboardControls inFlightKeyboardControls;
     private FlowControls gameFlowControls;
-    
-    public ControlsManager(ControlsMapper controlsMapper,Pilot pilot,Mission game){
+
+    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game) {
         inFlightKeyboardControls = new FlightKeyboardControls(pilot);
         gameFlowControls = new FlowControls(game);
-        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);   
+        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
         controlsMapper.setupFlowControls(gameFlowControls);
-        
-    }
-    
-    public void setPilot(Pilot pilot){
-        inFlightKeyboardControls.setPilot(pilot);
     }
 
+    public void setPilot(Pilot pilot) {
+        inFlightKeyboardControls.setPilot(pilot);
+    }
 }

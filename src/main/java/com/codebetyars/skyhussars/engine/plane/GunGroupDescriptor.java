@@ -25,12 +25,26 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.weapons.Gun;
 import java.util.List;
 
-public class GunGroup {
+public class GunGroupDescriptor {
 
     private String name;
-    private List<Gun> guns;
-    
+    private List<GunLocation> gunLocations;
+
+    public List<GunLocation> getGunLocations() {
+        return gunLocations;
+    }
+
+    public void setGunLocations(List<GunLocation> gunLocations) {
+        this.gunLocations = gunLocations;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

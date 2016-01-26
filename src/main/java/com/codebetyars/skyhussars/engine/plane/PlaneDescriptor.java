@@ -36,13 +36,13 @@ public class PlaneDescriptor {
     private float massGross;
     //lets use liter for now, density: 	775.0-840.0 g/L average: 0.8 kg/l
     private float internalTank;
-    private List<GunGroup> gunGroups;
+    private List<GunGroupDescriptor> gunGroups;
 
-    public List<GunGroup> getGunGroups() {
+    public List<GunGroupDescriptor> getGunGroups() {
         return gunGroups;
     }
 
-    public void setGunGroups(List<GunGroup> gunGroups) {
+    public void setGunGroups(List<GunGroupDescriptor> gunGroups) {
         this.gunGroups = gunGroups;
     }
 

@@ -28,6 +28,7 @@ package com.codebetyars.skyhussars.engine;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.scene.Node;
 
 public class Mission extends GameState {
@@ -40,6 +41,7 @@ public class Mission extends GameState {
     private GuiManager guiManager;
     private DayLightWeatherManager dayLightWeatherManager;
     private ControlsManager controlsManager;
+    private ProjectileManager projectileManager;
     private boolean paused = false;
     private boolean ended = false;
 
@@ -51,7 +53,8 @@ public class Mission extends GameState {
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        activePlane = new Plane(dataManager);
+        this.projectileManager = new ProjectileManager(dataManager,node);
+        activePlane = new Plane(dataManager,projectileManager);
         player = new Pilot(activePlane);
         /*not finished object creation?*/
         this.controlsManager = new ControlsManager(controlsMapper, player, this);

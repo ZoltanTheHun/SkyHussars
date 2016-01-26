@@ -23,18 +23,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.data.Ammunation;
 import com.codebetyars.skyhussars.engine.data.Armament;
 
 public class GunDescriptor implements Armament {
-    
+
     private String name;
     private float rateOfFire;
-    private Ammunation ammunation;
+    private BulletDescriptor bulletDescriptor;
     private float muzzleVelocity;
+
+    public BulletDescriptor getBulletDescriptor() {
+        return bulletDescriptor;
+    }
+
+    public void setBulletDescriptor(BulletDescriptor bulletDescriptor) {
+        this.bulletDescriptor = bulletDescriptor;
+    }
+
+    public float getMuzzleVelocity() {
+        return muzzleVelocity;
+    }
+
+    public void setMuzzleVelocity(float muzzleVelocity) {
+        this.muzzleVelocity = muzzleVelocity;
+    }
 
     public String getName() {
         return name;
@@ -51,5 +65,4 @@ public class GunDescriptor implements Armament {
     public void setRateOfFire(float rateOfFire) {
         this.rateOfFire = rateOfFire;
     }
-    
 }

@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.physics;
 
+import com.codebetyars.skyhussars.engine.plane.EngineLocation;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
@@ -38,14 +39,12 @@ import java.util.List;
 public class AdvancedPlanePhysics implements PlanePhysics {
 
     private static final Vector3f GRAVITY = new Vector3f(0f, -10f, 0f);
-    private float maxThrust;
-    private float currentThrust = 0;
     private float airDensity = 1.2745f;
     private float planeFactor = 0.2566f; // cross section and drag coeff together
     private float wingArea = 22.07f; //m2
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
-    private float mass = 5738; //actually the loaded weight is  57380N, the empty weight is 38190N
-    private Vector3f vWeight = GRAVITY.mult(mass);
+    private float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
+    private Vector3f vWeight;
     private float aspectRatio = 6.37f;
     private float pi = 3.14f;
     private float angleOfAttack;
@@ -58,9 +57,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private float height;
     private float length = 10.49f;
     private float rPlane = 1.3f;
-    private Matrix3f momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
-            0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
-            0f, 0f, (mass / 2) * (rPlane * rPlane));
+    private Matrix3f momentOfInertiaTensor;
     private List<Airfoil> airfoils = new ArrayList<>();
     private List<Engine> engines = new ArrayList<>();
     SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
@@ -68,15 +65,20 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
     SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public AdvancedPlanePhysics(Spatial model,PlaneDescriptor planeDescriptor) {
-        airfoils.add(leftWing);
-        maxThrust = planeDescriptor.getEngineLocations().get(0).getEngineDescriptor().getThrustMax();
+    public AdvancedPlanePhysics(Spatial model, PlaneDescriptor planeDescriptor) {
         mass = planeDescriptor.getMassGross();
+        vWeight = GRAVITY.mult(mass);
+        momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
+                0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
+                0f, 0f, (mass / 2) * (rPlane * rPlane));
+
+        airfoils.add(leftWing);
         airfoils.add(rightWing);
         airfoils.add(horizontalStabilizer);
         airfoils.add(verticalStabilizer);
-        Engine engine = new Engine(Vector3f.ZERO, new Vector3f(0, 0, maxThrust));
-        engines.add(engine);
+        for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
+            engines.add(new Engine(engineLocation));
+        }
     }
 
     @Override

@@ -23,27 +23,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
+import com.codebetyars.skyhussars.engine.plane.GunLocation;
+import com.jme3.math.Vector3f;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Gun {
     //M3 shoots 1200 bullets per minute -> 20 per second
     //rate of fire is in second
-    private GunDescriptor gunType;
-    public Gun(GunDescriptor gunType){
-        this.gunType = gunType;
+
+    private GunLocation gunLocation;
+    private int ammo;
+
+    public Gun(GunLocation gunLocation) {
+        this.gunLocation = gunLocation;
+        this.ammo = gunLocation.getRoundsMax();
     }
     /*bullets procuded since last update*/
     private float bpslu = 0;
 
-    public List<Projectile> update(float tpf){
-        bpslu = gunType.getRateOfFire() * tpf;
+    //refine it later on, it is not enough to pass velocity only
+    public List<Projectile> update(float tpf, boolean firing, Vector3f noseDirection,
+            Vector3f vPlaneVelocity, Vector3f vPlaneLocation) {
+        bpslu += gunLocation.getGunDescriptor().getRateOfFire() * tpf;
+        /*gunLocation.getGunDescriptor().getMuzzleVelocity();*/
         List<Projectile> projectiles = new LinkedList<>();
-        return null;
-        
+        while (bpslu-- > 1) {
+            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO, null);
+            projectiles.add(bullet);
+            bpslu -= 1;
+        }
+        return projectiles;
+
     }
 }

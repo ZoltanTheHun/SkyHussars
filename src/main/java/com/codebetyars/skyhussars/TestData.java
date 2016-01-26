@@ -28,7 +28,7 @@ package com.codebetyars.skyhussars;
 import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineLocation;
-import com.codebetyars.skyhussars.engine.plane.GunGroup;
+import com.codebetyars.skyhussars.engine.plane.GunGroupDescriptor;
 import com.codebetyars.skyhussars.engine.plane.GunLocation;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.Vector3f;
@@ -68,16 +68,16 @@ public class TestData {
         gun2.setRoundsMax(300);
         gun2.setLocation(new Vector3f(-0.5f, 0.0f, 2.0f));
         guns.add(gun2);
-        GunGroup gunGroup = new GunGroup();
+        GunGroupDescriptor gunGroup = new GunGroupDescriptor();
         gunGroup.setName("6x .50 M3 Browning");
         gunGroup.setGunLocations(guns);
 
-        List<GunGroup> gunGroups = new ArrayList<>();
+        List<GunGroupDescriptor> gunGroups = new ArrayList<>();
         gunGroups.add(gunGroup);
 
         EngineLocation engineLocation = new EngineLocation();
         engineLocation.setEngineDescriptor(engines.get("Allison J33-A-9"));
-        engineLocation.setLocation(new Vector3f(0f, 0f, -2f));
+        engineLocation.setLocation(new Vector3f(0f, 0f, 0f));
         List<EngineLocation> engineLocations = new LinkedList<>();
         engineLocations.add(engineLocation);
         PlaneDescriptor planeDescriptor = new PlaneDescriptor();
@@ -93,7 +93,7 @@ public class TestData {
 
         engineLocation = new EngineLocation();
         engineLocation.setEngineDescriptor(engines.get("Allison J33-A-17"));
-        engineLocation.setLocation(new Vector3f(0f, 0f, -2f));
+        engineLocation.setLocation(new Vector3f(0f, 0f, 0f));
         engineLocations = new LinkedList<>();
         engineLocations.add(engineLocation);
         planeDescriptor = new PlaneDescriptor();

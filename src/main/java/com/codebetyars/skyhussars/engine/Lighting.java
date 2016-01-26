@@ -23,13 +23,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
+import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,19 +38,47 @@ import java.util.List;
 public class Lighting {
 
     private List<Light> lights;
+    private DirectionalLight directionalLight;
+    private AmbientLight ambientLight;
+    private PointLight pointLight;
 
     public Lighting() {
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White.mult(1f));
-        sun.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
-        AmbientLight ambientLight = new AmbientLight();
-        ambientLight.setColor(ColorRGBA.White.mult(1f));
-        lights = new LinkedList<Light>();
-        lights.add(sun);
+        directionalLight = new DirectionalLight();
+        directionalLight.setColor(ColorRGBA.White.mult(0.5f));
+        directionalLight.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
+        ambientLight = new AmbientLight();
+        ambientLight.setColor(ColorRGBA.White.mult(0.5f));
+        pointLight = new PointLight();
+        lights = new LinkedList<>();
+        lights.add(directionalLight);
         lights.add(ambientLight);
     }
-    
-    public List<Light> getLights(){
+
+    public List<Light> getLights() {
         return lights;
+    }
+
+    public void setLightingBodies(Vector3f sun, Vector3f moon) {
+        float sunAt = sun.angleBetween(Vector3f.UNIT_Y);
+        float moonAt = moon.angleBetween(Vector3f.UNIT_Y);
+        System.out.println("Sun at: " + sunAt + ", moon at: " + moonAt);
+        if (sunAt < FastMath.HALF_PI) {
+            directionalLight.setDirection(sun.negate());
+            ColorRGBA lightStrength = ColorRGBA.White.mult(1f - sunAt / 4f);
+            directionalLight.setColor(lightStrength);
+            ambientLight.setColor(lightStrength);
+        } else if (moonAt < FastMath.HALF_PI) {
+            directionalLight.setDirection(moon.negate());
+            ColorRGBA lightStrength = ColorRGBA.White.mult(0.4f - moonAt / 6f);
+            directionalLight.setColor(lightStrength);
+            ambientLight.setColor(lightStrength);
+        } else {
+            directionalLight.setDirection(Vector3f.UNIT_Y.negate());
+            ColorRGBA lightStrength = ColorRGBA.White.mult(0.24f);
+            directionalLight.setColor(lightStrength);
+            ambientLight.setColor(lightStrength);
+        }
+        System.out.println("Direction of light: " + directionalLight.getDirection());
+
     }
 }

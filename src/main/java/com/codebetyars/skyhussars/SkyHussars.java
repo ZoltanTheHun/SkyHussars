@@ -34,7 +34,6 @@ import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
 import com.codebetyars.skyhussars.engine.TerrainManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
@@ -44,7 +43,6 @@ public class SkyHussars extends SimpleApplication {
     private GameState currentState;
 
     public static void main(String[] args) {
-        ObjectMapper mapper = new ObjectMapper();
         SkyHussars app = new SkyHussars();
         AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");

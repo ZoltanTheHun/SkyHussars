@@ -25,18 +25,25 @@
  */
 package com.codebetyars.skyhussars.engine.weapons;
 
+import com.codebetyars.skyhussars.engine.DataManager;
+import com.jme3.scene.Node;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectileManager {
     
     private List<Projectile> projectiles;
+    private DataManager dataManager;
+    private Node rootNode;
     
-    public ProjectileManager() {
+    public ProjectileManager(DataManager dataManager, Node node) {
         this.projectiles = new ArrayList<>();
+        this.dataManager = dataManager;
+        this.rootNode = node;
     }
     
-    public void addProjectile(Projectile projectile) {
+    public void addProjectile(Bullet projectile) {
+        rootNode.attachChild(dataManager.getBox().move(projectile.getLocation()));
         projectiles.add(projectile);
     }
     

@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.physics;
 
 import com.jme3.math.FastMath;
@@ -53,6 +52,7 @@ public class SymmetricAirfoil implements Airfoil {
     }
     private int[] aoa = {0, 2, 4, 6, 8, 10, 12, 30};
     private float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.778f, 0.8f};
+    // private float[]
     private float wingArea;
     private float incidence;
     private Vector3f cog;
@@ -66,6 +66,7 @@ public class SymmetricAirfoil implements Airfoil {
     private boolean damper;
     private boolean leftDamper;
 
+    @Override
     public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Quaternion situation, Vector3f vAngularVelocity) {
         //Quaternion foil = wingRotation.mult(qAileron).mult(situation);//situation.mult(wingRotation).mult(qAileron);//situation.mult(qIncidence).mult(qAileron).mult(dehidral);
         Quaternion foil = situation.mult(wingRotation).mult(qAileron);//situation.mult(qIncidence).mult(qAileron).mult(dehidral);

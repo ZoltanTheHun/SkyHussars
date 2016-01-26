@@ -23,33 +23,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.TestData;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Box;
 
 public class DataManager {
 
     private SoundManager soundManager;
     private ModelManager modelManager;
     private TestData testData = new TestData();
+    private Geometry geom;
 
     public DataManager(AssetManager assetManager) {
         this.modelManager = new ModelManager(assetManager);
         this.soundManager = new SoundManager(assetManager);
+        Box box = new Box(0.5f,0.5f,0.5f);
+        geom = new Geometry("A shape", box); // wrap shape into geometry
+        Material mat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");   // create material
+        geom.setMaterial(mat);
     }
 
-    
-    public ModelManager modelManager(){
+    public ModelManager modelManager() {
         return modelManager;
     }
-    public SoundManager soundManager(){
+
+    public SoundManager soundManager() {
         return soundManager;
     }
-    
-    public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId){
+
+    public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId) {
         return testData.getPlaneDescriptor(planeDescriptorId);
+    }
+    
+    public Geometry getBox(){
+        return geom.clone();
     }
 }

@@ -23,29 +23,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.physics;
 
+import com.codebetyars.skyhussars.engine.plane.EngineLocation;
 import com.jme3.math.Vector3f;
 
-public class Engine implements ThrustProducer,RigidBody{
-    private Vector3f centerOfGravity;    
+public class Engine implements ThrustProducer, RigidBody {
+
+    private EngineLocation engineLocation;
+    private Vector3f centerOfGravity;
     private Vector3f vMaxThrust;
     private float throttle = 0.0f;
-    public Engine(Vector3f centerOfGravity,Vector3f vMaxThrust){
-        this.centerOfGravity = centerOfGravity;
-        this.vMaxThrust = vMaxThrust;
+
+    public Engine(EngineLocation engineLocation) {
+        this.engineLocation = engineLocation;
+        this.centerOfGravity = engineLocation.getLocation();
+        this.vMaxThrust = new Vector3f(0, 0, engineLocation.getEngineDescriptor().getThrustMax());
     }
+
+    @Override
     public Vector3f getCenterOfGravity() {
         return centerOfGravity;
     }
     /*throttle between 0 and 1*/
+    @Override
     public Vector3f getThrust() {
         return vMaxThrust.mult(throttle);
     }
-    
-    public void setThrottle(float throttle){
+
+    @Override
+    public void setThrottle(float throttle) {
         this.throttle = throttle;
     }
-    
 }

@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.jme3.asset.AssetManager;
@@ -41,16 +40,17 @@ public class DayLightWeatherManager {
         node.addControl(sc);
         sc.getSunAndStars().setHour(12f);
         sc.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);
-        sc.getSunAndStars().setSolarLongitude(Calendar.FEBRUARY, 10);
-        sc.setCloudiness(1f);
+        sc.getSunAndStars().setSolarLongitude(Calendar.AUGUST, 10);
+        System.out.println("Sun location: " + sc.getSunAndStars().getSunDirection());
+        sc.setCloudiness(0f);
         sc.setEnabled(true);
-        setupLighting(node);
-    }
 
-    private void setupLighting(Node node) {
         Lighting lighting = new Lighting();
+        lighting.setLightingBodies(sc.getSunAndStars().getSunDirection(), sc.getMoonDirection());
+
         for (Light light : lighting.getLights()) {
             node.addLight(light);
         }
+
     }
 }
