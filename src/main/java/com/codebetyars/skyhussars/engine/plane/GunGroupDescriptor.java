@@ -30,13 +30,13 @@ import java.util.List;
 public class GunGroupDescriptor {
 
     private String name;
-    private List<GunLocation> gunLocations;
+    private List<GunLocationDescriptor> gunLocations;
 
-    public List<GunLocation> getGunLocations() {
+    public List<GunLocationDescriptor> getGunLocations() {
         return gunLocations;
     }
 
-    public void setGunLocations(List<GunLocation> gunLocations) {
+    public void setGunLocations(List<GunLocationDescriptor> gunLocations) {
         this.gunLocations = gunLocations;
     }
 

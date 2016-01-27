@@ -39,6 +39,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Plane {
@@ -49,6 +50,7 @@ public class Plane {
     private PlanePhysics physics;
     private AudioNode engineSound;
     private List<Gun> guns;
+    private List<GunGroup> gunGroups;
     private List<Missile> missiles;
     private List<Bomb> bombs;
     private List<Engine> engines;
@@ -74,7 +76,16 @@ public class Plane {
         this.physics.setSpeedForward(model, 300f);
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
+        initializeGunGroup();
     }
+    
+    private void initializeGunGroup(){
+        gunGroups = new ArrayList<>();
+        for(GunGroupDescriptor gunGroupDescriptor : planeDescriptor.getGunGroupDescriptors()){
+            gunGroups.add(new GunGroup(gunGroupDescriptor,projectileManager));
+        }
+    }
+            
 
     public Spatial getModel() {
         return model;
@@ -82,9 +93,8 @@ public class Plane {
 
     public void update(float tpf) {
         updatePlanePhysics(tpf);
-        if (firing) {
-            Bullet bullet = new Bullet(model.getLocalTranslation(), Vector3f.ZERO, null);
-            projectileManager.addProjectile(bullet);
+        for(GunGroup gunGroup : gunGroups){
+            gunGroup.firing(firing,model.getLocalTranslation(),Vector3f.ZERO);
         }
     }
 

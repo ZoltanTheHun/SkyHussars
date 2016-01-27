@@ -29,7 +29,7 @@ import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineLocation;
 import com.codebetyars.skyhussars.engine.plane.GunGroupDescriptor;
-import com.codebetyars.skyhussars.engine.plane.GunLocation;
+import com.codebetyars.skyhussars.engine.plane.GunLocationDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
@@ -57,13 +57,13 @@ public class TestData {
         GunDescriptor gun = new GunDescriptor();
         gun.setName(".50 M3 Browning");
         gun.setRateOfFire(20);
-        List<GunLocation> guns = new ArrayList<>();
-        GunLocation gun1 = new GunLocation();
+        List<GunLocationDescriptor> guns = new ArrayList<>();
+        GunLocationDescriptor gun1 = new GunLocationDescriptor();
         gun1.setGunDescriptor(gun);
         gun1.setRoundsMax(300);
         gun1.setLocation(new Vector3f(0.5f, 0.0f, 2.0f));
         guns.add(gun1);
-        GunLocation gun2 = new GunLocation();
+        GunLocationDescriptor gun2 = new GunLocationDescriptor();
         gun2.setGunDescriptor(gun);
         gun2.setRoundsMax(300);
         gun2.setLocation(new Vector3f(-0.5f, 0.0f, 2.0f));
@@ -87,7 +87,7 @@ public class TestData {
         planeDescriptor.setMassGross(5307);
         planeDescriptor.setMassTakeOffMax(6350);
         planeDescriptor.setInternalTank(1609);
-        planeDescriptor.setGunGroups(gunGroups);
+        planeDescriptor.setGunGroupDescriptors(gunGroups);
         planes.put(planeDescriptor.getName(), planeDescriptor);
 
 
@@ -103,7 +103,7 @@ public class TestData {
         planeDescriptor.setMassGross(5307);
         planeDescriptor.setMassTakeOffMax(6350);
         planeDescriptor.setInternalTank(1609);
-        planeDescriptor.setGunGroups(gunGroups);
+        planeDescriptor.setGunGroupDescriptors(gunGroups);
         planes.put(planeDescriptor.getName(), planeDescriptor);
     }
 

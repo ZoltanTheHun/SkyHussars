@@ -38,7 +38,7 @@ public class DayLightWeatherManager {
     public DayLightWeatherManager(AssetManager assetManager, Camera camera, Node node) {
         SkyControl sc = new SkyControl(assetManager, camera, 0.9f, true, true);
         node.addControl(sc);
-        sc.getSunAndStars().setHour(12f);
+        sc.getSunAndStars().setHour(5f);
         sc.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);
         sc.getSunAndStars().setSolarLongitude(Calendar.AUGUST, 10);
         System.out.println("Sun location: " + sc.getSunAndStars().getSunDirection());

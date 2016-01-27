@@ -25,12 +25,43 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.weapons.Gun;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.math.Vector3f;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GunGroup {
 
+    public GunGroup(GunGroupDescriptor gunGroupDescriptor, ProjectileManager projectileManager) {
+        name = gunGroupDescriptor.getName();
+        gunLocations = new ArrayList<>();
+        for (GunLocationDescriptor gunLocationDescriptor : gunGroupDescriptor.getGunLocations()) {
+            gunLocations.add(new GunLocation(gunLocationDescriptor,
+                    gunLocationDescriptor.getRoundsMax(), projectileManager));
+        }
+    }
     private String name;
-    private List<Gun> guns;
-    
+    private List<GunLocation> gunLocations;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<GunLocation> getGunLocations() {
+        return gunLocations;
+    }
+
+    public void setGunLocations(List<GunLocation> gunLocations) {
+        this.gunLocations = gunLocations;
+    }
+
+    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity) {
+        for (GunLocation gunLocation : gunLocations) {
+            gunLocation.firing(firing,vLocation,vVelocity);
+        }
+    }
 }

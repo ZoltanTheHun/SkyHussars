@@ -23,40 +23,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.weapons;
 
-import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
-import com.codebetyars.skyhussars.engine.plane.GunLocationDescriptor;
+package com.codebetyars.skyhussars.engine.plane;
+
 import com.jme3.math.Vector3f;
-import java.util.LinkedList;
-import java.util.List;
 
-public class Gun {
-    //M3 shoots 1200 bullets per minute -> 20 per second
-    //rate of fire is in second
+public class GunLocationDescriptor {
 
-    private GunLocationDescriptor gunLocation;
-    private int ammo;
+    private GunDescriptor gunDescriptor;
+    private int roundsMax;
+    private Vector3f location;
 
-    public Gun(GunLocationDescriptor gunLocation) {
-        this.gunLocation = gunLocation;
-        this.ammo = gunLocation.getRoundsMax();
+    public GunDescriptor getGunDescriptor() {
+        return gunDescriptor;
     }
-    /*bullets procuded since last update*/
-    private float bpslu = 0;
 
-    //refine it later on, it is not enough to pass velocity only
-    public List<Projectile> update(float tpf, boolean firing, Vector3f noseDirection,
-            Vector3f vPlaneVelocity, Vector3f vPlaneLocation) {
-        bpslu += gunLocation.getGunDescriptor().getRateOfFire() * tpf;
-        /*gunLocation.getGunDescriptor().getMuzzleVelocity();*/
-        List<Projectile> projectiles = new LinkedList<>();
-        while (bpslu-- > 1) {
-            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO, null);
-            projectiles.add(bullet);
-            bpslu -= 1;
-        }
-        return projectiles;
+    public void setGunDescriptor(GunDescriptor gunDescriptor) {
+        this.gunDescriptor = gunDescriptor;
+    }
 
+    public int getRoundsMax() {
+        return roundsMax;
+    }
+
+    public void setRoundsMax(int roundsMax) {
+        this.roundsMax = roundsMax;
+    }
+
+    public Vector3f getLocation() {
+        return location;
+    }
+
+    public void setLocation(Vector3f location) {
+        this.location = location;
     }
 }

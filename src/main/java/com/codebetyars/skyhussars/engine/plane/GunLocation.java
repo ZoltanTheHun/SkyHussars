@@ -23,38 +23,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.plane;
 
+import com.codebetyars.skyhussars.engine.weapons.Bullet;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.math.Vector3f;
 
 public class GunLocation {
 
-    private GunDescriptor gunDescriptor;
-    private int roundsMax;
-    private Vector3f location;
+    private GunLocationDescriptor gunLocationDescriptor;
+    private int rounds;
+    private ProjectileManager projectileManager;
 
-    public GunDescriptor getGunDescriptor() {
-        return gunDescriptor;
+    public GunLocation(GunLocationDescriptor gunLocationDescriptor, int rounds, ProjectileManager projectileManager) {
+        this.gunLocationDescriptor = gunLocationDescriptor;
+        /*should check if rounnds > maxRounds*/
+        this.rounds = rounds;
+        this.projectileManager = projectileManager;
     }
 
-    public void setGunDescriptor(GunDescriptor gunDescriptor) {
-        this.gunDescriptor = gunDescriptor;
-    }
-
-    public int getRoundsMax() {
-        return roundsMax;
-    }
-
-    public void setRoundsMax(int roundsMax) {
-        this.roundsMax = roundsMax;
-    }
-
-    public Vector3f getLocation() {
-        return location;
-    }
-
-    public void setLocation(Vector3f location) {
-        this.location = location;
+    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity) {
+        if (firing) {
+            Bullet bullet = new Bullet(vLocation, vVelocity, null);
+            projectileManager.addProjectile(bullet);
+        }
     }
 }
