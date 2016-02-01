@@ -57,6 +57,7 @@ public class TestData {
         GunDescriptor gun = new GunDescriptor();
         gun.setName(".50 M3 Browning");
         gun.setRateOfFire(20);
+        gun.setMuzzleVelocity(890);
         List<GunLocationDescriptor> guns = new ArrayList<>();
         GunLocationDescriptor gun1 = new GunLocationDescriptor();
         gun1.setGunDescriptor(gun);

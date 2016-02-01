@@ -42,8 +42,12 @@ public class GunLocation {
         this.projectileManager = projectileManager;
     }
 
-    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity) {
+    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity,Vector3f vOrientation) {
         if (firing) {
+            /*actually this should be here the plane orientation corrected with gun orientation*/
+            Vector3f vBulletVelocity = vOrientation.negate().normalize().mult(gunLocationDescriptor.
+                    getGunDescriptor().getMuzzleVelocity());
+            vVelocity = vVelocity.add(vBulletVelocity);
             Bullet bullet = new Bullet(vLocation, vVelocity, null);
             projectileManager.addProjectile(bullet);
         }

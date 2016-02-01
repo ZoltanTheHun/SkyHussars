@@ -25,10 +25,17 @@
  */
 package com.codebetyars.skyhussars.engine.weapons;
 
+import com.jme3.math.Vector3f;
+
 public class Missile extends Projectile {
 
     @Override
-    public void update() {
+    public void update(float tpf) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Vector3f getLocation() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

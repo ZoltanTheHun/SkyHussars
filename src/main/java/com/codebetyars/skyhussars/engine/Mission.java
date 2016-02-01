@@ -83,6 +83,7 @@ public class Mission extends GameState {
         if (!paused && !ended) {
             activePlane.getEngineSound().play();
             activePlane.update(tpf);
+            projectileManager.update(tpf);
             cameraManager.followWithCamera(activePlane.getModel());
             if (terrainManager.checkCollisionWithGround(activePlane)) {
                 ended = true;

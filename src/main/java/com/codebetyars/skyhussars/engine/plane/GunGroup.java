@@ -59,9 +59,9 @@ public class GunGroup {
         this.gunLocations = gunLocations;
     }
 
-    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity) {
+    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Vector3f vOrientation) {
         for (GunLocation gunLocation : gunLocations) {
-            gunLocation.firing(firing,vLocation,vVelocity);
+            gunLocation.firing(firing,vLocation,vVelocity,vOrientation);
         }
     }
 }

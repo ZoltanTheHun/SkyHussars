@@ -78,14 +78,13 @@ public class Plane {
         this.projectileManager = projectileManager;
         initializeGunGroup();
     }
-    
-    private void initializeGunGroup(){
+
+    private void initializeGunGroup() {
         gunGroups = new ArrayList<>();
-        for(GunGroupDescriptor gunGroupDescriptor : planeDescriptor.getGunGroupDescriptors()){
-            gunGroups.add(new GunGroup(gunGroupDescriptor,projectileManager));
+        for (GunGroupDescriptor gunGroupDescriptor : planeDescriptor.getGunGroupDescriptors()) {
+            gunGroups.add(new GunGroup(gunGroupDescriptor, projectileManager));
         }
     }
-            
 
     public Spatial getModel() {
         return model;
@@ -93,8 +92,8 @@ public class Plane {
 
     public void update(float tpf) {
         updatePlanePhysics(tpf);
-        for(GunGroup gunGroup : gunGroups){
-            gunGroup.firing(firing,model.getLocalTranslation(),Vector3f.ZERO);
+        for (GunGroup gunGroup : gunGroups) {
+            gunGroup.firing(firing, model.getLocalTranslation(), physics.getVVelovity(), model.getLocalRotation().mult(Vector3f.UNIT_Z).negate());
         }
     }
 

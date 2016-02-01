@@ -246,4 +246,9 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     public void setRudder(float aileron) {
         verticalStabilizer.controlAileron(aileron);
     }
+
+    @Override
+    public Vector3f getVVelovity() {
+        return vVelocity;
+    }
 }

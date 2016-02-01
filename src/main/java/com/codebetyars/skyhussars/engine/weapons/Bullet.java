@@ -27,27 +27,26 @@ package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.plane.BulletDescriptor;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.shape.Box;
 
 public class Bullet extends Projectile {
 
     private Vector3f vLocation;
     private Vector3f vVelocity;
     private BulletDescriptor bulletDescriptor;
-    private Box box = new Box(0.5f, 0.5f, 0.5f);
 
     public Bullet(Vector3f vLocation, Vector3f vVelocity, BulletDescriptor bulletDescriptor) {
-        this.vLocation = vLocation;
-        this.vVelocity = vVelocity;
+        this.vLocation = vLocation.clone();
+        this.vVelocity = vVelocity.clone();
         this.bulletDescriptor = bulletDescriptor;
     }
 
     @Override
-    public void update() {
-    }
-    
-    public Vector3f getLocation(){
-        return vLocation;
+    public void update(float tpf) {
+        vLocation = vLocation.add(vVelocity.mult(tpf));
     }
 
+    @Override
+    public Vector3f getLocation() {
+        return vLocation;
+    }
 }

@@ -26,8 +26,11 @@
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.DataManager;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ProjectileManager {
@@ -35,6 +38,7 @@ public class ProjectileManager {
     private List<Projectile> projectiles;
     private DataManager dataManager;
     private Node rootNode;
+    private List<Geometry> projectileGeometries = new LinkedList<>();
     
     public ProjectileManager(DataManager dataManager, Node node) {
         this.projectiles = new ArrayList<>();
@@ -43,13 +47,20 @@ public class ProjectileManager {
     }
     
     public void addProjectile(Bullet projectile) {
-        rootNode.attachChild(dataManager.getBox().move(projectile.getLocation()));
+        Geometry newGeometry = dataManager.getBox();
+        projectileGeometries.add(newGeometry);
+        rootNode.attachChild(newGeometry);
+        newGeometry.move(projectile.getLocation());
         projectiles.add(projectile);
     }
     
-    public void update(){
+    public void update(float tpf){
+        Iterator<Geometry> geomIterator = projectileGeometries.iterator();
         for(Projectile projectile : projectiles){
-            projectile.update();
+            projectile.update(tpf);
+            if(geomIterator.hasNext()){
+                geomIterator.next().setLocalTranslation(projectile.getLocation());
+            }
         }
     }
 }

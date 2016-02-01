@@ -26,7 +26,11 @@
 
 package com.codebetyars.skyhussars.engine.weapons;
 
+import com.jme3.math.Vector3f;
+
 public abstract class Projectile {
 
-    public abstract void update();
+    public abstract void update(float tpf);
+        
+    public abstract Vector3f getLocation();
 }
