@@ -32,7 +32,6 @@ import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
-import com.codebetyars.skyhussars.engine.weapons.Bullet;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.math.FastMath;
@@ -93,7 +92,7 @@ public class Plane {
     public void update(float tpf) {
         updatePlanePhysics(tpf);
         for (GunGroup gunGroup : gunGroups) {
-            gunGroup.firing(firing, model.getLocalTranslation(), physics.getVVelovity(), model.getLocalRotation().mult(Vector3f.UNIT_Z).negate());
+            gunGroup.firing(firing, model.getLocalTranslation(), physics.getVVelovity(), model.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
         }
     }
 

@@ -29,6 +29,7 @@ import com.codebetyars.skyhussars.TestData;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 
@@ -42,10 +43,11 @@ public class DataManager {
     public DataManager(AssetManager assetManager) {
         this.modelManager = new ModelManager(assetManager);
         this.soundManager = new SoundManager(assetManager);
-        Box box = new Box(0.5f,0.5f,0.5f);
-        geom = new Geometry("A shape", box); // wrap shape into geometry
+        Box box = new Box(0.2f,0.2f,0.2f);
+        geom = new Geometry("bullet", box); // wrap shape into geometry
         Material mat = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");   // create material
+                "Common/MatDefs/Misc/Unshaded.j3md"); // create material
+        mat.setColor("Color", ColorRGBA.Green);
         geom.setMaterial(mat);
     }
 

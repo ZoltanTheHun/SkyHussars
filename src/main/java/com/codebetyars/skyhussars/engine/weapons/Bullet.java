@@ -49,4 +49,9 @@ public class Bullet extends Projectile {
     public Vector3f getLocation() {
         return vLocation;
     }
+
+    @Override
+    public Vector3f getVelocity() {
+        return vVelocity;
+    }
 }

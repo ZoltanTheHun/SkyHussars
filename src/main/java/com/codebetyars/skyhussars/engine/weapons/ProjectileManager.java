@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.DataManager;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
@@ -59,7 +60,12 @@ public class ProjectileManager {
         for(Projectile projectile : projectiles){
             projectile.update(tpf);
             if(geomIterator.hasNext()){
-                geomIterator.next().setLocalTranslation(projectile.getLocation());
+                Geometry geom = geomIterator.next();
+                geom.setLocalTranslation(projectile.getLocation());
+                Vector3f direction = projectile.getVelocity().normalize();
+                geom.lookAt(direction, Vector3f.UNIT_Y);
+                //geom.setLocalRotation(new Quaternion().);
+                
             }
         }
     }
