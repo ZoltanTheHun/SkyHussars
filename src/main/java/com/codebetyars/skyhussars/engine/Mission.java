@@ -53,13 +53,12 @@ public class Mission extends GameState {
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        this.projectileManager = new ProjectileManager(dataManager,node);
-        activePlane = new Plane(dataManager,projectileManager);
+        this.projectileManager = new ProjectileManager(dataManager, node);
+        activePlane = new Plane(dataManager, projectileManager);
         player = new Pilot(activePlane);
         /*not finished object creation?*/
-        this.controlsManager = new ControlsManager(controlsMapper, player, this);
-        node.attachChild(activePlane.getModel());
-        node.attachChild(activePlane.getEngineSound());
+        this.controlsManager = new ControlsManager(controlsMapper, player, this,cameraManager);
+        node.attachChild(activePlane.getNode());
         initiliazePlayer();
     }
 
@@ -76,6 +75,7 @@ public class Mission extends GameState {
         activePlane.setHeight(3000);
         cameraManager.moveCameraTo(activePlane.getLocation());
         cameraManager.followWithCamera(activePlane.getModel());
+        cameraManager.init();
     }
 
     @Override
@@ -84,7 +84,6 @@ public class Mission extends GameState {
             activePlane.getEngineSound().play();
             activePlane.update(tpf);
             projectileManager.update(tpf);
-            cameraManager.followWithCamera(activePlane.getModel());
             if (terrainManager.checkCollisionWithGround(activePlane)) {
                 ended = true;
             }
@@ -92,6 +91,7 @@ public class Mission extends GameState {
         } else {
             activePlane.getEngineSound().pause();
         }
+        cameraManager.update(tpf);
         return this;
     }
 

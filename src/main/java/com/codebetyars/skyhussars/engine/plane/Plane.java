@@ -37,6 +37,7 @@ import com.jme3.audio.AudioNode;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class Plane {
     private List<Engine> engines;
     private boolean firing = false;
     private ProjectileManager projectileManager;
+    private Node node;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, model);
@@ -76,6 +78,9 @@ public class Plane {
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
         initializeGunGroup();
+        this.node = new Node();
+        node.attachChild(model);
+        node.attachChild(engineSound);
     }
 
     private void initializeGunGroup() {
@@ -87,6 +92,10 @@ public class Plane {
 
     public Spatial getModel() {
         return model;
+    }
+
+    public Node getNode() {
+        return node;
     }
 
     public void update(float tpf) {

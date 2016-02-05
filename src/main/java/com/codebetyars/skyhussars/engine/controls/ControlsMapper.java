@@ -27,13 +27,16 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 
 public class ControlsMapper {
-    
-    public static final String FIRE = "Fire";
 
+    public static final String FIRE = "Fire";
+    public static final String INCREASE_FOV = "IncreaseFov";
+    public static final String DECREASE_FOV = "DecreaseFov";
     private InputManager inputManager;
 
     public ControlsMapper(InputManager inputManager) {
@@ -62,5 +65,11 @@ public class ControlsMapper {
         inputManager.addListener(flightKeyboardControls, "Throttle0%",
                 "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
                 "NoseDown", "NoseUp", "RotateLeft", "RotateRight", FIRE);
+    }
+
+    public void setupCameraControls(CameraControls cameraControls) {
+        inputManager.addMapping(INCREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        inputManager.addListener(cameraControls, INCREASE_FOV,DECREASE_FOV);
     }
 }

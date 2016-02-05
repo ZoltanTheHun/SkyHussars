@@ -26,25 +26,32 @@
 package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.Mission;
-import com.codebetyars.skyhussars.engine.Pilot;
+import com.jme3.input.controls.ActionListener;
 
-public class ControlsManager {
+public class CameraControls implements ActionListener {
 
-    private FlightKeyboardControls inFlightKeyboardControls;
-    private FlowControls gameFlowControls;
-    private CameraControls cameraControls;
+    private CameraManager cameraManager;
 
-    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game,CameraManager cameraManager) {
-        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
-        gameFlowControls = new FlowControls(game);
-        cameraControls = new CameraControls(cameraManager);
-        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
-        controlsMapper.setupFlowControls(gameFlowControls);
-        controlsMapper.setupCameraControls(cameraControls);
+    public CameraControls(CameraManager cameraManager) {
+        this.cameraManager = cameraManager;
     }
 
-    public void setPilot(Pilot pilot) {
-        inFlightKeyboardControls.setPilot(pilot);
+    @Override
+    public void onAction(String name, boolean isPressed, float tpf) {
+        if (isPressed) {
+            if (name.equals(ControlsMapper.INCREASE_FOV)) {
+                cameraManager.setFovChangeActive(true, false);
+            }
+            if (name.equals(ControlsMapper.DECREASE_FOV)) {
+                cameraManager.setFovChangeActive(true, true);
+            }
+        } else {
+            if (name.equals(ControlsMapper.INCREASE_FOV)) {
+                cameraManager.setFovChangeActive(false);
+            }
+            if (name.equals(ControlsMapper.DECREASE_FOV)) {
+                cameraManager.setFovChangeActive(false);
+            }
+        }
     }
 }

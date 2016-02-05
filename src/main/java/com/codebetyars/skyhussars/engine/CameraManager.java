@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.jme3.input.FlyByCamera;
@@ -35,25 +34,77 @@ public class CameraManager {
 
     private Camera camera;
     private FlyByCamera flyCam;
+    private boolean fovChangeActive;
+    private boolean fovNarrowing;
+    private final int minFov = 20;
+    private final int maxFov = 100;
+    private float fovChangeRate = 8f;
 
     public CameraManager(Camera camera, FlyByCamera flyCam) {
         this.camera = camera;
         this.flyCam = flyCam;
     }
+    public Spatial focus;
 
-    public void followWithCamera(Spatial spatial) {
-        Vector3f cameraLocation = new Vector3f(0, 3f, -12);
-        camera.setLocation((spatial.getWorldTranslation()).add(spatial.getLocalRotation().mult(cameraLocation)));
-        camera.lookAt(spatial.getWorldTranslation(),
-                spatial.getLocalRotation().mult(Vector3f.UNIT_Y));
+    public void update(float tpf) {
+        follow();
+        updateFov(tpf);
     }
 
+    private void updateFov(float tpf) {
+        if (fovChangeActive) {
+            if (fovNarrowing && fov > minFov) {
+                setFov(fov - fovChangeRate * tpf);
+            }
+            if (!fovNarrowing && fov < maxFov) {
+                setFov(fov + fovChangeRate * tpf);
+            }
+        }
+    }
+
+    private void follow() {
+        Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
+        camera.setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
+        camera.lookAt(focus.getWorldTranslation(),
+                focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+    }
+
+    public void init() {
+        if (focus != null) {
+            follow();
+        }
+    }
+
+    public void followWithCamera(Spatial spatial) {
+        this.focus = spatial;
+    }
+    private float aspect;
+    private float fov;
+    private float near = 0.1f;
+    private float far = 200000f;
+
     public void initializeCamera() {
-        float aspect = (float) camera.getWidth() / (float) camera.getHeight();
-        //jmonkey has 45 degrees default FOV
-        float fov = 90;
-        camera.setFrustumPerspective(fov, aspect, 0.1f, 200000);
+        aspect = (float) camera.getWidth() / (float) camera.getHeight();
+        setFov(45);
         flyCam.setMoveSpeed(200);
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
+        camera.setFrustumPerspective(fov, aspect, near, far);
+    }
+
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFovChangeActive(boolean fovChangeActive) {
+        this.fovChangeActive = fovChangeActive;
+    }
+
+    public void setFovChangeActive(boolean active, boolean fovNarrowing) {
+        this.fovChangeActive = active;
+        this.fovNarrowing = fovNarrowing;
     }
 
     public void moveCameraTo(Vector3f location) {
