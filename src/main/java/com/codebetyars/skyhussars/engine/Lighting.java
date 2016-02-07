@@ -69,7 +69,7 @@ public class Lighting {
             ambientLight.setColor(lightStrength);
         } else if (moonAt < FastMath.HALF_PI) {
             directionalLight.setDirection(moon.negate());
-            ColorRGBA lightStrength = ColorRGBA.White.mult(0.4f - moonAt / 6f);
+            ColorRGBA lightStrength = ColorRGBA.White.mult(0.25f - moonAt / 6f);
             directionalLight.setColor(lightStrength);
             ambientLight.setColor(lightStrength);
         } else {

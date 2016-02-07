@@ -44,7 +44,6 @@ public class MainMenu extends GameState implements ScreenController {
     @Override
     public GameState update(float tpf) {
         GameState nextState = this;
-        System.out.println("Start game" + guiManager.startGame);
         if (guiManager.startGame) {
             nextState = state;
             guiManager.startGame = false;

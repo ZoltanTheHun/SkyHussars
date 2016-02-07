@@ -28,11 +28,14 @@ package com.codebetyars.skyhussars.engine;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class SoundManager {
 
-    private Map<String, AudioNode> sounds = new HashMap<String, AudioNode>();
+    private Map<String, AudioNode> sounds = new HashMap<>();
+    private List<AudioNode> requestedNodes = new LinkedList<>();
 
     public SoundManager(AssetManager assetManager) {
         prepareEngineSound(assetManager);
@@ -52,6 +55,14 @@ public class SoundManager {
     }
 
     public AudioNode sound(String key) {
-        return sounds.get(key);
+        AudioNode sound = sounds.get(key).clone();
+        requestedNodes.add(sound);
+        return sound;
+    }
+    
+    public void muteAllSounds(){
+        for(AudioNode sound : requestedNodes){
+            sound.stop();
+        }
     }
 }

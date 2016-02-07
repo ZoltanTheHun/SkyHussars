@@ -60,10 +60,11 @@ public class SkyHussars extends SimpleApplication {
         DataManager dataManager = new DataManager(assetManager);
         ControlsMapper controlsMapper = new ControlsMapper(inputManager);
         CameraManager cameraManager = new CameraManager(this.cam, flyCam);
-        GuiManager guiManager = new GuiManager(assetManager, inputManager,
-                audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager);
-        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera());
         DayLightWeatherManager dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
+        GuiManager guiManager = new GuiManager(assetManager, inputManager,
+                audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager,dayLightWeatherManager);
+        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera());
+
 
         rootNode.attachChild(terrainManager.getTerrain());
         cameraManager.initializeCamera();

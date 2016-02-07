@@ -89,7 +89,7 @@ public class Mission extends GameState {
             }
             guiManager.update(activePlane.getSpeedKmH());
         } else {
-            activePlane.getEngineSound().pause();
+            dataManager.soundManager().muteAllSounds();
         }
         cameraManager.update(tpf);
         return this;
