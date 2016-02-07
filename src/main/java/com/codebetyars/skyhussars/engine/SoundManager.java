@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.jme3.asset.AssetManager;
@@ -41,11 +40,15 @@ public class SoundManager {
 
     private void prepareEngineSound(AssetManager assetManager) {
         AudioNode engineSound = new AudioNode(assetManager, "Sounds/jet.wav", false);
+        AudioNode gunSound = new AudioNode(assetManager, "Sounds/shoot.ogg", false);
         engineSound.setLooping(true);  // activate continuous playing
         engineSound.setPositional(true);
         engineSound.setVolume(3);
         engineSound.setPitch(1f);
+        gunSound.setLooping(true);
+        gunSound.setPositional(true);
         sounds.put("engine", engineSound);
+        sounds.put("gun", gunSound);
     }
 
     public AudioNode sound(String key) {

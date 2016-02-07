@@ -49,6 +49,7 @@ public class Plane {
     private Spatial model;
     private PlanePhysics physics;
     private AudioNode engineSound;
+    private AudioNode gunSound;
     private List<Gun> guns;
     private List<GunGroup> gunGroups;
     private List<Missile> missiles;
@@ -73,6 +74,7 @@ public class Plane {
         this.planeDescriptor = dataManager.getPlaneDescriptor("Lockheed P-80A-1-LO Shooting Star");
         this.physics = new AdvancedPlanePhysics(model, planeDescriptor);
         this.engineSound = dataManager.soundManager().sound("engine");
+        this.gunSound = dataManager.soundManager().sound("gun");
         this.physics.setThrust(1.0f);
         this.physics.setSpeedForward(model, 300f);
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
@@ -81,6 +83,7 @@ public class Plane {
         this.node = new Node();
         node.attachChild(model);
         node.attachChild(engineSound);
+        node.attachChild(gunSound);
     }
 
     private void initializeGunGroup() {
@@ -100,6 +103,11 @@ public class Plane {
 
     public void update(float tpf) {
         updatePlanePhysics(tpf);
+        if (firing) {
+            gunSound.play();
+        } else {
+            gunSound.stop();
+        }
         for (GunGroup gunGroup : gunGroups) {
             gunGroup.firing(firing, model.getLocalTranslation(), physics.getVVelovity(), model.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
         }
