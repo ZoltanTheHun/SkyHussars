@@ -36,8 +36,8 @@ import java.util.Map;
 
 public class ModelManager {
 
-    private Map<String, Spatial> spatials = new HashMap<String, Spatial>();
-    private Map<String, Material> materials = new HashMap<String,Material>();
+    private Map<String, Spatial> spatials = new HashMap<>();
+    private Map<String, Material> materials = new HashMap<>();
 
     public ModelManager(AssetManager assetManager) {
         loadModels(assetManager);

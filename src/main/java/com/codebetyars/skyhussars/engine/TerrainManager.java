@@ -91,7 +91,6 @@ public class TerrainManager {
         float height = terrain.getHeight(plane.getLocation2D());
         if (height > plane.getHeight()) {
             collide = true;
-            //plane.setHeight((int) height + 1);
         }
         return collide;
     }

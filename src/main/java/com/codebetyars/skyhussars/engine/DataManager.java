@@ -27,10 +27,13 @@ package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.TestData;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
+import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
 public class DataManager {
@@ -38,12 +41,16 @@ public class DataManager {
     private SoundManager soundManager;
     private ModelManager modelManager;
     private TestData testData = new TestData();
+    private PlaneFactory planeFactory;
     private Geometry geom;
+    private ProjectileManager projectileManager;
 
-    public DataManager(AssetManager assetManager) {
+    public DataManager(AssetManager assetManager, Node node) {
         this.modelManager = new ModelManager(assetManager);
         this.soundManager = new SoundManager(assetManager);
-        Box box = new Box(0.2f,0.2f,0.2f);
+        projectileManager = new ProjectileManager(this, node);
+        this.planeFactory = new PlaneFactory(this, projectileManager);
+        Box box = new Box(0.2f, 0.2f, 0.2f);
         geom = new Geometry("bullet", box); // wrap shape into geometry
         Material mat = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md"); // create material
@@ -59,11 +66,19 @@ public class DataManager {
         return soundManager;
     }
 
+    public PlaneFactory planeFactory() {
+        return planeFactory;
+    }
+
+    public ProjectileManager projectileManager() {
+        return projectileManager;
+    }
+
     public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId) {
         return testData.getPlaneDescriptor(planeDescriptorId);
     }
-    
-    public Geometry getBox(){
+
+    public Geometry getBox() {
         return geom.clone();
     }
 }

@@ -23,28 +23,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.mission.Mission;
-import com.codebetyars.skyhussars.engine.Pilot;
+package com.codebetyars.skyhussars.engine.mission;
 
-public class ControlsManager {
+import java.util.List;
 
-    private FlightKeyboardControls inFlightKeyboardControls;
-    private FlowControls gameFlowControls;
-    private CameraControls cameraControls;
-
-    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game,CameraManager cameraManager) {
-        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
-        gameFlowControls = new FlowControls(game);
-        cameraControls = new CameraControls(cameraManager);
-        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
-        controlsMapper.setupFlowControls(gameFlowControls);
-        controlsMapper.setupCameraControls(cameraControls);
+public class MissionDescriptor {
+    
+    private String name;
+    private List<PlaneMissionDescriptor> planeMissionDescriptor;
+    
+    public String name(){
+        return name;
+    }
+    
+    public void name(String name){
+        
     }
 
-    public void setPilot(Pilot pilot) {
-        inFlightKeyboardControls.setPilot(pilot);
-    }
 }

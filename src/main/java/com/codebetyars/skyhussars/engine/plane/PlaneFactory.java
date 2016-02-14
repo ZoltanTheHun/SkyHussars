@@ -23,28 +23,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.controls;
+package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.mission.Mission;
-import com.codebetyars.skyhussars.engine.Pilot;
+import com.codebetyars.skyhussars.engine.DataManager;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.audio.AudioNode;
+import com.jme3.scene.Spatial;
 
-public class ControlsManager {
+public class PlaneFactory {
 
-    private FlightKeyboardControls inFlightKeyboardControls;
-    private FlowControls gameFlowControls;
-    private CameraControls cameraControls;
+    private DataManager dataManager;
+    private ProjectileManager projectileManager;
 
-    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game,CameraManager cameraManager) {
-        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
-        gameFlowControls = new FlowControls(game);
-        cameraControls = new CameraControls(cameraManager);
-        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
-        controlsMapper.setupFlowControls(gameFlowControls);
-        controlsMapper.setupCameraControls(cameraControls);
+    public PlaneFactory(DataManager dataManager, ProjectileManager projectileManager) {
+        this.dataManager = dataManager;
+        this.projectileManager = projectileManager;
     }
 
-    public void setPilot(Pilot pilot) {
-        inFlightKeyboardControls.setPilot(pilot);
+    public Plane createPlane(String planeType) {
+        PlaneDescriptor planeDescriptor = dataManager.getPlaneDescriptor(planeType);
+        Spatial model = dataManager.modelManager().model("p80", "p80_material");
+        AudioNode engineSound = dataManager.soundManager().sound("engine");
+        AudioNode gunSound = dataManager.soundManager().sound("gun");
+        return new Plane(
+                model, planeDescriptor, engineSound,
+                gunSound, projectileManager);
     }
 }

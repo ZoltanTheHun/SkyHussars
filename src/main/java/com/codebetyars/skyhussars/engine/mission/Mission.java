@@ -23,8 +23,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.mission;
 
+import com.codebetyars.skyhussars.engine.CameraManager;
+import com.codebetyars.skyhussars.engine.DataManager;
+import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
+import com.codebetyars.skyhussars.engine.GameState;
+import com.codebetyars.skyhussars.engine.GuiManager;
+import com.codebetyars.skyhussars.engine.Pilot;
+import com.codebetyars.skyhussars.engine.TerrainManager;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
@@ -53,8 +60,8 @@ public class Mission extends GameState {
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        this.projectileManager = new ProjectileManager(dataManager, node);
-        activePlane = new Plane(dataManager, projectileManager);
+        this.projectileManager = dataManager.projectileManager();
+        activePlane = dataManager.planeFactory().createPlane("Lockheed P-80A-1-LO Shooting Star");
         player = new Pilot(activePlane);
         /*not finished object creation?*/
         this.controlsManager = new ControlsManager(controlsMapper, player, this,cameraManager);
@@ -74,7 +81,7 @@ public class Mission extends GameState {
         activePlane.setLocation(0, 0);
         activePlane.setHeight(3000);
         cameraManager.moveCameraTo(activePlane.getLocation());
-        cameraManager.followWithCamera(activePlane.getModel());
+        cameraManager.followWithCamera(activePlane.getNode());
         cameraManager.init();
     }
 

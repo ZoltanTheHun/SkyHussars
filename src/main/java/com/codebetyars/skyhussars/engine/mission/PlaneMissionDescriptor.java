@@ -23,28 +23,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.mission.Mission;
-import com.codebetyars.skyhussars.engine.Pilot;
+package com.codebetyars.skyhussars.engine.mission;
 
-public class ControlsManager {
+import com.jme3.math.Vector3f;
 
-    private FlightKeyboardControls inFlightKeyboardControls;
-    private FlowControls gameFlowControls;
-    private CameraControls cameraControls;
 
-    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game,CameraManager cameraManager) {
-        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
-        gameFlowControls = new FlowControls(game);
-        cameraControls = new CameraControls(cameraManager);
-        controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
-        controlsMapper.setupFlowControls(gameFlowControls);
-        controlsMapper.setupCameraControls(cameraControls);
+public class PlaneMissionDescriptor {
+
+    private String planeType;
+    private boolean isPlayer;
+    private Vector3f startLocation;
+
+    public String getPlaneType() {
+        return planeType;
     }
 
-    public void setPilot(Pilot pilot) {
-        inFlightKeyboardControls.setPilot(pilot);
+    public void setPlaneType(String planeType) {
+        this.planeType = planeType;
+    }
+
+    public boolean isIsPlayer() {
+        return isPlayer;
+    }
+
+    public void setIsPlayer(boolean isPlayer) {
+        this.isPlayer = isPlayer;
+    }
+
+    public Vector3f getStartLocation() {
+        return startLocation;
+    }
+
+    public void setStartLocation(Vector3f startLocation) {
+        this.startLocation = startLocation;
     }
 }

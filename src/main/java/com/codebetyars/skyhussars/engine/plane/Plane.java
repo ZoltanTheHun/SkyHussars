@@ -26,7 +26,6 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.data.Engine;
-import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
@@ -60,7 +59,7 @@ public class Plane {
     private Node node;
 
     public void updatePlanePhysics(float tpf) {
-        physics.update(tpf, model);
+        physics.update(tpf, node);
         System.out.println(getInfo());
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
@@ -69,14 +68,12 @@ public class Plane {
         return physics.getInfo();
     }
 
-    public Plane(DataManager dataManager, ProjectileManager projectileManager) {
-        this.model = dataManager.modelManager().model("p80", "p80_material");
-        this.planeDescriptor = dataManager.getPlaneDescriptor("Lockheed P-80A-1-LO Shooting Star");
-        this.physics = new AdvancedPlanePhysics(model, planeDescriptor);
-        this.engineSound = dataManager.soundManager().sound("engine");
-        this.gunSound = dataManager.soundManager().sound("gun");
-        this.physics.setThrust(1.0f);
-        this.physics.setSpeedForward(model, 300f);
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager) {
+        this.model = model;
+        this.planeDescriptor = planeDescriptor;
+        this.engineSound = engineSound;
+        this.gunSound = gunSound;
+        //test model is backwards
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
         initializeGunGroup();
@@ -84,6 +81,9 @@ public class Plane {
         node.attachChild(model);
         node.attachChild(engineSound);
         node.attachChild(gunSound);
+        this.physics = new AdvancedPlanePhysics(node, planeDescriptor);
+        this.physics.setThrust(1.0f);
+        this.physics.setSpeedForward(model, 300f);
     }
 
     private void initializeGunGroup() {
@@ -93,10 +93,9 @@ public class Plane {
         }
     }
 
-    public Spatial getModel() {
-        return model;
-    }
-
+    /*public Spatial getModel() {
+     return model;
+     }*/
     public Node getNode() {
         return node;
     }
@@ -109,7 +108,7 @@ public class Plane {
             gunSound.stop();
         }
         for (GunGroup gunGroup : gunGroups) {
-            gunGroup.firing(firing, model.getLocalTranslation(), physics.getVVelovity(), model.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
+            gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
         }
     }
 
@@ -144,27 +143,27 @@ public class Plane {
     }
 
     public void setHeight(int height) {
-        model.getLocalTranslation().setY(height);
+        node.getLocalTranslation().setY(height);
     }
 
     public void setLocation(int x, int z) {
-        model.move(x, model.getLocalTranslation().y, z);
+        node.move(x, node.getLocalTranslation().y, z);
     }
 
     public void setLocation(int x, int y, int z) {
-        model.move(x, y, z);
+        node.move(x, y, z);
     }
 
     public float getHeight() {
-        return model.getLocalTranslation().y;
+        return node.getLocalTranslation().y;
     }
 
     public Vector3f getLocation() {
-        return model.getLocalTranslation();
+        return node.getLocalTranslation();
     }
 
     public Vector2f getLocation2D() {
-        return new Vector2f(model.getLocalTranslation().x, model.getLocalTranslation().z);
+        return new Vector2f(node.getLocalTranslation().x, node.getLocalTranslation().z);
     }
 
     public String getSpeedKmH() {

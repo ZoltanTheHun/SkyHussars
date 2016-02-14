@@ -29,7 +29,7 @@ import com.codebetyars.skyhussars.engine.CameraManager;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
-import com.codebetyars.skyhussars.engine.Mission;
+import com.codebetyars.skyhussars.engine.mission.Mission;
 import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
@@ -57,15 +57,13 @@ public class SkyHussars extends SimpleApplication {
     }
 
     private void instantiateResources() {
-        DataManager dataManager = new DataManager(assetManager);
+        DataManager dataManager = new DataManager(assetManager,rootNode);
         ControlsMapper controlsMapper = new ControlsMapper(inputManager);
         CameraManager cameraManager = new CameraManager(this.cam, flyCam);
         DayLightWeatherManager dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
         GuiManager guiManager = new GuiManager(assetManager, inputManager,
                 audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager,dayLightWeatherManager);
         TerrainManager terrainManager = new TerrainManager(assetManager, getCamera());
-
-
         rootNode.attachChild(terrainManager.getTerrain());
         cameraManager.initializeCamera();
 

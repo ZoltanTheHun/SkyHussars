@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.Mission;
+import com.codebetyars.skyhussars.engine.mission.Mission;
 import com.jme3.input.controls.ActionListener;
 
 public class FlowControls implements ActionListener {

@@ -30,6 +30,7 @@ import java.util.List;
 public class PlaneDescriptor {
 
     private String name;
+    private String modelName;
     private List<EngineLocation> engineLocations;
     private float massEmpty;
     private float massTakeOffMax;
