@@ -43,11 +43,11 @@ public class PlaneMissionDescriptor {
         this.planeType = planeType;
     }
 
-    public boolean isIsPlayer() {
+    public boolean player() {
         return isPlayer;
     }
 
-    public void setIsPlayer(boolean isPlayer) {
+    public void player(boolean isPlayer) {
         this.isPlayer = isPlayer;
     }
 

@@ -27,7 +27,6 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
 import com.codebetyars.skyhussars.engine.mission.Mission;
-import com.codebetyars.skyhussars.engine.Pilot;
 
 public class ControlsManager {
 
@@ -35,16 +34,13 @@ public class ControlsManager {
     private FlowControls gameFlowControls;
     private CameraControls cameraControls;
 
-    public ControlsManager(ControlsMapper controlsMapper, Pilot pilot, Mission game,CameraManager cameraManager) {
-        inFlightKeyboardControls = new FlightKeyboardControls(pilot);
-        gameFlowControls = new FlowControls(game);
+    public ControlsManager(ControlsMapper controlsMapper, Mission mission,CameraManager cameraManager) {
+        inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
+        gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
         controlsMapper.setupFlowControls(gameFlowControls);
         controlsMapper.setupCameraControls(cameraControls);
     }
-
-    public void setPilot(Pilot pilot) {
-        inFlightKeyboardControls.setPilot(pilot);
-    }
+    
 }

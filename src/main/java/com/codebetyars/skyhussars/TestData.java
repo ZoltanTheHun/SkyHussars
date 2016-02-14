@@ -25,6 +25,8 @@
  */
 package com.codebetyars.skyhussars;
 
+import com.codebetyars.skyhussars.engine.mission.MissionDescriptor;
+import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
 import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineLocation;
@@ -43,6 +45,7 @@ public class TestData {
 
     private Map<String, PlaneDescriptor> planes = new HashMap<>();
     private Map<String, EngineDescriptor> engines = new HashMap<>();
+    private Map<String, MissionDescriptor> missions = new HashMap<>();
 
     public TestData() {
         EngineDescriptor engine = new EngineDescriptor();
@@ -106,9 +109,28 @@ public class TestData {
         planeDescriptor.setInternalTank(1609);
         planeDescriptor.setGunGroupDescriptors(gunGroups);
         planes.put(planeDescriptor.getName(), planeDescriptor);
+
+        PlaneMissionDescriptor planeMissionDescriptor = new PlaneMissionDescriptor();
+        planeMissionDescriptor.player(true);
+        planeMissionDescriptor.setPlaneType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor.setStartLocation(new Vector3f(0, 3000, 0));
+
+        List<PlaneMissionDescriptor> planeMissionDescriptors = new ArrayList<>();
+        planeMissionDescriptors.add(planeMissionDescriptor);
+
+        MissionDescriptor missionDescriptor = new MissionDescriptor();
+        missionDescriptor.name("Test mission");
+        missionDescriptor.planeMissionDescriptors(planeMissionDescriptors);
+
+        missions.put(missionDescriptor.name(), missionDescriptor);
+
     }
 
     public PlaneDescriptor getPlaneDescriptor(String planeName) {
         return planes.get(planeName);
+    }
+
+    public MissionDescriptor getMissionDescriptor(String name) {
+        return missions.get(name);
     }
 }

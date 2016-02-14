@@ -31,42 +31,47 @@ import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
 import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.Pilot;
+import com.codebetyars.skyhussars.engine.SoundManager;
 import com.codebetyars.skyhussars.engine.TerrainManager;
-import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
-import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.scene.Node;
+import java.util.List;
 
 public class Mission extends GameState {
 
     private Pilot player;
-    private Plane activePlane;
     private DataManager dataManager;
     private CameraManager cameraManager;
     private TerrainManager terrainManager;
     private GuiManager guiManager;
     private DayLightWeatherManager dayLightWeatherManager;
-    private ControlsManager controlsManager;
     private ProjectileManager projectileManager;
     private boolean paused = false;
     private boolean ended = false;
+    private List<Plane> planes;
+    private List<Pilot> pilots;
+    private SoundManager soundManager;
 
-    public Mission(DataManager dataManager,
+    public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            GuiManager guiManager, Node node, DayLightWeatherManager dayLightWeatherManager, ControlsMapper controlsMapper) {
-        this.dataManager = dataManager;
+            GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager) {
+        this.planes = planes;
+        this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        this.projectileManager = dataManager.projectileManager();
-        activePlane = dataManager.planeFactory().createPlane("Lockheed P-80A-1-LO Shooting Star");
-        player = new Pilot(activePlane);
-        /*not finished object creation?*/
-        this.controlsManager = new ControlsManager(controlsMapper, player, this,cameraManager);
-        node.attachChild(activePlane.getNode());
+        this.soundManager = soundManager;
+        for (Plane plane : planes) {
+            if (plane.planeMissionDescriptor().player()) {
+                player = new Pilot(plane);
+            }
+        }
         initiliazePlayer();
+    }
+
+    public Pilot player() {
+        return player;
     }
 
     /**
@@ -78,23 +83,28 @@ public class Mission extends GameState {
     }
 
     private void initiliazePlayer() {
-        activePlane.setLocation(0, 0);
-        activePlane.setHeight(3000);
-        cameraManager.moveCameraTo(activePlane.getLocation());
-        cameraManager.followWithCamera(activePlane.getNode());
+        player.plane().setLocation(0, 0);
+        player.plane().setHeight(3000);
+        cameraManager.moveCameraTo(player.plane().getLocation());
+        cameraManager.followWithCamera(player.plane().getNode());
         cameraManager.init();
     }
 
     @Override
     public GameState update(float tpf) {
         if (!paused && !ended) {
-            activePlane.getEngineSound().play();
-            activePlane.update(tpf);
+            for (Plane plane : planes) {
+                plane.getEngineSound().play();
+                plane.update(tpf);
+                if (terrainManager.checkCollisionWithGround(plane)) {
+                    plane.crashed(true);
+                }
+            }
             projectileManager.update(tpf);
-            if (terrainManager.checkCollisionWithGround(activePlane)) {
+            if (player.plane().crashed()) {
                 ended = true;
             }
-            guiManager.update(activePlane.getSpeedKmH());
+            guiManager.update(player.plane().getSpeedKmH());
         } else {
             dataManager.soundManager().muteAllSounds();
         }

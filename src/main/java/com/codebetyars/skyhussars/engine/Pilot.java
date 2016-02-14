@@ -65,4 +65,9 @@ public class Pilot {
      */
     public void setRudder(float rudder) {
     }
+    
+    public Plane plane(){
+        return plane;
+    }
+    
 }

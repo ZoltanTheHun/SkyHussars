@@ -23,22 +23,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.mission;
 
 import java.util.List;
 
 public class MissionDescriptor {
-    
+
     private String name;
-    private List<PlaneMissionDescriptor> planeMissionDescriptor;
-    
-    public String name(){
+    private List<PlaneMissionDescriptor> planeMissionDescriptors;
+
+    public String name() {
         return name;
     }
-    
-    public void name(String name){
-        
-    }
 
+    public void name(String name) {
+        this.name = name;
+    }
+    
+    public List<PlaneMissionDescriptor> planeMissionDescriptors(){
+        return planeMissionDescriptors;
+    }
+    
+    public void planeMissionDescriptors(List<PlaneMissionDescriptor> planeMissionDescriptors){
+        this.planeMissionDescriptors = planeMissionDescriptors;
+    }
 }

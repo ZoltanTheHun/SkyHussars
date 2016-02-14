@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.data.Engine;
+import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
@@ -44,6 +45,7 @@ import java.util.List;
 public class Plane {
 
     private PlaneDescriptor planeDescriptor;
+    private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
     private Spatial model;
     private PlanePhysics physics;
@@ -57,6 +59,7 @@ public class Plane {
     private boolean firing = false;
     private ProjectileManager projectileManager;
     private Node node;
+    private boolean crashed = false;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, node);
@@ -68,6 +71,12 @@ public class Plane {
         return physics.getInfo();
     }
 
+    public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor){
+        this.planeMissionDescriptor = planeMissionDescriptor;
+    }
+    public PlaneMissionDescriptor planeMissionDescriptor(){
+        return planeMissionDescriptor;
+    }
     public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager) {
         this.model = model;
         this.planeDescriptor = planeDescriptor;
@@ -154,6 +163,9 @@ public class Plane {
         node.move(x, y, z);
     }
 
+    public void setLocation(Vector3f location){
+        node.move(location);
+    }
     public float getHeight() {
         return node.getLocalTranslation().y;
     }
@@ -172,5 +184,11 @@ public class Plane {
 
     public void setFiring(boolean trigger) {
         firing = trigger;
+    }
+    public void crashed(boolean crashed){
+        this.crashed = crashed;
+    }
+    public boolean crashed(){
+        return crashed;
     }
 }

@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.TestData;
+import com.codebetyars.skyhussars.engine.mission.MissionDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
@@ -76,6 +77,10 @@ public class DataManager {
 
     public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId) {
         return testData.getPlaneDescriptor(planeDescriptorId);
+    }
+    
+    public MissionDescriptor missionDescriptor(String name){
+        return testData.getMissionDescriptor(name);
     }
 
     public Geometry getBox() {
