@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.plane.Plane;
@@ -31,6 +30,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
@@ -41,7 +41,7 @@ public class TerrainManager {
 
     private TerrainQuad terrain;
 
-    public TerrainManager(AssetManager assetManager, Camera camera) {
+    public TerrainManager(AssetManager assetManager, Camera camera, Node root) {
         AbstractHeightMap heightmap;
         Texture heightMapImage = assetManager.loadTexture(
                 "Textures/Adria.bmp");
@@ -76,6 +76,8 @@ public class TerrainManager {
 
         TerrainLodControl control = new TerrainLodControl(terrain, camera);
         terrain.addControl(control);
+
+        root.attachChild(terrain);
     }
 
     public TerrainQuad getTerrain() {

@@ -71,12 +71,14 @@ public class Plane {
         return physics.getInfo();
     }
 
-    public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor){
+    public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
         this.planeMissionDescriptor = planeMissionDescriptor;
     }
-    public PlaneMissionDescriptor planeMissionDescriptor(){
+
+    public PlaneMissionDescriptor planeMissionDescriptor() {
         return planeMissionDescriptor;
     }
+
     public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager) {
         this.model = model;
         this.planeDescriptor = planeDescriptor;
@@ -91,7 +93,6 @@ public class Plane {
         node.attachChild(engineSound);
         node.attachChild(gunSound);
         this.physics = new AdvancedPlanePhysics(node, planeDescriptor);
-        this.physics.setThrust(1.0f);
         this.physics.setSpeedForward(model, 300f);
     }
 
@@ -102,23 +103,27 @@ public class Plane {
         }
     }
 
-    /*public Spatial getModel() {
-     return model;
-     }*/
     public Node getNode() {
         return node;
     }
 
     public void update(float tpf) {
-        updatePlanePhysics(tpf);
-        if (firing) {
-            gunSound.play();
-        } else {
+        if (!crashed) {
+            engineSound.play();
+            updatePlanePhysics(tpf);
+            if (firing) {
+                gunSound.play();
+            } else {
+                gunSound.stop();
+            }
+            for (GunGroup gunGroup : gunGroups) {
+                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
+            }
+        }else{
+            engineSound.stop();
             gunSound.stop();
         }
-        for (GunGroup gunGroup : gunGroups) {
-            gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
-        }
+
     }
 
     public AudioNode getEngineSound() {
@@ -163,9 +168,10 @@ public class Plane {
         node.move(x, y, z);
     }
 
-    public void setLocation(Vector3f location){
+    public void setLocation(Vector3f location) {
         node.move(location);
     }
+
     public float getHeight() {
         return node.getLocalTranslation().y;
     }
@@ -185,10 +191,12 @@ public class Plane {
     public void setFiring(boolean trigger) {
         firing = trigger;
     }
-    public void crashed(boolean crashed){
+
+    public void crashed(boolean crashed) {
         this.crashed = crashed;
     }
-    public boolean crashed(){
+
+    public boolean crashed() {
         return crashed;
     }
 }

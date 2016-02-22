@@ -26,7 +26,6 @@
 package com.codebetyars.skyhussars.engine.mission;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
 import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
@@ -40,7 +39,6 @@ import java.util.List;
 public class Mission extends GameState {
 
     private Pilot player;
-    private DataManager dataManager;
     private CameraManager cameraManager;
     private TerrainManager terrainManager;
     private GuiManager guiManager;
@@ -83,8 +81,8 @@ public class Mission extends GameState {
     }
 
     private void initiliazePlayer() {
-        player.plane().setLocation(0, 0);
-        player.plane().setHeight(3000);
+        /*player.plane().setLocation(0, 0);
+        player.plane().setHeight(3000);*/
         cameraManager.moveCameraTo(player.plane().getLocation());
         cameraManager.followWithCamera(player.plane().getNode());
         cameraManager.init();
@@ -94,7 +92,6 @@ public class Mission extends GameState {
     public GameState update(float tpf) {
         if (!paused && !ended) {
             for (Plane plane : planes) {
-                plane.getEngineSound().play();
                 plane.update(tpf);
                 if (terrainManager.checkCollisionWithGround(plane)) {
                     plane.crashed(true);
@@ -106,7 +103,7 @@ public class Mission extends GameState {
             }
             guiManager.update(player.plane().getSpeedKmH());
         } else {
-            dataManager.soundManager().muteAllSounds();
+            soundManager.muteAllSounds();
         }
         cameraManager.update(tpf);
         return this;
@@ -128,7 +125,7 @@ public class Mission extends GameState {
         this.paused = paused;
     }
 
-    public boolean isPaused() {
+    public boolean paused() {
         return paused;
     }
 }

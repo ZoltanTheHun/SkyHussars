@@ -63,7 +63,7 @@ public class ModelManager {
     }
     
     public Spatial model(String modelName, String materialName){
-        Spatial model = spatials.get(modelName);
+        Spatial model = spatials.get(modelName).clone();
         model.setMaterial(materials.get(materialName));
         return model;
     }

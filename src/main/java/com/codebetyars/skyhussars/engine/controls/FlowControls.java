@@ -39,7 +39,7 @@ public class FlowControls implements ActionListener {
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
         if (name.equals("Pause") && isPressed) {
-            game.paused(!game.isPaused());
+            game.paused(!game.paused());
         } else if (name.equals("Camera") && isPressed) {
             // followCamera = !followCamera;
         } else if (name.equals("Reset") && isPressed) {

@@ -72,9 +72,10 @@ public class MissionFactory {
     private List<Plane> planes(MissionDescriptor missionDescriptor) {
         List<Plane> planes = new ArrayList<>();
         for (PlaneMissionDescriptor planeMission : missionDescriptor.planeMissionDescriptors()) {
-            Plane plane = dataManager.planeFactory().createPlane(planeMission.getPlaneType());
-            plane.setLocation(planeMission.getStartLocation());
+            Plane plane = dataManager.planeFactory().createPlane(planeMission.planeType());
+            plane.setLocation(planeMission.startLocation());
             plane.planeMissinDescriptor(planeMission);
+            plane.setThrottle(0.6f);
             root.attachChild(plane.getNode());
             planes.add(plane);
         }

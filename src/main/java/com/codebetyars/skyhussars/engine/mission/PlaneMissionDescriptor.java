@@ -34,12 +34,13 @@ public class PlaneMissionDescriptor {
     private String planeType;
     private boolean isPlayer;
     private Vector3f startLocation;
+    private float initialSpeed;
 
-    public String getPlaneType() {
+    public String planeType() {
         return planeType;
     }
 
-    public void setPlaneType(String planeType) {
+    public void planeType(String planeType) {
         this.planeType = planeType;
     }
 
@@ -51,11 +52,12 @@ public class PlaneMissionDescriptor {
         this.isPlayer = isPlayer;
     }
 
-    public Vector3f getStartLocation() {
+    public Vector3f startLocation() {
         return startLocation;
     }
 
-    public void setStartLocation(Vector3f startLocation) {
+    public void startLocation(Vector3f startLocation) {
         this.startLocation = startLocation;
     }
+    
 }

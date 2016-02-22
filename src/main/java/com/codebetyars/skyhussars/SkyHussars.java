@@ -63,12 +63,10 @@ public class SkyHussars extends SimpleApplication {
         DayLightWeatherManager dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
         GuiManager guiManager = new GuiManager(assetManager, inputManager,
                 audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager, dayLightWeatherManager);
-        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera());
-        rootNode.attachChild(terrainManager.getTerrain());
+        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera(),rootNode);
         cameraManager.initializeCamera();
-        MissionFactory missionFactory = new MissionFactory(dataManager, rootNode, 
-                controlsMapper, cameraManager,terrainManager,guiManager,dayLightWeatherManager);
-
+        MissionFactory missionFactory = new MissionFactory(dataManager, rootNode,
+                controlsMapper, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
 
         MainMenu mainMenu = new MainMenu(guiManager, missionFactory.mission("Test mission"));
 

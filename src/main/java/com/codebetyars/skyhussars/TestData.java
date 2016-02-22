@@ -112,11 +112,17 @@ public class TestData {
 
         PlaneMissionDescriptor planeMissionDescriptor = new PlaneMissionDescriptor();
         planeMissionDescriptor.player(true);
-        planeMissionDescriptor.setPlaneType("Lockheed P-80A-1-LO Shooting Star");
-        planeMissionDescriptor.setStartLocation(new Vector3f(0, 3000, 0));
+        planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
+        
+        PlaneMissionDescriptor planeMissionDescriptor2 = new PlaneMissionDescriptor();
+        planeMissionDescriptor2.player(false);
+        planeMissionDescriptor2.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor2.startLocation(new Vector3f(0, 3000, 100));
 
         List<PlaneMissionDescriptor> planeMissionDescriptors = new ArrayList<>();
         planeMissionDescriptors.add(planeMissionDescriptor);
+        planeMissionDescriptors.add(planeMissionDescriptor2);
 
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");

@@ -42,7 +42,7 @@ public class PlaneFactory {
 
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.getPlaneDescriptor(planeType);
-        Spatial model = dataManager.modelManager().model("p80", "p80_material");
+        Spatial model = dataManager.modelManager().model("p80", "p80_material").clone();
         AudioNode engineSound = dataManager.soundManager().sound("engine");
         AudioNode gunSound = dataManager.soundManager().sound("gun");
         return new Plane(
