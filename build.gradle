@@ -5,9 +5,11 @@ plugins {
   id 'net.researchgate.release' version '2.3.4'
 }
 
-sourceCompatibility = 1.7
-
+group = 'com.codebetyars'
 version = "0.3.0-SNAPSHOT"
+
+buildDir = '../build'
+sourceCompatibility = 1.7
 
 distributions {
     main {
@@ -26,12 +28,6 @@ uploadArchives {
     }
 }
 
-
-task copyRuntimeLibs(type: Copy) {
-  into "build/libs/lib"
-  from configurations.runtime
-}
-
 repositories {
     mavenCentral()
     maven {
@@ -40,31 +36,28 @@ repositories {
 }
 
 def versions = [
-     jme3: '3.0.+',
   jackson: '2.7.0',
+  jme3: '3.0.+',
+  junit: '4.12',
 ]
 
 dependencies {
-  compile group: 'com.jme3', name: 'jme3-core',  version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-effects',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-networking', version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-plugins',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-jogg',       version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-terrain',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-blender',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-jbullet',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-niftygui',   version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-desktop',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-lwjgl',      version: versions.jme3
-
-  compile group: 'org.bushe', name: 'eventbus', version: '1.4'
   compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-  
-  compile fileTree(dir: 'libs', include: '*.jar')
-}
+  compile group: 'com.jme3',  name: 'jme3-core',       version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-effects',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-networking', version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-plugins',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-jogg',       version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-terrain',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-blender',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-jbullet',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-niftygui',   version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-desktop',    version: versions.jme3
+  compile group: 'com.jme3',  name: 'jme3-lwjgl',      version: versions.jme3
+  compile group: 'junit',     name: 'junit',           version: versions.junit
+  compile group: 'org.bushe', name: 'eventbus',        version: '1.4'
 
-task cp << {
-  println configurations.compile.resolve().join('\n') + ' lib/assets.jar'
+  compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 jar {
