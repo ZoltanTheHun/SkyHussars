@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.DataModel;
 import com.codebetyars.skyhussars.engine.ModelManager;
 import com.codebetyars.skyhussars.engine.SoundManager;

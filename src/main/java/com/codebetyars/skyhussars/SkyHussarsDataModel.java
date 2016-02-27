@@ -28,22 +28,12 @@ package com.codebetyars.skyhussars;
 import com.codebetyars.skyhussars.engine.DataModel;
 import com.codebetyars.skyhussars.engine.mission.MissionDescriptor;
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
-import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
-import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
-import com.codebetyars.skyhussars.engine.plane.EngineLocation;
-import com.codebetyars.skyhussars.engine.plane.GunGroupDescriptor;
-import com.codebetyars.skyhussars.engine.plane.GunLocationDescriptor;
-import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
+import com.codebetyars.skyhussars.engine.plane.*;
 import com.jme3.math.Vector3f;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class SkyHussarsDataModel implements DataModel, InitializingBean {

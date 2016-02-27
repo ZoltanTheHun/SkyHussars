@@ -25,40 +25,32 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.SkyHussars;
-import com.codebetyars.skyhussars.SkyHussarsDataModel;
-import com.codebetyars.skyhussars.engine.mission.MissionDescriptor;
-import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
-import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
-import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataManager implements InitializingBean {
+public class DataManager {
 
     @Autowired
-    private SkyHussars application;
+    private AssetManager assetManager;
 
     private Geometry bulletTemplate;
 
-    @Override
-    public void afterPropertiesSet() {
-        Material mat = new Material(application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); // create material
-        mat.setColor("Color", ColorRGBA.Green);
-
-        Geometry bullet = new Geometry("bullet", new Box(0.2f, 0.2f, 0.2f)); // wrap shape into geometry
-        bullet.setMaterial(mat);
-
-        bulletTemplate = bullet;
-    }
-
     public Geometry getBullet() {
+        if (bulletTemplate == null) {
+            Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); // create material
+            mat.setColor("Color", ColorRGBA.Green);
+
+            Geometry bullet = new Geometry("bullet", new Box(0.2f, 0.2f, 0.2f)); // wrap shape into geometry
+            bullet.setMaterial(mat);
+
+            bulletTemplate = bullet;
+        }
         return bulletTemplate.clone();
     }
 }

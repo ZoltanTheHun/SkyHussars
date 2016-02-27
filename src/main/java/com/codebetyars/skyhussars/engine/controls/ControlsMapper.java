@@ -31,6 +31,7 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,11 +40,9 @@ public class ControlsMapper {
     public static final String FIRE = "Fire";
     public static final String INCREASE_FOV = "IncreaseFov";
     public static final String DECREASE_FOV = "DecreaseFov";
-    private InputManager inputManager;
 
-    public ControlsMapper(InputManager inputManager) {
-        this.inputManager = inputManager;
-    }
+    @Value("#{application.inputManager}")
+    private InputManager inputManager;
 
     public void setupFlowControls(ActionListener actionListener) {
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));

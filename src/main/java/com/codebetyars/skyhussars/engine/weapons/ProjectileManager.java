@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.weapons;
 
-import com.codebetyars.skyhussars.SkyHussars;
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -42,7 +41,7 @@ import java.util.List;
 public class ProjectileManager {
 
     @Autowired
-    private SkyHussars application;
+    private Node rootNode;
 
     @Autowired
     private DataManager dataManager;
@@ -54,7 +53,7 @@ public class ProjectileManager {
     public void addProjectile(Bullet projectile) {
         Geometry newGeometry = dataManager.getBullet();
         projectileGeometries.add(newGeometry);
-        application.getRootNode().attachChild(newGeometry);
+        rootNode.attachChild(newGeometry);
         newGeometry.move(projectile.getLocation());
         projectiles.add(projectile);
     }
@@ -69,7 +68,6 @@ public class ProjectileManager {
                 Vector3f direction = projectile.getVelocity().normalize();
                 geom.lookAt(direction, Vector3f.UNIT_Y);
                 //geom.setLocalRotation(new Quaternion().);
-                
             }
         }
     }

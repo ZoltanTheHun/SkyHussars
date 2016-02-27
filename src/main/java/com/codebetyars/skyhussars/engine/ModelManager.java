@@ -26,12 +26,12 @@
 
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.SkyHussars;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,26 +39,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class ModelManager {
+public class ModelManager implements InitializingBean {
+
 
     @Autowired
-    private SkyHussars application;
+    private AssetManager assetManager;
 
     private Map<String, Spatial> spatials = new HashMap<>();
     private Map<String, Material> materials = new HashMap<>();
 
-    public ModelManager(AssetManager assetManager) {
-        loadModels(assetManager);
-        loadMaterials(assetManager);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        loadModels();
+        loadMaterials();
     }
 
-    private void loadModels(AssetManager assetManager) {
+    private void loadModels() {
         Spatial p80 = assetManager.loadModel("Models/p80/p80_16_game.j3o");
         spatials.put("p80", p80);
 
     }
 
-    private void loadMaterials(AssetManager assetManager) {
+    private void loadMaterials() {
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         Texture texture = assetManager.loadTexture("Textures/p80.png");
         material.setFloat("Shininess", 100f);

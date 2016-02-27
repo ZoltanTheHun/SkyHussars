@@ -27,11 +27,11 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.data.Engine;
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
-import com.codebetyars.skyhussars.engine.weapons.Missile;
-import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
+import com.codebetyars.skyhussars.engine.weapons.Gun;
+import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.math.FastMath;
@@ -39,6 +39,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
 import java.util.ArrayList;
 import java.util.List;
 

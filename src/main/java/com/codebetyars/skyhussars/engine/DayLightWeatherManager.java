@@ -25,16 +25,8 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.SkyHussars;
-import com.jme3.asset.AssetManager;
 import com.jme3.light.Light;
-import com.jme3.math.FastMath;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import jme3utilities.sky.SkyControl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +36,7 @@ import org.springframework.stereotype.Component;
 public class DayLightWeatherManager implements InitializingBean {
 
     @Autowired
-    private SkyHussars application;
+    private Node rootNode;
 
     @Autowired
     private SkyControl skyControl;
@@ -54,9 +46,8 @@ public class DayLightWeatherManager implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        application.getRootNode().addControl(skyControl);
         for (Light light: lighting.getLights()) {
-            application.getRootNode().addLight(light);
+            rootNode.addLight(light);
         }
     }
 

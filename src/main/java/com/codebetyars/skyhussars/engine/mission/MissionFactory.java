@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.mission;
 
-import com.codebetyars.skyhussars.SkyHussars;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
@@ -43,7 +42,7 @@ import java.util.List;
 public class MissionFactory {
 
     @Autowired
-    private SkyHussars application;
+    private Node rootNode;
 
     @Autowired
     private DataModel dataModel;
@@ -87,7 +86,7 @@ public class MissionFactory {
             plane.setLocation(planeMission.startLocation());
             plane.planeMissinDescriptor(planeMission);
             plane.setThrottle(0.6f);
-            application.getRootNode().attachChild(plane.getNode());
+            rootNode.attachChild(plane.getNode());
             planes.add(plane);
         }
         return planes;

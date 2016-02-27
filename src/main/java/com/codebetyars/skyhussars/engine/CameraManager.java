@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.SkyHussars;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -37,13 +36,16 @@ import org.springframework.stereotype.Component;
 public class CameraManager {
 
     @Autowired
-    private SkyHussars application;
+    private Camera camera;
+
+    @Autowired
+    private FlyByCamera flyByCamera;
+
     private boolean fovChangeActive;
     private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
     private float fovChangeRate = 8f;
-
 
     public Spatial focus;
 
@@ -65,8 +67,8 @@ public class CameraManager {
 
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        getCamera().setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
-        getCamera().lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+        camera.setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
+        camera.lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
@@ -84,14 +86,14 @@ public class CameraManager {
     private float far = 200000f;
 
     public void initializeCamera() {
-        aspect = (float) getCamera().getWidth() / (float) getCamera().getHeight();
+        aspect = (float) camera.getWidth() / (float) camera.getHeight();
         setFov(45);
-        getFlyCam().setMoveSpeed(200);
+        flyByCamera.setMoveSpeed(200);
     }
 
     public void setFov(float fov) {
         this.fov = fov;
-        getCamera().setFrustumPerspective(fov, aspect, near, far);
+        camera.setFrustumPerspective(fov, aspect, near, far);
     }
 
     public float getFov() {
@@ -108,23 +110,14 @@ public class CameraManager {
     }
 
     public void moveCameraTo(Vector3f location) {
-        getCamera().setLocation(location);
+        camera.setLocation(location);
     }
 
     public void flyCamActive(boolean cursor) {
-        getFlyCam().setEnabled(!cursor);
+        flyByCamera.setEnabled(!cursor);
     }
 
     public boolean flyCamActive() {
-        return getFlyCam().isEnabled();
-    }
-
-
-    public Camera getCamera() {
-        return application.getCamera();
-    }
-
-    public FlyByCamera getFlyCam() {
-        return application.getFlyByCamera();
+        return flyByCamera.isEnabled();
     }
 }
