@@ -37,6 +37,8 @@ import de.lessvoid.nifty.controls.DropDownSelectionChangedEvent;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +48,8 @@ import java.util.Date;
 
 @Component
 public class GuiManager implements ScreenController, InitializingBean {
+
+    private final static Logger logger = LoggerFactory.getLogger(GuiManager.class);
 
     @Autowired
     private AssetManager assetManager;
@@ -100,7 +104,7 @@ public class GuiManager implements ScreenController, InitializingBean {
         } else {
             hour = Integer.parseInt(time.split(":")[0]);
         }
-        System.out.println("Set time of flight:" + hour);
+        logger.debug("Set time of flight:" + hour);
         dayLightWeatherManager.setHour(hour);
     }
 

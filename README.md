@@ -1,5 +1,10 @@
 # SkyHussars
 
+##### 2016.02.27
+Spring integration and logging put in place.
+
+_- LtPete_
+
 ##### 2016.02.26
 Project structure updates. So far lined out the gradle build, a couple of dependencies
 and done the dist assembly part.

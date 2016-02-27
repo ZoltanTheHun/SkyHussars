@@ -39,11 +39,15 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Plane {
+
+    private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
     private PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
@@ -64,7 +68,7 @@ public class Plane {
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, node);
-        System.out.println(getInfo());
+        logger.debug(getInfo());
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 

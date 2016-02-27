@@ -33,6 +33,8 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import jme3utilities.sky.SkyControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +44,8 @@ import java.util.List;
 
 @Component
 public class Lighting implements InitializingBean {
+
+    private final static Logger logger = LoggerFactory.getLogger(Lighting.class);
 
     @Autowired
     private SkyControl skyControl;
@@ -73,7 +77,7 @@ public class Lighting implements InitializingBean {
     public void setLightingBodies(Vector3f sun, Vector3f moon) {
         float sunAt = sun.angleBetween(Vector3f.UNIT_Y);
         float moonAt = moon.angleBetween(Vector3f.UNIT_Y);
-        System.out.println("Sun at: " + sunAt + ", moon at: " + moonAt);
+        logger.debug("Sun at: " + sunAt + ", moon at: " + moonAt);
         if (sunAt < FastMath.HALF_PI) {
             directionalLight.setDirection(sun.negate());
             ColorRGBA lightStrength = ColorRGBA.White.mult(1f - sunAt / 4f);
@@ -90,7 +94,7 @@ public class Lighting implements InitializingBean {
             directionalLight.setColor(lightStrength);
             ambientLight.setColor(lightStrength);
         }
-        System.out.println("Direction of light: " + directionalLight.getDirection());
+        logger.debug("Direction of light: " + directionalLight.getDirection());
 
     }
 }
