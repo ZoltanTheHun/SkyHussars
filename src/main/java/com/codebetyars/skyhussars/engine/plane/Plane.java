@@ -25,18 +25,23 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.data.Engine;
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
+import com.codebetyars.skyhussars.engine.physics.Airfoil;
+import com.codebetyars.skyhussars.engine.physics.Engine;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
+import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.bounding.BoundingVolume;
+import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -55,11 +60,14 @@ public class Plane {
     private List<GunGroup> gunGroups;
     private List<Missile> missiles;
     private List<Bomb> bombs;
-    private List<Engine> engines;
+    private List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
     private ProjectileManager projectileManager;
     private Node node;
     private boolean crashed = false;
+    private boolean shotdown = false;
+    private Geometry hitBox;
+    private ParticleEmitter fireEffect;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, node);
@@ -71,6 +79,10 @@ public class Plane {
         return physics.getInfo();
     }
 
+    public void fireEffect(ParticleEmitter fireEffect) {
+        this.fireEffect = fireEffect;
+    }
+
     public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
         this.planeMissionDescriptor = planeMissionDescriptor;
     }
@@ -78,8 +90,14 @@ public class Plane {
     public PlaneMissionDescriptor planeMissionDescriptor() {
         return planeMissionDescriptor;
     }
+    private float wingArea = 22.07f; //m2
+    private float aspectRatio = 6.37f;
+    SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
+    SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
+    SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
+    SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager) {
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry hitBox) {
         this.model = model;
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
@@ -88,11 +106,23 @@ public class Plane {
         this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
         initializeGunGroup();
+        hitBox.getMaterial().getAdditionalRenderState().setWireframe(true);
         this.node = new Node();
         node.attachChild(model);
         node.attachChild(engineSound);
         node.attachChild(gunSound);
-        this.physics = new AdvancedPlanePhysics(node, planeDescriptor);
+        //node.attachChild(hitBox);
+        this.hitBox = hitBox;
+        //hitBox.set
+        List<Airfoil> airfoils = new ArrayList<>();
+        airfoils.add(leftWing);
+        airfoils.add(rightWing);
+        airfoils.add(horizontalStabilizer);
+        airfoils.add(verticalStabilizer);
+        for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
+            engines.add(new Engine(engineLocation,1.0f));
+        }
+        this.physics = new AdvancedPlanePhysics(node, planeDescriptor, engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
     }
 
@@ -103,8 +133,24 @@ public class Plane {
         }
     }
 
+    public BoundingVolume getHitBox() {
+        return node.getWorldBound();
+    }
+
     public Node getNode() {
         return node;
+    }
+
+    public void hit() {
+        if (!shotdown) {
+            node.attachChild(fireEffect);
+            //explosion.setLocalTranslation(.getLocalTranslation());
+            fireEffect.emitAllParticles();
+            for(Engine engine : engines){
+                engine.damage(1.0f);
+            }
+        }
+        shotdown = true;
     }
 
     public void update(float tpf) {
@@ -119,7 +165,7 @@ public class Plane {
             for (GunGroup gunGroup : gunGroups) {
                 gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
             }
-        }else{
+        } else {
             engineSound.stop();
             gunSound.stop();
         }
@@ -141,19 +187,24 @@ public class Plane {
         if (throttle < 0.0f || throttle > 1.0f) {
             throw new IllegalArgumentException();
         }
-        physics.setThrust(throttle);
+        for (Engine engine : engines) {
+            engine.setThrottle(throttle);
+        }
         engineSound.setPitch(0.5f + throttle);
     }
 
     public void setAileron(float aileron) {
-        physics.setAileron(aileron);
+        leftWing.controlAileron(aileron);
+        rightWing.controlAileron(-1f * aileron);
+
     }
 
     public void setElevator(float elevator) {
-        physics.setElevator(elevator);
+        horizontalStabilizer.controlAileron(5f * elevator);
     }
 
     public void setRudder(float rudder) {
+        verticalStabilizer.controlAileron(rudder);
     }
 
     public void setHeight(int height) {

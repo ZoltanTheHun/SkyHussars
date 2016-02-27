@@ -29,6 +29,7 @@ import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 
 public class PlaneFactory {
 
@@ -45,8 +46,11 @@ public class PlaneFactory {
         Spatial model = dataManager.modelManager().model("p80", "p80_material").clone();
         AudioNode engineSound = dataManager.soundManager().sound("engine");
         AudioNode gunSound = dataManager.soundManager().sound("gun");
-        return new Plane(
+        Box box = new Box(6f, 1f, 4f);
+        Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
-                gunSound, projectileManager);
+                gunSound, projectileManager,dataManager.hitBox(box));
+        plane.fireEffect(dataManager.fireEffect());
+        return plane;
     }
 }

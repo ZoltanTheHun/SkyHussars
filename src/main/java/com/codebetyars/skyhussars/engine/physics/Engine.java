@@ -34,11 +34,13 @@ public class Engine implements ThrustProducer, RigidBody {
     private Vector3f centerOfGravity;
     private Vector3f vMaxThrust;
     private float throttle = 0.0f;
+    private float engineStatus = 1.0f;
 
-    public Engine(EngineLocation engineLocation) {
+    public Engine(EngineLocation engineLocation,float engineStatus) {
         this.engineLocation = engineLocation;
         this.centerOfGravity = engineLocation.getLocation();
         this.vMaxThrust = new Vector3f(0, 0, engineLocation.getEngineDescriptor().getThrustMax());
+        this.engineStatus = engineStatus;
     }
 
     @Override
@@ -48,11 +50,19 @@ public class Engine implements ThrustProducer, RigidBody {
     /*throttle between 0 and 1*/
     @Override
     public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle);
+        return vMaxThrust.mult(throttle).mult(engineStatus);
     }
 
     @Override
     public void setThrottle(float throttle) {
         this.throttle = throttle;
     }
+    
+    public void damage(float damage){
+        engineStatus -= damage;
+        if(engineStatus < 0){
+            engineStatus = 0;
+        }
+    }
+    
 }

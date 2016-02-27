@@ -37,6 +37,7 @@ public class PlaneDescriptor {
     private float massGross;
     //lets use liter for now, density: 	775.0-840.0 g/L average: 0.8 kg/l
     private float internalTank;
+    private float wingArea;
     private List<GunGroupDescriptor> gunGroupDescriptors;
 
     public List<GunGroupDescriptor> getGunGroupDescriptors() {

@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.plane.BulletDescriptor;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Vector3f;
 
 public class Bullet extends Projectile {
@@ -53,5 +54,10 @@ public class Bullet extends Projectile {
     @Override
     public Vector3f getVelocity() {
         return vVelocity;
+    }
+
+    @Override
+    public BoundingVolume getHitbox() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

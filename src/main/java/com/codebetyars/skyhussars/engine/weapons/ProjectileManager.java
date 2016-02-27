@@ -26,6 +26,9 @@
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.DataManager;
+import com.codebetyars.skyhussars.engine.plane.Plane;
+import com.jme3.bounding.BoundingVolume;
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -35,18 +38,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ProjectileManager {
-    
+
     private List<Projectile> projectiles;
     private DataManager dataManager;
     private Node rootNode;
     private List<Geometry> projectileGeometries = new LinkedList<>();
-    
+
     public ProjectileManager(DataManager dataManager, Node node) {
         this.projectiles = new ArrayList<>();
         this.dataManager = dataManager;
         this.rootNode = node;
     }
-    
+
     public void addProjectile(Bullet projectile) {
         Geometry newGeometry = dataManager.getBox();
         projectileGeometries.add(newGeometry);
@@ -54,18 +57,29 @@ public class ProjectileManager {
         newGeometry.move(projectile.getLocation());
         projectiles.add(projectile);
     }
-    
-    public void update(float tpf){
+
+    public void update(float tpf) {
         Iterator<Geometry> geomIterator = projectileGeometries.iterator();
-        for(Projectile projectile : projectiles){
+        for (Projectile projectile : projectiles) {
             projectile.update(tpf);
-            if(geomIterator.hasNext()){
+            if (geomIterator.hasNext()) {
                 Geometry geom = geomIterator.next();
                 geom.setLocalTranslation(projectile.getLocation());
                 Vector3f direction = projectile.getVelocity().normalize();
                 geom.lookAt(direction, Vector3f.UNIT_Y);
                 //geom.setLocalRotation(new Quaternion().);
-                
+
+            }
+        }
+    }
+
+    public void checkCollision(Plane plane) {
+        for (Geometry projectile : projectileGeometries) {
+            CollisionResults collisionResults = new CollisionResults();
+            if (projectile.collideWith(plane.getNode().getWorldBound(), collisionResults) > 0) {
+                if (collisionResults.size() > 0) {
+                    plane.hit();
+                }
             }
         }
     }

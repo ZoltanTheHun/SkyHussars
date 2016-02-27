@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.weapons;
 
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Vector3f;
 
 public class Missile extends Projectile {
@@ -41,6 +42,11 @@ public class Missile extends Projectile {
 
     @Override
     public Vector3f getVelocity() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BoundingVolume getHitbox() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

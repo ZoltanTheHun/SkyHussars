@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.physics;
 
-import com.codebetyars.skyhussars.engine.plane.EngineLocation;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
@@ -41,11 +40,9 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private static final Vector3f GRAVITY = new Vector3f(0f, -10f, 0f);
     private float airDensity = 1.2745f;
     private float planeFactor = 0.2566f; // cross section and drag coeff together
-    private float wingArea = 22.07f; //m2
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
     private float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
     private Vector3f vWeight;
-    private float aspectRatio = 6.37f;
     private float pi = 3.14f;
     private float angleOfAttack;
     private Vector3f vVelocity = new Vector3f(0f, 0f, 0f);
@@ -60,25 +57,15 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private Matrix3f momentOfInertiaTensor;
     private List<Airfoil> airfoils = new ArrayList<>();
     private List<Engine> engines = new ArrayList<>();
-    SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
-    SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public AdvancedPlanePhysics(Spatial model, PlaneDescriptor planeDescriptor) {
+    public AdvancedPlanePhysics(Spatial model, PlaneDescriptor planeDescriptor, List<Engine> engines, List<Airfoil> airfoils) {
         mass = planeDescriptor.getMassGross();
         vWeight = GRAVITY.mult(mass);
         momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
                 0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
                 0f, 0f, (mass / 2) * (rPlane * rPlane));
-
-        airfoils.add(leftWing);
-        airfoils.add(rightWing);
-        airfoils.add(horizontalStabilizer);
-        airfoils.add(verticalStabilizer);
-        for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
-            engines.add(new Engine(engineLocation));
-        }
+        this.airfoils = airfoils;
+        this.engines = engines;
     }
 
     @Override
@@ -181,13 +168,6 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     }
 
     @Override
-    public void setThrust(float throttle) {
-        for (Engine engine : engines) {
-            engine.setThrottle(throttle);
-        }
-    }
-
-    @Override
     public String getSpeedKmH() {
         NumberFormat fractionless = NumberFormat.getInstance();
         fractionless.setMaximumFractionDigits(0);
@@ -228,27 +208,12 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     }
 
     @Override
-    public void setElevator(float aileron) {
-        horizontalStabilizer.controlAileron(5f * aileron);
+    public Vector3f getVVelovity() {
+        return vVelocity;
     }
 
     @Override
     public void setSpeedForward(Spatial model, float kmh) {
         vVelocity = model.getLocalRotation().mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
-    }
-
-    @Override
-    public void setAileron(float aileron) {
-        leftWing.controlAileron(aileron);
-        rightWing.controlAileron(-1f * aileron);
-    }
-
-    public void setRudder(float aileron) {
-        verticalStabilizer.controlAileron(aileron);
-    }
-
-    @Override
-    public Vector3f getVVelovity() {
-        return vVelocity;
     }
 }

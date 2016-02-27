@@ -31,8 +31,11 @@ import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
@@ -43,6 +46,7 @@ public class DataManager {
     private ModelManager modelManager;
     private TestData testData = new TestData();
     private PlaneFactory planeFactory;
+    private AssetManager assetManager;
     private Geometry geom;
     private ProjectileManager projectileManager;
 
@@ -51,6 +55,7 @@ public class DataManager {
         this.soundManager = new SoundManager(assetManager);
         projectileManager = new ProjectileManager(this, node);
         this.planeFactory = new PlaneFactory(this, projectileManager);
+        this.assetManager = assetManager;
         Box box = new Box(0.2f, 0.2f, 0.2f);
         geom = new Geometry("bullet", box); // wrap shape into geometry
         Material mat = new Material(assetManager,
@@ -78,12 +83,40 @@ public class DataManager {
     public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId) {
         return testData.getPlaneDescriptor(planeDescriptorId);
     }
-    
-    public MissionDescriptor missionDescriptor(String name){
+
+    public MissionDescriptor missionDescriptor(String name) {
         return testData.getMissionDescriptor(name);
     }
 
     public Geometry getBox() {
         return geom.clone();
+    }
+
+    public Geometry hitBox(Box box) {
+        Geometry geom = new Geometry("hitbox", box); // wrap shape into geometry
+        Material mat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md"); // create material
+        mat.setColor("Color", ColorRGBA.Red);
+        geom.setMaterial(mat);
+        return geom;
+    }
+
+    public ParticleEmitter fireEffect() {
+        ParticleEmitter fire = new ParticleEmitter("Emitter", Type.Triangle, 30);
+        Material mat_red = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
+        mat_red.setTexture("Texture", assetManager.loadTexture("Textures/explosion0.png"));
+        fire.setMaterial(mat_red);
+        fire.setImagesX(8);
+        fire.setImagesY(8); // 2x2 texture animation
+        fire.setEndColor(new ColorRGBA(1f, 0f, 0f, 1f));   // red
+        fire.setStartColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
+        fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
+        fire.setStartSize(1.5f);
+        fire.setEndSize(0.1f);
+        fire.setGravity(0, 0, 0);
+        fire.setLowLife(0.5f);
+        fire.setHighLife(3f);
+        fire.getParticleInfluencer().setVelocityVariation(0.3f);
+        return fire;
     }
 }

@@ -82,7 +82,7 @@ public class Mission extends GameState {
 
     private void initiliazePlayer() {
         /*player.plane().setLocation(0, 0);
-        player.plane().setHeight(3000);*/
+         player.plane().setHeight(3000);*/
         cameraManager.moveCameraTo(player.plane().getLocation());
         cameraManager.followWithCamera(player.plane().getNode());
         cameraManager.init();
@@ -98,6 +98,9 @@ public class Mission extends GameState {
                 }
             }
             projectileManager.update(tpf);
+            for(Plane plane : planes){
+                projectileManager.checkCollision(plane);
+            }
             if (player.plane().crashed()) {
                 ended = true;
             }
