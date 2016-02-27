@@ -1,32 +1,13 @@
 plugins {
-  id 'java'
-  id 'maven'
-  id 'distribution'
-  id 'net.researchgate.release' version '2.3.4'
+  id 'application'
 }
 
 group = 'com.codebetyars'
 version = "0.3.0-SNAPSHOT"
 
-buildDir = '../build'
 sourceCompatibility = 1.7
 
-distributions {
-    main {
-        baseName = 'someName'
-        contents {
-            from { 'src/readme' }
-        }
-    }
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://some/repo")
-        }
-    }
-}
+mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
 
 repositories {
     mavenCentral()
@@ -35,10 +16,11 @@ repositories {
     }
 }
 
-def versions = [
+ext.versions = [
   jackson: '2.7.0',
   jme3: '3.0.+',
   junit: '4.12',
+  eventbus: '1.4',
 ]
 
 dependencies {
@@ -55,18 +37,7 @@ dependencies {
   compile group: 'com.jme3',  name: 'jme3-desktop',    version: versions.jme3
   compile group: 'com.jme3',  name: 'jme3-lwjgl',      version: versions.jme3
   compile group: 'junit',     name: 'junit',           version: versions.junit
-  compile group: 'org.bushe', name: 'eventbus',        version: '1.4'
+  compile group: 'org.bushe', name: 'eventbus',        version: versions.eventbus
 
-  compile fileTree(dir: 'libs', include: '*.jar')
-}
-
-jar {
-  manifest {
-    attributes([
-      'Main-Class': 'com.codebetyars.skyhussars.SkyHussars',
-      'Implementation-Title': 'SkyHussars',
-      'Implementation-Version': version,
-      'Class-Path': configurations.compile.collect { 'lib/' + it.getName() }.join('\n') + ' lib/assets.jar',
-    ])
-  }
+  compile fileTree(dir: 'lib', include: '*.jar')
 }

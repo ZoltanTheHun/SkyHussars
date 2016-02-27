@@ -27,13 +27,11 @@ package com.codebetyars.skyhussars.engine.physics;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+
 import static org.junit.Assert.*;
 
+@Ignore
 public class SymmetricAirfoilTest {
     
     public SymmetricAirfoilTest() {
