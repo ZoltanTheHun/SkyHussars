@@ -41,3 +41,13 @@ dependencies {
 
   compile fileTree(dir: 'lib', include: '*.jar')
 }
+
+distributions {
+  sources {
+    contents {
+      from ('.') {
+        exclude file('.gitignore').readLines()
+      }
+    }
+  }
+}
