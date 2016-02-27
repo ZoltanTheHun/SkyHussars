@@ -7,7 +7,7 @@ and done the dist assembly part.
 To build the project, run `gradle assemble`, this will
 put the distribution package into the _build/distributions_ folder. To run the application, you have two choices:
   - execute `gradle run`
-  - unzip the distribution and run `bin/SkyHussars.bat`
+  - unzip the distribution and run `Launch SkyHussars.bat`
 
 _- LtPete_
 
