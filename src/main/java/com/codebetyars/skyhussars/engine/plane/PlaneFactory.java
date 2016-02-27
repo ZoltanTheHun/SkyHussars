@@ -26,27 +26,35 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
+import com.codebetyars.skyhussars.engine.DataModel;
+import com.codebetyars.skyhussars.engine.ModelManager;
+import com.codebetyars.skyhussars.engine.SoundManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.scene.Spatial;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PlaneFactory {
 
-    private DataManager dataManager;
+    @Autowired
+    private DataModel dataModel;
+
+    @Autowired
+    private ModelManager modelManager;
+
+    @Autowired
+    private SoundManager soundManager;
+
+    @Autowired
     private ProjectileManager projectileManager;
 
-    public PlaneFactory(DataManager dataManager, ProjectileManager projectileManager) {
-        this.dataManager = dataManager;
-        this.projectileManager = projectileManager;
-    }
-
     public Plane createPlane(String planeType) {
-        PlaneDescriptor planeDescriptor = dataManager.getPlaneDescriptor(planeType);
-        Spatial model = dataManager.modelManager().model("p80", "p80_material").clone();
-        AudioNode engineSound = dataManager.soundManager().sound("engine");
-        AudioNode gunSound = dataManager.soundManager().sound("gun");
-        return new Plane(
-                model, planeDescriptor, engineSound,
-                gunSound, projectileManager);
+        PlaneDescriptor planeDescriptor = dataModel.getPlaneDescriptor(planeType);
+        Spatial model = modelManager.model("p80", "p80_material").clone();
+        AudioNode engineSound = soundManager.sound("engine");
+        AudioNode gunSound = soundManager.sound("gun");
+        return new Plane(model, planeDescriptor, engineSound, gunSound, projectileManager);
     }
 }

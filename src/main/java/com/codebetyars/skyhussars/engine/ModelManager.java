@@ -26,15 +26,23 @@
 
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.SkyHussars;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ModelManager {
+
+    @Autowired
+    private SkyHussars application;
 
     private Map<String, Spatial> spatials = new HashMap<>();
     private Map<String, Material> materials = new HashMap<>();

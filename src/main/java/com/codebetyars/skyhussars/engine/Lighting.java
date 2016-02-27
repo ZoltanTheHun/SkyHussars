@@ -32,17 +32,27 @@ import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import jme3utilities.sky.SkyControl;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class Lighting {
+@Component
+public class Lighting implements InitializingBean {
+
+    @Autowired
+    private SkyControl skyControl;
 
     private List<Light> lights;
     private DirectionalLight directionalLight;
     private AmbientLight ambientLight;
     private PointLight pointLight;
 
-    public Lighting() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         directionalLight = new DirectionalLight();
         directionalLight.setColor(ColorRGBA.White.mult(0.5f));
         directionalLight.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
@@ -52,6 +62,8 @@ public class Lighting {
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
+
+        setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
     }
 
     public List<Light> getLights() {

@@ -25,46 +25,57 @@
  */
 package com.codebetyars.skyhussars.engine.mission;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.DataManager;
-import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
-import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.TerrainManager;
+import com.codebetyars.skyhussars.SkyHussars;
+import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.plane.Plane;
+import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
+import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.scene.Node;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MissionFactory {
 
-    private DataManager dataManager;
-    private Node root;
+    @Autowired
+    private SkyHussars application;
+
+    @Autowired
+    private DataModel dataModel;
+
+    @Autowired
+    private ProjectileManager projectileManager;
+
+    @Autowired
+    private SoundManager soundManager;
+
+    @Autowired
     private ControlsMapper controlsMapper;
+
+    @Autowired
     private CameraManager cameraManager;
+
+    @Autowired
     private TerrainManager terrainManager;
+
+    @Autowired
     private GuiManager guiManager;
+
+    @Autowired
+    private PlaneFactory planeFactory;
+
+    @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
 
-    public MissionFactory(DataManager dataManager, Node root,ControlsMapper controlsMapper,
-            CameraManager cameraManager,TerrainManager terrainManager,GuiManager guiManager, 
-            DayLightWeatherManager dayLightWeatherManager) {
-        this.dataManager = dataManager;
-        this.root = root;
-        this.controlsMapper = controlsMapper;
-        this.cameraManager = cameraManager;
-        this.terrainManager = terrainManager;
-        this.guiManager = guiManager;
-        this.dayLightWeatherManager = dayLightWeatherManager;
-                
-    }
-
     public Mission mission(String missionName) {
-        MissionDescriptor missionDescriptor = dataManager.missionDescriptor(missionName);
+        MissionDescriptor missionDescriptor = dataModel.getMissionDescriptor(missionName);
         List<Plane> planes = planes(missionDescriptor);
-        Mission mission = new Mission(planes,dataManager.projectileManager(),dataManager.soundManager(),cameraManager,terrainManager,
-                guiManager,dayLightWeatherManager);
+        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
         ControlsManager cm = new ControlsManager(controlsMapper, mission, cameraManager);
         return mission;
     }
@@ -72,11 +83,11 @@ public class MissionFactory {
     private List<Plane> planes(MissionDescriptor missionDescriptor) {
         List<Plane> planes = new ArrayList<>();
         for (PlaneMissionDescriptor planeMission : missionDescriptor.planeMissionDescriptors()) {
-            Plane plane = dataManager.planeFactory().createPlane(planeMission.planeType());
+            Plane plane = planeFactory.createPlane(planeMission.planeType());
             plane.setLocation(planeMission.startLocation());
             plane.planeMissinDescriptor(planeMission);
             plane.setThrottle(0.6f);
-            root.attachChild(plane.getNode());
+            application.getRootNode().attachChild(plane.getNode());
             planes.add(plane);
         }
         return planes;

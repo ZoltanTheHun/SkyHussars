@@ -25,65 +25,40 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.TestData;
+import com.codebetyars.skyhussars.SkyHussars;
+import com.codebetyars.skyhussars.SkyHussarsDataModel;
 import com.codebetyars.skyhussars.engine.mission.MissionDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class DataManager {
+@Component
+public class DataManager implements InitializingBean {
 
-    private SoundManager soundManager;
-    private ModelManager modelManager;
-    private TestData testData = new TestData();
-    private PlaneFactory planeFactory;
-    private Geometry geom;
-    private ProjectileManager projectileManager;
+    @Autowired
+    private SkyHussars application;
 
-    public DataManager(AssetManager assetManager, Node node) {
-        this.modelManager = new ModelManager(assetManager);
-        this.soundManager = new SoundManager(assetManager);
-        projectileManager = new ProjectileManager(this, node);
-        this.planeFactory = new PlaneFactory(this, projectileManager);
-        Box box = new Box(0.2f, 0.2f, 0.2f);
-        geom = new Geometry("bullet", box); // wrap shape into geometry
-        Material mat = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md"); // create material
+    private Geometry bulletTemplate;
+
+    @Override
+    public void afterPropertiesSet() {
+        Material mat = new Material(application.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md"); // create material
         mat.setColor("Color", ColorRGBA.Green);
-        geom.setMaterial(mat);
+
+        Geometry bullet = new Geometry("bullet", new Box(0.2f, 0.2f, 0.2f)); // wrap shape into geometry
+        bullet.setMaterial(mat);
+
+        bulletTemplate = bullet;
     }
 
-    public ModelManager modelManager() {
-        return modelManager;
-    }
-
-    public SoundManager soundManager() {
-        return soundManager;
-    }
-
-    public PlaneFactory planeFactory() {
-        return planeFactory;
-    }
-
-    public ProjectileManager projectileManager() {
-        return projectileManager;
-    }
-
-    public PlaneDescriptor getPlaneDescriptor(String planeDescriptorId) {
-        return testData.getPlaneDescriptor(planeDescriptorId);
-    }
-    
-    public MissionDescriptor missionDescriptor(String name){
-        return testData.getMissionDescriptor(name);
-    }
-
-    public Geometry getBox() {
-        return geom.clone();
+    public Geometry getBullet() {
+        return bulletTemplate.clone();
     }
 }

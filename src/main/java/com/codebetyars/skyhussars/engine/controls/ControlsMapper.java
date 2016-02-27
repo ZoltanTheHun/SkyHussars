@@ -31,7 +31,9 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ControlsMapper {
 
     public static final String FIRE = "Fire";

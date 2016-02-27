@@ -26,67 +26,70 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
-import com.codebetyars.skyhussars.engine.DataManager;
-import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
 import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
-import com.codebetyars.skyhussars.engine.TerrainManager;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SkyHussars extends SimpleApplication {
 
-    private GameState currentState;
-
+    // Start Spring application context and start the game
     public static void main(String[] args) {
-        SkyHussars app = new SkyHussars();
-        AppSettings settings = new AppSettings(false);
-        settings.setTitle("SkyHussars");
-        settings.setSettingsDialogImage("Textures/settings_image.jpg");
-        app.setSettings(settings);
-        app.start();
+        ApplicationContext context = new AnnotationConfigApplicationContext(SkyHussarsContext.class);
+        context.getBean(SkyHussars.class).start();
     }
+
+    @Autowired
+    private MainMenu mainMenu;
+
+    @Autowired
+    private CameraManager cameraManager;
+
+    @Autowired
+    private GuiManager guiManager;
+
+    @Autowired
+    private MissionFactory missionFactory;
+
+    @Override
+    @Autowired
+    public void setSettings(AppSettings settings) {
+        super.setSettings(settings);
+    }
+
+    private GameState gameState = mainMenu;
 
     @Override
     public void simpleInitApp() {
-        instantiateResources();
-    }
-
-    private void instantiateResources() {
-        DataManager dataManager = new DataManager(assetManager, rootNode);
-        ControlsMapper controlsMapper = new ControlsMapper(inputManager);
-        CameraManager cameraManager = new CameraManager(this.cam, flyCam);
-        DayLightWeatherManager dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
-        GuiManager guiManager = new GuiManager(assetManager, inputManager,
-                audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager, dayLightWeatherManager);
-        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera(),rootNode);
+        setDisplayStatView(false);
         cameraManager.initializeCamera();
-        MissionFactory missionFactory = new MissionFactory(dataManager, rootNode,
-                controlsMapper, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
-
-        MainMenu mainMenu = new MainMenu(guiManager, missionFactory.mission("Test mission"));
-
-        this.setDisplayStatView(false);
         guiManager.createGUI();
-        currentState = mainMenu;
-        currentState.initialize();
+        mainMenu.setPendingMission(missionFactory.mission("Test mission"));
+        mainMenu.initialize();
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        GameState nextState = currentState.update(tpf);
-        if (nextState != currentState) {
-            currentState.close();
-            currentState = nextState;
-            currentState.initialize();
+        GameState nextState = gameState.update(tpf);
+        if (nextState != gameState) {
+            gameState.close();
+            gameState = nextState;
+            gameState.initialize();
         }
     }
 
     @Override
     public void simpleRender(RenderManager rm) {
     }
+
 }

@@ -36,7 +36,9 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TerrainManager {
 
     private TerrainQuad terrain;

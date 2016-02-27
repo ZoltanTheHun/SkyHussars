@@ -25,25 +25,26 @@
  */
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.SkyHussars;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CameraManager {
 
-    private Camera camera;
-    private FlyByCamera flyCam;
+    @Autowired
+    private SkyHussars application;
     private boolean fovChangeActive;
     private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
     private float fovChangeRate = 8f;
 
-    public CameraManager(Camera camera, FlyByCamera flyCam) {
-        this.camera = camera;
-        this.flyCam = flyCam;
-    }
+
     public Spatial focus;
 
     public void update(float tpf) {
@@ -64,9 +65,8 @@ public class CameraManager {
 
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        camera.setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
-        camera.lookAt(focus.getWorldTranslation(),
-                focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+        getCamera().setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
+        getCamera().lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
@@ -84,14 +84,14 @@ public class CameraManager {
     private float far = 200000f;
 
     public void initializeCamera() {
-        aspect = (float) camera.getWidth() / (float) camera.getHeight();
+        aspect = (float) getCamera().getWidth() / (float) getCamera().getHeight();
         setFov(45);
-        flyCam.setMoveSpeed(200);
+        getFlyCam().setMoveSpeed(200);
     }
 
     public void setFov(float fov) {
         this.fov = fov;
-        camera.setFrustumPerspective(fov, aspect, near, far);
+        getCamera().setFrustumPerspective(fov, aspect, near, far);
     }
 
     public float getFov() {
@@ -108,14 +108,23 @@ public class CameraManager {
     }
 
     public void moveCameraTo(Vector3f location) {
-        camera.setLocation(location);
+        getCamera().setLocation(location);
     }
 
     public void flyCamActive(boolean cursor) {
-        flyCam.setEnabled(!cursor);
+        getFlyCam().setEnabled(!cursor);
     }
 
     public boolean flyCamActive() {
-        return flyCam.isEnabled();
+        return getFlyCam().isEnabled();
+    }
+
+
+    public Camera getCamera() {
+        return application.getCamera();
+    }
+
+    public FlyByCamera getFlyCam() {
+        return application.getFlyByCamera();
     }
 }

@@ -21,6 +21,7 @@ ext.versions = [
   jme3: '3.0.+',
   junit: '4.12',
   eventbus: '1.4',
+  spring: '4.2.+',
 ]
 
 dependencies {
@@ -38,6 +39,8 @@ dependencies {
   compile group: 'com.jme3',  name: 'jme3-lwjgl',      version: versions.jme3
   compile group: 'junit',     name: 'junit',           version: versions.junit
   compile group: 'org.bushe', name: 'eventbus',        version: versions.eventbus
+
+  compile group: 'org.springframework', name: 'spring-context', version: versions.spring
 
   compile fileTree(dir: 'lib', include: '*.jar')
 }
