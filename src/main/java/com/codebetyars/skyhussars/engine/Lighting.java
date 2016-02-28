@@ -32,17 +32,31 @@ import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import jme3utilities.sky.SkyControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class Lighting {
+@Component
+public class Lighting implements InitializingBean {
+
+    private final static Logger logger = LoggerFactory.getLogger(Lighting.class);
+
+    @Autowired
+    private SkyControl skyControl;
 
     private List<Light> lights;
     private DirectionalLight directionalLight;
     private AmbientLight ambientLight;
     private PointLight pointLight;
 
-    public Lighting() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         directionalLight = new DirectionalLight();
         directionalLight.setColor(ColorRGBA.White.mult(0.5f));
         directionalLight.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
@@ -52,6 +66,8 @@ public class Lighting {
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
+
+        setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
     }
 
     public List<Light> getLights() {
@@ -61,7 +77,7 @@ public class Lighting {
     public void setLightingBodies(Vector3f sun, Vector3f moon) {
         float sunAt = sun.angleBetween(Vector3f.UNIT_Y);
         float moonAt = moon.angleBetween(Vector3f.UNIT_Y);
-        System.out.println("Sun at: " + sunAt + ", moon at: " + moonAt);
+        logger.debug("Sun at: " + sunAt + ", moon at: " + moonAt);
         if (sunAt < FastMath.HALF_PI) {
             directionalLight.setDirection(sun.negate());
             ColorRGBA lightStrength = ColorRGBA.White.mult(1f - sunAt / 4f);
@@ -78,7 +94,7 @@ public class Lighting {
             directionalLight.setColor(lightStrength);
             ambientLight.setColor(lightStrength);
         }
-        System.out.println("Direction of light: " + directionalLight.getDirection());
+        logger.debug("Direction of light: " + directionalLight.getDirection());
 
     }
 }

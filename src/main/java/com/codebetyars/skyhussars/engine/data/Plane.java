@@ -27,6 +27,7 @@
 package com.codebetyars.skyhussars.engine.data;
 
 import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
+
 import java.util.List;
 
 public class Plane {

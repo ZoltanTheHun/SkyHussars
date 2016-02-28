@@ -27,28 +27,40 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.weapons.Bullet;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Ring;
 import com.jme3.math.Vector3f;
+
+import java.util.Random;
 
 public class GunLocation {
 
     private GunLocationDescriptor gunLocationDescriptor;
     private int rounds;
     private ProjectileManager projectileManager;
+    private Random random;
 
     public GunLocation(GunLocationDescriptor gunLocationDescriptor, int rounds, ProjectileManager projectileManager) {
         this.gunLocationDescriptor = gunLocationDescriptor;
         /*should check if rounnds > maxRounds*/
         this.rounds = rounds;
         this.projectileManager = projectileManager;
+        this.random = new Random();
     }
 
-    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity, Vector3f vOrientation) {
+    public Vector3f addSpread(Vector3f vVelocity) {
+        float spread = gunLocationDescriptor.getGunDescriptor().getSpread() * (float) random.nextGaussian() * vVelocity.length() / 100f;
+        return new Ring(vVelocity, vVelocity.normalize(), spread, spread).random();
+    }
+
+    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity, Quaternion vOrientation) {
         if (firing) {
-            /*actually this should be here the plane orientation corrected with gun orientation*/
-            Vector3f vBulletVelocity = vOrientation.negate().normalize().mult(gunLocationDescriptor.
-                    getGunDescriptor().getMuzzleVelocity());
-            vVelocity = vVelocity.add(vBulletVelocity);
-            Bullet bullet = new Bullet(vLocation, vVelocity, null);
+            Vector3f vBulletLocation = vLocation.add(vOrientation.mult(gunLocationDescriptor.getLocation()));
+            Vector3f vMuzzleVelocity = vOrientation.mult(Vector3f.UNIT_Z).mult(gunLocationDescriptor.getGunDescriptor().getMuzzleVelocity());
+            Vector3f vBulletVelocity = addSpread(vVelocity.add(vMuzzleVelocity));
+
+            Bullet bullet = new Bullet(vBulletLocation, vBulletVelocity, null);
             projectileManager.addProjectile(bullet);
         }
     }

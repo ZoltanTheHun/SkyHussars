@@ -27,11 +27,11 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.data.Engine;
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
-import com.codebetyars.skyhussars.engine.weapons.Missile;
-import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.weapons.Bomb;
+import com.codebetyars.skyhussars.engine.weapons.Gun;
+import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.math.FastMath;
@@ -39,10 +39,15 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Plane {
+
+    private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
     private PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
@@ -63,7 +68,7 @@ public class Plane {
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, node);
-        System.out.println(getInfo());
+        logger.debug(getInfo());
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 
@@ -117,7 +122,7 @@ public class Plane {
                 gunSound.stop();
             }
             for (GunGroup gunGroup : gunGroups) {
-                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
+                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation());
             }
         }else{
             engineSound.stop();

@@ -33,6 +33,7 @@ public class GunDescriptor implements Armament {
     private float rateOfFire;
     private BulletDescriptor bulletDescriptor;
     private float muzzleVelocity;
+    private float spread;
 
     public BulletDescriptor getBulletDescriptor() {
         return bulletDescriptor;
@@ -48,6 +49,14 @@ public class GunDescriptor implements Armament {
 
     public void setMuzzleVelocity(float muzzleVelocity) {
         this.muzzleVelocity = muzzleVelocity;
+    }
+
+    public float getSpread() {
+        return spread;
+    }
+
+    public void setSpread(float spread) {
+        this.spread = spread;
     }
 
     public String getName() {

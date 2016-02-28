@@ -25,43 +25,34 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.light.Light;
-import com.jme3.math.FastMath;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import jme3utilities.sky.SkyControl;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class DayLightWeatherManager {
+@Component
+public class DayLightWeatherManager implements InitializingBean {
 
-    private SkyControl sc;
+    @Autowired
+    private Node rootNode;
+
+    @Autowired
+    private SkyControl skyControl;
+
+    @Autowired
     private Lighting lighting;
 
-    public DayLightWeatherManager(AssetManager assetManager, Camera camera, Node node) {
-        sc = new SkyControl(assetManager, camera, 0.9f, true, true);
-        node.addControl(sc);
-        SimpleDateFormat dateformat = new SimpleDateFormat("HH");
-        int hour = Integer.parseInt(dateformat.format(new Date()));
-        sc.getSunAndStars().setHour(hour);
-        sc.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);
-        sc.getSunAndStars().setSolarLongitude(Calendar.AUGUST, 10);
-        System.out.println("Sun location: " + sc.getSunAndStars().getSunDirection());
-        sc.setCloudiness(0f);
-        sc.setEnabled(true);
-
-        lighting = new Lighting();
-        lighting.setLightingBodies(sc.getSunAndStars().getSunDirection(), sc.getMoonDirection());
-        for (Light light : lighting.getLights()) {
-            node.addLight(light);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        for (Light light: lighting.getLights()) {
+            rootNode.addLight(light);
         }
     }
 
     public void setHour(int hour) {
-        sc.getSunAndStars().setHour(hour);
-        lighting.setLightingBodies(sc.getSunAndStars().getSunDirection(), sc.getMoonDirection());
+        skyControl.getSunAndStars().setHour(hour);
+        lighting.setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
     }
 }

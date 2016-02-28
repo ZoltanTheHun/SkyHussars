@@ -29,21 +29,24 @@ import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CameraManager {
 
+    @Autowired
     private Camera camera;
-    private FlyByCamera flyCam;
+
+    @Autowired
+    private FlyByCamera flyByCamera;
+
     private boolean fovChangeActive;
     private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
     private float fovChangeRate = 8f;
 
-    public CameraManager(Camera camera, FlyByCamera flyCam) {
-        this.camera = camera;
-        this.flyCam = flyCam;
-    }
     public Spatial focus;
 
     public void update(float tpf) {
@@ -65,8 +68,7 @@ public class CameraManager {
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
         camera.setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
-        camera.lookAt(focus.getWorldTranslation(),
-                focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+        camera.lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
@@ -86,7 +88,7 @@ public class CameraManager {
     public void initializeCamera() {
         aspect = (float) camera.getWidth() / (float) camera.getHeight();
         setFov(45);
-        flyCam.setMoveSpeed(200);
+        flyByCamera.setMoveSpeed(200);
     }
 
     public void setFov(float fov) {
@@ -112,10 +114,10 @@ public class CameraManager {
     }
 
     public void flyCamActive(boolean cursor) {
-        flyCam.setEnabled(!cursor);
+        flyByCamera.setEnabled(!cursor);
     }
 
     public boolean flyCamActive() {
-        return flyCam.isEnabled();
+        return flyByCamera.isEnabled();
     }
 }

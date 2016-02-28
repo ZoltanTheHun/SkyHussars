@@ -28,11 +28,16 @@ package com.codebetyars.skyhussars.engine.physics;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @Ignore
 public class SymmetricAirfoilTest {
+
+    private final static Logger logger = LoggerFactory.getLogger(SymmetricAirfoilTest.class);
     
     public SymmetricAirfoilTest() {
     }
@@ -58,7 +63,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testCalculateResultantForce() {
-        System.out.println("calculateResultantForce");
+        logger.debug("calculateResultantForce");
         float airDensity = 0.0F;
         Vector3f vVelocity = null;
         Quaternion horizontal = null;
@@ -77,7 +82,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testCalculateLift_4args() {
-        System.out.println("calculateLift");
+        logger.debug("calculateLift");
         float angleOfAttack = 0.0F;
         float airDensity = 0.0F;
         Vector3f vFlow = null;
@@ -95,7 +100,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testCalculateLift_3args() {
-        System.out.println("calculateLift");
+        logger.debug("calculateLift");
         float angleOfAttack = 0.0F;
         float airDensity = 0.0F;
         Vector3f vFlow = null;
@@ -112,7 +117,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testGetLiftCoefficient() {
-        System.out.println("getLiftCoefficient");
+        logger.debug("getLiftCoefficient");
         float angleOfAttack = 0.0F;
         SymmetricAirfoil instance = null;
         float expResult = 0.0F;
@@ -127,7 +132,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testCalculateInducedDrag_3args() {
-        System.out.println("calculateInducedDrag");
+        logger.debug("calculateInducedDrag");
         float airDensity = 0.0F;
         Vector3f vFlow = null;
         Vector3f vLift = null;
@@ -144,7 +149,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testCalculateInducedDrag_float_Vector3f() {
-        System.out.println("calculateInducedDrag");
+        logger.debug("calculateInducedDrag");
         float airDensity = 0.0F;
         Vector3f vVelocity = null;
         SymmetricAirfoil instance = null;
@@ -160,7 +165,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testGetCenterOfGravity() {
-        System.out.println("getCenterOfGravity");
+        logger.debug("getCenterOfGravity");
         SymmetricAirfoil instance = null;
         Vector3f expResult = null;
         Vector3f result = instance.getCenterOfGravity();
@@ -174,7 +179,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testGetName() {
-        System.out.println("getName");
+        logger.debug("getName");
         SymmetricAirfoil instance = null;
         String expResult = "";
         String result = instance.getName();
@@ -188,7 +193,7 @@ public class SymmetricAirfoilTest {
      */
     @Test
     public void testControlAileron() {
-        System.out.println("controlAileron");
+        logger.debug("controlAileron");
         int aileron = 0;
         SymmetricAirfoil instance = null;
         instance.controlAileron(aileron);

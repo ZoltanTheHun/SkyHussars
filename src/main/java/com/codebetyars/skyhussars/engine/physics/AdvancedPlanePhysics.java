@@ -32,11 +32,16 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdvancedPlanePhysics implements PlanePhysics {
+
+    private final static Logger logger = LoggerFactory.getLogger(AdvancedPlanePhysics.class);
 
     private static final Vector3f GRAVITY = new Vector3f(0f, -10f, 0f);
     private float airDensity = 1.2745f;
@@ -85,10 +90,10 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     public void update(float tpf, Spatial model) {
         updateAuxiliary(model);
         Vector3f vLinearAcceleration = Vector3f.ZERO;
-        System.out.println("Plane roll: " + (model.getLocalRotation().mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
+        logger.debug("Plane roll: " + (model.getLocalRotation().mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
         ActingForces engineForces = calculateEngineForces(model.getLocalRotation());
         ActingForces airfoilForces = calculateAirfoilForces(model.getLocalRotation(), vVelocity.negate());
-        System.out.println("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
+        logger.debug("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
 
         vLinearAcceleration = vLinearAcceleration.add(vWeight);
         vLinearAcceleration = vLinearAcceleration.add(engineForces.vLinearComponent);
@@ -101,7 +106,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
 
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
-        System.out.println("Angular velocity: " + vAngularVelocity);
+        logger.debug("Angular velocity: " + vAngularVelocity);
 
         moderateRoll();
         model.rotate(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
@@ -138,11 +143,11 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         Vector3f vTorque = Vector3f.ZERO;
         for (Airfoil airfoil : airfoils) {
             Vector3f airfoilForce = airfoil.calculateResultantForce(airDensity, vFlow, situation, vAngularVelocity);
-            System.out.println("Airfoilforce points to: " + airfoilForce.toString()/*.normalize().dot(situation.mult(Vector3f.UNIT_Y))*/);
+            logger.debug("Airfoilforce points to: " + airfoilForce.toString()/*.normalize().dot(situation.mult(Vector3f.UNIT_Y))*/);
             vLinearAcceleration = vLinearAcceleration.add(airfoilForce);
             airfoilForce = situation.inverse().mult(airfoilForce);
             Vector3f distFromCenter = airfoil.getCenterOfGravity();
-            System.out.println("Airfoilforce points to: " + airfoilForce.toString());
+            logger.debug("Airfoilforce points to: " + airfoilForce.toString());
             vTorque = vTorque.add(distFromCenter.cross(airfoilForce));
         }
         return new ActingForces(vLinearAcceleration, vTorque);
