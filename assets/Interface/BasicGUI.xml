@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <useStyles filename="nifty-default-styles.xml" />
+    <useControls filename="nifty-default-controls.xml" />
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="start" controller="com.codebetyars.skyhussars.engine.GuiManager">
+        <layer id="foreground" childLayout="vertical">
+            <panel id="padding1" height="10%" width="35%" align="center" childLayout="center"/>
+            <panel id="panel_top" height="15%" width="35%" align="center" childLayout="center" 	backgroundColor="#68686833" >
+                <text text="SkyHussars" font="Interface/Fonts/Default.fnt" width="100%" height="100%" />
+            </panel>
+            <panel id="padding2" height="10%" width="35%" align="center" childLayout="center"/>
+            <panel id="panel_mid" height="50%" width="75%" align="center" childLayout="center" backgroundColor="#00000099">
+                <text text="Welcome to SkyHussars r1. This is a simple flying game made to test out jMonkeyEngine and to learn a little bit about aerodynamics. The plane can be pitched and rolled with the cursor keys. The thrust can be controlled with the number keys from 1 to 5. There is no objective and the only way to fail is to crash to the ground. In that case the plane can be restored to its original position with the R button. To pause the game, the P key can be used. Space can be used to shoot with the gun. Left and right mouse buttons control the field of view. To exit the game please press ESC." font="Interface/Fonts/Default.fnt" width="100%" height="100%" wrap="true" />
+            </panel>
+            <panel id="button_panel" height="25%" width="50%" align="center" childLayout="horizontal">
+                <panel id="timePanel" width="50%"  childLayout="horizontal">
+                    <text text="Please select start time for flight: " font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
+                    <control id="timeControl" width="50%" name="dropDown">
+                        <interact onChanged="setTime()"/>
+                    </control>  
+                </panel>     
+                <panel id="okPanel" width="50%"  childLayout="center">
+                    <control name="button" label="Start Flying" id="StartButton" align="center" valign="center" visibleToMouse="true"> 
+                        <interact onClick="startGame()"/>
+                    </control>
+                </panel>         
+            </panel>
+        </layer>
+    </screen>
+    <screen id="main" controller="com.codebetyars.skyhussars.engine.GuiManager">
+        <layer id="foreground" childLayout="vertical" align="center">
+            <panel id="panel_top" height="90%" align="center" childLayout="vertical">
+            </panel>
+            <panel id="panel_bottom"  childLayout="horizontal" valign="bottom" height="10%">
+                <panel id="panel_empty" valign="bottom"  height="100%" width="75%" childLayout="vertical">
+                </panel>
+                <panel id="panel_information"  childLayout="horizontal" align="right" valign="bottom" backgroundColor="#00000099" height="100%" width="25%">
+                    <text id="speedDisplay" text="" font="Interface/Fonts/Default.fnt" width="100%" height="100%" vAlign="right"/>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

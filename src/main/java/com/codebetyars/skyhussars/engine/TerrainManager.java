@@ -36,48 +36,53 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class TerrainManager {
+@Component
+public class TerrainManager implements InitializingBean {
+
+    @Autowired
+    private AssetManager assetManager;
+
+    @Autowired
+    private Camera camera;
+
+    @Autowired
+    private Node rootNode;
 
     private TerrainQuad terrain;
 
-    public TerrainManager(AssetManager assetManager, Camera camera, Node root) {
-        AbstractHeightMap heightmap;
-        Texture heightMapImage = assetManager.loadTexture(
-                "Textures/Adria.bmp");
-        heightmap = new ImageBasedHeightMap(heightMapImage.getImage(), 1f);
+    @Override
+    public void afterPropertiesSet() {
+        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/Adria.bmp").getImage(), 1f);
         heightmap.load();
-        int patchSize = 17;
-        terrain = new TerrainQuad("my terrain", patchSize, 2049, heightmap.getHeightMap());
-        Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
-        // Load alpha map (for splat textures)
-        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/Adria_alpha.png"));
-        Texture grass = assetManager.loadTexture(
-                "Textures/ground.png");
+
+        Texture grass = assetManager.loadTexture("Textures/ground.png");
         grass.setWrap(Texture.WrapMode.Repeat);
+
+        Texture water = assetManager.loadTexture("Textures/water.png");
+        water.setWrap(Texture.WrapMode.Repeat);
+
+        Texture land = assetManager.loadTexture("Textures/forest.png");
+        land.setWrap(Texture.WrapMode.Repeat);
+
+        Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
+        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/Adria_alpha.png"));
         mat_terrain.setTexture("DiffuseMap", grass);
         mat_terrain.setFloat("DiffuseMap_0_scale", 4096f);
-        terrain.setMaterial(mat_terrain);
-
-        Texture water = assetManager.loadTexture(
-                "Textures/water.png");
-        water.setWrap(Texture.WrapMode.Repeat);
         mat_terrain.setTexture("DiffuseMap_2", water);
         mat_terrain.setFloat("DiffuseMap_2_scale", 32f);
-
-        Texture land = assetManager.loadTexture(
-                "Textures/forest.png");
-        land.setWrap(Texture.WrapMode.Repeat);
         mat_terrain.setTexture("DiffuseMap_1", land);
         mat_terrain.setFloat("DiffuseMap_1_scale", 128f);
 
+        terrain = new TerrainQuad("my terrain", 17, 2049, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
         terrain.setLocalScale(1000f, 1f, 1000f);
+        terrain.addControl(new TerrainLodControl(terrain, camera));
 
-        TerrainLodControl control = new TerrainLodControl(terrain, camera);
-        terrain.addControl(control);
-
-        root.attachChild(terrain);
+        rootNode.attachChild(terrain);
     }
 
     public TerrainQuad getTerrain() {

@@ -32,26 +32,29 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+@Component
 public class ProjectileManager {
 
-    private List<Projectile> projectiles;
-    private DataManager dataManager;
+    @Autowired
     private Node rootNode;
+
+    @Autowired
+    private DataManager dataManager;
+
+    private List<Projectile> projectiles = new ArrayList<>();
+
     private List<Geometry> projectileGeometries = new LinkedList<>();
 
-    public ProjectileManager(DataManager dataManager, Node node) {
-        this.projectiles = new ArrayList<>();
-        this.dataManager = dataManager;
-        this.rootNode = node;
-    }
-
     public void addProjectile(Bullet projectile) {
-        Geometry newGeometry = dataManager.getBox();
+        Geometry newGeometry = dataManager.getBullet();
         projectileGeometries.add(newGeometry);
         rootNode.attachChild(newGeometry);
         newGeometry.move(projectile.getLocation());

@@ -25,68 +25,57 @@
  */
 package com.codebetyars.skyhussars;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
-import com.codebetyars.skyhussars.engine.DataManager;
-import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
-import com.codebetyars.skyhussars.engine.GameState;
-import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.MainMenu;
-import com.codebetyars.skyhussars.engine.TerrainManager;
-import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SkyHussars extends SimpleApplication {
 
-    private GameState currentState;
-
     public static void main(String[] args) {
-        SkyHussars app = new SkyHussars();
         AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");
         settings.setSettingsDialogImage("Textures/settings_image.jpg");
-        app.setSettings(settings);
-        app.start();
+
+        SkyHussars application = new SkyHussars();
+        application.setSettings(settings);
+        application.start();
     }
+
+    private SkyHussarsContext skyHussarsContext;
 
     @Override
     public void simpleInitApp() {
-        instantiateResources();
-    }
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-    private void instantiateResources() {
-        DataManager dataManager = new DataManager(assetManager, rootNode);
-        ControlsMapper controlsMapper = new ControlsMapper(inputManager);
-        CameraManager cameraManager = new CameraManager(this.cam, flyCam);
-        DayLightWeatherManager dayLightWeatherManager = new DayLightWeatherManager(assetManager, cam, rootNode);
-        GuiManager guiManager = new GuiManager(assetManager, inputManager,
-                audioRenderer, guiViewPort, "Interface/BasicGUI.xml", cameraManager, dayLightWeatherManager);
-        TerrainManager terrainManager = new TerrainManager(assetManager, getCamera(),rootNode);
-        cameraManager.initializeCamera();
-        MissionFactory missionFactory = new MissionFactory(dataManager, rootNode,
-                controlsMapper, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
+        DefaultListableBeanFactory beanFactory = context.getDefaultListableBeanFactory();
+        beanFactory.registerSingleton("application", this);
+        beanFactory.registerSingleton("rootNode", getRootNode());
+        beanFactory.registerSingleton("assetManager", getAssetManager());
+        beanFactory.registerSingleton("inputManager", getInputManager());
+        beanFactory.registerSingleton("camera", getCamera());
+        beanFactory.registerSingleton("flyByCamera", getFlyByCamera());
+        beanFactory.registerSingleton("audioRenderer", getAudioRenderer());
+        beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
 
-        MainMenu mainMenu = new MainMenu(guiManager, missionFactory.mission("Test mission"));
+        context.register(SkyHussarsContext.class);
+        context.refresh();
 
-        this.setDisplayStatView(false);
-        guiManager.createGUI();
-        currentState = mainMenu;
-        currentState.initialize();
+        skyHussarsContext = context.getBean(SkyHussarsContext.class);
+        skyHussarsContext.simpleInitApp();
+
+        setDisplayStatView(false);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        GameState nextState = currentState.update(tpf);
-        if (nextState != currentState) {
-            currentState.close();
-            currentState = nextState;
-            currentState.initialize();
-        }
+        skyHussarsContext.simpleUpdate(tpf);
     }
 
     @Override
     public void simpleRender(RenderManager rm) {
+        skyHussarsContext.simpleRender(rm);
     }
+
 }

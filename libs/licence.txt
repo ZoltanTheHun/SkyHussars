@@ -1,1 +1,0 @@
-SkyControl is provided by BSD 3 clause license https://github.com/jMonkeyEngine-Contributions/SkyControl/blob/master/license.txt

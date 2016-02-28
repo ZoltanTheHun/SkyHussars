@@ -28,8 +28,12 @@ package com.codebetyars.skyhussars.engine.physics;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SymmetricAirfoil implements Airfoil {
+
+    private final static Logger logger = LoggerFactory.getLogger(SymmetricAirfoil.class);
 
     public SymmetricAirfoil(String name, Vector3f cog, float wingArea, float incidence, float aspectRatio, boolean damper, float dehidralDegree) {
         this.wingArea = wingArea;
@@ -40,7 +44,7 @@ public class SymmetricAirfoil implements Airfoil {
         this.qIncidence = qIncidence.fromAngles((-incidence) * FastMath.DEG_TO_RAD, 0, 0);
         this.dehidral = new Quaternion().fromAngleAxis(dehidralDegree * FastMath.DEG_TO_RAD, Vector3f.UNIT_Z);//vertical ? Vector3f.UNIT_X : Vector3f.UNIT_Y;
         wingRotation = qIncidence.mult(dehidral);
-        System.out.println(name + " pointing to " + qIncidence.mult(dehidral).mult(Vector3f.UNIT_Y));
+        logger.debug(name + " pointing to " + qIncidence.mult(dehidral).mult(Vector3f.UNIT_Y));
         this.damper = damper;
         if (damper) {
             if (this.cog.dot(Vector3f.UNIT_X) < 0) {
@@ -85,7 +89,7 @@ public class SymmetricAirfoil implements Airfoil {
         if (vLift.normalize().dot(vUp) < 0) {
             direction = "down";
         }
-        System.out.println(name + " at " + angleOfAttack + " degrees generated " + direction + "forces: vLift " + vLift.length() + ", induced drag " + vInducedDrag.length());
+        logger.debug(name + " at " + angleOfAttack + " degrees generated " + direction + "forces: vLift " + vLift.length() + ", induced drag " + vInducedDrag.length());
     }
 
     public Vector3f addDamping(Vector3f vFlow, Vector3f vAngularVelocity, Vector3f vUp) {
@@ -138,7 +142,7 @@ public class SymmetricAirfoil implements Airfoil {
 
     public Vector3f calculateInducedDrag(float airDensity, Vector3f vFlow, Vector3f vLift) {
         float dividened = (0.5f * airDensity * aspectRatio * vFlow.lengthSquared() * FastMath.PI * wingArea);
-        //System.out.println("Airdensity: " + airDensity + ", Velocity: " + vVelocity.length() + ", lift: " + vLift.length() + );
+        //logger.debug("Airdensity: " + airDensity + ", Velocity: " + vVelocity.length() + ", lift: " + vLift.length() + );
         if (dividened == 0) {
             return Vector3f.ZERO;
         }

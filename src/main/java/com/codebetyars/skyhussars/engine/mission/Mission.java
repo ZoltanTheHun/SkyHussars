@@ -25,15 +25,10 @@
  */
 package com.codebetyars.skyhussars.engine.mission;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
-import com.codebetyars.skyhussars.engine.GameState;
-import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.Pilot;
-import com.codebetyars.skyhussars.engine.SoundManager;
-import com.codebetyars.skyhussars.engine.TerrainManager;
+import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+
 import java.util.List;
 
 public class Mission extends GameState {

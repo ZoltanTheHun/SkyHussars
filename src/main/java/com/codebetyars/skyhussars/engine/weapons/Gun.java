@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.plane.GunLocationDescriptor;
 import com.jme3.math.Vector3f;
+
 import java.util.LinkedList;
 import java.util.List;
 

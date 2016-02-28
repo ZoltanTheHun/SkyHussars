@@ -27,21 +27,30 @@ package com.codebetyars.skyhussars.engine;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SoundManager {
+@Component
+public class SoundManager implements InitializingBean{
+
+    @Autowired
+    private AssetManager assetManager;
 
     private Map<String, AudioNode> sounds = new HashMap<>();
     private List<AudioNode> requestedNodes = new LinkedList<>();
 
-    public SoundManager(AssetManager assetManager) {
-        prepareEngineSound(assetManager);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        prepareEngineSound();
     }
 
-    private void prepareEngineSound(AssetManager assetManager) {
+    private void prepareEngineSound() {
         AudioNode engineSound = new AudioNode(assetManager, "Sounds/jet.wav", false);
         AudioNode gunSound = new AudioNode(assetManager, "Sounds/shoot.ogg", false);
         engineSound.setLooping(true);  // activate continuous playing

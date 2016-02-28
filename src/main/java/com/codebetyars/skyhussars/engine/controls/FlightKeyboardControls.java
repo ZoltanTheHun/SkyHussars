@@ -27,7 +27,6 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.Pilot;
 import com.jme3.input.controls.ActionListener;
-import com.codebetyars.skyhussars.engine.controls.ControlsMapper.*;
 
 public class FlightKeyboardControls implements ActionListener {
 

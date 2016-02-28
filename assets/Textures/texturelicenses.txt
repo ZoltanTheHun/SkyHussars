@@ -1,0 +1,3 @@
+water.png from OpenGameArt.com via Attribution-ShareAlike 3.0 Unported @ http://creativecommons.org/licenses/by-sa/3.0/
+forest.png and ground.png via GPL2/3 @ http://www.gnu.org/licenses/gpl-3.0.en.html
+circle-01.png from OpenGameArt via Attribution-ShareAlike 3.0 Unported @ http://creativecommons.org/licenses/by-sa/3.0/

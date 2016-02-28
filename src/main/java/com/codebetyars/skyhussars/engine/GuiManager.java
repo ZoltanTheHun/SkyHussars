@@ -32,74 +32,65 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.controls.DropDownSelectionChangedEvent;
-import de.lessvoid.nifty.controls.dropdown.DropDownControl;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class GuiManager implements ScreenController {
+@Component
+public class GuiManager implements ScreenController, InitializingBean {
 
-    private Nifty nifty;
+    private final static Logger logger = LoggerFactory.getLogger(GuiManager.class);
+
+    @Autowired
+    private AssetManager assetManager;
+
+    @Autowired
     private InputManager inputManager;
-    private String guiLocation;
+
+    @Autowired
+    private AudioRenderer audioRenderer;
+
+    @Autowired
     private ViewPort guiViewPort;
-    private NiftyJmeDisplay niftyDisplay;
+
+    @Autowired
     private CameraManager cameraManager;
-    private DropDownControl timeControl;
+
+    @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
 
-    public GuiManager(AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer,
-            ViewPort guiViewPort, String guiLocation, CameraManager cameraManager,DayLightWeatherManager dayLightWeatherManager) {
-        niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
-        this.inputManager = inputManager;
-        this.guiViewPort = guiViewPort;
+    private Nifty nifty;
+
+    private NiftyJmeDisplay niftyDisplay;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
-        this.startGame = false;
-        this.guiLocation = guiLocation;
-        this.cameraManager = cameraManager;
-        this.dayLightWeatherManager = dayLightWeatherManager;
     }
 
     public void createGUI() {
-        nifty.fromXml(guiLocation, "start", this);
+        nifty.fromXml("Interface/BasicGUI.xml", "start", this);
         nifty.addControls();
         nifty.update();
-        guiViewPort.addProcessor(niftyDisplay);
-        timeControl = nifty.getScreen("start").
-                findElementByName("timeControl").getControl(DropDownControl.class);
-        setupTimeControl(timeControl);
-    }
 
-    private void setupTimeControl(DropDownControl timeControl) {
+        DropDown<String> timeControl = nifty.getScreen("start").findNiftyControl("timeControl", DropDown.class);
         timeControl.addItem("Now");
-        timeControl.addItem("00:00");
-        timeControl.addItem("01:00");
-        timeControl.addItem("02:00");
-        timeControl.addItem("03:00");
-        timeControl.addItem("04:00");
-        timeControl.addItem("05:00");
-        timeControl.addItem("06:00");
-        timeControl.addItem("07:00");
-        timeControl.addItem("08:00");
-        timeControl.addItem("09:00");
-        timeControl.addItem("10:00");
-        timeControl.addItem("11:00");
-        timeControl.addItem("12:00");
-        timeControl.addItem("13:00");
-        timeControl.addItem("14:00");
-        timeControl.addItem("15:00");
-        timeControl.addItem("16:00");
-        timeControl.addItem("17:00");
-        timeControl.addItem("18:00");
-        timeControl.addItem("19:00");
-        timeControl.addItem("20:00");
-        timeControl.addItem("21:00");
-        timeControl.addItem("22:00");
-        timeControl.addItem("23:00");
+        for (int i=0; i < 23; i++) {
+            timeControl.addItem( (i < 10 ? "0" + i : i) + ":00");
+        }
+
+        guiViewPort.addProcessor(niftyDisplay);
     }
 
     @NiftyEventSubscriber(id = "timeControl")
@@ -113,7 +104,7 @@ public class GuiManager implements ScreenController {
         } else {
             hour = Integer.parseInt(time.split(":")[0]);
         }
-        System.out.println("Set time of flight:" + hour);
+        logger.debug("Set time of flight:" + hour);
         dayLightWeatherManager.setHour(hour);
     }
 
@@ -143,9 +134,7 @@ public class GuiManager implements ScreenController {
 
     public void onEndScreen() {
     }
-    /*
-     temp solution, needs restructuring dependencies
-     */
+
     public boolean startGame = false;
 
     public void startGame() {

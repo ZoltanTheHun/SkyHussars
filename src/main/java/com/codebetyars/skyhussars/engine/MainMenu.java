@@ -29,15 +29,17 @@ package com.codebetyars.skyhussars.engine;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MainMenu extends GameState implements ScreenController {
 
-    public MainMenu(GuiManager guiManager, GameState state) {
-        this.state = state;
-        this.guiManager = guiManager;
-    }
-    private GameState state;
+    @Autowired
     private GuiManager guiManager;
+
+    private GameState pendingMission;
+
     private float time = 0;
     //private boolean startGame = false;
 
@@ -45,7 +47,7 @@ public class MainMenu extends GameState implements ScreenController {
     public GameState update(float tpf) {
         GameState nextState = this;
         if (guiManager.startGame) {
-            nextState = state;
+            nextState = getPendingMission();
             guiManager.startGame = false;
         }
         return nextState;
@@ -72,5 +74,13 @@ public class MainMenu extends GameState implements ScreenController {
     }
 
     public void onEndScreen() {
+    }
+
+    public GameState getPendingMission() {
+        return pendingMission;
+    }
+
+    public void setPendingMission(GameState pendingMission) {
+        this.pendingMission = pendingMission;
     }
 }
