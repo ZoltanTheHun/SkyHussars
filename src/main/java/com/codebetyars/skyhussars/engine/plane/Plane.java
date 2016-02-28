@@ -122,7 +122,7 @@ public class Plane {
                 gunSound.stop();
             }
             for (GunGroup gunGroup : gunGroups) {
-                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation().mult(Vector3f.UNIT_Z).negate());
+                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation());
             }
         }else{
             engineSound.stop();

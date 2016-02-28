@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class GunGroup {
         this.gunLocations = gunLocations;
     }
 
-    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Vector3f vOrientation) {
+    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Quaternion vOrientation) {
         for (GunLocation gunLocation : gunLocations) {
             gunLocation.firing(firing,vLocation,vVelocity,vOrientation);
         }

@@ -57,6 +57,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         gun.setName(".50 M3 Browning");
         gun.setRateOfFire(20);
         gun.setMuzzleVelocity(890);
+        gun.setSpread(0.5f);
         List<GunLocationDescriptor> guns = new ArrayList<>();
         GunLocationDescriptor gun1 = new GunLocationDescriptor();
         gun1.setGunDescriptor(gun);
