@@ -68,14 +68,16 @@ public class Plane {
     private List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
     private ProjectileManager projectileManager;
-    private Node node;
+    private Node rootNode;
+    private Node outerView;
+    private Node cockpitView;
     private boolean crashed = false;
     private boolean shotdown = false;
     private Geometry hitBox;
     private ParticleEmitter fireEffect;
 
     public void updatePlanePhysics(float tpf) {
-        physics.update(tpf, node);
+        physics.update(tpf, rootNode);
         logger.debug(getInfo());
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
@@ -97,12 +99,12 @@ public class Plane {
     }
     private float wingArea = 22.07f; //m2
     private float aspectRatio = 6.37f;
-    SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
-    SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
+    private SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
+    private SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
+    private SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
+    private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry hitBox) {
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry hitBox, Geometry cockpit) {
         this.model = model;
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
@@ -112,10 +114,17 @@ public class Plane {
         this.projectileManager = projectileManager;
         initializeGunGroup();
         hitBox.getMaterial().getAdditionalRenderState().setWireframe(true);
-        this.node = new Node();
-        node.attachChild(model);
-        node.attachChild(engineSound);
-        node.attachChild(gunSound);
+        this.rootNode = new Node();
+        this.outerView = new Node();
+        this.cockpitView = new Node();
+        outerView.attachChild(model);
+        cockpitView.attachChild(cockpit);
+        cockpitView.rotate(0, FastMath.PI, 0);
+        cockpitView.move(0.015f, -0.015f, 0.7f);
+        rootNode.attachChild(outerView);
+        rootNode.attachChild(cockpitView);
+        rootNode.attachChild(engineSound);
+        rootNode.attachChild(gunSound);
         //node.attachChild(hitBox);
         this.hitBox = hitBox;
         //hitBox.set
@@ -127,7 +136,7 @@ public class Plane {
         for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
             engines.add(new Engine(engineLocation,1.0f));
         }
-        this.physics = new AdvancedPlanePhysics(node, planeDescriptor, engines, airfoils);
+        this.physics = new AdvancedPlanePhysics(rootNode, planeDescriptor, engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
     }
 
@@ -139,16 +148,24 @@ public class Plane {
     }
 
     public BoundingVolume getHitBox() {
-        return node.getWorldBound();
+        return rootNode.getWorldBound();
     }
 
-    public Node getNode() {
-        return node;
+    public Node rootNode() {
+        return rootNode;
+    }
+    
+    public Node outerView() {
+        return outerView;
+    }
+    
+    public Node cockpit() {
+        return cockpitView;
     }
 
     public void hit() {
         if (!shotdown) {
-            node.attachChild(fireEffect);
+            rootNode.attachChild(fireEffect);
             //explosion.setLocalTranslation(.getLocalTranslation());
             fireEffect.emitAllParticles();
             for(Engine engine : engines){
@@ -168,7 +185,7 @@ public class Plane {
                 gunSound.stop();
             }
             for (GunGroup gunGroup : gunGroups) {
-                gunGroup.firing(firing, node.getLocalTranslation(), physics.getVVelovity(), node.getWorldRotation());
+                gunGroup.firing(firing, rootNode.getLocalTranslation(), physics.getVVelovity(), rootNode.getWorldRotation());
             }
         } else {
             engineSound.stop();
@@ -213,31 +230,31 @@ public class Plane {
     }
 
     public void setHeight(int height) {
-        node.getLocalTranslation().setY(height);
+        rootNode.getLocalTranslation().setY(height);
     }
 
     public void setLocation(int x, int z) {
-        node.move(x, node.getLocalTranslation().y, z);
+        rootNode.move(x, rootNode.getLocalTranslation().y, z);
     }
 
     public void setLocation(int x, int y, int z) {
-        node.move(x, y, z);
+        rootNode.move(x, y, z);
     }
 
     public void setLocation(Vector3f location) {
-        node.move(location);
+        rootNode.move(location);
     }
 
     public float getHeight() {
-        return node.getLocalTranslation().y;
+        return rootNode.getLocalTranslation().y;
     }
 
     public Vector3f getLocation() {
-        return node.getLocalTranslation();
+        return rootNode.getLocalTranslation();
     }
 
     public Vector2f getLocation2D() {
-        return new Vector2f(node.getLocalTranslation().x, node.getLocalTranslation().z);
+        return new Vector2f(rootNode.getLocalTranslation().x, rootNode.getLocalTranslation().z);
     }
 
     public String getSpeedKmH() {

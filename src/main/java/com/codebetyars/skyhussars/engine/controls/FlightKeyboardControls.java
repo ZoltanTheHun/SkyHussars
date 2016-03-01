@@ -67,10 +67,10 @@ public class FlightKeyboardControls implements ActionListener {
                 case "Throttle100%":
                     pilot.setThrottle(1.0f);
                     break;
-                case "NoseDown":
+                case ControlsMapper.PITCH_DOWN:
                     noseDown = true;
                     break;
-                case "NoseUp":
+                case ControlsMapper.PITCH_UP:
                     noseUp = true;
                     break;
                 case "RotateLeft":
@@ -85,10 +85,10 @@ public class FlightKeyboardControls implements ActionListener {
             }
         } else {
             switch (name) {
-                case "NoseDown":
+                case ControlsMapper.PITCH_DOWN:
                     noseDown = false;
                     break;
-                case "NoseUp":
+                case ControlsMapper.PITCH_UP:
                     noseUp = false;
                     break;
                 case "RotateLeft":

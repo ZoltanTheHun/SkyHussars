@@ -29,10 +29,13 @@ import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Quad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +52,7 @@ public class DataManager {
             Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); // create material
             mat.setColor("Color", ColorRGBA.Green);
 
-            Geometry bullet = new Geometry("bullet", new Box(0.2f, 0.2f, 0.2f)); // wrap shape into geometry
+            Geometry bullet = new Geometry("bullet", new Box(0.05f, 0.05f, 0.05f)); // wrap shape into geometry
             bullet.setMaterial(mat);
 
             bulletTemplate = bullet;
@@ -63,6 +66,22 @@ public class DataManager {
                 "Common/MatDefs/Misc/Unshaded.j3md"); // create material
         mat.setColor("Color", ColorRGBA.Red);
         geom.setMaterial(mat);
+        return geom;
+    }
+
+    public Geometry getCockpit() {
+        Quad reticle = new Quad(
+                0.03f, 0.03f);
+        //Box reticle = new Box(0.3f, 0.3f,0.3f);
+        Geometry geom = new Geometry("reticle", reticle); // wrap shape into geometry
+        Material mat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md"); // create material
+        mat.setColor("Color", ColorRGBA.White);
+        mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        mat.setTexture("ColorMap", assetManager.loadTexture(
+                "Textures/circle-01.png"));
+        geom.setMaterial(mat);
+        geom.setQueueBucket(Bucket.Transparent); 
         return geom;
     }
 

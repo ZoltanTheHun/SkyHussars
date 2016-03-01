@@ -40,6 +40,11 @@ public class ControlsMapper {
     public static final String FIRE = "Fire";
     public static final String INCREASE_FOV = "IncreaseFov";
     public static final String DECREASE_FOV = "DecreaseFov";
+    public static final String PITCH_UP = "PitchUp";
+    public static final String PITCH_DOWN = "PitchDown";
+    public static final String COCKPIT_VIEW = "CockpitView";
+    public static final String OUTER_VIEW = "OuterView";
+
 
     @Value("#{application.inputManager}")
     private InputManager inputManager;
@@ -52,8 +57,8 @@ public class ControlsMapper {
     }
 
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
-        inputManager.addMapping("NoseDown", new KeyTrigger(KeyInput.KEY_UP));
-        inputManager.addMapping("NoseUp", new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addMapping(PITCH_DOWN, new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping(PITCH_UP, new KeyTrigger(KeyInput.KEY_DOWN));
         inputManager.addMapping("RotateLeft", new KeyTrigger(KeyInput.KEY_LEFT));
         inputManager.addMapping("RotateRight", new KeyTrigger(KeyInput.KEY_RIGHT));
         inputManager.addMapping("Throttle0%", new KeyTrigger(KeyInput.KEY_1));
@@ -65,12 +70,14 @@ public class ControlsMapper {
         inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addListener(flightKeyboardControls, "Throttle0%",
                 "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
-                "NoseDown", "NoseUp", "RotateLeft", "RotateRight", FIRE);
+                PITCH_DOWN, PITCH_UP, "RotateLeft", "RotateRight", FIRE);
     }
 
     public void setupCameraControls(CameraControls cameraControls) {
         inputManager.addMapping(INCREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addListener(cameraControls, INCREASE_FOV,DECREASE_FOV);
+        inputManager.addMapping(COCKPIT_VIEW, new KeyTrigger(KeyInput.KEY_F1));
+        inputManager.addMapping(OUTER_VIEW, new KeyTrigger(KeyInput.KEY_F5));
+        inputManager.addListener(cameraControls, INCREASE_FOV,DECREASE_FOV,COCKPIT_VIEW,OUTER_VIEW);
     }
 }

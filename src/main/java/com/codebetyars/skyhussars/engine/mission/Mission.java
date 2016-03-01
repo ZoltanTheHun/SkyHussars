@@ -78,8 +78,9 @@ public class Mission extends GameState {
     private void initiliazePlayer() {
         /*player.plane().setLocation(0, 0);
          player.plane().setHeight(3000);*/
-        cameraManager.moveCameraTo(player.plane().getLocation());
-        cameraManager.followWithCamera(player.plane().getNode());
+        Plane plane = player.plane();
+        cameraManager.moveCameraTo(plane.getLocation());
+        cameraManager.followWithCamera(plane.rootNode(),plane.outerView(),plane.cockpit());
         cameraManager.init();
     }
 

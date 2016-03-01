@@ -28,12 +28,17 @@ package com.codebetyars.skyhussars.engine;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.scene.Spatial;
+import com.jme3.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CameraManager {
+
+    public static enum CameraMode {
+
+        COCKPIT_VIEW, OUTER_VIEW
+    }
 
     @Autowired
     private Camera camera;
@@ -41,16 +46,27 @@ public class CameraManager {
     @Autowired
     private FlyByCamera flyByCamera;
 
+    private CameraMode cameraMode = CameraMode.OUTER_VIEW;
+
     private boolean fovChangeActive;
     private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
-    private float fovChangeRate = 8f;
+    private float fovChangeRate = 12f;
 
-    public Spatial focus;
+    private Node focus;
+    private Node outerView;
+    private Node cockpit;
 
     public void update(float tpf) {
-        follow();
+        switch (cameraMode) {
+            case OUTER_VIEW:
+                follow();
+                break;
+            case COCKPIT_VIEW:
+                showCockpit();
+                break;
+        }
         updateFov(tpf);
     }
 
@@ -71,14 +87,23 @@ public class CameraManager {
         camera.lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
+    private void showCockpit() {
+        camera.setLocation((focus.getWorldTranslation()));
+        camera.lookAtDirection(focus.getLocalRotation().mult(Vector3f.UNIT_Z), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+    }
+
     public void init() {
         if (focus != null) {
             follow();
         }
     }
 
-    public void followWithCamera(Spatial spatial) {
-        this.focus = spatial;
+    public void followWithCamera(Node node, Node outerView, Node cockpit) {
+        this.focus = node;
+        this.outerView = outerView;
+        this.cockpit = cockpit;
+        switchToView(cameraMode);
+
     }
     private float aspect;
     private float fov;
@@ -119,5 +144,28 @@ public class CameraManager {
 
     public boolean flyCamActive() {
         return flyByCamera.isEnabled();
+    }
+
+    public void switchToView(CameraMode view) {
+        switch (view) {
+            case COCKPIT_VIEW:
+                switchToCockpitView();
+                break;
+            case OUTER_VIEW:
+                switchToOuterView();
+                break;
+        }
+    }
+
+    private void switchToCockpitView() {
+        outerView.setCullHint(Node.CullHint.Always);
+        cockpit.setCullHint(Node.CullHint.Inherit);
+        this.cameraMode = CameraMode.COCKPIT_VIEW;
+    }
+
+    private void switchToOuterView() {
+        outerView.setCullHint(Node.CullHint.Inherit);
+        cockpit.setCullHint(Node.CullHint.Always);
+        this.cameraMode = CameraMode.OUTER_VIEW;
     }
 }

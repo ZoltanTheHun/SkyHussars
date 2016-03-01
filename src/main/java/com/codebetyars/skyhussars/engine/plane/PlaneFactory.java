@@ -62,7 +62,7 @@ public class PlaneFactory {
         Box box = new Box(6f, 1f, 4f);
         Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
-                gunSound, projectileManager, dataManager.hitBox(box));
+                gunSound, projectileManager, dataManager.hitBox(box),dataManager.getCockpit());
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }

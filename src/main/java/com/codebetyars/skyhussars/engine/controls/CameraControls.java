@@ -45,6 +45,12 @@ public class CameraControls implements ActionListener {
             if (name.equals(ControlsMapper.DECREASE_FOV)) {
                 cameraManager.setFovChangeActive(true, true);
             }
+            if (name.equals(ControlsMapper.COCKPIT_VIEW)) {
+                cameraManager.switchToView(CameraManager.CameraMode.COCKPIT_VIEW);
+            }
+            if (name.equals(ControlsMapper.OUTER_VIEW)) {
+                cameraManager.switchToView(CameraManager.CameraMode.OUTER_VIEW);
+            }
         } else {
             if (name.equals(ControlsMapper.INCREASE_FOV)) {
                 cameraManager.setFovChangeActive(false);
