@@ -81,7 +81,7 @@ public class DataManager {
         mat.setTexture("ColorMap", assetManager.loadTexture(
                 "Textures/circle-01.png"));
         geom.setMaterial(mat);
-        geom.setQueueBucket(Bucket.Transparent); 
+        geom.setQueueBucket(Bucket.Translucent); 
         return geom;
     }
 
