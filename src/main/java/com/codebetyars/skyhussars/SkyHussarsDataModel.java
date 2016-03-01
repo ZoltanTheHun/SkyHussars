@@ -91,7 +91,6 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeDescriptor.setGunGroupDescriptors(gunGroups);
         planes.put(planeDescriptor.getName(), planeDescriptor);
 
-
         engineLocation = new EngineLocation();
         engineLocation.setEngineDescriptor(engines.get("Allison J33-A-17"));
         engineLocation.setLocation(new Vector3f(0f, 0f, 0f));
@@ -111,16 +110,48 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeMissionDescriptor.player(true);
         planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
         planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
-        
+
         PlaneMissionDescriptor planeMissionDescriptor2 = new PlaneMissionDescriptor();
         planeMissionDescriptor2.player(false);
         planeMissionDescriptor2.planeType("Lockheed P-80A-1-LO Shooting Star");
         planeMissionDescriptor2.startLocation(new Vector3f(0, 3000, 100));
 
+        PlaneMissionDescriptor planeMissionDescriptor3 = new PlaneMissionDescriptor();
+        planeMissionDescriptor3.player(false);
+        planeMissionDescriptor3.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor3.startLocation(new Vector3f(0, 3000, 1000));
+
+        PlaneMissionDescriptor planeMissionDescriptor4 = new PlaneMissionDescriptor();
+        planeMissionDescriptor4.player(false);
+        planeMissionDescriptor4.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor4.startLocation(new Vector3f(50, 2500, 100));
+        
+        PlaneMissionDescriptor planeMissionDescriptor5 = new PlaneMissionDescriptor();
+        planeMissionDescriptor5.player(false);
+        planeMissionDescriptor5.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor5.startLocation(new Vector3f(-100, 3000, 100));
+        
+        PlaneMissionDescriptor planeMissionDescriptor6 = new PlaneMissionDescriptor();
+        planeMissionDescriptor6.player(false);
+        planeMissionDescriptor6.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor6.startLocation(new Vector3f(100, 3000, 100));
+
+        PlaneMissionDescriptor planeMissionDescriptor7 = new PlaneMissionDescriptor();
+        planeMissionDescriptor7.player(false);
+        planeMissionDescriptor7.planeType("Lockheed P-80A-1-LO Shooting Star");
+        planeMissionDescriptor7.startLocation(new Vector3f(0, 3000, 5000));
+
         List<PlaneMissionDescriptor> planeMissionDescriptors = new ArrayList<>();
         planeMissionDescriptors.add(planeMissionDescriptor);
         planeMissionDescriptors.add(planeMissionDescriptor2);
+        planeMissionDescriptors.add(planeMissionDescriptor3);
+        planeMissionDescriptors.add(planeMissionDescriptor4);
+        planeMissionDescriptors.add(planeMissionDescriptor5);
+        planeMissionDescriptors.add(planeMissionDescriptor6);
+        planeMissionDescriptors.add(planeMissionDescriptor7);
 
+        
+        
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");
         missionDescriptor.planeMissionDescriptors(planeMissionDescriptors);
