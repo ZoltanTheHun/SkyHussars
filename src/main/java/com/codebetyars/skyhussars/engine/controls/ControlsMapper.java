@@ -30,6 +30,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,10 @@ public class ControlsMapper {
     public static final String PITCH_DOWN = "PitchDown";
     public static final String COCKPIT_VIEW = "CockpitView";
     public static final String OUTER_VIEW = "OuterView";
-
+    public static final String MOUSE_LEFT = "MouseLeft";
+    public static final String MOUSE_RIGHT = "MouseRight";
+    public static final String MOUSE_DOWN = "MouseDown";
+    public static final String MOUSE_UP = "MouseUp";
 
     @Value("#{application.inputManager}")
     private InputManager inputManager;
@@ -78,6 +82,10 @@ public class ControlsMapper {
         inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addMapping(COCKPIT_VIEW, new KeyTrigger(KeyInput.KEY_F1));
         inputManager.addMapping(OUTER_VIEW, new KeyTrigger(KeyInput.KEY_F5));
-        inputManager.addListener(cameraControls, INCREASE_FOV,DECREASE_FOV,COCKPIT_VIEW,OUTER_VIEW);
+        inputManager.addMapping(MOUSE_LEFT, new MouseAxisTrigger(MouseInput.AXIS_X, false));
+        inputManager.addMapping(MOUSE_RIGHT, new MouseAxisTrigger(MouseInput.AXIS_X, true));
+        inputManager.addMapping(MOUSE_UP, new MouseAxisTrigger(MouseInput.AXIS_Y, true));
+        inputManager.addMapping(MOUSE_DOWN, new MouseAxisTrigger(MouseInput.AXIS_Y, false));
+        inputManager.addListener(cameraControls, INCREASE_FOV, DECREASE_FOV, COCKPIT_VIEW, OUTER_VIEW,MOUSE_UP,MOUSE_DOWN,MOUSE_RIGHT,MOUSE_LEFT);
     }
 }

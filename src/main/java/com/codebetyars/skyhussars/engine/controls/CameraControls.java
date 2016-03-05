@@ -27,10 +27,11 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
 
-public class CameraControls implements ActionListener {
+public class CameraControls implements ActionListener,AnalogListener {
 
-    private CameraManager cameraManager;
+    private final CameraManager cameraManager;
 
     public CameraControls(CameraManager cameraManager) {
         this.cameraManager = cameraManager;
@@ -60,4 +61,20 @@ public class CameraControls implements ActionListener {
             }
         }
     }
+
+    @Override
+    public void onAnalog(String name, float value, float tpf) {
+        if(name.equals(ControlsMapper.MOUSE_LEFT)){
+           cameraManager.rotateCameraX(-value,tpf);
+        }else if(name.equals(ControlsMapper.MOUSE_RIGHT)) {
+           cameraManager.rotateCameraX(value,tpf);
+        }
+        if(name.equals(ControlsMapper.MOUSE_UP)){
+           cameraManager.rotateCameraY(value,tpf);
+        }else if(name.equals(ControlsMapper.MOUSE_DOWN)) {
+           cameraManager.rotateCameraY(-value,tpf);
+        }
+    }
+    
+    
 }

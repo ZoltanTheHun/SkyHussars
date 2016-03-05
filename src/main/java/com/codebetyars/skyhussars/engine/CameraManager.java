@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine;
 
 import com.jme3.input.FlyByCamera;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
@@ -52,11 +53,14 @@ public class CameraManager {
     private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
-    private float fovChangeRate = 12f;
+    private final float fovChangeRate = 12f;
 
     private Node focus;
     private Node outerView;
     private Node cockpit;
+
+    private Quaternion rotationX = new Quaternion();
+    private Quaternion rotationY = new Quaternion();
 
     public void update(float tpf) {
         switch (cameraMode) {
@@ -89,7 +93,9 @@ public class CameraManager {
 
     private void showCockpit() {
         camera.setLocation((focus.getWorldTranslation()));
-        camera.lookAtDirection(focus.getLocalRotation().mult(Vector3f.UNIT_Z), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+        camera.lookAtDirection(focus.getLocalRotation().mult(rotationX).
+                mult(rotationY).mult(Vector3f.UNIT_Z), focus.getLocalRotation().
+                        mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
@@ -167,5 +173,19 @@ public class CameraManager {
         outerView.setCullHint(Node.CullHint.Inherit);
         cockpit.setCullHint(Node.CullHint.Always);
         this.cameraMode = CameraMode.OUTER_VIEW;
+    }
+
+    public void rotateCameraX(float value, float tpf) {
+        if (cameraMode == CameraMode.COCKPIT_VIEW) {
+            Quaternion rotation = new Quaternion();
+            rotationX.multLocal(rotation.fromAngles(0, value, 0));
+        }
+    }
+
+    public void rotateCameraY(float value, float tpf) {
+        if (cameraMode == CameraMode.COCKPIT_VIEW) {
+            Quaternion rotation = new Quaternion();
+            rotationY.multLocal(rotation.fromAngles(value, 0, 0));
+        }
     }
 }

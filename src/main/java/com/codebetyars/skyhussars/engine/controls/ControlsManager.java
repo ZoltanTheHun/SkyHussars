@@ -30,9 +30,9 @@ import com.codebetyars.skyhussars.engine.mission.Mission;
 
 public class ControlsManager {
 
-    private FlightKeyboardControls inFlightKeyboardControls;
-    private FlowControls gameFlowControls;
-    private CameraControls cameraControls;
+    private final FlightKeyboardControls inFlightKeyboardControls;
+    private final FlowControls gameFlowControls;
+    private final CameraControls cameraControls;
 
     public ControlsManager(ControlsMapper controlsMapper, Mission mission,CameraManager cameraManager) {
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());

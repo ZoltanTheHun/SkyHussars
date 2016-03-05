@@ -72,7 +72,6 @@ public class DataManager {
     public Geometry getCockpit() {
         Quad reticle = new Quad(
                 0.03f, 0.03f);
-        //Box reticle = new Box(0.3f, 0.3f,0.3f);
         Geometry geom = new Geometry("reticle", reticle); // wrap shape into geometry
         Material mat = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md"); // create material
