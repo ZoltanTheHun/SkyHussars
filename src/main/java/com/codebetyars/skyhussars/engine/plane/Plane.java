@@ -36,9 +36,11 @@ import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.audio.Listener;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -54,36 +56,37 @@ public class Plane {
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
-    private PlaneDescriptor planeDescriptor;
+    private final PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
-    private Spatial model;
-    private PlanePhysics physics;
-    private AudioNode engineSound;
-    private AudioNode gunSound;
+    private final PlanePhysics physics;
+    private final AudioNode engineSound;
+    private final AudioNode gunSound;
     private List<Gun> guns;
     private List<GunGroup> gunGroups;
     private List<Missile> missiles;
     private List<Bomb> bombs;
-    private List<Engine> engines = new ArrayList<>();
+    private final List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
-    private ProjectileManager projectileManager;
-    private Node rootNode;
-    private Node outerView;
-    private Node cockpitView;
+    private final ProjectileManager projectileManager;
     private boolean crashed = false;
     private boolean shotdown = false;
-    private Geometry hitBox;
     private ParticleEmitter fireEffect;
+    private final PlaneGeometry planeGeometry;
+    private Listener listener;
 
     public void updatePlanePhysics(float tpf) {
-        physics.update(tpf, rootNode);
+        physics.update(tpf, planeGeometry.rootNode());
         logger.debug(getInfo());
     }
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 
     public String getInfo() {
         return physics.getInfo();
+    }
+
+    public PlaneGeometry planeGeometry() {
+        return planeGeometry;
     }
 
     public void fireEffect(ParticleEmitter fireEffect) {
@@ -104,39 +107,28 @@ public class Plane {
     private SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
     private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry hitBox, Geometry cockpit) {
-        this.model = model;
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry cockpit) {
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
         this.gunSound = gunSound;
         //test model is backwards
-        this.model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
+        model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
         initializeGunGroup();
-        hitBox.getMaterial().getAdditionalRenderState().setWireframe(true);
-        this.rootNode = new Node();
-        this.outerView = new Node();
-        this.cockpitView = new Node();
-        outerView.attachChild(model);
-        cockpitView.attachChild(cockpit);
-        cockpitView.rotate(0, FastMath.PI, 0);
-        cockpitView.move(0.015f, -0.015f, 0.7f);
-        rootNode.attachChild(outerView);
-        rootNode.attachChild(cockpitView);
-        rootNode.attachChild(engineSound);
-        rootNode.attachChild(gunSound);
-        //node.attachChild(hitBox);
-        this.hitBox = hitBox;
-        //hitBox.set
+        planeGeometry = new PlaneGeometry();
+        planeGeometry.attachSpatialToCockpitNode(cockpit);
+        planeGeometry.attachSpatialToModelNode(model);
+        planeGeometry.attachSpatialToRootNode(engineSound);
+        planeGeometry.attachSpatialToRootNode(gunSound);
         List<Airfoil> airfoils = new ArrayList<>();
         airfoils.add(leftWing);
         airfoils.add(rightWing);
         airfoils.add(horizontalStabilizer);
         airfoils.add(verticalStabilizer);
         for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
-            engines.add(new Engine(engineLocation,1.0f));
+            engines.add(new Engine(engineLocation, 1.0f));
         }
-        this.physics = new AdvancedPlanePhysics(rootNode, planeDescriptor, engines, airfoils);
+        this.physics = new AdvancedPlanePhysics(planeGeometry.rootNode(), planeDescriptor, engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
     }
 
@@ -148,27 +140,15 @@ public class Plane {
     }
 
     public BoundingVolume getHitBox() {
-        return rootNode.getWorldBound();
-    }
-
-    public Node rootNode() {
-        return rootNode;
-    }
-    
-    public Node outerView() {
-        return outerView;
-    }
-    
-    public Node cockpit() {
-        return cockpitView;
+        return planeGeometry.rootNode().getWorldBound();
     }
 
     public void hit() {
         if (!shotdown) {
-            rootNode.attachChild(fireEffect);
+            planeGeometry.attachSpatialToRootNode(fireEffect);
             //explosion.setLocalTranslation(.getLocalTranslation());
             fireEffect.emitAllParticles();
-            for(Engine engine : engines){
+            for (Engine engine : engines) {
                 engine.damage(1.0f);
             }
         }
@@ -185,17 +165,19 @@ public class Plane {
                 gunSound.stop();
             }
             for (GunGroup gunGroup : gunGroups) {
-                gunGroup.firing(firing, rootNode.getLocalTranslation(), physics.getVVelovity(), rootNode.getWorldRotation());
+                gunGroup.firing(firing, planeGeometry.rootNode().getLocalTranslation(),
+                        physics.getVVelovity(), planeGeometry.rootNode().getWorldRotation());
             }
         } else {
             engineSound.stop();
             gunSound.stop();
         }
-
-    }
-
-    public AudioNode getEngineSound() {
-        return engineSound;
+      /*  if (listener != null) {
+            listener.setLocation(planeGeometry.rootNode().getWorldTranslation());
+            listener.setRotation(planeGeometry.rootNode().getLocalRotation().mult(Quaternion.DIRECTION_Z));
+        }
+        engineSound.setLocalTranslation(planeGeometry.rootNode().getWorldTranslation());
+        gunSound.setLocalTranslation(planeGeometry.rootNode().getWorldTranslation());*/
     }
 
     /**
@@ -230,31 +212,31 @@ public class Plane {
     }
 
     public void setHeight(int height) {
-        rootNode.getLocalTranslation().setY(height);
+        planeGeometry.rootNode().getLocalTranslation().setY(height);
     }
 
     public void setLocation(int x, int z) {
-        rootNode.move(x, rootNode.getLocalTranslation().y, z);
+        planeGeometry.rootNode().move(x, planeGeometry.rootNode().getLocalTranslation().y, z);
     }
 
     public void setLocation(int x, int y, int z) {
-        rootNode.move(x, y, z);
+        planeGeometry.rootNode().move(x, y, z);
     }
 
     public void setLocation(Vector3f location) {
-        rootNode.move(location);
+        planeGeometry.rootNode().move(location);
     }
 
     public float getHeight() {
-        return rootNode.getLocalTranslation().y;
+        return planeGeometry.rootNode().getLocalTranslation().y;
     }
 
     public Vector3f getLocation() {
-        return rootNode.getLocalTranslation();
+        return planeGeometry.rootNode().getLocalTranslation();
     }
 
     public Vector2f getLocation2D() {
-        return new Vector2f(rootNode.getLocalTranslation().x, rootNode.getLocalTranslation().z);
+        return new Vector2f(planeGeometry.rootNode().getLocalTranslation().x, planeGeometry.rootNode().getLocalTranslation().z);
     }
 
     public String getSpeedKmH() {
@@ -271,5 +253,9 @@ public class Plane {
 
     public boolean crashed() {
         return crashed;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 }

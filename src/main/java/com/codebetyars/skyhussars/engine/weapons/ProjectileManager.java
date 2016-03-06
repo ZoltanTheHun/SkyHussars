@@ -27,7 +27,6 @@ package com.codebetyars.skyhussars.engine.weapons;
 
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.plane.Plane;
-import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -70,8 +69,6 @@ public class ProjectileManager {
                 geom.setLocalTranslation(projectile.getLocation());
                 Vector3f direction = projectile.getVelocity().normalize();
                 geom.lookAt(direction, Vector3f.UNIT_Y);
-                //geom.setLocalRotation(new Quaternion().);
-
             }
         }
     }
@@ -79,7 +76,7 @@ public class ProjectileManager {
     public void checkCollision(Plane plane) {
         for (Geometry projectile : projectileGeometries) {
             CollisionResults collisionResults = new CollisionResults();
-            if (projectile.collideWith(plane.rootNode().getWorldBound(), collisionResults) > 0) {
+            if (projectile.collideWith(plane.planeGeometry().rootNode().getWorldBound(), collisionResults) > 0) {
                 if (collisionResults.size() > 0) {
                     plane.hit();
                 }

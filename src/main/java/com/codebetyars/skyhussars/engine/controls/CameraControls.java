@@ -64,15 +64,19 @@ public class CameraControls implements ActionListener,AnalogListener {
 
     @Override
     public void onAnalog(String name, float value, float tpf) {
-        if(name.equals(ControlsMapper.MOUSE_LEFT)){
-           cameraManager.rotateCameraX(-value,tpf);
-        }else if(name.equals(ControlsMapper.MOUSE_RIGHT)) {
-           cameraManager.rotateCameraX(value,tpf);
-        }
-        if(name.equals(ControlsMapper.MOUSE_UP)){
-           cameraManager.rotateCameraY(value,tpf);
-        }else if(name.equals(ControlsMapper.MOUSE_DOWN)) {
-           cameraManager.rotateCameraY(-value,tpf);
+        switch (name) {
+            case ControlsMapper.MOUSE_LEFT:
+                cameraManager.rotateCameraX(-value,tpf);
+                break;
+            case ControlsMapper.MOUSE_RIGHT:
+                cameraManager.rotateCameraX(value,tpf);
+                break;
+            case ControlsMapper.MOUSE_UP:
+                cameraManager.rotateCameraY(value,tpf);
+                break;
+            case ControlsMapper.MOUSE_DOWN:
+                cameraManager.rotateCameraY(-value,tpf);
+                break;
         }
     }
     

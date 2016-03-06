@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SoundManager implements InitializingBean{
+public class SoundManager implements InitializingBean {
 
     @Autowired
     private AssetManager assetManager;
@@ -55,8 +55,11 @@ public class SoundManager implements InitializingBean{
         AudioNode gunSound = new AudioNode(assetManager, "Sounds/shoot.ogg", false);
         engineSound.setLooping(true);  // activate continuous playing
         engineSound.setPositional(true);
+        engineSound.setMaxDistance(10f);
+        engineSound.setRefDistance(5f);
         engineSound.setVolume(3);
         engineSound.setPitch(1f);
+        
         gunSound.setLooping(true);
         gunSound.setPositional(true);
         sounds.put("engine", engineSound);
@@ -68,9 +71,9 @@ public class SoundManager implements InitializingBean{
         requestedNodes.add(sound);
         return sound;
     }
-    
-    public void muteAllSounds(){
-        for(AudioNode sound : requestedNodes){
+
+    public void muteAllSounds() {
+        for (AudioNode sound : requestedNodes) {
             sound.stop();
         }
     }

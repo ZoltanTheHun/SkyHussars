@@ -61,9 +61,9 @@ public class SkyHussars extends SimpleApplication {
 
         context.register(SkyHussarsContext.class);
         context.refresh();
-
         skyHussarsContext = context.getBean(SkyHussarsContext.class);
         skyHussarsContext.simpleInitApp();
+        skyHussarsContext.setListener(listener);
 
         setDisplayStatView(false);
     }
@@ -71,6 +71,8 @@ public class SkyHussars extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
+        listener.setLocation(cam.getLocation());
+        listener.setRotation(cam.getRotation());
     }
 
     @Override

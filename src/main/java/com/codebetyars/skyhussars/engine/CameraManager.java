@@ -25,6 +25,8 @@
  */
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.engine.plane.PlaneGeometry;
+import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -38,7 +40,13 @@ public class CameraManager {
 
     public static enum CameraMode {
 
-        COCKPIT_VIEW, OUTER_VIEW
+        COCKPIT_VIEW(GeometryMode.COCKPIT_MODE), OUTER_VIEW(GeometryMode.MODEL_MODE);
+
+        CameraMode(GeometryMode geometryMode) {
+            this.geometryMode = geometryMode;
+        }
+
+        public final GeometryMode geometryMode;
     }
 
     @Autowired
@@ -55,12 +63,10 @@ public class CameraManager {
     private final int maxFov = 100;
     private final float fovChangeRate = 12f;
 
-    private Node focus;
-    private Node outerView;
-    private Node cockpit;
+    private PlaneGeometry focus;
 
-    private Quaternion rotationX = new Quaternion();
-    private Quaternion rotationY = new Quaternion();
+    private final Quaternion rotationX = new Quaternion();
+    private final Quaternion rotationY = new Quaternion();
 
     public void update(float tpf) {
         switch (cameraMode) {
@@ -87,15 +93,17 @@ public class CameraManager {
 
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        camera.setLocation((focus.getWorldTranslation()).add(focus.getLocalRotation().mult(cameraLocation)));
-        camera.lookAt(focus.getWorldTranslation(), focus.getLocalRotation().mult(Vector3f.UNIT_Y));
+        Node node = focus.rootNode();
+        camera.setLocation((node.getWorldTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
+        camera.lookAt(node.getWorldTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     private void showCockpit() {
-        camera.setLocation((focus.getWorldTranslation()));
-        camera.lookAtDirection(focus.getLocalRotation().mult(rotationX).
-                mult(rotationY).mult(Vector3f.UNIT_Z), focus.getLocalRotation().
-                        mult(Vector3f.UNIT_Y));
+        camera.setLocation((focus.rootNode().getWorldTranslation()));
+        Node node = focus.rootNode();
+        camera.lookAtDirection(node.getLocalRotation().mult(rotationX).
+                mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
+                mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
@@ -104,10 +112,8 @@ public class CameraManager {
         }
     }
 
-    public void followWithCamera(Node node, Node outerView, Node cockpit) {
-        this.focus = node;
-        this.outerView = outerView;
-        this.cockpit = cockpit;
+    public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
+        focus = planeGeometry;
         switchToView(cameraMode);
 
     }
@@ -153,26 +159,8 @@ public class CameraManager {
     }
 
     public void switchToView(CameraMode view) {
-        switch (view) {
-            case COCKPIT_VIEW:
-                switchToCockpitView();
-                break;
-            case OUTER_VIEW:
-                switchToOuterView();
-                break;
-        }
-    }
-
-    private void switchToCockpitView() {
-        outerView.setCullHint(Node.CullHint.Always);
-        cockpit.setCullHint(Node.CullHint.Inherit);
-        this.cameraMode = CameraMode.COCKPIT_VIEW;
-    }
-
-    private void switchToOuterView() {
-        outerView.setCullHint(Node.CullHint.Inherit);
-        cockpit.setCullHint(Node.CullHint.Always);
-        this.cameraMode = CameraMode.OUTER_VIEW;
+        focus.switchTo(view.geometryMode);
+        this.cameraMode = view;
     }
 
     public void rotateCameraX(float value, float tpf) {

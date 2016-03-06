@@ -6,6 +6,7 @@ import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.Listener;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
@@ -46,6 +47,8 @@ public class SkyHussarsContext {
 
     private GameState gameState;
 
+    private Listener listener;
+
     @Bean
     public SkyControl skyControl() {
         Calendar now = new GregorianCalendar();
@@ -59,10 +62,10 @@ public class SkyHussarsContext {
         return skyControl;
     }
 
-
     public void simpleInitApp() {
         cameraManager.initializeCamera();
         guiManager.createGUI();
+        missionFactory.setListener(listener);
         mainMenu.setPendingMission(missionFactory.mission("Test mission"));
         mainMenu.initialize();
         gameState = mainMenu;
@@ -79,4 +82,9 @@ public class SkyHussarsContext {
 
     public void simpleRender(RenderManager rm) {
     }
+
+    void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
 }

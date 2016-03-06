@@ -28,22 +28,23 @@ package com.codebetyars.skyhussars.engine.mission;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.audio.Listener;
 
 import java.util.List;
 
 public class Mission extends GameState {
 
     private Pilot player;
-    private CameraManager cameraManager;
-    private TerrainManager terrainManager;
-    private GuiManager guiManager;
-    private DayLightWeatherManager dayLightWeatherManager;
-    private ProjectileManager projectileManager;
+    private final CameraManager cameraManager;
+    private final TerrainManager terrainManager;
+    private final GuiManager guiManager;
+    private final DayLightWeatherManager dayLightWeatherManager;
+    private final ProjectileManager projectileManager;
     private boolean paused = false;
     private boolean ended = false;
-    private List<Plane> planes;
+    private final List<Plane> planes;
     private List<Pilot> pilots;
-    private SoundManager soundManager;
+    private final SoundManager soundManager;
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
@@ -54,7 +55,7 @@ public class Mission extends GameState {
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        this.soundManager = soundManager;
+        this.soundManager = soundManager;;
         for (Plane plane : planes) {
             if (plane.planeMissionDescriptor().player()) {
                 player = new Pilot(plane);
@@ -80,7 +81,7 @@ public class Mission extends GameState {
          player.plane().setHeight(3000);*/
         Plane plane = player.plane();
         cameraManager.moveCameraTo(plane.getLocation());
-        cameraManager.followWithCamera(plane.rootNode(),plane.outerView(),plane.cockpit());
+        cameraManager.followWithCamera(plane.planeGeometry());
         cameraManager.init();
     }
 
@@ -94,7 +95,7 @@ public class Mission extends GameState {
                 }
             }
             projectileManager.update(tpf);
-            for(Plane plane : planes){
+            for (Plane plane : planes) {
                 projectileManager.checkCollision(plane);
             }
             if (player.plane().crashed()) {
@@ -127,4 +128,9 @@ public class Mission extends GameState {
     public boolean paused() {
         return paused;
     }
+
+    void setListener(Listener listener) {
+        player.plane().setListener(listener);
+    }
+
 }
