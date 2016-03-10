@@ -151,7 +151,6 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeMissionDescriptors.add(planeMissionDescriptor7);
 
         
-        
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");
         missionDescriptor.planeMissionDescriptors(planeMissionDescriptors);

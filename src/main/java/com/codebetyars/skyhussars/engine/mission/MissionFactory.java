@@ -31,7 +31,6 @@ import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.audio.Listener;
 import com.jme3.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,13 +70,12 @@ public class MissionFactory {
 
     @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
-    private Listener listener;
 
     public Mission mission(String missionName) {
         MissionDescriptor missionDescriptor = dataModel.getMissionDescriptor(missionName);
         List<Plane> planes = planes(missionDescriptor);
         Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
-        mission.setListener(listener);
+
         ControlsManager cm = new ControlsManager(controlsMapper, mission, cameraManager);
         return mission;
     }
@@ -95,7 +93,4 @@ public class MissionFactory {
         return planes;
     }
 
-    public void setListener(Listener listener) {
-        this.listener = listener;
-    }
 }

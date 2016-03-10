@@ -47,9 +47,9 @@ public class SkyHussars extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        AnnotationConfigApplicationContext appcontext = new AnnotationConfigApplicationContext();
 
-        DefaultListableBeanFactory beanFactory = context.getDefaultListableBeanFactory();
+        DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("application", this);
         beanFactory.registerSingleton("rootNode", getRootNode());
         beanFactory.registerSingleton("assetManager", getAssetManager());
@@ -59,11 +59,10 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("audioRenderer", getAudioRenderer());
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
 
-        context.register(SkyHussarsContext.class);
-        context.refresh();
-        skyHussarsContext = context.getBean(SkyHussarsContext.class);
+        appcontext.register(SkyHussarsContext.class);
+        appcontext.refresh();
+        skyHussarsContext = appcontext.getBean(SkyHussarsContext.class);
         skyHussarsContext.simpleInitApp();
-        skyHussarsContext.setListener(listener);
 
         setDisplayStatView(false);
     }
@@ -71,7 +70,7 @@ public class SkyHussars extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
-        listener.setLocation(cam.getLocation());
+        listener.setLocation(cam.getLocation());        
         listener.setRotation(cam.getRotation());
     }
 

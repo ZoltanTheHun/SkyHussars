@@ -52,6 +52,9 @@ public class CameraControls implements ActionListener,AnalogListener {
             if (name.equals(ControlsMapper.OUTER_VIEW)) {
                 cameraManager.switchToView(CameraManager.CameraMode.OUTER_VIEW);
             }
+            if (name.equals(ControlsMapper.CENTER_CAMERA)) {
+                cameraManager.centerCamera();
+            }
         } else {
             if (name.equals(ControlsMapper.INCREASE_FOV)) {
                 cameraManager.setFovChangeActive(false);

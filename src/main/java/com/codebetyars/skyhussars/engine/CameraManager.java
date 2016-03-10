@@ -163,17 +163,40 @@ public class CameraManager {
         this.cameraMode = view;
     }
 
+    private final float DEG170 = 2.96706f;
+
     public void rotateCameraX(float value, float tpf) {
         if (cameraMode == CameraMode.COCKPIT_VIEW) {
             Quaternion rotation = new Quaternion();
+            //naive approach!!!
             rotationX.multLocal(rotation.fromAngles(0, value, 0));
+            float[] angles = rotationX.toAngles(null);
+            if (angles[1] > DEG170) {
+                rotationX.fromAngles(0, DEG170, 0);
+            } else if (angles[1] < -DEG170) {
+                rotationX.fromAngles(0, -DEG170, 0);
+            }
         }
     }
+
+    private final float DEG80 = 1.39626f;
 
     public void rotateCameraY(float value, float tpf) {
         if (cameraMode == CameraMode.COCKPIT_VIEW) {
             Quaternion rotation = new Quaternion();
+            //naive approach!!!
             rotationY.multLocal(rotation.fromAngles(value, 0, 0));
+            float[] angles = rotationY.toAngles(null);
+            if (angles[0] > DEG80) {
+                rotationY.fromAngles(DEG80, 0, 0);
+            } else if (angles[0] < -DEG80) {
+                rotationY.fromAngles(-DEG80, 0, 0);
+            }
         }
+    }
+    
+    public void centerCamera(){
+        rotationX.fromAngles(0, 0, 0);
+        rotationY.fromAngles(0, 0, 0);
     }
 }

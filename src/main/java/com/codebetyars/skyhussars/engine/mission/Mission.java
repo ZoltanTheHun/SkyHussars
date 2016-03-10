@@ -128,9 +128,4 @@ public class Mission extends GameState {
     public boolean paused() {
         return paused;
     }
-
-    void setListener(Listener listener) {
-        player.plane().setListener(listener);
-    }
-
 }

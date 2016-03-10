@@ -53,13 +53,17 @@ public class SoundManager implements InitializingBean {
     private void prepareEngineSound() {
         AudioNode engineSound = new AudioNode(assetManager, "Sounds/jet.wav", false);
         AudioNode gunSound = new AudioNode(assetManager, "Sounds/shoot.ogg", false);
-        engineSound.setLooping(true);  // activate continuous playing
+        /*
+            Probably the sound of the engines will be combined with the engine implementation.
+            However probably the doppler effect the setVelocity call is also necessary
+        */
+        engineSound.setLooping(true);
         engineSound.setPositional(true);
-        engineSound.setMaxDistance(10f);
-        engineSound.setRefDistance(5f);
-        engineSound.setVolume(3);
+        engineSound.setMaxDistance(10000f);
+        engineSound.setRefDistance(50f);
+        engineSound.setVolume(1f);
         engineSound.setPitch(1f);
-        
+
         gunSound.setLooping(true);
         gunSound.setPositional(true);
         sounds.put("engine", engineSound);

@@ -36,15 +36,12 @@ import com.codebetyars.skyhussars.engine.weapons.Gun;
 import com.codebetyars.skyhussars.engine.weapons.Missile;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
-import com.jme3.audio.Listener;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +70,6 @@ public class Plane {
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
     private final PlaneGeometry planeGeometry;
-    private Listener listener;
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf, planeGeometry.rootNode());
@@ -110,6 +106,7 @@ public class Plane {
     public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry cockpit) {
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
+        //engineSound.setPositional(true);
         this.gunSound = gunSound;
         //test model is backwards
         model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
@@ -169,15 +166,9 @@ public class Plane {
                         physics.getVVelovity(), planeGeometry.rootNode().getWorldRotation());
             }
         } else {
-            engineSound.stop();
+            engineSound.pause();
             gunSound.stop();
         }
-      /*  if (listener != null) {
-            listener.setLocation(planeGeometry.rootNode().getWorldTranslation());
-            listener.setRotation(planeGeometry.rootNode().getLocalRotation().mult(Quaternion.DIRECTION_Z));
-        }
-        engineSound.setLocalTranslation(planeGeometry.rootNode().getWorldTranslation());
-        gunSound.setLocalTranslation(planeGeometry.rootNode().getWorldTranslation());*/
     }
 
     /**
@@ -253,9 +244,5 @@ public class Plane {
 
     public boolean crashed() {
         return crashed;
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
     }
 }

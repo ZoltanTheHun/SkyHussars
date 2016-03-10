@@ -49,6 +49,7 @@ public class ControlsMapper {
     public static final String MOUSE_RIGHT = "MouseRight";
     public static final String MOUSE_DOWN = "MouseDown";
     public static final String MOUSE_UP = "MouseUp";
+    public static final String CENTER_CAMERA = "CenterCamera";
 
     @Value("#{application.inputManager}")
     private InputManager inputManager;
@@ -78,14 +79,16 @@ public class ControlsMapper {
     }
 
     public void setupCameraControls(CameraControls cameraControls) {
-        inputManager.addMapping(INCREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        inputManager.addMapping(INCREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping(COCKPIT_VIEW, new KeyTrigger(KeyInput.KEY_F1));
         inputManager.addMapping(OUTER_VIEW, new KeyTrigger(KeyInput.KEY_F5));
         inputManager.addMapping(MOUSE_LEFT, new MouseAxisTrigger(MouseInput.AXIS_X, false));
         inputManager.addMapping(MOUSE_RIGHT, new MouseAxisTrigger(MouseInput.AXIS_X, true));
         inputManager.addMapping(MOUSE_UP, new MouseAxisTrigger(MouseInput.AXIS_Y, true));
         inputManager.addMapping(MOUSE_DOWN, new MouseAxisTrigger(MouseInput.AXIS_Y, false));
-        inputManager.addListener(cameraControls, INCREASE_FOV, DECREASE_FOV, COCKPIT_VIEW, OUTER_VIEW,MOUSE_UP,MOUSE_DOWN,MOUSE_RIGHT,MOUSE_LEFT);
+        inputManager.addMapping(CENTER_CAMERA, new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE), new KeyTrigger(KeyInput.KEY_NUMPAD5));
+        inputManager.addListener(cameraControls, INCREASE_FOV, DECREASE_FOV, COCKPIT_VIEW,
+                OUTER_VIEW, MOUSE_UP, MOUSE_DOWN, MOUSE_RIGHT, MOUSE_LEFT,CENTER_CAMERA);
     }
 }
