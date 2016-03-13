@@ -43,7 +43,7 @@ public class FlowControls implements ActionListener {
         } else if (name.equals("Camera") && isPressed) {
             // followCamera = !followCamera;
         } else if (name.equals("Reset") && isPressed) {
-            game.initializeScene();
+            game.reinitPlayer();
         }
     }
 }

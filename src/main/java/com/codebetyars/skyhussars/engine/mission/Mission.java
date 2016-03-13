@@ -55,7 +55,7 @@ public class Mission extends GameState {
         this.terrainManager = terrainManager;
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
-        this.soundManager = soundManager;;
+        this.soundManager = soundManager;
         for (Plane plane : planes) {
             if (plane.planeMissionDescriptor().player()) {
                 player = new Pilot(plane);
@@ -77,8 +77,6 @@ public class Mission extends GameState {
     }
 
     private void initiliazePlayer() {
-        /*player.plane().setLocation(0, 0);
-         player.plane().setHeight(3000);*/
         Plane plane = player.plane();
         cameraManager.moveCameraTo(plane.getLocation());
         cameraManager.followWithCamera(plane.planeGeometry());
@@ -127,5 +125,13 @@ public class Mission extends GameState {
 
     public boolean paused() {
         return paused;
+    }
+
+    public void reinitPlayer() {
+        player.plane().setLocation(0, 0);
+        player.plane().setHeight(3000);
+        player.plane().crashed(false);
+        initiliazePlayer();
+        ended = false;
     }
 }

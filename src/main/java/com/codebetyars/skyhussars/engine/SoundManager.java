@@ -61,7 +61,7 @@ public class SoundManager implements InitializingBean {
         engineSound.setPositional(true);
         engineSound.setMaxDistance(10000f);
         engineSound.setRefDistance(50f);
-        engineSound.setVolume(1f);
+        engineSound.setVolume(3f);
         engineSound.setPitch(1f);
 
         gunSound.setLooping(true);

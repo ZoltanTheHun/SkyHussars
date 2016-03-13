@@ -71,7 +71,7 @@ public class SkyHussars extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
         listener.setLocation(cam.getLocation());        
-        listener.setRotation(cam.getRotation());
+        listener.setRotation(cam.getRotation().inverse());
     }
 
     @Override
