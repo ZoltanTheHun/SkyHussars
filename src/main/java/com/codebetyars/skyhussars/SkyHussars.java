@@ -26,8 +26,10 @@
 package com.codebetyars.skyhussars;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import java.io.File;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -35,8 +37,9 @@ public class SkyHussars extends SimpleApplication {
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
+
         settings.setTitle("SkyHussars");
-        settings.setSettingsDialogImage("Textures/settings_image.jpg");
+        settings.setSettingsDialogImage("images/settings_image.jpg");
 
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
@@ -45,10 +48,22 @@ public class SkyHussars extends SimpleApplication {
 
     private SkyHussarsContext skyHussarsContext;
 
+    private void addAssetClassloader() {
+        File dir = new File(System.getProperty("user.dir") + "/assets");
+        if (dir.exists()) {
+            assetManager.registerLocator(dir.getPath(), FileLocator.class);
+        }
+        dir = new File(System.getProperty("user.dir") + "/../assets");
+        if (dir.exists()) {
+            assetManager.registerLocator(dir.getPath(), FileLocator.class);
+        }
+    }
+
     @Override
     public void simpleInitApp() {
+        System.out.println("User dir: " + System.getProperty("user.dir"));
+        addAssetClassloader();
         AnnotationConfigApplicationContext appcontext = new AnnotationConfigApplicationContext();
-
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("application", this);
         beanFactory.registerSingleton("rootNode", getRootNode());
@@ -70,7 +85,7 @@ public class SkyHussars extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
-        listener.setLocation(cam.getLocation());        
+        listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation().inverse());
     }
 

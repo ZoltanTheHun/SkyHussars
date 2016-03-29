@@ -1,11 +1,17 @@
 plugins {
-  id 'application'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '1.6.1'
 }
 
 group = 'com.codebetyars'
-version = "0.3.0-SNAPSHOT"
+version = "0.4.0-SNAPSHOT"
 
 sourceCompatibility = 1.7
+
+//this for debugging
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.codebetyars.skyhussars.SkyHussars'
+}
 
 mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
 
@@ -17,12 +23,12 @@ repositories {
 }
 
 ext.versions = [
-  eventbus: '1.4',
-  jackson: '2.7.0',
-  jme3: '3.0.+',
-  junit: '4.12',
-  logback: '1.1.5',
-  spring: '4.2.+',
+    eventbus: '1.4',
+    jackson: '2.7.0',
+    jme3: '3.0.+',
+    junit: '4.12',
+    logback: '1.1.5',
+    spring: '4.2.+',
 ]
 
 sourceSets {
@@ -31,38 +37,59 @@ sourceSets {
             srcDir 'src/java'
         }
         resources {
-            srcDir 'assets'
+            srcDir 'src/resources'
+        }
+    }
+    valami {
+        java {
+            srcDir 'test'
         }
     }
 }
 
 dependencies {
-  compile fileTree(dir: 'lib', include: '*.jar')
-  compile group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
-  compile group: 'com.jme3', name: 'jme3-core',       version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-effects',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-networking', version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-plugins',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-jogg',       version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-terrain',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-blender',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-jbullet',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-niftygui',   version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-desktop',    version: versions.jme3
-  compile group: 'com.jme3', name: 'jme3-lwjgl',      version: versions.jme3
-  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-  compile group: 'org.bushe', name: 'eventbus', version: versions.eventbus
-  compile group: 'org.springframework', name: 'spring-context',  version: versions.spring
-
-  testCompile group: 'junit',               name: 'junit',           version: versions.junit
+    compile fileTree(dir: 'lib', include: '*.jar')
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
+    compile group: 'com.jme3', name: 'jme3-core',       version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-effects',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-networking', version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-plugins',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-jogg',       version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-terrain',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-blender',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-jbullet',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-niftygui',   version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-desktop',    version: versions.jme3
+    compile group: 'com.jme3', name: 'jme3-lwjgl',      version: versions.jme3
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    compile group: 'org.bushe', name: 'eventbus', version: versions.eventbus
+    compile group: 'org.springframework', name: 'spring-context',  version: versions.spring
+    testCompile group: 'junit',               name: 'junit',           version: versions.junit
 }
 
 distributions {
-  sources {
-    contents {
-      from ('.') {
-        exclude file('.gitignore').readLines()
-      }
+    sources {
+        contents {
+            from ('.') {
+                exclude file('.gitignore').readLines()
+            }
+        }
     }
-  }
+}
+
+applicationDistribution.from('assets') into 'assets'
+copy {
+    from('assets') into 'build/launch4j/assets'
+}
+
+//sourceSets.main.runtimeClasspath = sourceSets.main.runtimeClasspath + files('.','../assets')
+
+//to make it work with gradle run
+run.classpath = run.classpath + files('assets','.')
+
+launch4j {
+    mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
+    icon = 'assets/icons/game.ico'  
+    outfile = 'SkyHussars.exe'
+    chdir = '.'
 }
