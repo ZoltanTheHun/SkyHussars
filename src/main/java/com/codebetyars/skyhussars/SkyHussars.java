@@ -48,7 +48,7 @@ public class SkyHussars extends SimpleApplication {
 
     private SkyHussarsContext skyHussarsContext;
 
-    private void addAssetClassloader() {
+    private void addAssetLocations() {
         File dir = new File(System.getProperty("user.dir") + "/assets");
         if (dir.exists()) {
             assetManager.registerLocator(dir.getPath(), FileLocator.class);
@@ -61,8 +61,7 @@ public class SkyHussars extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        System.out.println("User dir: " + System.getProperty("user.dir"));
-        addAssetClassloader();
+        addAssetLocations();
         AnnotationConfigApplicationContext appcontext = new AnnotationConfigApplicationContext();
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("application", this);
