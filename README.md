@@ -9,6 +9,6 @@ The project can be easily built with gradle. There are 2 commands available to a
 gradle assemble - this will create the common distribution, with runscripts for Linux and Windows
 gradle launch4j - this will create a windows executable
 ```
-Game assets are stored in the assets folder. All of them are created by ZoltanTheHun_ or licensed under some open source license, with the license indicated in the appropriate folder.
+Game assets are stored in the assets folder. All of them are licensed under some open source license or created by _ZoltanTheHun_, with the license indicated in the appropriate folder.
 
 
