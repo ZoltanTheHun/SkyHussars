@@ -25,22 +25,24 @@
  */
 package com.codebetyars.skyhussars;
 
+import com.codebetyars.skyhussars.engine.SettingsManager;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
-import java.io.File;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 public class SkyHussars extends SimpleApplication {
+
+    public static final SettingsManager settingsManager = new SettingsManager();
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
 
         settings.setTitle("SkyHussars");
         settings.setSettingsDialogImage("images/settings_image.jpg");
-
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
         application.start();
@@ -48,21 +50,11 @@ public class SkyHussars extends SimpleApplication {
 
     private SkyHussarsContext skyHussarsContext;
 
-    private void addAssetLocations() {
-        File dir = new File(System.getProperty("user.dir") + "/assets");
-        if (dir.exists()) {
-            assetManager.registerLocator(dir.getPath(), FileLocator.class);
-        }
-        dir = new File(System.getProperty("user.dir") + "/../assets");
-        if (dir.exists()) {
-            assetManager.registerLocator(dir.getPath(), FileLocator.class);
-        }
+    private void setupAssetRoot() {
+        assetManager.registerLocator(settingsManager.assetDirectory().getPath(), FileLocator.class);
     }
 
-    @Override
-    public void simpleInitApp() {
-        addAssetLocations();
-        AnnotationConfigApplicationContext appcontext = new AnnotationConfigApplicationContext();
+    private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) {
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("application", this);
         beanFactory.registerSingleton("rootNode", getRootNode());
@@ -72,7 +64,13 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("flyByCamera", getFlyByCamera());
         beanFactory.registerSingleton("audioRenderer", getAudioRenderer());
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
+    }
 
+    @Override
+    public void simpleInitApp() {
+        setupAssetRoot();
+        AnnotationConfigApplicationContext appcontext = new AnnotationConfigApplicationContext();
+        registerCommonFunctionsToContext(appcontext);
         appcontext.register(SkyHussarsContext.class);
         appcontext.refresh();
         skyHussarsContext = appcontext.getBean(SkyHussarsContext.class);
@@ -84,8 +82,8 @@ public class SkyHussars extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
+        listener.setRotation(cam.getRotation());
         listener.setLocation(cam.getLocation());
-        listener.setRotation(cam.getRotation().inverse());
     }
 
     @Override

@@ -38,7 +38,7 @@ public class MainMenu extends GameState implements ScreenController {
     @Autowired
     private GuiManager guiManager;
 
-    private GameState pendingMission;
+    private GameState nextMission;
 
     private float time = 0;
     //private boolean startGame = false;
@@ -77,10 +77,10 @@ public class MainMenu extends GameState implements ScreenController {
     }
 
     public GameState getPendingMission() {
-        return pendingMission;
+        return nextMission;
     }
 
     public void setPendingMission(GameState pendingMission) {
-        this.pendingMission = pendingMission;
+        this.nextMission = pendingMission;
     }
 }
