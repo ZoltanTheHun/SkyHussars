@@ -43,9 +43,6 @@ public class PlaneFactory {
     private DataManager dataManager;
     
     @Autowired
-    private DataModel dataModel;
-
-    @Autowired
     private ModelManager modelManager;
 
     @Autowired
@@ -55,7 +52,7 @@ public class PlaneFactory {
     private ProjectileManager projectileManager;
 
     public Plane createPlane(String planeType) {
-        PlaneDescriptor planeDescriptor = dataModel.getPlaneDescriptor(planeType);
+        PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
         Spatial model = modelManager.model("p80", "p80_material").clone();
         AudioNode engineSound = soundManager.sound("engine");
         AudioNode gunSound = soundManager.sound("gun");

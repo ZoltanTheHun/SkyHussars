@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine;
 
+import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
@@ -42,6 +43,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataManager {
 
+    @Autowired
+    private PlaneRegistry planeRegistry;
     @Autowired
     private AssetManager assetManager;
 
@@ -80,7 +83,7 @@ public class DataManager {
         mat.setTexture("ColorMap", assetManager.loadTexture(
                 "Textures/circle-01.png"));
         geom.setMaterial(mat);
-        geom.setQueueBucket(Bucket.Translucent); 
+        geom.setQueueBucket(Bucket.Translucent);
         return geom;
     }
 
@@ -101,5 +104,9 @@ public class DataManager {
         fire.setHighLife(3f);
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
         return fire;
+    }
+
+    public PlaneRegistry planeRegistry() {
+        return planeRegistry;
     }
 }

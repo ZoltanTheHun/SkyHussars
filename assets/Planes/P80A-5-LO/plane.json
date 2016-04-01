@@ -1,0 +1,50 @@
+{
+  "name" : "Lockheed P-80A-5-LO Shooting Star",
+  "engineLocations" : [ {
+    "engineDescriptor" : {
+      "name" : "Allison J33-A-17",
+      "thrustMax" : 17792
+    },
+    "location" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    }
+  } ],
+  "massEmpty" : 3593.0,
+  "massTakeOffMax" : 6350.0,
+  "massGross" : 5307.0,
+  "internalTank" : 1609.0,
+  "gunGroupDescriptors" : [ {
+    "name" : "6x .50 M3 Browning",
+    "gunLocations" : [ {
+      "gunDescriptor" : {
+        "name" : ".50 M3 Browning",
+        "rateOfFire" : 20.0,
+        "bulletDescriptor" : null,
+        "muzzleVelocity" : 890.0,
+        "spread" : 0.5
+      },
+      "roundsMax" : 300,
+      "location" : {
+        "x" : 0.5,
+        "y" : 0.0,
+        "z" : 2.0
+      }
+    }, {
+      "gunDescriptor" : {
+        "name" : ".50 M3 Browning",
+        "rateOfFire" : 20.0,
+        "bulletDescriptor" : null,
+        "muzzleVelocity" : 890.0,
+        "spread" : 0.5
+      },
+      "roundsMax" : 300,
+      "location" : {
+        "x" : -0.5,
+        "y" : 0.0,
+        "z" : 2.0
+      }
+    } ]
+  } ]
+}

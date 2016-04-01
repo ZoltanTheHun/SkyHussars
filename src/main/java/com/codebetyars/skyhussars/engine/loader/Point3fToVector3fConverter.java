@@ -23,43 +23,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.plane;
+package com.codebetyars.skyhussars.engine.loader;
 
-import com.codebetyars.skyhussars.engine.loader.Point3fToVector3fConverter;
-import com.codebetyars.skyhussars.engine.loader.Vector3fToPoint3fConverter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.Converter;
 import com.jme3.math.Vector3f;
+import javax.vecmath.Point3f;
 
-public class GunLocationDescriptor {
+public class Point3fToVector3fConverter implements Converter<Point3f, Vector3f> {
 
-    private GunDescriptor gunDescriptor;
-    private int roundsMax;
-    private Vector3f location;
-
-    public GunDescriptor getGunDescriptor() {
-        return gunDescriptor;
+    @Override
+    public Vector3f convert(Point3f value) {
+        return new Vector3f(value.x, value.y, value.z);
     }
 
-    public void setGunDescriptor(GunDescriptor gunDescriptor) {
-        this.gunDescriptor = gunDescriptor;
+    @Override
+    public JavaType getInputType(TypeFactory typeFactory) {
+        return typeFactory.constructType(Point3f.class);
     }
 
-    public int getRoundsMax() {
-        return roundsMax;
+    @Override
+    public JavaType getOutputType(TypeFactory typeFactory) {
+        return typeFactory.constructType(Vector3f.class);
     }
 
-    public void setRoundsMax(int roundsMax) {
-        this.roundsMax = roundsMax;
-    }
-
-    @JsonSerialize(converter = Vector3fToPoint3fConverter.class)
-    public Vector3f getLocation() {
-        return location;
-    }
-
-    @JsonDeserialize(converter = Point3fToVector3fConverter.class)
-    public void setLocation(Vector3f location) {
-        this.location = location;
-    }
 }

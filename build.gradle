@@ -64,7 +64,9 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     compile group: 'org.bushe', name: 'eventbus', version: versions.eventbus
     compile group: 'org.springframework', name: 'spring-context',  version: versions.spring
-    testCompile group: 'junit',               name: 'junit',           version: versions.junit
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+    testCompile group: 'junit', name: 'junit',          version: versions.junit
 }
 
 distributions {

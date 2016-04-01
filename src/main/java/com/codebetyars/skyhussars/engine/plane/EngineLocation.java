@@ -23,12 +23,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.plane;
 
+import com.codebetyars.skyhussars.engine.loader.Point3fToVector3fConverter;
+import com.codebetyars.skyhussars.engine.loader.Vector3fToPoint3fConverter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jme3.math.Vector3f;
 
 public class EngineLocation {
+
     private EngineDescriptor engineDescriptor;
     private Vector3f location;
 
@@ -40,12 +44,14 @@ public class EngineLocation {
         this.engineDescriptor = engineDescriptor;
     }
 
+    @JsonSerialize(converter = Vector3fToPoint3fConverter.class)
     public Vector3f getLocation() {
         return location;
     }
 
+    @JsonDeserialize(converter = Point3fToVector3fConverter.class)
     public void setLocation(Vector3f location) {
         this.location = location;
     }
-    
+
 }
