@@ -25,8 +25,8 @@
  */
 package com.codebetyars.skyhussars.engine.plane;
 
-import com.codebetyars.skyhussars.engine.loader.Point3fToVector3fConverter;
-import com.codebetyars.skyhussars.engine.loader.Vector3fToPoint3fConverter;
+import com.codebetyars.skyhussars.engine.loader.converters.Point3fToVector3fConverter;
+import com.codebetyars.skyhussars.engine.loader.converters.Vector3fToPoint3fConverter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jme3.math.Vector3f;

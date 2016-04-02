@@ -31,6 +31,8 @@ import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.Listener;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Mission extends GameState {
 
@@ -45,10 +47,12 @@ public class Mission extends GameState {
     private final List<Plane> planes;
     private List<Pilot> pilots;
     private final SoundManager soundManager;
+    private final static Logger logger = LoggerFactory.getLogger(Mission.class);
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
             GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager) {
+
         this.planes = planes;
         this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;
@@ -86,16 +90,22 @@ public class Mission extends GameState {
     @Override
     public GameState update(float tpf) {
         if (!paused && !ended) {
-            for (Plane plane : planes) {
+            long millis = System.currentTimeMillis();
+            planes.parallelStream().forEach(plane -> {
                 plane.update(tpf);
                 if (terrainManager.checkCollisionWithGround(plane)) {
                     plane.crashed(true);
                 }
-            }
+
+            });
             projectileManager.update(tpf);
-            for (Plane plane : planes) {
+
+            planes.forEach(plane -> {
+                plane.updateSound();
                 projectileManager.checkCollision(plane);
-            }
+            });
+            millis = System.currentTimeMillis() - millis;
+            logger.info("Stream complete in " + millis);
             if (player.plane().crashed()) {
                 ended = true;
             }

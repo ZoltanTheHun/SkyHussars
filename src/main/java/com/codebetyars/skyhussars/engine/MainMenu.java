@@ -47,7 +47,7 @@ public class MainMenu extends GameState implements ScreenController {
     public GameState update(float tpf) {
         GameState nextState = this;
         if (guiManager.startGame) {
-            nextState = getPendingMission();
+            nextState = getNextMission();
             guiManager.startGame = false;
         }
         return nextState;
@@ -76,11 +76,11 @@ public class MainMenu extends GameState implements ScreenController {
     public void onEndScreen() {
     }
 
-    public GameState getPendingMission() {
+    public GameState getNextMission() {
         return nextMission;
     }
 
-    public void setPendingMission(GameState pendingMission) {
+    public void setNextMission(GameState pendingMission) {
         this.nextMission = pendingMission;
     }
 }

@@ -62,8 +62,8 @@ public class ProjectileManager {
 
     public void update(float tpf) {
         Iterator<Geometry> geomIterator = projectileGeometries.iterator();
+        projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
         for (Projectile projectile : projectiles) {
-            projectile.update(tpf);
             if (geomIterator.hasNext()) {
                 Geometry geom = geomIterator.next();
                 geom.setLocalTranslation(projectile.getLocation());
@@ -74,13 +74,13 @@ public class ProjectileManager {
     }
 
     public void checkCollision(Plane plane) {
-        for (Geometry projectile : projectileGeometries) {
+        projectileGeometries.forEach(projectile -> {
             CollisionResults collisionResults = new CollisionResults();
             if (projectile.collideWith(plane.planeGeometry().rootNode().getWorldBound(), collisionResults) > 0) {
                 if (collisionResults.size() > 0) {
                     plane.hit();
                 }
             }
-        }
+        });
     }
 }

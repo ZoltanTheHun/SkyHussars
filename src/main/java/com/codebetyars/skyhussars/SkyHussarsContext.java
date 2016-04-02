@@ -30,15 +30,12 @@ import com.codebetyars.skyhussars.engine.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.MainMenu;
 import com.codebetyars.skyhussars.engine.SettingsManager;
-import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
-import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
-import java.io.File;
 import jme3utilities.sky.SkyControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -94,7 +91,7 @@ public class SkyHussarsContext {
     public void simpleInitApp() {
         cameraManager.initializeCamera();
         guiManager.createGUI();
-        mainMenu.setPendingMission(missionFactory.mission("Test mission"));
+        mainMenu.setNextMission(missionFactory.mission("Test mission"));
         mainMenu.initialize();
         gameState = mainMenu;
     }

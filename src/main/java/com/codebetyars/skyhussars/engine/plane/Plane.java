@@ -59,10 +59,7 @@ public class Plane {
     private final PlanePhysics physics;
     private final AudioNode engineSound;
     private final AudioNode gunSound;
-    private List<Gun> guns;
     private List<GunGroup> gunGroups;
-    private List<Missile> missiles;
-    private List<Bomb> bombs;
     private final List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
     private final ProjectileManager projectileManager;
@@ -143,7 +140,6 @@ public class Plane {
     public void hit() {
         if (!shotdown) {
             planeGeometry.attachSpatialToRootNode(fireEffect);
-            //explosion.setLocalTranslation(.getLocalTranslation());
             fireEffect.emitAllParticles();
             for (Engine engine : engines) {
                 engine.damage(1.0f);
@@ -154,16 +150,21 @@ public class Plane {
 
     public void update(float tpf) {
         if (!crashed) {
-            engineSound.play();
             updatePlanePhysics(tpf);
+            gunGroups.parallelStream().forEach(gunGroup -> {
+                gunGroup.firing(firing, planeGeometry.rootNode().getLocalTranslation(),
+                        physics.getVVelovity(), planeGeometry.rootNode().getWorldRotation());
+            });
+        }
+    }
+
+    public void updateSound() {
+        if (!crashed) {
+            engineSound.play();
             if (firing) {
                 gunSound.play();
             } else {
                 gunSound.stop();
-            }
-            for (GunGroup gunGroup : gunGroups) {
-                gunGroup.firing(firing, planeGeometry.rootNode().getLocalTranslation(),
-                        physics.getVVelovity(), planeGeometry.rootNode().getWorldRotation());
             }
         } else {
             engineSound.pause();

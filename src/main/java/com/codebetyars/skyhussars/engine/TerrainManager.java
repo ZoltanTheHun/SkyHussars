@@ -81,7 +81,6 @@ public class TerrainManager implements InitializingBean {
         terrain.setMaterial(mat_terrain);
         terrain.setLocalScale(1000f, 1f, 1000f);
         terrain.addControl(new TerrainLodControl(terrain, camera));
-
         rootNode.attachChild(terrain);
     }
 

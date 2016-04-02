@@ -6,7 +6,7 @@ plugins {
 group = 'com.codebetyars'
 version = "0.4.0-SNAPSHOT"
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 //this for debugging
 if (!hasProperty('mainClass')) {
