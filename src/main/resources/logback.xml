@@ -5,9 +5,18 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    
+    <appender name="stdfile" class="ch.qos.logback.core.FileAppender">
+        <file>skyhussars.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <root level="INFO">
         <appender-ref ref="stdout" />
+        <appender-ref ref="stdfile" />
     </root>
 
 </configuration>

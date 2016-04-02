@@ -89,8 +89,8 @@ public class Mission extends GameState {
 
     @Override
     public GameState update(float tpf) {
+        long millis = System.currentTimeMillis();
         if (!paused && !ended) {
-            long millis = System.currentTimeMillis();
             planes.parallelStream().forEach(plane -> {
                 plane.update(tpf);
                 if (terrainManager.checkCollisionWithGround(plane)) {
@@ -104,8 +104,6 @@ public class Mission extends GameState {
                 plane.updateSound();
                 projectileManager.checkCollision(plane);
             });
-            millis = System.currentTimeMillis() - millis;
-            logger.info("Stream complete in " + millis);
             if (player.plane().crashed()) {
                 ended = true;
             }
@@ -114,6 +112,8 @@ public class Mission extends GameState {
             soundManager.muteAllSounds();
         }
         cameraManager.update(tpf);
+        millis = System.currentTimeMillis() - millis;
+        logger.info("Gamestate update complete in " + millis);
         return this;
     }
 

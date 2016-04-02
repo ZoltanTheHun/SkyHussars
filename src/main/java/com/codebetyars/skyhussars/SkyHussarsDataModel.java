@@ -47,7 +47,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
         planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
 
-        List<PlaneMissionDescriptor> planes = generatePlanes(250);
+        List<PlaneMissionDescriptor> planes = generatePlanes(0);
         planes.add(planeMissionDescriptor);
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");
@@ -57,7 +57,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
     }
 
     private List<PlaneMissionDescriptor> generatePlanes(int n) {
-        if (n < 1) {
+        if (n < 0) {
             throw new IllegalArgumentException("Cannot generate less than 1 planes");
         }
         List<PlaneMissionDescriptor> planes = new LinkedList<>();
