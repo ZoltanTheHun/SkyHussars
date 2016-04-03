@@ -47,7 +47,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
         planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
 
-        List<PlaneMissionDescriptor> planes = generatePlanes(0);
+        List<PlaneMissionDescriptor> planes = generatePlanes(12);
         planes.add(planeMissionDescriptor);
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");

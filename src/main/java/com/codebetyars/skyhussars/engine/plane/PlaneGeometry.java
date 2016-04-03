@@ -86,4 +86,7 @@ public class PlaneGeometry {
     public Node rootNode() {
         return rootNode;
     }
+    public Node modelNode() {
+        return modelNode;
+    }
 }

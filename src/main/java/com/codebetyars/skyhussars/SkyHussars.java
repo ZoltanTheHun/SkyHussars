@@ -100,8 +100,6 @@ public class SkyHussars extends SimpleApplication {
         skyHussarsContext.simpleUpdate(tpf);
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
-
-        logger.info("Listener location: " + listener.getLocation());
     }
 
     @Override
