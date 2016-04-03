@@ -26,7 +26,7 @@
 package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.mission.Mission;
+import com.codebetyars.skyhussars.engine.gamestates.Mission;
 
 public class ControlsManager {
 

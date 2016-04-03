@@ -27,10 +27,11 @@
 package com.codebetyars.skyhussars.engine.physics;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 public interface PlanePhysics {
-    public void update(float tpf, Spatial model);
+    public void update(float tpf, Node model);
     public String getInfo();
     public void setSpeedForward(Spatial model,float kmh);
     public Vector3f getVVelovity();

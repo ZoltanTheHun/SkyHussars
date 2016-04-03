@@ -24,63 +24,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.gamestates;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
-public class MainMenu extends GameState implements ScreenController {
-
-    @Autowired
-    private GuiManager guiManager;
-
-    private GameState nextMission;
-
-    private float time = 0;
-    //private boolean startGame = false;
-
-    @Override
-    public GameState update(float tpf) {
-        GameState nextState = this;
-        if (guiManager.startGame) {
-            nextState = getNextMission();
-            guiManager.startGame = false;
-        }
-        return nextState;
-    }
-
-    @Override
-    public void close() {
-    }
-
-    @Override
-    public void initialize() {
-        guiManager.startGame = false;
-        guiManager.cursor(true);
-    }
-
-    public void startGame() {
-        guiManager.startGame = true;
-    }
-
-    public void bind(Nifty nifty, Screen screen) {
-    }
-
-    public void onStartScreen() {
-    }
-
-    public void onEndScreen() {
-    }
-
-    public GameState getNextMission() {
-        return nextMission;
-    }
-
-    public void setNextMission(GameState pendingMission) {
-        this.nextMission = pendingMission;
-    }
+public abstract class GameState {
+    public abstract GameState update(float tpf);
+    public abstract void close();
+    public abstract void initialize();
 }

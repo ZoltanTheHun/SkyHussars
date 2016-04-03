@@ -27,10 +27,18 @@ package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.SettingsManager;
 import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
+import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.audio.Environment;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -38,6 +46,8 @@ import org.springframework.context.support.GenericApplicationContext;
 public class SkyHussars extends SimpleApplication {
 
     private final SettingsManager settingsManager = new SettingsManager();
+
+    private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
@@ -47,7 +57,7 @@ public class SkyHussars extends SimpleApplication {
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
         application.start();
-        
+
     }
 
     private SkyHussarsContext skyHussarsContext;
@@ -79,15 +89,19 @@ public class SkyHussars extends SimpleApplication {
         appcontext.refresh();
         skyHussarsContext = appcontext.getBean(SkyHussarsContext.class);
         skyHussarsContext.simpleInitApp();
-
+        audioRenderer.setListener(listener);
+        listener.setRenderer(audioRenderer);
+        listener.setLocation(Vector3f.ZERO);
         setDisplayStatView(false);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
-        listener.setRotation(cam.getRotation());
         listener.setLocation(cam.getLocation());
+        listener.setRotation(cam.getRotation());
+
+        logger.info("Listener location: " + listener.getLocation());
     }
 
     @Override

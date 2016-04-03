@@ -23,27 +23,65 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.gamestates.Mission;
-import com.jme3.input.controls.ActionListener;
+package com.codebetyars.skyhussars.engine.gamestates;
 
-public class FlowControls implements ActionListener {
+import com.codebetyars.skyhussars.engine.GuiManager;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-    private Mission game;
+@Component
+public class MainMenu extends GameState implements ScreenController {
 
-    public FlowControls(Mission game) {
-        this.game = game;
+    @Autowired
+    private GuiManager guiManager;
+
+    private GameState nextMission;
+
+    private float time = 0;
+    //private boolean startGame = false;
+
+    @Override
+    public GameState update(float tpf) {
+        GameState nextState = this;
+        if (guiManager.startGame) {
+            nextState = getNextMission();
+            guiManager.startGame = false;
+        }
+        return nextState;
     }
 
     @Override
-    public void onAction(String name, boolean isPressed, float tpf) {
-        if (name.equals("Pause") && isPressed) {
-            game.paused(!game.paused());
-        } else if (name.equals("Camera") && isPressed) {
-            // followCamera = !followCamera;
-        } else if (name.equals("Reset") && isPressed) {
-            game.reinitPlayer();
-        }
+    public void close() {
+    }
+
+    @Override
+    public void initialize() {
+        guiManager.startGame = false;
+        guiManager.cursor(true);
+    }
+
+    public void startGame() {
+        guiManager.startGame = true;
+    }
+
+    public void bind(Nifty nifty, Screen screen) {
+    }
+
+    public void onStartScreen() {
+    }
+
+    public void onEndScreen() {
+    }
+
+    public GameState getNextMission() {
+        return nextMission;
+    }
+
+    public void setNextMission(GameState pendingMission) {
+        this.nextMission = pendingMission;
     }
 }

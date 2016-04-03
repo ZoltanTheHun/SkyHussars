@@ -26,9 +26,9 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.GameState;
+import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.MainMenu;
+import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.codebetyars.skyhussars.engine.SettingsManager;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.asset.AssetManager;

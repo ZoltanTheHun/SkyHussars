@@ -30,6 +30,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     }
 
     @Override
-    public void update(float tpf, Spatial model) {
+    public void update(float tpf, Node model) {
         updateAuxiliary(model);
         Vector3f vLinearAcceleration = Vector3f.ZERO;
         logger.debug("Plane roll: " + (model.getLocalRotation().mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
@@ -144,7 +145,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
 
-    private void updateAuxiliary(Spatial model) {
+    private void updateAuxiliary(Node model) {
         updateHelpers(model);
         updateAngleOfAttack(model);
         updatePlaneFactor();
@@ -167,8 +168,8 @@ public class AdvancedPlanePhysics implements PlanePhysics {
          }*/
     }
 
-    private void updateHelpers(Spatial model) {
-        height = model.getWorldTranslation().getY();
+    private void updateHelpers(Node model) {
+        height = model.getLocalTranslation().getY();
         airDensity = WorldPhysicsData.getAirDensity((int) height);
     }
 

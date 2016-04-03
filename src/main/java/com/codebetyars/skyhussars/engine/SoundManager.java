@@ -59,11 +59,12 @@ public class SoundManager implements InitializingBean {
         */
         engineSound.setLooping(true);
         engineSound.setPositional(true);
+        engineSound.setReverbEnabled(true);
         engineSound.setMaxDistance(10000f);
-        engineSound.setRefDistance(50f);
+        engineSound.setRefDistance(5f);
         engineSound.setVolume(3f);
         engineSound.setPitch(1f);
-
+        
         gunSound.setLooping(true);
         gunSound.setPositional(true);
         sounds.put("engine", engineSound);
@@ -77,8 +78,8 @@ public class SoundManager implements InitializingBean {
     }
 
     public void muteAllSounds() {
-        for (AudioNode sound : requestedNodes) {
+        requestedNodes.stream().forEach((sound) -> {
             sound.stop();
-        }
+        });
     }
 }

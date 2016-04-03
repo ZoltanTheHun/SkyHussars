@@ -34,6 +34,7 @@ public class PlaneGeometry {
     private final Node rootNode;
     private final Node cockpitNode;
     private final Node modelNode;
+    private final Node soundNode;
 
     public static enum GeometryMode {
 
@@ -43,11 +44,13 @@ public class PlaneGeometry {
     public PlaneGeometry() {
         rootNode = new Node();
         cockpitNode = new Node();
-        rootNode.attachChild(cockpitNode);
+        // rootNode.attachChild(cockpitNode);
 
         modelNode = new Node();
+        soundNode = new Node();
         rootNode.attachChild(cockpitNode);
         rootNode.attachChild(modelNode);
+        rootNode.attachChild(soundNode);
     }
 
     public void attachSpatialToCockpitNode(Spatial cockpit) {
@@ -60,7 +63,7 @@ public class PlaneGeometry {
     }
 
     public void attachSpatialToRootNode(Spatial spatial) {
-        rootNode.attachChild(spatial);
+        soundNode.attachChild(spatial);
     }
 
     public void attachSpatialToModelNode(Spatial model) {
