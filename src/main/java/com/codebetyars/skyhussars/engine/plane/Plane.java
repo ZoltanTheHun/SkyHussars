@@ -103,6 +103,7 @@ public class Plane {
     public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry cockpit) {
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
+        engineSound.setLocalTranslation(0, 0, - 5);
         //engineSound.setPositional(true);
         this.gunSound = gunSound;
         //test model is backwards
