@@ -81,6 +81,15 @@ public class MissionFactory {
         return mission;
     }
 
+    public Mission mission(String planeType, int enemyCount) {
+        MissionDescriptor missionDescriptor = dataModel.getNewMission(planeType, enemyCount);
+        List<Plane> planes = planes(missionDescriptor);
+        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
+
+        ControlsManager cm = new ControlsManager(controlsMapper, mission, cameraManager);
+        return mission;
+    }
+
     private List<Plane> planes(MissionDescriptor missionDescriptor) {
         List<Plane> planes = new ArrayList<>();
         for (PlaneMissionDescriptor planeMission : missionDescriptor.planeMissionDescriptors()) {

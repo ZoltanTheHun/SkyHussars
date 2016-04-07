@@ -47,7 +47,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
         planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
         planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
 
-        List<PlaneMissionDescriptor> planes = generatePlanes(12);
+        List<PlaneMissionDescriptor> planes = generatePlanes(0);
         planes.add(planeMissionDescriptor);
         MissionDescriptor missionDescriptor = new MissionDescriptor();
         missionDescriptor.name("Test mission");
@@ -67,7 +67,7 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
             PlaneMissionDescriptor planeMissionDescriptor = new PlaneMissionDescriptor();
             planeMissionDescriptor.player(false);
             planeMissionDescriptor.planeType("Lockheed P-80A-1-LO Shooting Star");
-            planeMissionDescriptor.startLocation(new Vector3f(dir*(r.nextInt(500)+i*10), 3000+r.nextInt(1500)-750, r.nextInt(500)+i*1));
+            planeMissionDescriptor.startLocation(new Vector3f(dir * (r.nextInt(500) + i * 10), 3000 + r.nextInt(1500) - 750, r.nextInt(500) + i * 1));
             planes.add(planeMissionDescriptor);
             dir *= -1;
         }
@@ -77,5 +77,18 @@ public class SkyHussarsDataModel implements DataModel, InitializingBean {
     @Override
     public MissionDescriptor getMissionDescriptor(String name) {
         return missions.get(name);
+    }
+
+    @Override
+    public MissionDescriptor getNewMission(String playerPlane, int enemyCount) {
+        MissionDescriptor missionDescriptor = new MissionDescriptor();
+        PlaneMissionDescriptor planeMissionDescriptor = new PlaneMissionDescriptor();
+        planeMissionDescriptor.player(true);
+        planeMissionDescriptor.planeType(playerPlane);
+        planeMissionDescriptor.startLocation(new Vector3f(0, 3000, 0));
+        List<PlaneMissionDescriptor> planes = generatePlanes(enemyCount);
+        planes.add(planeMissionDescriptor);
+        missionDescriptor.planeMissionDescriptors(planes);
+        return missionDescriptor;
     }
 }

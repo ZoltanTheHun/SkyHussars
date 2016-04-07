@@ -30,6 +30,7 @@ import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.codebetyars.skyhussars.engine.SettingsManager;
+import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
@@ -66,9 +67,9 @@ public class SkyHussarsContext {
 
     @Autowired
     private MainMenu mainMenu;
-
+    
     @Autowired
-    private MissionFactory missionFactory;
+    private MainMenuControls mainMenuControls;
 
     @Autowired
     private SettingsManager settingsManager;
@@ -91,7 +92,6 @@ public class SkyHussarsContext {
     public void simpleInitApp() {
         cameraManager.initializeCamera();
         guiManager.createGUI();
-        mainMenu.setNextMission(missionFactory.mission("Test mission"));
         mainMenu.initialize();
         gameState = mainMenu;
     }

@@ -23,10 +23,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.GuiManager;
+import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
+import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -37,19 +38,49 @@ import org.springframework.stereotype.Component;
 public class MainMenu extends GameState implements ScreenController {
 
     @Autowired
+    private MissionFactory missionFactory;
+
+    @Autowired
+    private PlaneRegistry planeRegistry;
+
+    @Autowired
     private GuiManager guiManager;
 
     private GameState nextMission;
 
     private float time = 0;
-    //private boolean startGame = false;
 
+    private int enemyCount = 0;
+
+    private boolean startGame = false;
+
+    public int getEnemyCount() {
+        return enemyCount;
+    }
+
+    public void setEnemyCount(int enemyCount) {
+        this.enemyCount = enemyCount;
+    }
+
+    public String getPlaneType() {
+        return planeType;
+    }
+
+    public void setPlaneType(String planeType) {
+        this.planeType = planeType;
+    }
+
+//should come from parameter
+    private String planeType;// = planeRegistry.availablePlanes().get(0);
+
+    //private String planeType;//= planeRegistry.availablePlanes().get(0);
     @Override
     public GameState update(float tpf) {
         GameState nextState = this;
-        if (guiManager.startGame) {
-            nextState = getNextMission();
-            guiManager.startGame = false;
+        if (startGame) {
+            //nextState = missionFactory.mission("Test mission");
+            nextState = missionFactory.mission(planeType, enemyCount);
+            startGame = false;
         }
         return nextState;
     }
@@ -60,12 +91,11 @@ public class MainMenu extends GameState implements ScreenController {
 
     @Override
     public void initialize() {
-        guiManager.startGame = false;
         guiManager.cursor(true);
     }
 
     public void startGame() {
-        guiManager.startGame = true;
+        startGame = true;
     }
 
     public void bind(Nifty nifty, Screen screen) {
@@ -77,11 +107,4 @@ public class MainMenu extends GameState implements ScreenController {
     public void onEndScreen() {
     }
 
-    public GameState getNextMission() {
-        return nextMission;
-    }
-
-    public void setNextMission(GameState pendingMission) {
-        this.nextMission = pendingMission;
-    }
 }
