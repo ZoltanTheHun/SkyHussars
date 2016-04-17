@@ -23,11 +23,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.gamestates;
 
-public abstract interface GameState {
-    public abstract GameState update(float tpf);
-    public abstract void close();
-    public abstract void initialize();
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MissionControls implements ScreenController {
+
+    private final static Logger logger = LoggerFactory.getLogger(MissionControls.class);
+    
+    private boolean popupToBeClosed;
+
+    public void exitToDesktop() {
+        System.exit(0);
+    }
+    
+    public void closePopup(){
+        popupToBeClosed = true;
+    }
+    
+    public boolean popupToBeClosed(){
+        return popupToBeClosed;
+    }
+    
+    public void resetPopupToBeClosed(){
+        popupToBeClosed = false;
+    }
+
+    @Override
+    public void bind(Nifty nifty, Screen screen) {
+    }
+
+    @Override
+    public void onStartScreen() {
+    }
+
+    @Override
+    public void onEndScreen() {
+    }
+
 }

@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainMenu extends GameState implements ScreenController {
+public class MainMenu implements GameState, ScreenController {
 
     @Autowired
     private MissionFactory missionFactory;

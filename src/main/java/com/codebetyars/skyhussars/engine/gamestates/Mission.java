@@ -33,7 +33,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Mission extends GameState {
+public class Mission implements GameState {
 
     private Pilot player;
     private final CameraManager cameraManager;
@@ -47,10 +47,11 @@ public class Mission extends GameState {
     private List<Pilot> pilots;
     private final SoundManager soundManager;
     private final static Logger logger = LoggerFactory.getLogger(Mission.class);
+    private MissionControls missionControls;
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager) {
+            GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager, MissionControls missionControls) {
 
         this.planes = planes;
         this.projectileManager = projectileManager;
@@ -59,6 +60,7 @@ public class Mission extends GameState {
         this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
         this.soundManager = soundManager;
+        this.missionControls = missionControls;
         for (Plane plane : planes) {
             if (plane.planeMissionDescriptor().player()) {
                 player = new Pilot(plane);
@@ -88,6 +90,11 @@ public class Mission extends GameState {
 
     @Override
     public GameState update(float tpf) {
+        if (missionControls.popupToBeClosed()) {
+            guiManager.cursor(false);
+            guiManager.exitMenu(false);
+            missionControls.resetPopupToBeClosed();
+        }
         long millis = System.currentTimeMillis();
         if (!paused && !ended) {
             planes.parallelStream().forEach(plane -> {
@@ -142,5 +149,11 @@ public class Mission extends GameState {
         player.plane().crashed(false);
         initiliazePlayer();
         ended = false;
+    }
+
+    public void switchIngameMenu() {
+        boolean nextState = !guiManager.cursor();
+        guiManager.cursor(nextState);
+        guiManager.exitMenu(nextState);
     }
 }

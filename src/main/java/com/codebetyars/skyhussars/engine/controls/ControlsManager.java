@@ -2,7 +2,7 @@
  * Copyright (c) 2016, ZoltanTheHun
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
+ * Redistri ution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * * Redistributions of source code must retain the above copyright notice, this
@@ -33,14 +33,17 @@ public class ControlsManager {
     private final FlightKeyboardControls inFlightKeyboardControls;
     private final FlowControls gameFlowControls;
     private final CameraControls cameraControls;
+    private final MenuControls menuControls;
 
     public ControlsManager(ControlsMapper controlsMapper, Mission mission,CameraManager cameraManager) {
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
         gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
+        menuControls = new MenuControls(mission);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
         controlsMapper.setupFlowControls(gameFlowControls);
         controlsMapper.setupCameraControls(cameraControls);
+        controlsMapper.setupMenuControls(menuControls);
     }
     
 }

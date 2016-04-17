@@ -30,8 +30,8 @@ import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.codebetyars.skyhussars.engine.SettingsManager;
+import com.codebetyars.skyhussars.engine.controls.MessageBuffer;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
-import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.Camera;
@@ -73,6 +73,9 @@ public class SkyHussarsContext {
 
     @Autowired
     private SettingsManager settingsManager;
+    
+    @Autowired 
+    private MessageBuffer messageBuffer;
 
     private GameState gameState;
 

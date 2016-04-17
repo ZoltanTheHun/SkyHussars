@@ -23,9 +23,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.controls;
 
-package com.codebetyars.skyhussars.engine;
+import com.codebetyars.skyhussars.engine.gamestates.Mission;
+import com.jme3.input.controls.ActionListener;
 
-public enum StateName {
-    MAIN_MENU,LEVEL;
+public class MenuControls implements ActionListener {
+
+    /*@Autowired
+    private MessageBuffer messageBuffer;*/ 
+    private final Mission mission;
+    
+    public MenuControls(Mission mission){
+        this.mission = mission;
+    }
+
+    @Override
+    public void onAction(String name, boolean isPressed, float tpf) {
+        if (name.equals(ControlsMapper.MENU_DISPLAY) && isPressed) {
+            mission.switchIngameMenu();
+        }
+    }
+
 }

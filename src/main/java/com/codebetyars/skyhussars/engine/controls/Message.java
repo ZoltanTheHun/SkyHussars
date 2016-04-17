@@ -23,11 +23,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.controls;
 
-package com.codebetyars.skyhussars.engine.gamestates;
-
-public abstract interface GameState {
-    public abstract GameState update(float tpf);
-    public abstract void close();
-    public abstract void initialize();
+public enum Message {
+    MENU_DISPLAY;
 }

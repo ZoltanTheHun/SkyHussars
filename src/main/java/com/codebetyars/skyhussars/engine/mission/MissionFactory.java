@@ -29,6 +29,7 @@ import com.codebetyars.skyhussars.engine.gamestates.Mission;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
 import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
+import com.codebetyars.skyhussars.engine.gamestates.MissionControls;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
@@ -72,10 +73,13 @@ public class MissionFactory {
     @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
 
+    @Autowired
+    private MissionControls missionControls;
+
     public Mission mission(String missionName) {
         MissionDescriptor missionDescriptor = dataModel.getMissionDescriptor(missionName);
         List<Plane> planes = planes(missionDescriptor);
-        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
+        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager,missionControls);
 
         ControlsManager cm = new ControlsManager(controlsMapper, mission, cameraManager);
         return mission;
@@ -84,7 +88,7 @@ public class MissionFactory {
     public Mission mission(String planeType, int enemyCount) {
         MissionDescriptor missionDescriptor = dataModel.getNewMission(planeType, enemyCount);
         List<Plane> planes = planes(missionDescriptor);
-        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager);
+        Mission mission = new Mission(planes, projectileManager, soundManager, cameraManager, terrainManager, guiManager, dayLightWeatherManager,missionControls);
 
         ControlsManager cm = new ControlsManager(controlsMapper, mission, cameraManager);
         return mission;

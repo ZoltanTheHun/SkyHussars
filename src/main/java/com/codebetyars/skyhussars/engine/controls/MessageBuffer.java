@@ -23,11 +23,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.controls;
 
-package com.codebetyars.skyhussars.engine.gamestates;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Component;
 
-public abstract interface GameState {
-    public abstract GameState update(float tpf);
-    public abstract void close();
-    public abstract void initialize();
+@Component
+public class MessageBuffer {
+
+    private final List<Message> buffer = new ArrayList<>(100);
+
+    public synchronized void queue(Message command) {
+        buffer.add(command);
+    }
+
+    public synchronized List<Message> emptyBuffer() {
+        List<Message> messages = new ArrayList<>(buffer);
+        buffer.clear();
+        return messages;
+    }
 }

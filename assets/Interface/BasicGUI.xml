@@ -45,9 +45,28 @@
             </panel>
         </layer>
     </screen>
-    <screen id="main" controller="com.codebetyars.skyhussars.engine.GuiManager">
+    <screen id="main" controller="com.codebetyars.skyhussars.engine.gamestates.MissionControls">
         <layer id="foreground" childLayout="vertical" align="center">
             <panel id="panel_top" height="90%" align="center" childLayout="vertical">
+				<panel id="upperpadding" height="38%" width="50%" align="center" childLayout="horizontal" padding="25px">				         
+				</panel>
+			    <panel id="exitMenuPanel" height="26%" width="50%" align="center" childLayout="vertical" backgroundColor="#00000099" padding="25px" textSize="2.0" visible="false">
+				    <text text="Are you sure you want to quit?" font="Interface/Fonts/courier_new_42.fnt" width="100%" height="100%" wrap="true" textSize="50%" />
+					<panel id="exitToSystemPanel" width="50%"  childLayout="horizontal" padding="25px" align="center">
+						<panel width="50%" childLayout="center">
+							<control name="button" label="Exit to desktop" id="exitToDesktop" visibleToMouse="true"> 
+								<interact onClick="exitToDesktop()"/>
+							</control>
+						</panel>
+						<panel  width="50%" childLayout="center">
+							<control name="button" label="Cancel" id="cancel" padding="50px" visibleToMouse="true"> 
+								<interact onClick="closePopup()"/>
+							</control>
+						</panel>
+					</panel>         
+				</panel>
+				<panel id="bottompadding" height="38%" width="50%" align="center" childLayout="horizontal" padding="25px">				         
+				</panel>
             </panel>
             <panel id="panel_bottom"  childLayout="horizontal" valign="bottom" height="10%">
                 <panel id="panel_empty" valign="bottom"  height="100%" width="75%" childLayout="vertical">

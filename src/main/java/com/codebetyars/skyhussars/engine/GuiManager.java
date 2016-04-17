@@ -26,12 +26,14 @@
 package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
+import com.codebetyars.skyhussars.engine.gamestates.MissionControls;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.InputManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -40,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class GuiManager implements ScreenController, InitializingBean {
@@ -61,9 +62,12 @@ public class GuiManager implements ScreenController, InitializingBean {
 
     @Autowired
     private CameraManager cameraManager;
-    
+
     @Autowired
     private MainMenuControls mainMenuControls;
+    
+    @Autowired
+    private MissionControls missionControls;
 
     private Nifty nifty;
 
@@ -76,21 +80,31 @@ public class GuiManager implements ScreenController, InitializingBean {
     }
 
     public void createGUI() {
-        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls);
+        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls,missionControls);
         nifty.addControls();
         nifty.update();
+        nifty.setIgnoreKeyboardEvents(true);
         mainMenuControls.init(nifty);
         guiViewPort.addProcessor(niftyDisplay);
     }
-
 
     public void update(String speed) {
         nifty.getCurrentScreen().findElementByName("speedDisplay").
                 getRenderer(TextRenderer.class).setText(speed + "km/h");
     }
 
+    public void exitMenu(boolean state) {
+        Element exitMenu = nifty.getCurrentScreen().findElementByName("exitMenuPanel");
+        if (state) {
+            exitMenu.show();
+        } else {
+            exitMenu.hide();
+        }
+    }
+
     public void switchScreen(String screenId) {
         nifty.gotoScreen(screenId);
+
     }
 
     public void cursor(boolean cursor) {

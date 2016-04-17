@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
+import com.jme3.app.SimpleApplication;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -50,11 +51,14 @@ public class ControlsMapper {
     public static final String MOUSE_DOWN = "MouseDown";
     public static final String MOUSE_UP = "MouseUp";
     public static final String CENTER_CAMERA = "CenterCamera";
+    public static final String MENU_DISPLAY = "OpenMenu";
 
     @Value("#{application.inputManager}")
     private InputManager inputManager;
 
     public void setupFlowControls(ActionListener actionListener) {
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_HIDE_STATS);
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
         inputManager.addMapping("Camera", new KeyTrigger(KeyInput.KEY_C));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_R));
@@ -89,6 +93,11 @@ public class ControlsMapper {
         inputManager.addMapping(MOUSE_DOWN, new MouseAxisTrigger(MouseInput.AXIS_Y, false));
         inputManager.addMapping(CENTER_CAMERA, new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE), new KeyTrigger(KeyInput.KEY_NUMPAD5));
         inputManager.addListener(cameraControls, INCREASE_FOV, DECREASE_FOV, COCKPIT_VIEW,
-                OUTER_VIEW, MOUSE_UP, MOUSE_DOWN, MOUSE_RIGHT, MOUSE_LEFT,CENTER_CAMERA);
+                OUTER_VIEW, MOUSE_UP, MOUSE_DOWN, MOUSE_RIGHT, MOUSE_LEFT, CENTER_CAMERA);
+    }
+
+    public void setupMenuControls(MenuControls menuControls) {
+        inputManager.addMapping(MENU_DISPLAY, new KeyTrigger(KeyInput.KEY_ESCAPE));
+        inputManager.addListener(menuControls, MENU_DISPLAY);
     }
 }
