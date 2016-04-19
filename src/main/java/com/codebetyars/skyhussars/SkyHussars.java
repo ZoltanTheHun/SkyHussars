@@ -31,7 +31,9 @@ import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.system.AppSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +67,7 @@ public class SkyHussars extends SimpleApplication {
     private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) {
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("settingsManager", settingsManager);
+        beanFactory.registerSingleton("renderManager", renderManager);
         beanFactory.registerSingleton("application", this);
         beanFactory.registerSingleton("rootNode", getRootNode());
         beanFactory.registerSingleton("assetManager", getAssetManager());
