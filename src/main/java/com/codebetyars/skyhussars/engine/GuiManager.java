@@ -109,7 +109,7 @@ public class GuiManager implements ScreenController, InitializingBean {
 
     public void cursor(boolean cursor) {
         inputManager.setCursorVisible(cursor);
-        cameraManager.flyCamActive(cursor);
+        //cameraManager.flyCamActive(cursor);
     }
 
     public boolean cursor() {

@@ -27,12 +27,8 @@ package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
-import com.jme3.input.FlyByCamera;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,17 +48,7 @@ public class CameraManager {
     }
 
     @Autowired
-    private Camera camera;
-    private Camera nearCam;
-
-    @Autowired
-    private FlyByCamera flyByCamera;
-
-    @Autowired
-    private RenderManager renderManager;
-
-    @Autowired
-    private Node rootNode;
+    private ComplexCamera camera;
 
     private CameraMode cameraMode = CameraMode.OUTER_VIEW;
 
@@ -91,11 +77,11 @@ public class CameraManager {
 
     private void updateFov(float tpf) {
         if (fovChangeActive) {
-            if (fovNarrowing && fov > minFov) {
-                setFov(fov - fovChangeRate * tpf);
+            if (fovNarrowing && camera.fov() > minFov) {
+                fov(camera.fov() - fovChangeRate * tpf);
             }
-            if (!fovNarrowing && fov < maxFov) {
-                setFov(fov + fovChangeRate * tpf);
+            if (!fovNarrowing && camera.fov() < maxFov) {
+                fov(camera.fov() + fovChangeRate * tpf);
             }
         }
     }
@@ -103,25 +89,20 @@ public class CameraManager {
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
         Node node = focus.rootNode();
-        camera.setLocation((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
+        camera.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
         camera.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
-        nearCam.setLocation((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
-        nearCam.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     private void showCockpit() {
-        camera.setLocation(focus.rootNode().getLocalTranslation());
-        nearCam.setLocation(focus.rootNode().getLocalTranslation());
+        camera.moveCameraTo(focus.rootNode().getLocalTranslation());
         Node node = focus.rootNode();
         camera.lookAtDirection(node.getLocalRotation().mult(rotationX).
-                mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
-                mult(Vector3f.UNIT_Y));
-        nearCam.lookAtDirection(node.getLocalRotation().mult(rotationX).
                 mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
                 mult(Vector3f.UNIT_Y));
     }
 
     public void init() {
+        camera.init();
         if (focus != null) {
             follow();
         }
@@ -130,38 +111,14 @@ public class CameraManager {
     public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
         focus = planeGeometry;
         switchToView(cameraMode);
-
-    }
-    private float aspect;
-    private float fov;
-    private float near = 300f;
-    private float far = 200000f;//200000f;
-    private float farCamNear = 0.3f;
-    private float farCamFar = 310f;
-
-    public void initializeCamera() {
-        aspect = (float) camera.getWidth() / (float) camera.getHeight();
-        flyByCamera.setMoveSpeed(200);
-
-        nearCam = new Camera(camera.getWidth(), camera.getHeight());
-        nearCam.setFrustumPerspective(fov, aspect, farCamNear, farCamFar);
-        ViewPort viewPort = renderManager.createMainView("farMainView", nearCam);   
-        viewPort.setClearFlags(false, true, true);
-        viewPort.attachScene(rootNode);
-
-        setFov(45);
-
     }
 
-    public void setFov(float fov) {
-        this.fov = fov;
-        camera.setFrustumPerspective(fov, aspect, near, far);
-        nearCam.setFrustumPerspective(fov, aspect, farCamNear, farCamFar);
-
+    public void fov(float fov) {
+        camera.fov(fov);
     }
 
-    public float getFov() {
-        return fov;
+    public float fov() {
+        return camera.fov();
     }
 
     public void setFovChangeActive(boolean fovChangeActive) {
@@ -174,17 +131,7 @@ public class CameraManager {
     }
 
     public void moveCameraTo(Vector3f location) {
-        camera.setLocation(location);
-        nearCam.setLocation(location);
-
-    }
-
-    public void flyCamActive(boolean cursor) {
-        flyByCamera.setEnabled(!cursor);
-    }
-
-    public boolean flyCamActive() {
-        return flyByCamera.isEnabled();
+        camera.moveCameraTo(location);
     }
 
     public void switchToView(CameraMode view) {

@@ -30,10 +30,7 @@ import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
 import com.jme3.system.AppSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +46,12 @@ public class SkyHussars extends SimpleApplication {
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
-
         settings.setTitle("SkyHussars");
         settings.setSettingsDialogImage("images/settings_image.jpg");
+        
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
         application.start();
-
     }
 
     private SkyHussarsContext skyHussarsContext;
@@ -76,6 +72,7 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("flyByCamera", getFlyByCamera());
         beanFactory.registerSingleton("audioRenderer", getAudioRenderer());
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
+        beanFactory.registerSingleton("listener", listener);
         beanFactory.registerSingleton("planeRegistry", new PlaneRegistryLoader(settingsManager.assetDirectory()).planeRegistry());
     }
 
@@ -88,9 +85,7 @@ public class SkyHussars extends SimpleApplication {
         appcontext.refresh();
         skyHussarsContext = appcontext.getBean(SkyHussarsContext.class);
         skyHussarsContext.simpleInitApp();
-        audioRenderer.setListener(listener);
-        listener.setRenderer(audioRenderer);
-        listener.setLocation(Vector3f.ZERO);
+        flyCam.setEnabled(false);
         setDisplayStatView(false);
     }
 

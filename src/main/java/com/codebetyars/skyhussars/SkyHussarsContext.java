@@ -93,7 +93,7 @@ public class SkyHussarsContext {
     }
 
     public void simpleInitApp() {
-        cameraManager.initializeCamera();
+        cameraManager.init();
         guiManager.createGUI();
         mainMenu.initialize();
         gameState = mainMenu;
