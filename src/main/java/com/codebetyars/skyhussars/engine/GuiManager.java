@@ -104,12 +104,10 @@ public class GuiManager implements ScreenController, InitializingBean {
 
     public void switchScreen(String screenId) {
         nifty.gotoScreen(screenId);
-
     }
 
     public void cursor(boolean cursor) {
         inputManager.setCursorVisible(cursor);
-        //cameraManager.flyCamActive(cursor);
     }
 
     public boolean cursor() {

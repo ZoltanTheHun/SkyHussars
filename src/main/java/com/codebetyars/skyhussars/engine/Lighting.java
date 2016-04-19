@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
@@ -32,6 +33,8 @@ import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
+import com.jme3.shadow.EdgeFilteringMode;
 import jme3utilities.sky.SkyControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +52,12 @@ public class Lighting implements InitializingBean {
 
     @Autowired
     private SkyControl skyControl;
+    
+    @Autowired
+    private AssetManager assetManager;
+    
+    @Autowired
+    private ComplexCamera camera;
 
     private List<Light> lights;
     private DirectionalLight directionalLight;
@@ -66,6 +75,13 @@ public class Lighting implements InitializingBean {
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
+
+        final int SHADOWMAP_SIZE = 1024;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        dlsr.setLight(directionalLight);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        camera.init();
+        camera.addProcessor(dlsr);
 
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
     }

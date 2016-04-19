@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine;
 
 import com.jme3.audio.Listener;
 import com.jme3.math.Vector3f;
+import com.jme3.post.SceneProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -39,22 +40,27 @@ public class ComplexCamera {
 
     @Autowired
     private RenderManager renderManager;
-
+    
     @Autowired
-    private Camera nearCam;
-
     private Camera farCam;
 
+    private Camera nearCam;
+    
     @Autowired
     private Listener listener;
 
     @Autowired
     private Node rootNode;
 
+    private ViewPort nearViewPort;
+    
+    @Autowired
+    private ViewPort farViewPort;
+    
     private float fov;
     private final float farCamNear = 300f;
     private final float farCamFar = 200000f;
-    private final float nearCamNear = 0.3f;
+    private final float nearCamNear = 0.5f;
     private final float nearCamFar = 310f;
     private float aspect;
 
@@ -62,14 +68,14 @@ public class ComplexCamera {
 
     public synchronized void init() {
         if (!initialized) {
-            aspect = (float) nearCam.getWidth() / (float) nearCam.getHeight();
+            aspect = (float) farCam.getWidth() / (float) farCam.getHeight();
 
-            farCam = new Camera(nearCam.getWidth(), nearCam.getHeight());
+            nearCam = new Camera(farCam.getWidth(), farCam.getHeight());
             farCam.setFrustumPerspective(fov, aspect, farCamNear, farCamFar);
             nearCam.setFrustumPerspective(fov, aspect, nearCamNear, nearCamFar);
-            ViewPort viewPort = renderManager.createMainView("farMainView", nearCam);
-            viewPort.setClearFlags(false, true, true);
-            viewPort.attachScene(rootNode);
+            nearViewPort = renderManager.createMainView("nearMainView", nearCam);
+            nearViewPort.setClearFlags(false, true, true);
+            nearViewPort.attachScene(rootNode);
             fov(45);
             initialized = true;
         }
@@ -77,7 +83,7 @@ public class ComplexCamera {
 
     public synchronized void fov(float fov) {
         this.fov = fov;
-        nearCam.setFrustumPerspective(fov, aspect, nearCamNear, farCamFar);
+        nearCam.setFrustumPerspective(fov, aspect, nearCamNear, nearCamFar);
         farCam.setFrustumPerspective(fov, aspect, farCamNear, farCamFar);
     }
 
@@ -101,5 +107,10 @@ public class ComplexCamera {
         farCam.lookAt(direction, up);
         nearCam.lookAt(direction, up);
         listener.setRotation(nearCam.getRotation());
+    }
+    
+    public void addProcessor(SceneProcessor processor){
+        nearViewPort.addProcessor(processor);
+        farViewPort.addProcessor(processor);
     }
 }

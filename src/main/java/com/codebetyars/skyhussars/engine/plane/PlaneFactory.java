@@ -26,11 +26,11 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
-import com.codebetyars.skyhussars.engine.DataModel;
 import com.codebetyars.skyhussars.engine.ModelManager;
 import com.codebetyars.skyhussars.engine.SoundManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +54,7 @@ public class PlaneFactory {
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
         Spatial model = modelManager.model("p80", "p80_material").clone();
+        model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         AudioNode engineSound = soundManager.sound("engine");
         AudioNode gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);

@@ -30,6 +30,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
@@ -81,6 +82,7 @@ public class TerrainManager implements InitializingBean {
         terrain.setMaterial(mat_terrain);
         terrain.setLocalScale(1000f, 1f, 1000f);
         terrain.addControl(new TerrainLodControl(terrain, camera));
+        terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
         rootNode.attachChild(terrain);
     }
 
