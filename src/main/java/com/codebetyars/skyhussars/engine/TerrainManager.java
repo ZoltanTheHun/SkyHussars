@@ -80,7 +80,7 @@ public class TerrainManager implements InitializingBean {
 
         terrain = new TerrainQuad("my terrain", 17, 2049, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
-        terrain.setLocalScale(1000f, 1f, 1000f);
+        terrain.setLocalScale(1000f, 15f, 1000f);
         terrain.addControl(new TerrainLodControl(terrain, camera));
         terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
         rootNode.attachChild(terrain);

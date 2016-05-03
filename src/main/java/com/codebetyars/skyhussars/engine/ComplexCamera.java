@@ -54,14 +54,13 @@ public class ComplexCamera {
 
     private ViewPort nearViewPort;
     
-    @Autowired
     private ViewPort farViewPort;
     
     private float fov;
     private final float farCamNear = 300f;
     private final float farCamFar = 200000f;
     private final float nearCamNear = 0.5f;
-    private final float nearCamFar = 310f;
+    private final float nearCamFar = 300f;
     private float aspect;
 
     private boolean initialized = false;
@@ -69,13 +68,14 @@ public class ComplexCamera {
     public synchronized void init() {
         if (!initialized) {
             aspect = (float) farCam.getWidth() / (float) farCam.getHeight();
-
+            farViewPort = renderManager.getMainViews().get(0);
             nearCam = new Camera(farCam.getWidth(), farCam.getHeight());
             farCam.setFrustumPerspective(fov, aspect, farCamNear, farCamFar);
             nearCam.setFrustumPerspective(fov, aspect, nearCamNear, nearCamFar);
             nearViewPort = renderManager.createMainView("nearMainView", nearCam);
             nearViewPort.setClearFlags(false, true, true);
             nearViewPort.attachScene(rootNode);
+            
             fov(45);
             initialized = true;
         }
@@ -111,6 +111,6 @@ public class ComplexCamera {
     
     public void addProcessor(SceneProcessor processor){
         nearViewPort.addProcessor(processor);
-        farViewPort.addProcessor(processor);
+        //farViewPort.addProcessor(processor);
     }
 }

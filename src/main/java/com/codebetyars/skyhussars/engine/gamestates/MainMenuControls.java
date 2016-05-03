@@ -68,12 +68,14 @@ public class MainMenuControls implements ScreenController {
         for (int i = 0; i < 23; i++) {
             timeControl.addItem((i < 10 ? "0" + i : i) + ":00");
         }
+        timeControl.selectItemByIndex(0);
     }
 
     private void populatePlaneSelect(Nifty nifty) {
         DropDown<String> planeSelect = nifty.getScreen("start").findNiftyControl("planeSelect", DropDown.class);
         planeRegistry.availablePlanes().forEach(planeName
                 -> planeSelect.addItem(planeName));
+        planeSelect.selectItemByIndex(0);
     }
 
     private void populateEnemyCount(Nifty nifty) {
@@ -81,6 +83,7 @@ public class MainMenuControls implements ScreenController {
         for (int i = 0; i < 17; i++) {
             enemyCount.addItem("" + i);
         }
+        enemyCount.selectItemByIndex(0);
     }
    
     public void startGame() {

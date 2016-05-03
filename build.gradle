@@ -17,15 +17,15 @@ mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
 
 repositories {
     mavenCentral()
-    maven {
-        url 'http://updates.jmonkeyengine.org/maven'
-    }
+    maven { url 'http://updates.jmonkeyengine.org/maven'}
+    maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'}
+    maven { url 'https://jcenter.bintray.com/' }
 }
 
 ext.versions = [
     eventbus: '1.4',
     jackson: '2.7.0',
-    jme3: '3.0.+',
+    jme3: '3.1.0-beta1',
     junit: '4.12',
     logback: '1.1.5',
     spring: '4.2.+',
@@ -50,17 +50,17 @@ sourceSets {
 dependencies {
     compile fileTree(dir: 'lib', include: '*.jar')
     compile group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
-    compile group: 'com.jme3', name: 'jme3-core',       version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-effects',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-networking', version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-plugins',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-jogg',       version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-terrain',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-blender',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-jbullet',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-niftygui',   version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-desktop',    version: versions.jme3
-    compile group: 'com.jme3', name: 'jme3-lwjgl',      version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-core',       version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-effects',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-networking', version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-plugins',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-jogg',       version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-terrain',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-blender',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-jbullet',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-niftygui',   version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: versions.jme3
+    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl',      version: versions.jme3
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     compile group: 'org.bushe', name: 'eventbus', version: versions.eventbus
     compile group: 'org.springframework', name: 'spring-context',  version: versions.spring

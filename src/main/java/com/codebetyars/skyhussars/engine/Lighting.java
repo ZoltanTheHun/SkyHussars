@@ -62,7 +62,6 @@ public class Lighting implements InitializingBean {
     private List<Light> lights;
     private DirectionalLight directionalLight;
     private AmbientLight ambientLight;
-    private PointLight pointLight;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -71,15 +70,14 @@ public class Lighting implements InitializingBean {
         directionalLight.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
         ambientLight = new AmbientLight();
         ambientLight.setColor(ColorRGBA.White.mult(0.5f));
-        pointLight = new PointLight();
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
 
-        final int SHADOWMAP_SIZE = 1024;
-        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        final int SHADOWMAP_SIZE = 2048;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);        
         camera.init();
         camera.addProcessor(dlsr);
 
