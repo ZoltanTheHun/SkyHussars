@@ -102,7 +102,6 @@ public class CameraManager {
     }
 
     public void init() {
-        camera.init();
         if (focus != null) {
             follow();
         }

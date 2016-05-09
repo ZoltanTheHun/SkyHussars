@@ -26,7 +26,6 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -41,14 +40,7 @@ public class MainMenu implements GameState, ScreenController {
     private MissionFactory missionFactory;
 
     @Autowired
-    private PlaneRegistry planeRegistry;
-
-    @Autowired
     private GuiManager guiManager;
-
-    private GameState nextMission;
-
-    private float time = 0;
 
     private int enemyCount = 0;
 
@@ -70,15 +62,12 @@ public class MainMenu implements GameState, ScreenController {
         this.planeType = planeType;
     }
 
-//should come from parameter
-    private String planeType;// = planeRegistry.availablePlanes().get(0);
+    private String planeType;
 
-    //private String planeType;//= planeRegistry.availablePlanes().get(0);
     @Override
     public GameState update(float tpf) {
         GameState nextState = this;
         if (startGame) {
-            //nextState = missionFactory.mission("Test mission");
             nextState = missionFactory.mission(planeType, enemyCount);
             startGame = false;
         }

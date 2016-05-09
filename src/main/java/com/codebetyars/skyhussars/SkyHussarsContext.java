@@ -26,12 +26,10 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
+import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
-import com.codebetyars.skyhussars.engine.SettingsManager;
-import com.codebetyars.skyhussars.engine.controls.MessageBuffer;
-import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.Camera;
@@ -54,35 +52,26 @@ public class SkyHussarsContext {
     private AssetManager assetManager;
 
     @Autowired
-    private Camera camera;
-
-    @Autowired
     private Node rootNode;
 
     @Autowired
     private CameraManager cameraManager;
 
     @Autowired
+    private ComplexCamera camera;
+
+    @Autowired
     private GuiManager guiManager;
 
     @Autowired
     private MainMenu mainMenu;
-    
-    @Autowired
-    private MainMenuControls mainMenuControls;
-
-    @Autowired
-    private SettingsManager settingsManager;
-    
-    @Autowired 
-    private MessageBuffer messageBuffer;
 
     private GameState gameState;
 
     @Bean
     public SkyControl skyControl() {
         Calendar now = new GregorianCalendar();
-        SkyControl skyControl = new SkyControl(assetManager, camera, 0.9f, true, true);
+        SkyControl skyControl = new SkyControl(assetManager, camera.testCamera(), 0.9f, true, true);
         skyControl.getSunAndStars().setHour(now.get(Calendar.HOUR_OF_DAY));
         skyControl.getSunAndStars().setSolarLongitude(now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
         skyControl.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);

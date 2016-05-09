@@ -29,7 +29,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
-import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -78,8 +77,7 @@ public class Lighting implements InitializingBean {
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);        
-        camera.init();
-        camera.addProcessor(dlsr);
+        //camera.addEffect(dlsr);
 
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
     }

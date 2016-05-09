@@ -29,7 +29,6 @@ import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
-import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
@@ -48,7 +47,7 @@ public class TerrainManager implements InitializingBean {
     private AssetManager assetManager;
 
     @Autowired
-    private Camera camera;
+    private ComplexCamera camera;
 
     @Autowired
     private Node rootNode;
@@ -81,7 +80,7 @@ public class TerrainManager implements InitializingBean {
         terrain = new TerrainQuad("my terrain", 17, 2049, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
         terrain.setLocalScale(1000f, 15f, 1000f);
-        terrain.addControl(new TerrainLodControl(terrain, camera));
+        terrain.addControl(new TerrainLodControl(terrain, camera.testCamera()));
         terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
         rootNode.attachChild(terrain);
     }

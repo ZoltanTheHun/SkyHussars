@@ -52,7 +52,6 @@ public class Mission implements GameState {
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
             GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager, MissionControls missionControls) {
-
         this.planes = planes;
         this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;

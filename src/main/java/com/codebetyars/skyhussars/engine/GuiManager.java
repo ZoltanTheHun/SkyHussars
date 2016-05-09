@@ -61,9 +61,6 @@ public class GuiManager implements ScreenController, InitializingBean {
     private ViewPort guiViewPort;
 
     @Autowired
-    private CameraManager cameraManager;
-
-    @Autowired
     private MainMenuControls mainMenuControls;
     
     @Autowired
@@ -81,6 +78,7 @@ public class GuiManager implements ScreenController, InitializingBean {
 
     public void createGUI() {
         nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls,missionControls);
+        nifty.addControls();
         nifty.update();
         nifty.setIgnoreKeyboardEvents(true);
         mainMenuControls.init(nifty);
