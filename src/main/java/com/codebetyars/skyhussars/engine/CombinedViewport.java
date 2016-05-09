@@ -25,7 +25,10 @@
  */
 package com.codebetyars.skyhussars.engine;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.math.ColorRGBA;
+import com.jme3.post.Filter;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -46,6 +49,7 @@ public class CombinedViewport {
     private final float aspect;
     private final String name;
     private final Node node;
+    private FilterPostProcessor fpp;
 
     public CombinedViewport(String name,
             RenderManager renderManager,
@@ -53,7 +57,8 @@ public class CombinedViewport {
             float fov,
             float near,
             float far,
-            Node node
+            Node node,
+            FilterPostProcessor fpp
     ) {
         this.name = name;
         this.cam = mainCam.clone();
@@ -63,6 +68,7 @@ public class CombinedViewport {
         this.far = far;
         this.aspect = (float) mainCam.getWidth() / (float) mainCam.getHeight();
         this.node = node;
+        this.fpp = fpp;
         setupView();
     }
 
@@ -81,8 +87,11 @@ public class CombinedViewport {
         viewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
         viewPort.setOutputFrameBuffer(offBuffer);
         viewPort.setClearFlags(true, true, true);
-       
+
         viewPort.attachScene(node);
+        
+        viewPort.addProcessor(fpp);
+
     }
 
     public Texture2D colorBuffer() {
@@ -103,5 +112,9 @@ public class CombinedViewport {
 
     public void fov(float f) {
         cam.setFrustumPerspective(fov, aspect, near, far);
+    }
+    
+    public void addFilter(Filter filter) {
+        fpp.addFilter(filter);
     }
 }

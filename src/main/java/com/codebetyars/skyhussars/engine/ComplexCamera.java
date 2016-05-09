@@ -29,6 +29,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.Listener;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.Filter;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.SceneProcessor;
 import com.jme3.post.filters.ComposeFilter;
@@ -69,8 +70,8 @@ public class ComplexCamera implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         mainViewPort = renderManager.getMainViews().get(0);
-        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode));
-        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode));
+        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode, new FilterPostProcessor(assetManager)));
+        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode, new FilterPostProcessor(assetManager)));
         mainViewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
 
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
@@ -78,6 +79,7 @@ public class ComplexCamera implements InitializingBean {
             fpp.addFilter(new ComposeFilter(viewPort.colorBuffer()));
         });
         mainViewPort.addProcessor(fpp);
+
         fov(45);
     }
 
@@ -122,5 +124,9 @@ public class ComplexCamera implements InitializingBean {
         viewPorts.forEach(viewPort -> {
             viewPort.viewPort().addProcessor(processor);
         });
+    }
+
+    public void addFarEffect(Filter filter) {
+        viewPorts.get(1).addFilter(filter);
     }
 }

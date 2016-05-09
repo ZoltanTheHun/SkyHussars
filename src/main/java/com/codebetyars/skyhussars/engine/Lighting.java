@@ -32,8 +32,10 @@ import com.jme3.light.Light;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
+import com.jme3.water.WaterFilter;
 import jme3utilities.sky.SkyControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,12 +53,15 @@ public class Lighting implements InitializingBean {
 
     @Autowired
     private SkyControl skyControl;
-    
+
     @Autowired
     private AssetManager assetManager;
-    
+
     @Autowired
     private ComplexCamera camera;
+    
+    @Autowired 
+    private Node rootNode;
 
     private List<Light> lights;
     private DirectionalLight directionalLight;
@@ -76,10 +81,17 @@ public class Lighting implements InitializingBean {
         final int SHADOWMAP_SIZE = 2048;
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);        
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
         //camera.addEffect(dlsr);
 
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
+
+        float initialWaterHeight = 1300f; // choose a value for your scene
+        WaterFilter water = new WaterFilter(rootNode, directionalLight.getDirection());
+
+        water.setWaterHeight(initialWaterHeight);
+
+        camera.addFarEffect(water);
     }
 
     public List<Light> getLights() {
