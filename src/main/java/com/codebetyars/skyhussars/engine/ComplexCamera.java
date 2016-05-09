@@ -115,14 +115,12 @@ public class ComplexCamera implements InitializingBean {
     }
 
     public Camera testCamera() {
-        return viewPorts.get(0).cam();
+        return viewPorts.get(1).cam();
     }
 
     public void addEffect(SceneProcessor processor) {
         viewPorts.forEach(viewPort -> {
             viewPort.viewPort().addProcessor(processor);
         });
-        //nearViewPort.addProcessor(processor);
-        //farViewPort.addProcessor(processor);
     }
 }
