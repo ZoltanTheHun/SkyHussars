@@ -49,25 +49,25 @@ import java.util.List;
 
 @Component
 public class Lighting implements InitializingBean {
-
+    
     private final static Logger logger = LoggerFactory.getLogger(Lighting.class);
-
+    
     @Autowired
     private SkyControl skyControl;
-
+    
     @Autowired
     private AssetManager assetManager;
-
+    
     @Autowired
     private ComplexCamera camera;
-
+    
     @Autowired
     private Node rootNode;
-
+    
     private List<Light> lights;
     private DirectionalLight directionalLight;
     private AmbientLight ambientLight;
-
+    
     @Override
     public void afterPropertiesSet() throws Exception {
         directionalLight = new DirectionalLight();
@@ -78,32 +78,30 @@ public class Lighting implements InitializingBean {
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
-
+        
         final int SHADOWMAP_SIZE = 2048;
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
         camera.addEffect(dlsr);
-
+        
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
-
-        float initialWaterHeight = 1300f; // choose a value for your scene
+        
+        float initialWaterHeight = 1500f; // choose a value for your scene
         WaterFilter water = new WaterFilter(rootNode, directionalLight.getDirection());
-
         water.setWaterHeight(initialWaterHeight);
-
         camera.addFarEffect(water);
 
         /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        dlsf.setLight(directionalLight);
-        dlsf.setEnabled(true);
-        camera.addNearEffect(dlsf);*/
+         dlsf.setLight(directionalLight);
+         dlsf.setEnabled(true);
+         camera.addNearEffect(dlsf);*/
     }
-
+    
     public List<Light> getLights() {
         return lights;
     }
-
+    
     public void setLightingBodies(Vector3f sun, Vector3f moon) {
         float sunAt = sun.angleBetween(Vector3f.UNIT_Y);
         float moonAt = moon.angleBetween(Vector3f.UNIT_Y);
@@ -125,6 +123,6 @@ public class Lighting implements InitializingBean {
             ambientLight.setColor(lightStrength);
         }
         logger.debug("Direction of light: " + directionalLight.getDirection());
-
+        
     }
 }

@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.Filter;
 import com.jme3.post.FilterPostProcessor;
@@ -49,7 +48,7 @@ public class CombinedViewport {
     private final float aspect;
     private final String name;
     private final Node node;
-    private FilterPostProcessor fpp;
+    private final FilterPostProcessor fpp;
 
     public CombinedViewport(String name,
             RenderManager renderManager,
@@ -91,6 +90,7 @@ public class CombinedViewport {
         viewPort.attachScene(node);  
         viewPort.addProcessor(fpp);
         
+        fpp.setNumSamples(8);
     }
 
     public Texture2D colorBuffer() {
