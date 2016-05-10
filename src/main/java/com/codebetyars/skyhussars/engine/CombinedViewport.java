@@ -43,7 +43,7 @@ public class CombinedViewport {
     private final Camera cam;
     private final ViewPort viewPort;
     private Texture2D colorBuffer;
-    private final float fov;
+    private float fov;
     private final float near;
     private final float far;
     private final float aspect;
@@ -88,10 +88,9 @@ public class CombinedViewport {
         viewPort.setOutputFrameBuffer(offBuffer);
         viewPort.setClearFlags(true, true, true);
 
-        viewPort.attachScene(node);
-        
+        viewPort.attachScene(node);  
         viewPort.addProcessor(fpp);
-
+        
     }
 
     public Texture2D colorBuffer() {
@@ -110,7 +109,8 @@ public class CombinedViewport {
         return name;
     }
 
-    public void fov(float f) {
+    public void fov(float fov) {
+        this.fov = fov;
         cam.setFrustumPerspective(fov, aspect, near, far);
     }
     

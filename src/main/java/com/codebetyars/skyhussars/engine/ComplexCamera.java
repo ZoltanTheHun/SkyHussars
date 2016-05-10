@@ -79,7 +79,6 @@ public class ComplexCamera implements InitializingBean {
             fpp.addFilter(new ComposeFilter(viewPort.colorBuffer()));
         });
         mainViewPort.addProcessor(fpp);
-
         fov(45);
     }
 
@@ -121,12 +120,14 @@ public class ComplexCamera implements InitializingBean {
     }
 
     public void addEffect(SceneProcessor processor) {
-        viewPorts.forEach(viewPort -> {
-            viewPort.viewPort().addProcessor(processor);
-        });
+        viewPorts.get(0).viewPort().addProcessor(processor);
     }
 
     public void addFarEffect(Filter filter) {
         viewPorts.get(1).addFilter(filter);
+    }
+
+    public void addNearEffect(Filter filter) {
+        viewPorts.get(0).addFilter(filter);
     }
 }

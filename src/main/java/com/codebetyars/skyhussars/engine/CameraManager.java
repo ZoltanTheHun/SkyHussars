@@ -30,11 +30,15 @@ import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CameraManager {
+
+    private final static Logger logger = LoggerFactory.getLogger(CameraManager.class);
 
     public static enum CameraMode {
 
