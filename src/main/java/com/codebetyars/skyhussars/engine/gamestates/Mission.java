@@ -30,6 +30,7 @@ import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 
 import java.util.List;
+import java.util.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,11 +48,14 @@ public class Mission implements GameState {
     private List<Pilot> pilots;
     private final SoundManager soundManager;
     private final static Logger logger = LoggerFactory.getLogger(Mission.class);
-    private MissionControls missionControls;
+    private final MissionControls missionControls;
+    private final WorldThread worldThread = new WorldThread();
+    private Timer timer;
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
             GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager, MissionControls missionControls) {
+
         this.planes = planes;
         this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;
@@ -68,6 +72,8 @@ public class Mission implements GameState {
         initiliazePlayer();
     }
 
+    private int cycles = 0;
+    
     public Pilot player() {
         return player;
     }
@@ -80,6 +86,20 @@ public class Mission implements GameState {
         ended = false;
     }
 
+    private void startWorldThread() {
+        if (timer == null) {
+            timer = new Timer(true);
+            timer.schedule(worldThread, 0, 16);  // 16 = 60 tick, 50 = 20 tick
+        }
+    }
+
+    private void stopWorldThread() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     private void initiliazePlayer() {
         Plane plane = player.plane();
         cameraManager.moveCameraTo(plane.getLocation());
@@ -89,6 +109,7 @@ public class Mission implements GameState {
 
     @Override
     public GameState update(float tpf) {
+        cycles ++;
         if (missionControls.popupToBeClosed()) {
             guiManager.cursor(false);
             guiManager.exitMenu(false);
@@ -96,6 +117,7 @@ public class Mission implements GameState {
         }
         long millis = System.currentTimeMillis();
         if (!paused && !ended) {
+            startWorldThread();
             planes.parallelStream().forEach(plane -> {
                 plane.update(tpf);
                 if (terrainManager.checkCollisionWithGround(plane)) {
@@ -114,11 +136,14 @@ public class Mission implements GameState {
             }
             guiManager.update(player.plane().getSpeedKmH());
         } else {
+            stopWorldThread();
             soundManager.muteAllSounds();
         }
         cameraManager.update(tpf);
         millis = System.currentTimeMillis() - millis;
         logger.info("Gamestate update complete in " + millis);
+        logger.info("Current cycle: {}", worldThread.cycle());
+        logger.info("Current render cycle: {}", cycles);
         return this;
     }
 
