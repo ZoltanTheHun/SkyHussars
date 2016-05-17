@@ -31,11 +31,13 @@ import com.jme3.math.Vector3f;
 
 public class Bullet extends Projectile {
 
+    private Vector3f vStartLocation;
     private Vector3f vLocation;
     private Vector3f vVelocity;
     private BulletDescriptor bulletDescriptor;
 
     public Bullet(Vector3f vLocation, Vector3f vVelocity, BulletDescriptor bulletDescriptor) {
+        this.vStartLocation = vLocation.clone();
         this.vLocation = vLocation.clone();
         this.vVelocity = vVelocity.clone();
         this.bulletDescriptor = bulletDescriptor;
@@ -59,5 +61,10 @@ public class Bullet extends Projectile {
     @Override
     public BoundingVolume getHitbox() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override 
+    public boolean isLive() {
+        return vStartLocation.distance(vLocation) <= 2000;
     }
 }

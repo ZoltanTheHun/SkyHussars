@@ -38,9 +38,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class ProjectileManager {
+
+    private final static Logger logger = LoggerFactory.getLogger(ProjectileManager.class);
 
     @Autowired
     private Node rootNode;
@@ -61,14 +65,25 @@ public class ProjectileManager {
     }
 
     public void update(float tpf) {
-        Iterator<Geometry> geomIterator = projectileGeometries.iterator();
+        logger.info("Current projectiles: {}", projectileGeometries.size());
+        Iterator<Geometry > geomIterator = projectileGeometries.iterator();
         projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
-        for (Projectile projectile : projectiles) {
-            if (geomIterator.hasNext()) {
-                Geometry geom = geomIterator.next();
-                geom.setLocalTranslation(projectile.getLocation());
-                Vector3f direction = projectile.getVelocity().normalize();
-                geom.lookAt(direction, Vector3f.UNIT_Y);
+        Iterator<Projectile> it = projectiles.iterator();
+        while (it.hasNext()) {
+            Projectile projectile = it.next();
+            if (!projectile.isLive()) {
+                it.remove();
+                if (geomIterator.hasNext()) {
+                    geomIterator.next();
+                    geomIterator.remove();
+                }
+            } else {
+                if (geomIterator.hasNext()) {
+                    Geometry geom = geomIterator.next();
+                    geom.setLocalTranslation(projectile.getLocation());
+                    Vector3f direction = projectile.getVelocity().normalize();
+                    geom.lookAt(direction, Vector3f.UNIT_Y);
+                }
             }
         }
     }
@@ -76,7 +91,7 @@ public class ProjectileManager {
     public void checkCollision(Plane plane) {
         Node planeNode = plane.planeGeometry().modelNode();
         projectileGeometries.forEach(projectile -> {
-            CollisionResults collisionResults = new CollisionResults();   
+            CollisionResults collisionResults = new CollisionResults();
             if (projectile.collideWith(planeNode.getWorldBound(), collisionResults) > 0) {
                 if (collisionResults.size() > 0) {
                     plane.hit();

@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.weapons;
 
 import com.jme3.bounding.BoundingVolume;
@@ -32,7 +31,12 @@ import com.jme3.math.Vector3f;
 public abstract class Projectile {
 
     public abstract void update(float tpf);
+
     public abstract Vector3f getVelocity();
+
     public abstract Vector3f getLocation();
+
     public abstract BoundingVolume getHitbox();
+
+    public abstract boolean isLive();
 }
