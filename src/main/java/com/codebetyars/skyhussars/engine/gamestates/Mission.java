@@ -64,16 +64,14 @@ public class Mission implements GameState {
         this.dayLightWeatherManager = dayLightWeatherManager;
         this.soundManager = soundManager;
         this.missionControls = missionControls;
-        for (Plane plane : planes) {
-            if (plane.planeMissionDescriptor().player()) {
-                player = new Pilot(plane);
-            }
-        }
+        planes.stream().filter((plane) -> (plane.planeMissionDescriptor().player())).forEach((plane) -> {
+            player = new Pilot(plane);
+        });
         initiliazePlayer();
     }
 
     private int cycles = 0;
-    
+
     public Pilot player() {
         return player;
     }
@@ -109,7 +107,7 @@ public class Mission implements GameState {
 
     @Override
     public GameState update(float tpf) {
-        cycles ++;
+        cycles++;
         if (missionControls.popupToBeClosed()) {
             guiManager.cursor(false);
             guiManager.exitMenu(false);
@@ -118,19 +116,8 @@ public class Mission implements GameState {
         long millis = System.currentTimeMillis();
         if (!paused && !ended) {
             startWorldThread();
-            planes.parallelStream().forEach(plane -> {
-                plane.update(tpf);
-                if (terrainManager.checkCollisionWithGround(plane)) {
-                    plane.crashed(true);
-                }
-
-            });
             projectileManager.update(tpf);
-
-            planes.forEach(plane -> {
-                plane.updateSound();
-                projectileManager.checkCollision(plane);
-            });
+            updatePlanes(tpf);
             if (player.plane().crashed()) {
                 ended = true;
             }
@@ -145,6 +132,19 @@ public class Mission implements GameState {
         logger.info("Current cycle: {}", worldThread.cycle());
         logger.info("Current render cycle: {}", cycles);
         return this;
+    }
+
+    private void updatePlanes(float tpf) {
+        planes.parallelStream().forEach(plane -> {
+            plane.update(tpf);
+            if (terrainManager.checkCollisionWithGround(plane)) {
+                plane.crashed(true);
+            }
+        });
+        planes.forEach(plane -> {
+            plane.updateSound();
+            projectileManager.checkCollision(plane);
+        });
     }
 
     @Override
