@@ -36,6 +36,7 @@ import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -53,7 +54,7 @@ public class Plane {
     private final PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
-    private final PlanePhysics physics;
+    private final AdvancedPlanePhysics physics;
     private final AudioNode engineSound;
     private final AudioNode gunSound;
     private List<GunGroup> gunGroups;
@@ -63,12 +64,14 @@ public class Plane {
     private boolean crashed = false;
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
-    private final PlaneGeometry planeGeometry;
+    private final PlaneGeometry geom;
 
     public void updatePlanePhysics(float tpf) {
-        physics.update(tpf, planeGeometry.rootNode());
+        physics.update(tpf);
+        physics.updateModel(geom.root());
         logger.debug(getInfo());
     }
+    
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 
     public String getInfo() {
@@ -76,7 +79,7 @@ public class Plane {
     }
 
     public PlaneGeometry planeGeometry() {
-        return planeGeometry;
+        return geom;
     }
 
     public void fireEffect(ParticleEmitter fireEffect) {
@@ -107,11 +110,11 @@ public class Plane {
         model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
         initializeGunGroup();
-        planeGeometry = new PlaneGeometry();
-        planeGeometry.attachSpatialToCockpitNode(cockpit);
-        planeGeometry.attachSpatialToModelNode(model);
-        planeGeometry.attachSpatialToRootNode(engineSound);
-        planeGeometry.attachSpatialToRootNode(gunSound);
+        geom = new PlaneGeometry();
+        geom.attachSpatialToCockpitNode(cockpit);
+        geom.attachSpatialToModelNode(model);
+        geom.attachSpatialToRootNode(engineSound);
+        geom.attachSpatialToRootNode(gunSound);
         List<Airfoil> airfoils = new ArrayList<>();
         airfoils.add(leftWing);
         airfoils.add(rightWing);
@@ -120,7 +123,10 @@ public class Plane {
         for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
             engines.add(new Engine(engineLocation, 1.0f));
         }
-        this.physics = new AdvancedPlanePhysics(planeGeometry.rootNode(), planeDescriptor, engines, airfoils);
+        Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
+        
+        Vector3f translation = geom.root().getLocalTranslation();
+        this.physics = new AdvancedPlanePhysics(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
     }
 
@@ -132,12 +138,12 @@ public class Plane {
     }
 
     public BoundingVolume getHitBox() {
-        return planeGeometry.rootNode().getWorldBound();
+        return geom.root().getWorldBound();
     }
 
     public void hit() {
         if (!shotdown) {
-            planeGeometry.attachSpatialToRootNode(fireEffect);
+            geom.attachSpatialToRootNode(fireEffect);
             fireEffect.emitAllParticles();
             for (Engine engine : engines) {
                 engine.damage(1.0f);
@@ -150,8 +156,8 @@ public class Plane {
         if (!crashed) {
             updatePlanePhysics(tpf);
             gunGroups.parallelStream().forEach(gunGroup -> {
-                gunGroup.firing(firing, planeGeometry.rootNode().getLocalTranslation(),
-                        physics.getVVelovity(), planeGeometry.rootNode().getWorldRotation());
+                gunGroup.firing(firing, geom.root().getLocalTranslation(),
+                        physics.getVVelovity(), geom.root().getWorldRotation());
             });
         }
     }
@@ -202,31 +208,34 @@ public class Plane {
     }
 
     public void setHeight(int height) {
-        planeGeometry.rootNode().getLocalTranslation().setY(height);
+        Vector3f translation = geom.root().getLocalTranslation();
+        setLocation((int) translation.getX(), height, (int) translation.getZ());
     }
 
     public void setLocation(int x, int z) {
-        planeGeometry.rootNode().move(x, planeGeometry.rootNode().getLocalTranslation().y, z);
+        setLocation(x, (int) geom.root().getLocalTranslation().y, z);
     }
 
     public void setLocation(int x, int y, int z) {
-        planeGeometry.rootNode().move(x, y, z);
+        setLocation(new Vector3f(x, y, z));
     }
 
     public void setLocation(Vector3f location) {
-        planeGeometry.rootNode().move(location);
+        geom.root().setLocalTranslation(location);
+        physics.setTranslation(location);
+
     }
 
     public float getHeight() {
-        return planeGeometry.rootNode().getLocalTranslation().y;
+        return geom.root().getLocalTranslation().y;
     }
 
     public Vector3f getLocation() {
-        return planeGeometry.rootNode().getLocalTranslation();
+        return geom.root().getLocalTranslation();
     }
 
     public Vector2f getLocation2D() {
-        return new Vector2f(planeGeometry.rootNode().getLocalTranslation().x, planeGeometry.rootNode().getLocalTranslation().z);
+        return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z);
     }
 
     public String getSpeedKmH() {

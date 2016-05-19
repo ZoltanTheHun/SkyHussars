@@ -95,6 +95,7 @@ public class SkyHussars extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
+        /* This is needed to make sure the node is updated by rendering*/
         node.updateLogicalState(tpf);
         node.updateGeometricState();
     }

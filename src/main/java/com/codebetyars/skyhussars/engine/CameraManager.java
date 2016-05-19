@@ -92,14 +92,14 @@ public class CameraManager {
 
     private void follow() {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        Node node = focus.rootNode();
+        Node node = focus.root();
         camera.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
         camera.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
     }
 
     private void showCockpit() {
-        camera.moveCameraTo(focus.rootNode().getLocalTranslation());
-        Node node = focus.rootNode();
+        camera.moveCameraTo(focus.root().getLocalTranslation());
+        Node node = focus.root();
         camera.lookAtDirection(node.getLocalRotation().mult(rotationX).
                 mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
                 mult(Vector3f.UNIT_Y));

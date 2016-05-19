@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.physics;
 
-import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -47,7 +46,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private float airDensity = 1.2745f;
     private float planeFactor = 0.2566f; // cross section and drag coeff together
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
-    private float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
+    private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
     private Vector3f vWeight;
     private float pi = 3.14f;
     private float angleOfAttack;
@@ -60,44 +59,66 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private float height;
     private float length = 10.49f;
     private float rPlane = 1.3f;
-    private Matrix3f momentOfInertiaTensor;
+    private final Matrix3f momentOfInertiaTensor;
     private List<Airfoil> airfoils = new ArrayList<>();
     private List<Engine> engines = new ArrayList<>();
 
-    public AdvancedPlanePhysics(Spatial model, PlaneDescriptor planeDescriptor, List<Engine> engines, List<Airfoil> airfoils) {
-        mass = planeDescriptor.getMassGross();
+    private Quaternion rotation;
+
+    public void setRotation(Quaternion rotation) {
+        this.rotation = new Quaternion(rotation);
+    }
+
+    public void setTranslation(Vector3f translation) {
+        this.translation = new Vector3f(translation);
+    }
+    private Vector3f translation;
+    private final float tick = (float) 1 / (float) 60;
+
+    public AdvancedPlanePhysics(Quaternion rotation,
+            Vector3f translation,
+            float mass,
+            List<Engine> engines, List<Airfoil> airfoils) {
+        this.mass = mass;
         vWeight = GRAVITY.mult(mass);
         momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
                 0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
                 0f, 0f, (mass / 2) * (rPlane * rPlane));
         this.airfoils = airfoils;
         this.engines = engines;
+        this.rotation = new Quaternion(rotation);
+        this.translation = new Vector3f(translation);
     }
 
+    Quaternion tempQuaternion = new Quaternion();
     @Override
-    public void update(float tpf, Node model) {
-        updateAuxiliary(model);
-        Vector3f vLinearAcceleration = Vector3f.ZERO;
-        logger.debug("Plane roll: " + (model.getLocalRotation().mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
-        ActingForces engineForces = calculateEngineForces(model.getLocalRotation());
-        ActingForces airfoilForces = calculateAirfoilForces(model.getLocalRotation(), vVelocity.negate());
+    public void update(float tpf) {
+        updateAuxiliary(rotation, translation);
+        logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
+        ActingForces engineForces = calculateEngineForces(rotation);
+        ActingForces airfoilForces = calculateAirfoilForces(rotation, vVelocity.negate());
         logger.debug("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
-
-        vLinearAcceleration = vLinearAcceleration.add(vWeight);
-        vLinearAcceleration = vLinearAcceleration.add(engineForces.vLinearComponent);
-        vLinearAcceleration = vLinearAcceleration.add(airfoilForces.vLinearComponent);
-        vLinearAcceleration = vLinearAcceleration.add(calculateParasiticDrag());
-        vLinearAcceleration = vLinearAcceleration.divide(mass);
-
+        Vector3f vLinearAcceleration = Vector3f.ZERO
+                .add(vWeight)
+                .add(engineForces.vLinearComponent)
+                .add(airfoilForces.vLinearComponent)
+                .add(calculateParasiticDrag()).divide(mass);
+        logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
-        model.move(vVelocity.mult(tpf));
-
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
-        logger.debug("Angular velocity: " + vAngularVelocity);
-
+        logger.info("Angular velocity: " + vAngularVelocity);
+        translation = translation.add(vVelocity.mult(tpf));
         moderateRoll();
-        model.rotate(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        //fromangles is selfmodifying
+        Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        rotation = rotation.mult(rotationQuaternion);
+        logger.info("Rotation " + rotation);
+    }
+
+    public void updateModel(Node model) {
+        model.setLocalRotation(rotation);
+        model.setLocalTranslation(translation);
     }
 
     private void moderateRoll() {
@@ -126,14 +147,16 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         return new ActingForces(vLinearAcceleration, Vector3f.ZERO);
     }
 
-    private ActingForces calculateAirfoilForces(Quaternion situation, Vector3f vFlow) {
+    private ActingForces calculateAirfoilForces(Quaternion rotation, Vector3f vFlow) {
         Vector3f vLinearAcceleration = Vector3f.ZERO;
         Vector3f vTorque = Vector3f.ZERO;
         for (Airfoil airfoil : airfoils) {
-            Vector3f airfoilForce = airfoil.calculateResultantForce(airDensity, vFlow, situation, vAngularVelocity);
+            logger.debug("flow " + vFlow + ", rotation" + rotation + ", angular velocity " + vAngularVelocity);
+            Vector3f airfoilForce = airfoil.calculateResultantForce(airDensity, vFlow, rotation, vAngularVelocity);
             logger.debug("Airfoilforce points to: " + airfoilForce.toString()/*.normalize().dot(situation.mult(Vector3f.UNIT_Y))*/);
+            logger.debug("rotation" + rotation + ", linear" + vLinearAcceleration + ", airfoil " + airfoilForce);
             vLinearAcceleration = vLinearAcceleration.add(airfoilForce);
-            airfoilForce = situation.inverse().mult(airfoilForce);
+            airfoilForce = rotation.inverse().mult(airfoilForce);
             Vector3f distFromCenter = airfoil.getCenterOfGravity();
             logger.debug("Airfoilforce points to: " + airfoilForce.toString());
             vTorque = vTorque.add(distFromCenter.cross(airfoilForce));
@@ -145,15 +168,15 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
 
-    private void updateAuxiliary(Node model) {
-        updateHelpers(model);
-        updateAngleOfAttack(model);
+    private void updateAuxiliary(Quaternion rotation, Vector3f translation) {
+        updateHelpers(translation);
+        updateAngleOfAttack(rotation);
         updatePlaneFactor();
     }
 
-    private void updateAngleOfAttack(Spatial model) {
-        angleOfAttack = model.getLocalRotation().mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
-        float np = model.getLocalRotation().mult(Vector3f.UNIT_Y).dot(vVelocity.negate().normalize());
+    private void updateAngleOfAttack(Quaternion rotation) {
+        angleOfAttack = rotation.mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
+        float np = rotation.mult(Vector3f.UNIT_Y).dot(vVelocity.negate().normalize());
         if (np < 0) {
             angleOfAttack = -angleOfAttack;
         }
@@ -168,8 +191,8 @@ public class AdvancedPlanePhysics implements PlanePhysics {
          }*/
     }
 
-    private void updateHelpers(Node model) {
-        height = model.getLocalTranslation().getY();
+    private void updateHelpers(Vector3f translation) {
+        height = translation.getY();
         airDensity = WorldPhysicsData.getAirDensity((int) height);
     }
 

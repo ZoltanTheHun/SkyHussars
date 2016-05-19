@@ -101,7 +101,7 @@ public class MissionFactory {
             plane.setLocation(planeMission.startLocation());
             plane.planeMissinDescriptor(planeMission);
             plane.setThrottle(0.6f);
-            rootNode.attachChild(plane.planeGeometry().rootNode());
+            rootNode.attachChild(plane.planeGeometry().root());
             planes.add(plane);
         }
         return planes;
