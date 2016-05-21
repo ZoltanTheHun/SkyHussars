@@ -47,18 +47,17 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     private float planeFactor = 0.2566f; // cross section and drag coeff together
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
-    private Vector3f vWeight;
+    private final Vector3f vWeight;
     private float pi = 3.14f;
     private float angleOfAttack;
+
     private Vector3f vVelocity = new Vector3f(0f, 0f, 0f);
-    private Vector3f vAcceleration = new Vector3f(0f, 0f, 0f);
-    private Vector3f vDrag = new Vector3f(0f, 0f, 0f);
-    private Vector3f vLift = new Vector3f(0f, 0f, 0f);
     private Vector3f vAngularAcceleration = new Vector3f(0, 0, 0);
     private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
+
     private float height;
-    private float length = 10.49f;
-    private float rPlane = 1.3f;
+    private final float length = 10.49f;
+    private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
     private List<Airfoil> airfoils = new ArrayList<>();
     private List<Engine> engines = new ArrayList<>();
@@ -91,6 +90,7 @@ public class AdvancedPlanePhysics implements PlanePhysics {
     }
 
     Quaternion tempQuaternion = new Quaternion();
+
     @Override
     public void update(float tpf) {
         updateAuxiliary(rotation, translation);
@@ -107,16 +107,16 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
-        logger.info("Angular velocity: " + vAngularVelocity);
-        translation = translation.add(vVelocity.mult(tpf));
         moderateRoll();
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
-        rotation = rotation.mult(rotationQuaternion);
-        logger.info("Rotation " + rotation);
+        synchronized (this) {
+            rotation = rotation.mult(rotationQuaternion);
+            translation = translation.add(vVelocity.mult(tpf));
+        }
     }
 
-    public void updateModel(Node model) {
+    public synchronized void updateScene(Node model) {
         model.setLocalRotation(rotation);
         model.setLocalTranslation(translation);
     }
@@ -151,14 +151,10 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         Vector3f vLinearAcceleration = Vector3f.ZERO;
         Vector3f vTorque = Vector3f.ZERO;
         for (Airfoil airfoil : airfoils) {
-            logger.debug("flow " + vFlow + ", rotation" + rotation + ", angular velocity " + vAngularVelocity);
             Vector3f airfoilForce = airfoil.calculateResultantForce(airDensity, vFlow, rotation, vAngularVelocity);
-            logger.debug("Airfoilforce points to: " + airfoilForce.toString()/*.normalize().dot(situation.mult(Vector3f.UNIT_Y))*/);
-            logger.debug("rotation" + rotation + ", linear" + vLinearAcceleration + ", airfoil " + airfoilForce);
             vLinearAcceleration = vLinearAcceleration.add(airfoilForce);
             airfoilForce = rotation.inverse().mult(airfoilForce);
             Vector3f distFromCenter = airfoil.getCenterOfGravity();
-            logger.debug("Airfoilforce points to: " + airfoilForce.toString());
             vTorque = vTorque.add(distFromCenter.cross(airfoilForce));
         }
         return new ActingForces(vLinearAcceleration, vTorque);
@@ -224,12 +220,9 @@ public class AdvancedPlanePhysics implements PlanePhysics {
         bigFractionless.setMaximumFractionDigits(0);
         bigFractionless.setMinimumIntegerDigits(6);
         return "Thrust: " + engines.get(0).getThrust().length()
-                + ", Acceleration: " + accF.format(vAcceleration.length())
                 + ", CurrentSpeed: " + fractionless.format(vVelocity.length())
                 + ", CurrentSpeed km/h: " + fractionless.format(vVelocity.length() * 3.6)
-                + ", Drag: " + bigFractionless.format(vDrag.length())
                 + ", Height: " + fractionless.format(height)
-                + ", Lift: " + bigFractionless.format(vLift.length())
                 //+ ", AirSpeed: " + fractionless.format(airSpeed)
                 + ", AOA: " + fractionless.format(angleOfAttack)
                 + ", AngularVelocity: " + fraction2Format.format(vAngularVelocity.length())

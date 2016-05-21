@@ -29,7 +29,6 @@ import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
 import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
-import com.codebetyars.skyhussars.engine.physics.PlanePhysics;
 import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
@@ -68,10 +67,9 @@ public class Plane {
 
     public void updatePlanePhysics(float tpf) {
         physics.update(tpf);
-        physics.updateModel(geom.root());
         logger.debug(getInfo());
     }
-    
+
     Vector3f accG = new Vector3f(0f, -10f, 0f);
 
     public String getInfo() {
@@ -124,7 +122,7 @@ public class Plane {
             engines.add(new Engine(engineLocation, 1.0f));
         }
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
-        
+
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new AdvancedPlanePhysics(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
@@ -153,8 +151,8 @@ public class Plane {
     }
 
     public void update(float tpf) {
+        physics.updateScene(geom.root());
         if (!crashed) {
-            updatePlanePhysics(tpf);
             gunGroups.parallelStream().forEach(gunGroup -> {
                 gunGroup.firing(firing, geom.root().getLocalTranslation(),
                         physics.getVVelovity(), geom.root().getWorldRotation());

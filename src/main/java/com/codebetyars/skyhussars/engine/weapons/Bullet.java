@@ -38,7 +38,8 @@ public class Bullet extends Projectile {
 
     public Bullet(Vector3f vLocation, Vector3f vVelocity, BulletDescriptor bulletDescriptor) {
         this.vStartLocation = vLocation.clone();
-        this.vLocation = vLocation.clone();
+        /*temp fix to avoid self shooting*/
+        this.vLocation = vLocation.add(vVelocity.normalize().mult(10));
         this.vVelocity = vVelocity.clone();
         this.bulletDescriptor = bulletDescriptor;
     }

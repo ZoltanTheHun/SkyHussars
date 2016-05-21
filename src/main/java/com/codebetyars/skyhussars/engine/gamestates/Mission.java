@@ -31,6 +31,7 @@ import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class Mission implements GameState {
     private final SoundManager soundManager;
     private final static Logger logger = LoggerFactory.getLogger(Mission.class);
     private final MissionControls missionControls;
-    private final WorldThread worldThread = new WorldThread();
+    private final WorldThread worldThread;
     private Timer timer;
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
@@ -68,8 +69,9 @@ public class Mission implements GameState {
             player = new Pilot(plane);
         });
         initiliazePlayer();
+        worldThread = new WorldThread(planes, ticks);
     }
-
+    private final int ticks = 30;
     private int cycles = 0;
 
     public Pilot player() {
@@ -87,7 +89,12 @@ public class Mission implements GameState {
     private void startWorldThread() {
         if (timer == null) {
             timer = new Timer(true);
-            timer.schedule(worldThread, 0, 16);  // 16 = 60 tick, 50 = 20 tick
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    worldThread.run();
+                }
+            }, 0, 1000 / ticks);  // 16 = 60 tick, 50 = 20 tick
         }
     }
 
@@ -116,8 +123,9 @@ public class Mission implements GameState {
         long millis = System.currentTimeMillis();
         if (!paused && !ended) {
             startWorldThread();
-            projectileManager.update(tpf);
             updatePlanes(tpf);
+            projectileManager.update(tpf);
+
             if (player.plane().crashed()) {
                 ended = true;
             }
@@ -135,13 +143,11 @@ public class Mission implements GameState {
     }
 
     private void updatePlanes(float tpf) {
-        planes.parallelStream().forEach(plane -> {
+        planes.forEach(plane -> {
             plane.update(tpf);
             if (terrainManager.checkCollisionWithGround(plane)) {
                 plane.crashed(true);
-            }
-        });
-        planes.forEach(plane -> {
+            };
             plane.updateSound();
             projectileManager.checkCollision(plane);
         });

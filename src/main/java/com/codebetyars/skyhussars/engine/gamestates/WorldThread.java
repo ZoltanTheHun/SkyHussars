@@ -25,10 +25,24 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.plane.Plane;
+import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldThread extends TimerTask {
+    
+       private final static Logger logger = LoggerFactory.getLogger(WorldThread.class);
+
+    private final List<Plane> planes;
+    private final float tpf;
+
+    public WorldThread(List<Plane> planes, int ticks) {
+        this.planes = planes;
+        tpf = (float) 1 / (float) ticks;
+    }
 
     private final AtomicLong cycle = new AtomicLong(0);
 
@@ -38,6 +52,9 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
+        planes.parallelStream().forEach(plane -> {
+            plane.updatePlanePhysics(tpf);
+        });
         cycle.incrementAndGet();
     }
 
