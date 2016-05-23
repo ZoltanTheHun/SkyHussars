@@ -25,6 +25,8 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.physics.environment.AtmosphereImpl;
+import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import java.util.List;
 import java.util.TimerTask;
@@ -38,6 +40,8 @@ public class WorldThread extends TimerTask {
 
     private final List<Plane> planes;
     private final float tpf;
+    
+    private final Environment environment = new Environment(10,new AtmosphereImpl());
 
     public WorldThread(List<Plane> planes, int ticks) {
         this.planes = planes;
@@ -53,7 +57,7 @@ public class WorldThread extends TimerTask {
     @Override
     public void run() {
         planes.parallelStream().forEach(plane -> {
-            plane.updatePlanePhysics(tpf);
+            plane.updatePlanePhysics(tpf,environment);
         });
         cycle.incrementAndGet();
     }

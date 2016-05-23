@@ -26,10 +26,11 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
-import com.codebetyars.skyhussars.engine.physics.AdvancedPlanePhysics;
+import com.codebetyars.skyhussars.engine.physics.PlanePhysicsImpl;
 import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
 import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
+import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingVolume;
@@ -53,7 +54,7 @@ public class Plane {
     private final PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
-    private final AdvancedPlanePhysics physics;
+    private final PlanePhysicsImpl physics;
     private final AudioNode engineSound;
     private final AudioNode gunSound;
     private List<GunGroup> gunGroups;
@@ -65,8 +66,8 @@ public class Plane {
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
 
-    public void updatePlanePhysics(float tpf) {
-        physics.update(tpf);
+    public void updatePlanePhysics(float tpf,Environment environment) {
+        physics.update(tpf,environment);
         logger.debug(getInfo());
     }
 
@@ -124,7 +125,7 @@ public class Plane {
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
         Vector3f translation = geom.root().getLocalTranslation();
-        this.physics = new AdvancedPlanePhysics(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
+        this.physics = new PlanePhysicsImpl(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
         this.physics.setSpeedForward(model, 300f);
     }
 

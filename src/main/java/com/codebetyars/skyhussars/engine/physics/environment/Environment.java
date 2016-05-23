@@ -23,17 +23,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.codebetyars.skyhussars.engine.physics.environment;
 
-package com.codebetyars.skyhussars.engine.physics;
-
-import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 
-public interface PlanePhysics {
-    public void update(float tpf,Environment environment);
-    public String getInfo();
-    public void setSpeedForward(Spatial model,float kmh);
-    public Vector3f getVVelovity();
-    public String getSpeedKmH();
+public class Environment {
+
+    private final Atmosphere atmosphere;
+    private final Vector3f gravity;
+
+    public Environment(float gravity, Atmosphere atmosphere) {
+        this.gravity = new Vector3f(0, - gravity, 0);
+        this.atmosphere = atmosphere;
+    }
+
+    public float airDensity(int altitude) {
+        return atmosphere.getAirDensity(altitude);
+    }
+    
+    public Vector3f gravity(){
+        return gravity;
+    }
 }
