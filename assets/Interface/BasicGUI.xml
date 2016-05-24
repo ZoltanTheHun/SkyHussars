@@ -10,13 +10,9 @@
             <image filename="Textures/p80-background.jpg" width="100%" height="100%"></image>
         </layer>
         <layer id="foreground" childLayout="vertical">
-            <panel id="padding1" height="10%" width="35%" align="center" childLayout="center"/>
-            <panel id="panel_top" height="15%" width="35%" align="center" childLayout="center" 	backgroundColor="#68686833" >
-                <text text="SkyHussars" font="Interface/Fonts/Default.fnt" width="100%" height="100%" />
-            </panel>
-            <panel id="padding2" height="10%" width="35%" align="center" childLayout="center"/>
+            <panel id="padding1" height="35%" width="35%" align="center" childLayout="center"/>
             <panel id="panel_mid" height="50%" width="75%" align="center" childLayout="vertical" backgroundColor="#00000099">
-                <text text="Welcome to SkyHussars R4. This is a simple flying game made to test out jMonkeyEngine and to learn a little bit about aerodynamics. The plane can be pitched and rolled with the cursor keys. The thrust can be controlled with the number keys from 1 to 5. There is no objective and the only way to fail is to crash to the ground. In that case the plane can be restored to its original position with the R button. To pause the game, the P key can be used. To switch between outer and cockpit view use F1 and F5. Space  can be used to shoot with the gun. Left and right mouse buttons control the field of view. To exit the game please press ESC." font="Interface/Fonts/Default.fnt" width="100%" height="100%" wrap="true" />
+                <text text="Welcome to SkyHussars R6. This is a simple flying game made to test out jMonkeyEngine and to learn a little bit about aerodynamics. The plane can be pitched and rolled with the cursor keys. The thrust can be controlled with the number keys from 1 to 5. There is no objective and the only way to fail is to crash to the ground. In that case the plane can be restored to its original position with the R button. To pause the game, the P key can be used. To switch between outer and cockpit view use F1 and F5. Space  can be used to shoot with the gun. Left and right mouse buttons control the field of view. To exit the game please press ESC." font="Interface/Fonts/Default.fnt" width="100%" height="100%" wrap="true" />
 			    <panel id="timePanel" width="50%"  childLayout="horizontal">
                     <text text="Please select start time for flight: " font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
                     <control id="timeControl" width="50%" name="dropDown">
