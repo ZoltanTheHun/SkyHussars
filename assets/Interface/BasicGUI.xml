@@ -7,7 +7,7 @@
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="start" controller="com.codebetyars.skyhussars.engine.gamestates.MainMenuControls">
         <layer id="background" childLayout="center">
-            <image filename="Textures/p80-background.jpg"></image>
+            <image filename="Textures/p80-background.jpg" width="100%" height="100%"></image>
         </layer>
         <layer id="foreground" childLayout="vertical">
             <panel id="padding1" height="10%" width="35%" align="center" childLayout="center"/>
