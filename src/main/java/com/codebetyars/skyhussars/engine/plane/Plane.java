@@ -66,8 +66,8 @@ public class Plane {
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
 
-    public void updatePlanePhysics(float tpf,Environment environment) {
-        physics.update(tpf,environment);
+    public void updatePlanePhysics(float tpf, Environment environment) {
+        physics.update(tpf, environment);
         logger.debug(getInfo());
     }
 
@@ -198,6 +198,12 @@ public class Plane {
 
     }
 
+    /**
+     * Sets the status of the elevator. If the elevator is negative, it pushes
+     * the nose down. If the elevator is positive, it pulls the nose up.
+     *
+     * @param elevator must be between -1.0 and 1.0
+     */
     public void setElevator(float elevator) {
         horizontalStabilizer.controlAileron(5f * elevator);
     }

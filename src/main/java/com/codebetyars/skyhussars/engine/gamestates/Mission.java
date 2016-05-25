@@ -26,8 +26,10 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.*;
+import com.codebetyars.skyhussars.engine.ai.AIPilot;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import java.util.LinkedList;
 
 import java.util.List;
 import java.util.Timer;
@@ -47,6 +49,7 @@ public class Mission implements GameState {
     private boolean ended = false;
     private final List<Plane> planes;
     private List<Pilot> pilots;
+    private List<AIPilot> aiPilots = new LinkedList<>();
     private final SoundManager soundManager;
     private final static Logger logger = LoggerFactory.getLogger(Mission.class);
     private final MissionControls missionControls;
@@ -65,8 +68,12 @@ public class Mission implements GameState {
         this.dayLightWeatherManager = dayLightWeatherManager;
         this.soundManager = soundManager;
         this.missionControls = missionControls;
-        planes.stream().filter((plane) -> (plane.planeMissionDescriptor().player())).forEach((plane) -> {
-            player = new Pilot(plane);
+        planes.stream().forEach((plane) -> {
+            if (plane.planeMissionDescriptor().player()) {
+                player = new Pilot(plane);
+            } else {
+                aiPilots.add(new AIPilot(plane));
+            }
         });
         initiliazePlayer();
         worldThread = new WorldThread(planes, ticks);
@@ -129,6 +136,9 @@ public class Mission implements GameState {
             if (player.plane().crashed()) {
                 ended = true;
             }
+            aiPilots.stream().forEach(aiPilot -> {
+                aiPilot.update();
+            });
             guiManager.update(player.plane().getSpeedKmH());
         } else {
             stopWorldThread();
