@@ -33,7 +33,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.water.WaterFilter;
@@ -68,6 +67,8 @@ public class Lighting implements InitializingBean {
     private DirectionalLight directionalLight;
     private AmbientLight ambientLight;
     
+    private WaterFilter water;
+    
     @Override
     public void afterPropertiesSet() throws Exception {
         directionalLight = new DirectionalLight();
@@ -82,16 +83,16 @@ public class Lighting implements InitializingBean {
         final int SHADOWMAP_SIZE = 2048;
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
         camera.addEffect(dlsr);
         
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
         
         float initialWaterHeight = 1500f; // choose a value for your scene
-        WaterFilter water = new WaterFilter(rootNode, directionalLight.getDirection());
+        water = new WaterFilter(rootNode, directionalLight.getDirection());
         water.setWaterHeight(initialWaterHeight);
-        camera.addFarEffect(water);
-
+        //camera.addFarEffect(water);
+        
         /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
          dlsf.setLight(directionalLight);
          dlsf.setEnabled(true);
@@ -124,5 +125,9 @@ public class Lighting implements InitializingBean {
         }
         logger.debug("Direction of light: " + directionalLight.getDirection());
         
+    }
+    
+    public void waterEnabled(boolean enabled){
+        water.setEnabled(enabled);
     }
 }

@@ -1,6 +1,7 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
+import com.codebetyars.skyhussars.engine.Lighting;
 import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
@@ -26,6 +27,9 @@ public class MainMenuControls implements ScreenController {
 
     @Autowired
     private MainMenu mainMenu;
+
+    @Autowired
+    private Lighting lighting;
 
     private final static Logger logger = LoggerFactory.getLogger(MainMenuControls.class);
 
@@ -56,10 +60,24 @@ public class MainMenuControls implements ScreenController {
         mainMenu.setEnemyCount(Integer.parseInt(enemyCount));
     }
 
+    @NiftyEventSubscriber(id = "waterEnabled")
+    public void setWaterEnabled(final String id, final DropDownSelectionChangedEvent event) {
+        String disableWater = (String) event.getSelection();
+        lighting.waterEnabled(!"YES".equals(disableWater));
+    }
+
     public void init(Nifty nifty) {
         populateTimeControl(nifty);
         populatePlaneSelect(nifty);
         populateEnemyCount(nifty);
+        populateWaterEnabled(nifty);
+    }
+
+    private void populateWaterEnabled(Nifty nifty) {
+        DropDown<String> waterDisabled = nifty.getScreen("start").findNiftyControl("waterEnabled", DropDown.class);
+        waterDisabled.addItem("NO");
+        waterDisabled.addItem("YES");
+        waterDisabled.selectItemByIndex(0);
     }
 
     private void populateTimeControl(Nifty nifty) {
@@ -85,7 +103,7 @@ public class MainMenuControls implements ScreenController {
         }
         enemyCount.selectItemByIndex(0);
     }
-   
+
     public void startGame() {
         mainMenu.startGame();
     }

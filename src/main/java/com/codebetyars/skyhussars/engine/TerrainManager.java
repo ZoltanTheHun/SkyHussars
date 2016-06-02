@@ -56,7 +56,7 @@ public class TerrainManager implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/Adria.bmp").getImage(), 1f);
+        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/AdriaSmall.bmp").getImage(), 1f);
         heightmap.load();
 
         Texture grass = assetManager.loadTexture("Textures/ground.png");
@@ -69,15 +69,15 @@ public class TerrainManager implements InitializingBean {
         land.setWrap(Texture.WrapMode.Repeat);
 
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
-        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/Adria_alpha.png"));
+        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/AdriaSmall_alpha.png"));
         mat_terrain.setTexture("DiffuseMap", grass);
-        mat_terrain.setFloat("DiffuseMap_0_scale", 4096f);
+        mat_terrain.setFloat("DiffuseMap_0_scale", 128f);
         mat_terrain.setTexture("DiffuseMap_2", water);
         mat_terrain.setFloat("DiffuseMap_2_scale", 32f);
         mat_terrain.setTexture("DiffuseMap_1", land);
         mat_terrain.setFloat("DiffuseMap_1_scale", 128f);
 
-        terrain = new TerrainQuad("my terrain", 17, 2049, heightmap.getHeightMap());
+        terrain = new TerrainQuad("my terrain", 17, 513, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
         terrain.setLocalScale(1000f, 15f, 1000f);
         terrain.addControl(new TerrainLodControl(terrain, camera.testCamera()));
