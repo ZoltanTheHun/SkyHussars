@@ -90,6 +90,7 @@ public class SkyHussars extends SimpleApplication {
         skyHussarsContext.simpleInitApp();
         flyCam.setEnabled(false);
         setDisplayStatView(false);
+        
     }
 
     @Override

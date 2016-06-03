@@ -25,20 +25,24 @@
  */
 package com.codebetyars.skyhussars.engine.ai;
 
+import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 
 public class AIPilot {
 
     private Plane plane;
     private float initialHeight;
-
+    private Plane target;
+    
     public AIPilot(Plane plane) {
         this.plane = plane;
         this.initialHeight = plane.getHeight();
 
     }
 
-    public void update() {
+    public void update(World world) {
+        
+        world.lookAround();
         if (plane.getHeight() > initialHeight) {
             plane.setElevator(-1f);
             plane.setThrottle(0.5f);

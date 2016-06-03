@@ -55,6 +55,7 @@ public class Mission implements GameState {
     private final MissionControls missionControls;
     private final WorldThread worldThread;
     private Timer timer;
+    private World world = new World();
 
     public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
@@ -137,7 +138,7 @@ public class Mission implements GameState {
                 ended = true;
             }
             aiPilots.stream().forEach(aiPilot -> {
-                aiPilot.update();
+                aiPilot.update(world);
             });
             guiManager.update(player.plane().getSpeedKmH());
         } else {
