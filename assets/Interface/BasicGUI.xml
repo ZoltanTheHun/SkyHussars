@@ -31,7 +31,7 @@
                         <interact onChanged="setEnemyCount()"/>
                     </control>  
                 </panel>
-                <panel id="enemyCountPanel" width="50%"  childLayout="horizontal">
+                <panel id="disableWaterPanel" width="50%"  childLayout="horizontal">
                     <text text="Disable water(can increase performance)" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
                     <control id="waterEnabled" width="50%" name="dropDown">
                         <interact onChanged="setWaterEnabled()"/>
