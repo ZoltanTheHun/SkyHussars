@@ -74,7 +74,8 @@ public class ProjectileManager {
             if (!projectile.isLive()) {
                 it.remove();
                 if (geomIterator.hasNext()) {
-                    geomIterator.next();
+                    Geometry geom = geomIterator.next();
+                    rootNode.detachChild(geom);
                     geomIterator.remove();
                 }
             } else {

@@ -73,9 +73,9 @@ public class TerrainManager implements InitializingBean {
         mat_terrain.setTexture("DiffuseMap", grass);
         mat_terrain.setFloat("DiffuseMap_0_scale", 128f);
         mat_terrain.setTexture("DiffuseMap_2", water);
-        mat_terrain.setFloat("DiffuseMap_2_scale", 32f);
+        mat_terrain.setFloat("DiffuseMap_2_scale", 1024f);
         mat_terrain.setTexture("DiffuseMap_1", land);
-        mat_terrain.setFloat("DiffuseMap_1_scale", 128f);
+        mat_terrain.setFloat("DiffuseMap_1_scale", 1024f);
 
         terrain = new TerrainQuad("my terrain", 17, 513, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
