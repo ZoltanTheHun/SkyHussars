@@ -23,21 +23,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.sound;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
-import java.util.List;
-import java.util.Optional;
+import com.jme3.audio.AudioNode;
 
-public class World {
+public class AudioHandler {
 
-    private Plane target;
+    private AudioNode audioNode;
 
-    public World(List<Plane> planes) {
-        planes.stream().filter(p -> p.planeMissionDescriptor().player()).findFirst().ifPresent(p -> target = p);
+    private float pitch;
+
+    public AudioHandler(AudioNode audioNode) {
+        this.audioNode = audioNode;
+        pitch = audioNode.getPitch();
     }
 
-    public Optional<Plane> lookAround() {
-        return Optional.of(target);
+    public AudioNode audioNode() {
+        return audioNode;
+    }
+
+    synchronized public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    synchronized public void update() {
+        if (Math.abs(pitch - audioNode.getPitch()) > 0.01) {
+            audioNode.setPitch(pitch);
+        }
+    }
+
+    synchronized public void play() {
+        audioNode.play();
+    }
+
+    synchronized public void stop() {
+        audioNode.stop();
+    }
+
+    synchronized public void pause() {
+        audioNode.pause();
     }
 }

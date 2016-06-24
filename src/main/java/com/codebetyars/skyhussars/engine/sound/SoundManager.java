@@ -23,7 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.sound;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
@@ -43,7 +43,7 @@ public class SoundManager implements InitializingBean {
     private AssetManager assetManager;
 
     private Map<String, AudioNode> sounds = new HashMap<>();
-    private List<AudioNode> requestedNodes = new LinkedList<>();
+    private List<AudioHandler> requestedHandlers = new LinkedList<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -72,15 +72,19 @@ public class SoundManager implements InitializingBean {
         sounds.put("gun", gunSound);
     }
 
-    public AudioNode sound(String key) {
-        AudioNode sound = sounds.get(key).clone();
-        requestedNodes.add(sound);
-        return sound;
+    public AudioHandler sound(String key) {
+        AudioHandler handler = new AudioHandler(sounds.get(key).clone());
+        requestedHandlers.add(handler);
+        return handler;
     }
 
     public void muteAllSounds() {
-        requestedNodes.stream().forEach((sound) -> {
-            sound.stop();
+        requestedHandlers.stream().forEach(handler -> {
+            handler.stop();
         });
+    }
+
+    public void update() {
+        requestedHandlers.stream().forEach(handler -> handler.update());
     }
 }

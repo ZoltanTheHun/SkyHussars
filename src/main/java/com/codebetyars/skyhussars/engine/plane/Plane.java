@@ -31,6 +31,7 @@ import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
 import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
+import com.codebetyars.skyhussars.engine.sound.AudioHandler;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingVolume;
@@ -55,8 +56,8 @@ public class Plane {
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
     private final PlanePhysicsImpl physics;
-    private final AudioNode engineSound;
-    private final AudioNode gunSound;
+    private final AudioHandler engineSound;
+    private final AudioHandler gunSound;
     private List<GunGroup> gunGroups;
     private final List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
@@ -99,10 +100,10 @@ public class Plane {
     private SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
     private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioNode engineSound, AudioNode gunSound, ProjectileManager projectileManager, Geometry cockpit) {
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioHandler engineSound, AudioHandler gunSound, ProjectileManager projectileManager, Geometry cockpit) {
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
-        engineSound.setLocalTranslation(0, 0, - 5);
+        engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         //engineSound.setPositional(true);
         this.gunSound = gunSound;
         //test model is backwards
@@ -112,8 +113,8 @@ public class Plane {
         geom = new PlaneGeometry();
         geom.attachSpatialToCockpitNode(cockpit);
         geom.attachSpatialToModelNode(model);
-        geom.attachSpatialToRootNode(engineSound);
-        geom.attachSpatialToRootNode(gunSound);
+        geom.attachSpatialToRootNode(engineSound.audioNode());
+        geom.attachSpatialToRootNode(gunSound.audioNode());
         List<Airfoil> airfoils = new ArrayList<>();
         airfoils.add(leftWing);
         airfoils.add(rightWing);

@@ -27,11 +27,12 @@ package com.codebetyars.skyhussars.engine.ai;
 
 import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.plane.Plane;
+import java.util.Optional;
 
 public class AIPilot {
 
-    private Plane plane;
-    private float initialHeight;
+    private final Plane plane;
+    private final float initialHeight;
     private Plane target;
     
     public AIPilot(Plane plane) {
@@ -41,8 +42,8 @@ public class AIPilot {
     }
 
     public void update(World world) {
-        
-        world.lookAround();
+        plane.getLocation();
+        Optional<Plane> noticedPlane = world.lookAround();
         if (plane.getHeight() > initialHeight) {
             plane.setElevator(-1f);
             plane.setThrottle(0.5f);

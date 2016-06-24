@@ -154,6 +154,7 @@ public class SymmetricAirfoil implements Airfoil {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public Vector3f getCenterOfGravity() {
         return cog;
     }

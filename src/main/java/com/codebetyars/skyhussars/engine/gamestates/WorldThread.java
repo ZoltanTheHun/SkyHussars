@@ -25,9 +25,13 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.Pilot;
+import com.codebetyars.skyhussars.engine.World;
+import com.codebetyars.skyhussars.engine.ai.AIPilot;
 import com.codebetyars.skyhussars.engine.physics.environment.AtmosphereImpl;
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.codebetyars.skyhussars.engine.plane.Plane;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,16 +39,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WorldThread extends TimerTask {
-    
-       private final static Logger logger = LoggerFactory.getLogger(WorldThread.class);
+
+    private final static Logger logger = LoggerFactory.getLogger(WorldThread.class);
 
     private final List<Plane> planes;
     private final float tpf;
-    
-    private final Environment environment = new Environment(10,new AtmosphereImpl());
+
+    private final Environment environment = new Environment(10, new AtmosphereImpl());
+    private final List<AIPilot> aiPilots = new LinkedList<>();
+    private final World world;
 
     public WorldThread(List<Plane> planes, int ticks) {
         this.planes = planes;
+        planes.stream().forEach((plane) -> {
+            if (!plane.planeMissionDescriptor().player()) {
+                aiPilots.add(new AIPilot(plane));
+            }
+        });
+
+        world = new World(planes);
         tpf = (float) 1 / (float) ticks;
     }
 
@@ -57,7 +70,10 @@ public class WorldThread extends TimerTask {
     @Override
     public void run() {
         planes.parallelStream().forEach(plane -> {
-            plane.updatePlanePhysics(tpf,environment);
+            plane.updatePlanePhysics(tpf, environment);
+        });
+        aiPilots.parallelStream().forEach(aiPilot -> {
+            aiPilot.update(world);
         });
         cycle.incrementAndGet();
     }

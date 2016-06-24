@@ -83,7 +83,7 @@ public class MainMenuControls implements ScreenController {
     private void populateTimeControl(Nifty nifty) {
         DropDown<String> timeControl = nifty.getScreen("start").findNiftyControl("timeControl", DropDown.class);
         timeControl.addItem("Now");
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 24; i++) {
             timeControl.addItem((i < 10 ? "0" + i : i) + ":00");
         }
         timeControl.selectItemByIndex(0);
@@ -98,7 +98,7 @@ public class MainMenuControls implements ScreenController {
 
     private void populateEnemyCount(Nifty nifty) {
         DropDown<String> enemyCount = nifty.getScreen("start").findNiftyControl("enemyCount", DropDown.class);
-        for (int i = 0; i < 33; i++) {
+        for (int i = 0; i < 65; i++) {
             enemyCount.addItem("" + i);
         }
         enemyCount.selectItemByIndex(0);

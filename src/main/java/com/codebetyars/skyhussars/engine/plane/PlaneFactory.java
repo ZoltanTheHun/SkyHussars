@@ -27,7 +27,8 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.ModelManager;
-import com.codebetyars.skyhussars.engine.SoundManager;
+import com.codebetyars.skyhussars.engine.sound.AudioHandler;
+import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.renderer.queue.RenderQueue;
@@ -55,8 +56,8 @@ public class PlaneFactory {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
         Spatial model = modelManager.model("p80", "p80_material").clone();
         model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        AudioNode engineSound = soundManager.sound("engine");
-        AudioNode gunSound = soundManager.sound("gun");
+        AudioHandler engineSound = soundManager.sound("engine");
+        AudioHandler gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);
         Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
