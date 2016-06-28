@@ -29,6 +29,14 @@ import com.jme3.audio.AudioNode;
 
 public class AudioHandler {
 
+    private enum Command {
+
+        PLAY, STOP, PAUSE;
+    }
+
+    private Command command = Command.STOP;
+    private Command prevCommand = Command.STOP;
+
     private AudioNode audioNode;
 
     private float pitch;
@@ -47,20 +55,34 @@ public class AudioHandler {
     }
 
     synchronized public void update() {
+        if (command != prevCommand) {
+            switch (command) {
+                case PLAY:
+                    audioNode.play();
+                    break;
+                case STOP:
+                    audioNode.stop();
+                    break;
+                case PAUSE:
+                    audioNode.pause();
+                    break;
+            }
+            prevCommand = command;
+        }
         if (Math.abs(pitch - audioNode.getPitch()) > 0.01) {
             audioNode.setPitch(pitch);
         }
     }
 
     synchronized public void play() {
-        audioNode.play();
+        command = Command.PLAY;
     }
 
     synchronized public void stop() {
-        audioNode.stop();
+        command = Command.STOP;
     }
 
     synchronized public void pause() {
-        audioNode.pause();
+        command = Command.PAUSE;
     }
 }

@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.sound;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.audio.Listener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Component
 public class SoundManager implements InitializingBean {
@@ -49,6 +51,9 @@ public class SoundManager implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         prepareEngineSound();
     }
+
+    @Autowired
+    private Listener listener;
 
     private void prepareEngineSound() {
         AudioNode engineSound = new AudioNode(assetManager, "Sounds/jet.wav", false);
@@ -85,6 +90,21 @@ public class SoundManager implements InitializingBean {
     }
 
     public void update() {
-        requestedHandlers.stream().forEach(handler -> handler.update());
+        if (requestedHandlers.size() > 20) {
+            requestedHandlers.sort((handler1, handler2) -> {
+                float dist1 = handler1.audioNode().getWorldTranslation().distance(listener.getLocation());
+                float dist2 = handler2.audioNode().getWorldTranslation().distance(listener.getLocation());
+                if (dist1 > dist2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+        }
+        requestedHandlers.stream().limit(20).forEach(handler -> handler.update());
+        requestedHandlers.stream().skip(20).forEach(handler -> {
+            handler.stop();
+            handler.update();
+        });
     }
 }
