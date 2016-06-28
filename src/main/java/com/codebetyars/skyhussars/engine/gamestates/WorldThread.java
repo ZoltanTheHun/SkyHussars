@@ -25,7 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
-import com.codebetyars.skyhussars.engine.Pilot;
 import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.ai.AIPilot;
 import com.codebetyars.skyhussars.engine.physics.environment.AtmosphereImpl;
@@ -69,13 +68,21 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        planes.parallelStream().forEach(plane -> {
-            plane.updatePlanePhysics(tpf, environment);
-        });
+        synchronized (this) {
+            planes.parallelStream().forEach(plane -> {
+                plane.updatePlanePhysics(tpf, environment);
+            });
+        }
         aiPilots.parallelStream().forEach(aiPilot -> {
             aiPilot.update(world);
         });
         cycle.incrementAndGet();
+    }
+
+    public synchronized void updatePlaneLocations() {
+        planes.stream().forEach(plane -> {
+            plane.update(tpf);
+        });
     }
 
 }

@@ -98,7 +98,7 @@ public class MainMenuControls implements ScreenController {
 
     private void populateEnemyCount(Nifty nifty) {
         DropDown<String> enemyCount = nifty.getScreen("start").findNiftyControl("enemyCount", DropDown.class);
-        for (int i = 0; i < 65; i++) {
+        for (int i = 0; i < 251; i++) {
             enemyCount.addItem("" + i);
         }
         enemyCount.selectItemByIndex(0);

@@ -146,8 +146,9 @@ public class Mission implements GameState {
     }
 
     private void updatePlanes(float tpf) {
+        worldThread.updatePlaneLocations();
         planes.forEach(plane -> {
-            plane.update(tpf);
+            //plane.update(tpf);
             if (terrainManager.checkCollisionWithGround(plane)) {
                 plane.crashed(true);
             };
