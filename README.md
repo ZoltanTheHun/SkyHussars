@@ -1,5 +1,6 @@
 # SkyHussars
 **At this moment the project cannot be compiled as the dependencies for jME 3.0.10 are not available**
+
 SkyHussars is an open source flight simulator project built on top of the jMonkeyEngine. The game is licensed under the Modified BSD license.
 The purpose of this project to learn more about planes and game programming, development is done for fun. 
 
