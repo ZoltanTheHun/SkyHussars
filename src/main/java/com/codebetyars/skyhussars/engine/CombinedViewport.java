@@ -32,7 +32,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import com.jme3.texture.FrameBuffer;
 import com.jme3.texture.Image;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture2D;
@@ -49,6 +48,7 @@ public class CombinedViewport {
     private final String name;
     private final Node node;
     private final FilterPostProcessor fpp;
+    private boolean clearColorBuffer;
 
     public CombinedViewport(String name,
             RenderManager renderManager,
@@ -57,11 +57,12 @@ public class CombinedViewport {
             float near,
             float far,
             Node node,
-            FilterPostProcessor fpp
+            FilterPostProcessor fpp,
+            boolean clearColorBuffer
     ) {
         this.name = name;
         this.cam = mainCam.clone();
-        this.viewPort = renderManager.createPreView(name, cam);
+        this.viewPort = renderManager.createMainView(name, cam);
         this.fov = fov;
         this.near = near;
         this.far = far;
@@ -69,23 +70,18 @@ public class CombinedViewport {
         this.node = node;
         this.fpp = fpp;
         setupView();
+        this.clearColorBuffer = clearColorBuffer;
     }
 
     private void setupView() {
         cam.setFrustumPerspective(fov, aspect, near, far);
-
-        FrameBuffer offBuffer = new FrameBuffer(cam.getWidth(), cam.getHeight(), 1);
-
+        
         colorBuffer = new Texture2D(cam.getWidth(), cam.getHeight(), Image.Format.RGBA8);
         colorBuffer.setMinFilter(Texture.MinFilter.Trilinear);
         colorBuffer.setMagFilter(Texture.MagFilter.Bilinear);
 
-        offBuffer.setDepthBuffer(Image.Format.Depth);
-        offBuffer.setColorTexture(colorBuffer);
-
         viewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
-        viewPort.setOutputFrameBuffer(offBuffer);
-        viewPort.setClearFlags(true, true, true);
+        viewPort.setClearFlags(false, true, true);
 
         viewPort.attachScene(node);  
         viewPort.addProcessor(fpp);

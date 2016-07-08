@@ -30,6 +30,7 @@ import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.audio.AudioListenerState;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
@@ -65,13 +66,13 @@ public class SkyHussars extends SimpleApplication {
     private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) {
         node = new Node();
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
+        beanFactory.registerSingleton("camera", getCamera());
         beanFactory.registerSingleton("settingsManager", settingsManager);
         beanFactory.registerSingleton("renderManager", renderManager);
         beanFactory.registerSingleton("application", this);
         beanFactory.registerSingleton("rootNode", node);
         beanFactory.registerSingleton("assetManager", getAssetManager());
         beanFactory.registerSingleton("inputManager", getInputManager());
-        beanFactory.registerSingleton("camera", getCamera());
         beanFactory.registerSingleton("flyByCamera", getFlyByCamera());
         beanFactory.registerSingleton("audioRenderer", getAudioRenderer());
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
@@ -90,15 +91,13 @@ public class SkyHussars extends SimpleApplication {
         skyHussarsContext.simpleInitApp();
         flyCam.setEnabled(false);
         setDisplayStatView(false);
-        
+        stateManager.getState(AudioListenerState.class).setEnabled(false);
+
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         skyHussarsContext.simpleUpdate(tpf);
-        /* This is needed to make sure the node is updated by rendering*/
-        node.updateLogicalState(tpf);
-        node.updateGeometricState();
     }
 
     @Override

@@ -32,7 +32,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.Filter;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.SceneProcessor;
-import com.jme3.post.filters.ComposeFilter;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -65,20 +64,15 @@ public class ComplexCamera implements InitializingBean {
 
     private float fov = 45;
 
-    private List<CombinedViewport> viewPorts = new ArrayList<>();
+    private final List<CombinedViewport> viewPorts = new ArrayList<>();
 
     @Override
     public void afterPropertiesSet() {
         mainViewPort = renderManager.getMainViews().get(0);
-        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode, new FilterPostProcessor(assetManager)));
-        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode, new FilterPostProcessor(assetManager)));
+        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode, new FilterPostProcessor(assetManager), true));
+        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode, new FilterPostProcessor(assetManager), false));
         mainViewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
-
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        viewPorts.forEach(viewPort -> {
-            fpp.addFilter(new ComposeFilter(viewPort.colorBuffer()));
-        });
-        mainViewPort.addProcessor(fpp);
+        mainViewPort.setClearFlags(false, true, true);
         fov(45);
     }
 
@@ -116,11 +110,11 @@ public class ComplexCamera implements InitializingBean {
     }
 
     public Camera testCamera() {
-        return viewPorts.get(1).cam();
+        return viewPorts.get(0).cam();
     }
 
     public void addEffect(SceneProcessor processor) {
-        viewPorts.get(0).viewPort().addProcessor(processor);
+        viewPorts.get(1).viewPort().addProcessor(processor);
     }
 
     public void addFarEffect(Filter filter) {
@@ -130,4 +124,5 @@ public class ComplexCamera implements InitializingBean {
     public void addNearEffect(Filter filter) {
         viewPorts.get(0).addFilter(filter);
     }
+
 }

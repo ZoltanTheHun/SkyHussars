@@ -32,6 +32,7 @@ import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import jme3utilities.sky.SkyControl;
@@ -54,11 +55,8 @@ public class SkyHussarsContext {
     private Node rootNode;
 
     @Autowired
-    private CameraManager cameraManager;
-
-    @Autowired
     private ComplexCamera camera;
-
+    
     @Autowired
     private GuiManager guiManager;
 
@@ -75,13 +73,13 @@ public class SkyHussarsContext {
         skyControl.getSunAndStars().setSolarLongitude(now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
         skyControl.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);
         skyControl.setCloudiness(0f);
-        rootNode.addControl(skyControl);
+        rootNode/*camera.skyNode()*/.addControl(skyControl);
         skyControl.setEnabled(true);
         return skyControl;
     }
 
     public void simpleInitApp() {
-        cameraManager.init();
+        /*     cameraManager.init();*/
         guiManager.createGUI();
         mainMenu.initialize();
         gameState = mainMenu;
@@ -94,6 +92,10 @@ public class SkyHussarsContext {
             gameState = nextState;
             gameState.initialize();
         }
+
+        /* This is needed to make sure the node is updated by rendering*/
+        rootNode.updateLogicalState(tpf);
+        rootNode.updateGeometricState();
     }
 
     public void simpleRender(RenderManager rm) {

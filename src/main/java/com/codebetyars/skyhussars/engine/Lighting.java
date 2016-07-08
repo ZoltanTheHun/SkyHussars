@@ -33,6 +33,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.shadow.CompareMode;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.water.WaterFilter;
@@ -80,17 +81,19 @@ public class Lighting implements InitializingBean {
         lights.add(directionalLight);
         lights.add(ambientLight);
         
-        final int SHADOWMAP_SIZE = 2048;
-        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
+        final int SHADOWMAP_SIZE = 1024;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
         dlsr.setLight(directionalLight);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        dlsr.setRenderBackFacesShadows(Boolean.FALSE);
+        dlsr.setShadowCompareMode(CompareMode.Hardware);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
         camera.addEffect(dlsr);
         
         setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
         
         float initialWaterHeight = 1500f; // choose a value for your scene
-        water = new WaterFilter(rootNode, directionalLight.getDirection());
-        water.setWaterHeight(initialWaterHeight);
+        /*water = new WaterFilter(rootNode, directionalLight.getDirection());
+        water.setWaterHeight(initialWaterHeight);*/
         //camera.addFarEffect(water);
         
         /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
@@ -128,6 +131,6 @@ public class Lighting implements InitializingBean {
     }
     
     public void waterEnabled(boolean enabled){
-        water.setEnabled(enabled);
+//        water.setEnabled(enabled);
     }
 }
