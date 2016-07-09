@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Plane {
@@ -93,12 +94,11 @@ public class Plane {
     public PlaneMissionDescriptor planeMissionDescriptor() {
         return planeMissionDescriptor;
     }
-    private float wingArea = 22.07f; //m2
-    private float aspectRatio = 6.37f;
-    private SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    private SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);
-    private SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);
-    private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);
+
+    private final List<SymmetricAirfoil> leftWings = new ArrayList<>();
+    private final List<SymmetricAirfoil> rightWings = new ArrayList<>();
+    private final List<SymmetricAirfoil> horizontalStabilizers = new ArrayList<>();
+    private final List<SymmetricAirfoil> verticalStabilizers = new ArrayList<>();
 
     public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioHandler engineSound, AudioHandler gunSound, ProjectileManager projectileManager, Geometry cockpit) {
         this.planeDescriptor = planeDescriptor;
@@ -116,10 +116,38 @@ public class Plane {
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
         List<Airfoil> airfoils = new ArrayList<>();
-        airfoils.add(leftWing);
-        airfoils.add(rightWing);
-        airfoils.add(horizontalStabilizer);
-        airfoils.add(verticalStabilizer);
+        for (AirfoilDescriptor airfoilDescriptor : planeDescriptor.getAirfolDescriptors()) {
+            SymmetricAirfoil symmetricalAirfoil
+                    = new SymmetricAirfoil(
+                            airfoilDescriptor.getName(),
+                            airfoilDescriptor.getCog(),
+                            airfoilDescriptor.getWingArea(),
+                            airfoilDescriptor.getIncidence(),
+                            airfoilDescriptor.getAspectRatio(),
+                            airfoilDescriptor.isDamper(),
+                            airfoilDescriptor.getDehidralDegree());
+
+            airfoils.add(symmetricalAirfoil);
+            /*
+              should be temporary solution, use enum or something to indicate
+            */
+            if (symmetricalAirfoil.getName().startsWith("WingLeft")) {
+                leftWings.add(symmetricalAirfoil);
+            }
+            if (symmetricalAirfoil.getName().startsWith("WingRight")) {
+                rightWings.add(symmetricalAirfoil);
+            }
+            if (symmetricalAirfoil.getName().startsWith("Horizontal")) {
+                horizontalStabilizers.add(symmetricalAirfoil);
+            }
+            if (symmetricalAirfoil.getName().startsWith("Vertical")) {
+                verticalStabilizers.add(symmetricalAirfoil);
+            }
+        }
+        /*airfoils.add(leftWing);
+         airfoils.add(rightWing);
+         airfoils.add(horizontalStabilizer);
+         airfoils.add(verticalStabilizer);*/
         for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
             engines.add(new Engine(engineLocation, 1.0f));
         }
@@ -194,8 +222,8 @@ public class Plane {
     }
 
     public void setAileron(float aileron) {
-        leftWing.controlAileron(aileron);
-        rightWing.controlAileron(-1f * aileron);
+        leftWings.forEach(w -> w.controlAileron(aileron));
+        rightWings.forEach(w -> w.controlAileron(-1f * aileron));
 
     }
 
@@ -206,11 +234,11 @@ public class Plane {
      * @param elevator must be between -1.0 and 1.0
      */
     public void setElevator(float elevator) {
-        horizontalStabilizer.controlAileron(5f * elevator);
+        horizontalStabilizers.forEach(s -> s.controlAileron(5f * elevator));
     }
 
     public void setRudder(float rudder) {
-        verticalStabilizer.controlAileron(rudder);
+        verticalStabilizers.forEach(s -> s.controlAileron(rudder));
     }
 
     public void setHeight(int height) {

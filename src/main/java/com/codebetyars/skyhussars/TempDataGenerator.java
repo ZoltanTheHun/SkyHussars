@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars;
 
+import com.codebetyars.skyhussars.engine.plane.AirfoilDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineDescriptor;
 import com.codebetyars.skyhussars.engine.plane.EngineLocation;
 import com.codebetyars.skyhussars.engine.plane.GunDescriptor;
@@ -85,6 +86,54 @@ public class TempDataGenerator {
         engineLocation.setLocation(new Vector3f(0f, 0f, 0f));
         List<EngineLocation> engineLocations = new LinkedList<>();
         engineLocations.add(engineLocation);
+
+        List<AirfoilDescriptor> airfoilDescriptors = new LinkedList<>();
+
+        /*
+         private float wingArea = 22.07f; //m2
+         private float aspectRatio = 6.37f;
+         */
+        /*SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);*/
+        AirfoilDescriptor airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("WingLeft");
+        airfoilDescriptor.setCog(new Vector3f(-2.0f, 0, -0.2f));
+        airfoilDescriptor.setWingArea(22.07f / 2f);
+        airfoilDescriptor.setIncidence(1f);
+        airfoilDescriptor.setAspectRatio(6.37f);
+        airfoilDescriptor.setDamper(true);
+        airfoilDescriptor.setDehidralDegree(0f);
+        airfoilDescriptors.add(airfoilDescriptor);
+        /*SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);*/
+        airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("WingRight");
+        airfoilDescriptor.setCog(new Vector3f(2.0f, 0, -0.2f));
+        airfoilDescriptor.setWingArea(22.07f / 2f);
+        airfoilDescriptor.setAspectRatio(6.37f);
+        airfoilDescriptor.setIncidence(1f);
+        airfoilDescriptor.setDamper(true);
+        airfoilDescriptor.setDehidralDegree(0f);
+        airfoilDescriptors.add(airfoilDescriptor);
+        /*SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);*/
+        airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("HorizontalStabilizer");
+        airfoilDescriptor.setCog(new Vector3f(0, 0, -6f));
+        airfoilDescriptor.setWingArea(5f);
+        airfoilDescriptor.setIncidence(-3f);
+        airfoilDescriptor.setAspectRatio(6.37f / 1.5f);
+        airfoilDescriptor.setDamper(false);
+        airfoilDescriptor.setDehidralDegree(0f);
+        airfoilDescriptors.add(airfoilDescriptor);
+        /*      private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);*/
+        airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("VerticalStabilizer");
+        airfoilDescriptor.setCog(new Vector3f(0, 0, -6f));
+        airfoilDescriptor.setWingArea(5f);
+        airfoilDescriptor.setIncidence(0f);
+        airfoilDescriptor.setAspectRatio(6.37f / 1.5f);
+        airfoilDescriptor.setDamper(false);
+        airfoilDescriptor.setDehidralDegree(90f);
+        airfoilDescriptors.add(airfoilDescriptor);
+
         PlaneDescriptor planeDescriptor = new PlaneDescriptor();
         planeDescriptor.setName("Lockheed P-80A-1-LO Shooting Star");
         planeDescriptor.setEngineLocations(engineLocations);
@@ -93,6 +142,7 @@ public class TempDataGenerator {
         planeDescriptor.setMassTakeOffMax(6350);
         planeDescriptor.setInternalTank(1609);
         planeDescriptor.setGunGroupDescriptors(gunGroups);
+        planeDescriptor.setAirfolDescriptors(airfoilDescriptors);
         planes.put(planeDescriptor.getName(), planeDescriptor);
 
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(folder + "/p80a1lo.json"), planeDescriptor);
@@ -111,9 +161,10 @@ public class TempDataGenerator {
         planeDescriptor.setMassTakeOffMax(6350);
         planeDescriptor.setInternalTank(1609);
         planeDescriptor.setGunGroupDescriptors(gunGroups);
+        planeDescriptor.setAirfolDescriptors(airfoilDescriptors);
         planes.put(planeDescriptor.getName(), planeDescriptor);
 
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File("D:\\p80a5lo.json"), planeDescriptor);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(folder + "/p80a5lo.json"), planeDescriptor);
         System.out.println(mapper.writeValueAsString(planeDescriptor));
 
     }

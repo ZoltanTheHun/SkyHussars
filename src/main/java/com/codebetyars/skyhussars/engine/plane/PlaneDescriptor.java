@@ -38,6 +38,7 @@ public class PlaneDescriptor {
     //lets use liter for now, density: 	775.0-840.0 g/L average: 0.8 kg/l
     private float internalTank;
     private float wingArea;
+    private List<AirfoilDescriptor> airfolDescriptors;
     private List<GunGroupDescriptor> gunGroupDescriptors;
 
     public List<GunGroupDescriptor> getGunGroupDescriptors() {
@@ -95,4 +96,14 @@ public class PlaneDescriptor {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setAirfolDescriptors(List<AirfoilDescriptor> airfolDescriptors) {
+        this.airfolDescriptors = airfolDescriptors;
+    }
+
+    public List<AirfoilDescriptor> getAirfolDescriptors() {
+        return airfolDescriptors;
+    }
+    
+    
 }

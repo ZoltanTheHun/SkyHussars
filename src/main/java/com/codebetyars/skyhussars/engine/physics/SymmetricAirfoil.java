@@ -54,20 +54,20 @@ public class SymmetricAirfoil implements Airfoil {
             }
         }
     }
-    private int[] aoa = {0, 2, 4, 6, 8, 10, 12, 30};
-    private float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.778f, 0.8f};
+    private final int[] aoa = {0, 2, 4, 6, 8, 10, 12, 30};
+    private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.778f, 0.8f};
     // private float[]
-    private float wingArea;
-    private float incidence;
-    private Vector3f cog;
-    private String name;
-    private float aspectRatio;
+    private final float wingArea;
+    private final float incidence;
+    private final Vector3f cog;
+    private final String name;
+    private final float aspectRatio;
     private Quaternion qIncidence = new Quaternion();
-    private Quaternion dehidral;
+    private final Quaternion dehidral;
     private Quaternion qAileron = new Quaternion();
-    private Quaternion wingRotation;
-    private float dampingFactor = 1f;
-    private boolean damper;
+    private final Quaternion wingRotation;
+    private final float dampingFactor = 1f;
+    private final boolean damper;
     private boolean leftDamper;
 
     @Override

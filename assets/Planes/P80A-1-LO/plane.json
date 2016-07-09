@@ -15,6 +15,55 @@
   "massTakeOffMax" : 6350.0,
   "massGross" : 5307.0,
   "internalTank" : 1609.0,
+  "airfolDescriptors" : [ {
+    "name" : "WingLeft",
+    "cog" : {
+      "x" : -2.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 11.035,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0
+  }, {
+    "name" : "WingRight",
+    "cog" : {
+      "x" : 2.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 11.035,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0
+  }, {
+    "name" : "HorizontalStabilizer",
+    "cog" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -6.0
+    },
+    "wingArea" : 5.0,
+    "incidence" : -3.0,
+    "aspectRatio" : 4.2466664,
+    "damper" : false,
+    "dehidralDegree" : 0.0
+  }, {
+    "name" : "VerticalStabilizer",
+    "cog" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -6.0
+    },
+    "wingArea" : 5.0,
+    "incidence" : 0.0,
+    "aspectRatio" : 4.2466664,
+    "damper" : false,
+    "dehidralDegree" : 90.0
+  } ],
   "gunGroupDescriptors" : [ {
     "name" : "6x .50 M3 Browning",
     "gunLocations" : [ {

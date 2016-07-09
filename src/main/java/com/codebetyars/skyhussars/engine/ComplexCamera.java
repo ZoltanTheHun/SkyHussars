@@ -109,6 +109,9 @@ public class ComplexCamera implements InitializingBean {
         listener.setRotation(viewPorts.get(0).cam().getRotation());
     }
 
+    /**
+     * TODO: getting nth viewport is unsafe
+     */
     public Camera testCamera() {
         return viewPorts.get(0).cam();
     }
