@@ -32,7 +32,6 @@ import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
-import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import jme3utilities.sky.SkyControl;
@@ -58,6 +57,9 @@ public class SkyHussarsContext {
     private ComplexCamera camera;
     
     @Autowired
+    private CameraManager cameraManager;
+    
+    @Autowired
     private GuiManager guiManager;
 
     @Autowired
@@ -79,7 +81,7 @@ public class SkyHussarsContext {
     }
 
     public void simpleInitApp() {
-        /*     cameraManager.init();*/
+        cameraManager.init();
         guiManager.createGUI();
         mainMenu.initialize();
         gameState = mainMenu;
@@ -92,7 +94,6 @@ public class SkyHussarsContext {
             gameState = nextState;
             gameState.initialize();
         }
-
         /* This is needed to make sure the node is updated by rendering*/
         rootNode.updateLogicalState(tpf);
         rootNode.updateGeometricState();

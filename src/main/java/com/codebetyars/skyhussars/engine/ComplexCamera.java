@@ -69,8 +69,8 @@ public class ComplexCamera implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         mainViewPort = renderManager.getMainViews().get(0);
-        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode, new FilterPostProcessor(assetManager), true));
-        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode, new FilterPostProcessor(assetManager), false));
+        viewPorts.add(new CombinedViewport("farView", renderManager, mainCam, fov, 300f, 200000f, rootNode, new FilterPostProcessor(assetManager)));
+        viewPorts.add(new CombinedViewport("nearView", renderManager, mainCam, fov, 0.5f, 310f, rootNode, new FilterPostProcessor(assetManager)));
         mainViewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
         mainViewPort.setClearFlags(false, true, true);
         fov(45);

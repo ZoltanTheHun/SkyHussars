@@ -32,15 +32,11 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import com.jme3.texture.Image;
-import com.jme3.texture.Texture;
-import com.jme3.texture.Texture2D;
 
 public class CombinedViewport {
 
     private final Camera cam;
     private final ViewPort viewPort;
-    private Texture2D colorBuffer;
     private float fov;
     private final float near;
     private final float far;
@@ -48,7 +44,6 @@ public class CombinedViewport {
     private final String name;
     private final Node node;
     private final FilterPostProcessor fpp;
-    private boolean clearColorBuffer;
 
     public CombinedViewport(String name,
             RenderManager renderManager,
@@ -57,11 +52,10 @@ public class CombinedViewport {
             float near,
             float far,
             Node node,
-            FilterPostProcessor fpp,
-            boolean clearColorBuffer
+            FilterPostProcessor fpp
     ) {
         this.name = name;
-        this.cam = mainCam.clone();
+        this.cam = new Camera(mainCam.getWidth(),mainCam.getHeight());
         this.viewPort = renderManager.createMainView(name, cam);
         this.fov = fov;
         this.near = near;
@@ -70,16 +64,11 @@ public class CombinedViewport {
         this.node = node;
         this.fpp = fpp;
         setupView();
-        this.clearColorBuffer = clearColorBuffer;
     }
 
     private void setupView() {
         cam.setFrustumPerspective(fov, aspect, near, far);
         
-        colorBuffer = new Texture2D(cam.getWidth(), cam.getHeight(), Image.Format.RGBA8);
-        colorBuffer.setMinFilter(Texture.MinFilter.Trilinear);
-        colorBuffer.setMagFilter(Texture.MagFilter.Bilinear);
-
         viewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
         viewPort.setClearFlags(false, true, true);
 
@@ -87,10 +76,6 @@ public class CombinedViewport {
         viewPort.addProcessor(fpp);
         
         fpp.setNumSamples(8);
-    }
-
-    public Texture2D colorBuffer() {
-        return colorBuffer;
     }
 
     public Camera cam() {
