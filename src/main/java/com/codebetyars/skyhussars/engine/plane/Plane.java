@@ -129,8 +129,8 @@ public class Plane {
 
             airfoils.add(symmetricalAirfoil);
             /*
-              should be temporary solution, use enum or something to indicate
-            */
+             should be temporary solution, use enum or something to indicate
+             */
             if (symmetricalAirfoil.getName().startsWith("WingLeft")) {
                 leftWings.add(symmetricalAirfoil);
             }
@@ -266,6 +266,14 @@ public class Plane {
 
     public Vector3f getLocation() {
         return geom.root().getLocalTranslation();
+    }
+
+    public Vector3f getDirection() {
+        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z);
+    }
+
+    public float roll() {
+        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y);
     }
 
     public Vector2f getLocation2D() {
