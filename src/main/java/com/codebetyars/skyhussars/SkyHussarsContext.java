@@ -87,16 +87,18 @@ public class SkyHussarsContext {
         gameState = mainMenu;
     }
 
-    public void simpleUpdate(float tpf) {
+    public boolean simpleUpdate(float tpf) {
         GameState nextState = gameState.update(tpf);
-        if (nextState != gameState) {
+        if ( nextState != gameState ) {
             gameState.close();
             gameState = nextState;
-            gameState.initialize();
+            if(nextState != null) gameState.initialize();
         }
         /* This is needed to make sure the node is updated by rendering*/
         rootNode.updateLogicalState(tpf);
         rootNode.updateGeometricState();
+        //if nextState is null, exit
+        return nextState != null;
     }
 
     public void simpleRender(RenderManager rm) {

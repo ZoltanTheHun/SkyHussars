@@ -142,7 +142,8 @@ public class Mission implements GameState {
         logger.info("Gamestate update complete in " + millis);
         logger.info("Current cycle: {}", worldThread.cycle());
         logger.info("Current render cycle: {}", cycles);
-        return this;
+        
+        return missionControls.shouldStop()?null:this;
     }
 
     private void updatePlanes(float tpf) {
@@ -159,6 +160,9 @@ public class Mission implements GameState {
 
     @Override
     public void close() {
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override

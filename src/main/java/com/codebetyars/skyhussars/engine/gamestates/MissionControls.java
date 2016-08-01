@@ -39,8 +39,13 @@ public class MissionControls implements ScreenController {
     
     private boolean popupToBeClosed;
 
+    private boolean shouldStop = false;
     public void exitToDesktop() {
-        System.exit(0);
+        shouldStop = true;
+    }
+    
+    public boolean shouldStop(){
+        return shouldStop;
     }
     
     public void closePopup(){

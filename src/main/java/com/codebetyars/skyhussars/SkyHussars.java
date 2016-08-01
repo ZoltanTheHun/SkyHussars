@@ -97,7 +97,11 @@ public class SkyHussars extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        skyHussarsContext.simpleUpdate(tpf);
+        if(!skyHussarsContext.simpleUpdate(tpf)){
+            this.stop();
+        }
+                
+        
     }
 
     @Override
