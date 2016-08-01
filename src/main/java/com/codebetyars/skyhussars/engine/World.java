@@ -34,7 +34,8 @@ public class World {
     private Plane target;
 
     public World(List<Plane> planes) {
-        planes.stream().filter(p -> p.planeMissionDescriptor().player()).findFirst().ifPresent(p -> target = p);
+        planes.stream().filter(p -> p.planeMissionDescriptor().player())
+                .findFirst().ifPresent(p -> target = p);
     }
 
     public Optional<Plane> lookAround() {

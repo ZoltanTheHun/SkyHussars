@@ -44,9 +44,19 @@ public class AIPilot {
 
     public void update(World world) {
         plane.getLocation();
+
+        // first simple decision tree like AI.
+        // 1. don't get too close to earth
+        // 2. if enemy behind turn left
+        // if enemy to the left-ahead turn left
+        // if enemy to the right-ahead turn right
+        // if above/below make corrections
+        // how to combine moves?
         Optional<Plane> noticedPlane = world.lookAround();
         // should have some clever method chaining here?
-        if (noticedPlane.isPresent()) {
+        if (plane.getHeight() < 300) {
+            increaseHeight();
+        } else if (noticedPlane.isPresent()) {
             navigateToDirection(findDirection(noticedPlane.get()));
         } else {
             levelFlight();
@@ -67,8 +77,8 @@ public class AIPilot {
         //if behind, try to turn back
         //let's determine forward plane, then dot product tells us if direction
         //is backwards
-        System.out.println("flyingto: "+ flyingDir + ", targeting: " + targetDir + "dot: " + flyingDir.dot(targetDir));
-        if (flyingDir.dot(targetDir) < 0) {
+        System.out.println("flyingto: " + flyingDir + ", targeting: " + targetDir + "dot: " + flyingDir.dot(targetDir));
+        if (isBehind(flyingDir, targetDir)) {
             turnLeft();
         } else {
             levelFlight();
@@ -77,6 +87,10 @@ public class AIPilot {
         //and change hight to accomodate
         //if(flyingDir.cross(Vector3f.UNIT_Y).dot(targetDir)<);
 
+    }
+
+    private boolean isBehind(Vector3f flyingDir, Vector3f targetDir) {
+        return flyingDir.dot(targetDir) < 0;
     }
 
     private void turnLeft() {
@@ -90,7 +104,12 @@ public class AIPilot {
         }
     }
 
-    private void levelFlight() {
+    private void increaseHeight() {
+        rollUp();
+        plane.setElevator(1f);
+    }
+
+    private void rollUp() {
         System.out.println("plane roll:" + plane.roll());
         if (plane.roll() > 2f) {
             System.out.println("left");
@@ -101,7 +120,10 @@ public class AIPilot {
         } else {
             plane.setAileron(0);
         }
+    }
 
+    private void levelFlight() {
+        rollUp();
         if (plane.getHeight() > initialHeight) {
             plane.setElevator(-1f);
             plane.setThrottle(0.5f);
