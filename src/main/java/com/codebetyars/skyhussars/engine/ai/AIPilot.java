@@ -54,13 +54,17 @@ public class AIPilot {
         // how to combine moves?
         Optional<Plane> noticedPlane = world.lookAround();
         // should have some clever method chaining here?
-        if (plane.getHeight() < 300) {
+        if (isCloseToGround(world)) {
             increaseHeight();
         } else if (noticedPlane.isPresent()) {
             navigateToDirection(findDirection(noticedPlane.get()));
         } else {
             levelFlight();
         }
+    }
+    
+    public boolean isCloseToGround(World world) {
+        return world.getStandardHeightFor(plane) < 300;
     }
 
     private Vector3f findDirection(Plane target) {

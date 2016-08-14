@@ -23,28 +23,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.plane.instruments;
 
-import com.codebetyars.skyhussars.engine.plane.Plane;
-import java.util.List;
-import java.util.Optional;
-
-public class World {
-
-    private final TerrainManager terrainManager;
-    private Plane target;
-
-    public World(List<Plane> planes, TerrainManager terrainManager) {
-        this.terrainManager = terrainManager;
-        planes.stream().filter(p -> p.planeMissionDescriptor().player())
-                .findFirst().ifPresent(p -> target = p);
-    }
-
-    public Optional<Plane> lookAround() {
-        return Optional.of(target);
-    }
+public class Instruments {
     
-    public float getStandardHeightFor(Plane plane){
-        return plane.getHeight() - terrainManager.getHeightAt(plane.getLocation2D());
+    public Instruments(Altimeter altimeter){
+        this.altimeter = altimeter;
     }
+    private Altimeter altimeter;
+    
 }

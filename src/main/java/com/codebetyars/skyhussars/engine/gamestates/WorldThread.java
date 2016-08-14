@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.TerrainManager;
 import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.ai.AIPilot;
 import com.codebetyars.skyhussars.engine.physics.environment.AtmosphereImpl;
@@ -48,7 +49,7 @@ public class WorldThread extends TimerTask {
     private final List<AIPilot> aiPilots = new LinkedList<>();
     private final World world;
 
-    public WorldThread(List<Plane> planes, int ticks) {
+    public WorldThread(List<Plane> planes, int ticks, TerrainManager terrainManager) {
         this.planes = planes;
         planes.stream().forEach((plane) -> {
             if (!plane.planeMissionDescriptor().player()) {
@@ -56,7 +57,7 @@ public class WorldThread extends TimerTask {
             }
         });
 
-        world = new World(planes);
+        world = new World(planes, terrainManager);
         tpf = (float) 1 / (float) ticks;
     }
 

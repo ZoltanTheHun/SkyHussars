@@ -72,7 +72,7 @@ public class Mission implements GameState {
             }
         });
         initiliazePlayer();
-        worldThread = new WorldThread(planes, ticks);
+        worldThread = new WorldThread(planes, ticks, terrainManager);
     }
     private final int ticks = 30;
     private int cycles = 0;
