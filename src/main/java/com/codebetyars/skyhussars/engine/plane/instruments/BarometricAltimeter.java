@@ -25,11 +25,11 @@
  */
 package com.codebetyars.skyhussars.engine.plane.instruments;
 
-public class Altimeter {
+public class BarometricAltimeter {
     
     private float startHeight;
     
-    public Altimeter(float startHeight) {
+    public BarometricAltimeter(float startHeight) {
         this.startHeight = startHeight;
     }
     

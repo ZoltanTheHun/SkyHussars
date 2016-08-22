@@ -54,8 +54,8 @@ public class SymmetricAirfoil implements Airfoil {
             }
         }
     }
-    private final int[] aoa = {0, 2, 4, 6, 8, 10, 12, 30};
-    private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.778f, 0.8f};
+    private final int[] aoa = {0, 2, 4, 6, 8, 10, 15, 30};
+    private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f};
     // private float[]
     private final float wingArea;
     private final float incidence;

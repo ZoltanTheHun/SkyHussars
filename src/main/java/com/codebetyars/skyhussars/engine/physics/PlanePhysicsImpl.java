@@ -120,7 +120,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private void moderateRoll() {
-        if (vAngularVelocity.x > 2) {
+      /*  if (vAngularVelocity.x > 2) {
             vAngularVelocity.x = 2;
         } else if (vAngularVelocity.x < -2) {
             vAngularVelocity.x = -2;
@@ -134,7 +134,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
             vAngularVelocity.z = 2;
         } else if (vAngularVelocity.z < -2) {
             vAngularVelocity.z = -2;
-        }
+        }*/
     }
 
     private ActingForces calculateEngineForces(Quaternion situation) {
@@ -174,10 +174,12 @@ public class PlanePhysicsImpl implements PlanePhysics {
         if (np < 0) {
             angleOfAttack = -angleOfAttack;
         }
+        logger.info("Angle of attack: {}", angleOfAttack);
     }
 
     public void updatePlaneFactor() {
         planeFactor = 0.2566f;
+        
         /*if (angleOfAttack > 30 || angleOfAttack < - 30) {
          planeFactor = wingArea * 1.2f;     // let's pretend rest of the body area is half of body area
          } else {

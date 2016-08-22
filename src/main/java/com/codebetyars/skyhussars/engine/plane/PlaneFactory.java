@@ -27,6 +27,8 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.ModelManager;
+import com.codebetyars.skyhussars.engine.plane.instruments.BarometricAltimeter;
+import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
 import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
@@ -59,9 +61,10 @@ public class PlaneFactory {
         AudioHandler engineSound = soundManager.sound("engine");
         AudioHandler gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);
+        Instruments instruments = new Instruments(new BarometricAltimeter(0));
         Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
-                gunSound, projectileManager,dataManager.getCockpit());
+                gunSound, projectileManager,dataManager.getCockpit(),instruments);
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }

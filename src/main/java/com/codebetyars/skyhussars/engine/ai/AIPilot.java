@@ -62,7 +62,7 @@ public class AIPilot {
             levelFlight();
         }
     }
-    
+
     public boolean isCloseToGround(World world) {
         return world.getStandardHeightFor(plane) < 300;
     }
@@ -105,6 +105,13 @@ public class AIPilot {
             plane.setAileron(1);
         } else {
             plane.setAileron(0);
+        }
+       // pullInTurn();
+    }
+
+    public void pullInTurn() {
+        if (plane.roll() > -45 && plane.roll() < - 60) {
+            plane.setElevator(1f);
         }
     }
 

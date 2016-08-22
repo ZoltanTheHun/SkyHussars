@@ -139,9 +139,9 @@ public class Mission implements GameState {
         }
         cameraManager.update(tpf);
         millis = System.currentTimeMillis() - millis;
-        logger.info("Gamestate update complete in " + millis);
+     /*   logger.info("Gamestate update complete in " + millis);
         logger.info("Current cycle: {}", worldThread.cycle());
-        logger.info("Current render cycle: {}", cycles);
+        logger.info("Current render cycle: {}", cycles);*/
         
         return missionControls.shouldStop()?null:this;
     }

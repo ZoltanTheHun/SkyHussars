@@ -26,10 +26,14 @@
 package com.codebetyars.skyhussars.engine.plane.instruments;
 
 public class Instruments {
-    
-    public Instruments(Altimeter altimeter){
+
+    public Instruments(BarometricAltimeter altimeter) {
         this.altimeter = altimeter;
     }
-    private Altimeter altimeter;
-    
+    private final BarometricAltimeter altimeter;
+
+    public BarometricAltimeter altimeter() {
+        return altimeter;
+    }
+
 }

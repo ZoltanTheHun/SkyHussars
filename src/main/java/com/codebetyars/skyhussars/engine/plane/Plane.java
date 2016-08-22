@@ -31,6 +31,7 @@ import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
 import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
+import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.audio.AudioNode;
@@ -100,7 +101,10 @@ public class Plane {
     private final List<SymmetricAirfoil> horizontalStabilizers = new ArrayList<>();
     private final List<SymmetricAirfoil> verticalStabilizers = new ArrayList<>();
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor, AudioHandler engineSound, AudioHandler gunSound, ProjectileManager projectileManager, Geometry cockpit) {
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor,
+            AudioHandler engineSound, AudioHandler gunSound,
+            ProjectileManager projectileManager, Geometry cockpit,
+            Instruments instruments) {
         this.planeDescriptor = planeDescriptor;
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
@@ -222,11 +226,15 @@ public class Plane {
     }
 
     public void setAileron(float aileron) {
-        leftWings.forEach(w -> w.controlAileron(aileron));
-        rightWings.forEach(w -> w.controlAileron(-1f * aileron));
+        leftWings.forEach(w -> w.controlAileron(maxAileron*aileron));
+        rightWings.forEach(w -> w.controlAileron(-1f * maxAileron * aileron));
 
     }
 
+    
+    float maxElevator = 10f;
+    float maxAileron = 2f;
+     
     /**
      * Sets the status of the elevator. If the elevator is negative, it pushes
      * the nose down. If the elevator is positive, it pulls the nose up.
@@ -234,7 +242,7 @@ public class Plane {
      * @param elevator must be between -1.0 and 1.0
      */
     public void setElevator(float elevator) {
-        horizontalStabilizers.forEach(s -> s.controlAileron(5f * elevator));
+        horizontalStabilizers.forEach(s -> s.controlAileron(maxElevator * elevator));
     }
 
     public void setRudder(float rudder) {
