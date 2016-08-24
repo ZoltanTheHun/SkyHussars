@@ -34,7 +34,6 @@ import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.math.FastMath;
@@ -47,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Plane {
