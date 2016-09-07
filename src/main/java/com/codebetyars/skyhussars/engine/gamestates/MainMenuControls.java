@@ -104,17 +104,18 @@ public class MainMenuControls implements ScreenController {
         enemyCount.selectItemByIndex(0);
     }
 
-    public void openSingleMissionMenu(){
-        
+    public void openSingleMissionMenu() {
+
     }
-    
+
     public void openOptionsMenu() {
-        
+
     }
-    
+
     public void exitGame() {
-        
+
     }
+
     public void startGame() {
         mainMenu.startGame();
     }

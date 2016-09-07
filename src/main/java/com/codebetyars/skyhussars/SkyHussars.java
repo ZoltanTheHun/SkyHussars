@@ -49,6 +49,7 @@ public class SkyHussars extends SimpleApplication {
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");
+        /* the best would be to make this moddable */
         settings.setSettingsDialogImage("images/settings_image.jpg");
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
@@ -92,16 +93,13 @@ public class SkyHussars extends SimpleApplication {
         flyCam.setEnabled(false);
         setDisplayStatView(false);
         stateManager.getState(AudioListenerState.class).setEnabled(false);
-
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(!skyHussarsContext.simpleUpdate(tpf)){
+        if (!skyHussarsContext.simpleUpdate(tpf)) {
             this.stop();
         }
-                
-        
     }
 
     @Override
