@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
 import com.codebetyars.skyhussars.engine.gamestates.MissionControls;
+import com.codebetyars.skyhussars.engine.gamestates.SingleMissionMenu;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.InputManager;
@@ -77,7 +78,7 @@ public class GuiManager implements ScreenController, InitializingBean {
     }
 
     public void createGUI() {
-        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls);
+        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls,new SingleMissionMenu());
         //nifty.addControls();
         nifty.update();
         nifty.setIgnoreKeyboardEvents(true);

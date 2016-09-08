@@ -89,11 +89,12 @@
                 </panel>
             </panel>
         </layer>
-        <screen id="singleMissionMenu" controller="com.codebetyars.skyhussars.engine.gamestates.SingleMissionMenuControls">
-            <layer id="foreground" childLayout="vertical">
-                <control name="button" label="Back to Main Menu" id="mainMenuButton" align="center" valign="center" visibleToMouse="true"> 
-                    <interact onClick="goBackToMainMenu()"/>
-                </control>	
-            </layer>
-        </screen>
+    </screen>
+    <screen id="singleMissionMenu" controller="com.codebetyars.skyhussars.engine.gamestates.SingleMissionMenu">
+        <layer id="foreground" childLayout="vertical">
+            <control name="button" label="Back to Main Menu" id="mainMenuButton" align="center" valign="center" visibleToMouse="true"> 
+                <interact onClick="goBackToMainMenu()"/>
+            </control>	
+        </layer>
+    </screen>
 </nifty>

@@ -1,6 +1,7 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
+import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.Lighting;
 import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import de.lessvoid.nifty.Nifty;
@@ -105,7 +106,7 @@ public class MainMenuControls implements ScreenController {
     }
 
     public void openSingleMissionMenu() {
-
+        nifty.gotoScreen("singleMissionMenu");
     }
 
     public void openOptionsMenu() {
@@ -120,8 +121,13 @@ public class MainMenuControls implements ScreenController {
         mainMenu.startGame();
     }
 
+    private Nifty nifty;
+    private Screen screen;
+
     @Override
     public void bind(Nifty nifty, Screen screen) {
+        this.nifty = nifty;
+        this.screen = screen;
     }
 
     @Override
