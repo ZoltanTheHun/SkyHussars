@@ -1,7 +1,6 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
-import com.codebetyars.skyhussars.engine.Lighting;
 import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
@@ -83,9 +82,6 @@ public class SingleMissionMenu implements ScreenController {
 
     @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
-
-    @Autowired
-    private Lighting lighting;
 
     @NiftyEventSubscriber(id = "timeControl")
     public void setTime(final String id, final DropDownSelectionChangedEvent event) {
