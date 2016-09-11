@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainMenuControls implements ScreenController {
+public class MainMenu implements ScreenController {
 
-    private final static Logger logger = LoggerFactory.getLogger(MainMenuControls.class);
+    private final static Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
     @Autowired
     private MenuState menu;

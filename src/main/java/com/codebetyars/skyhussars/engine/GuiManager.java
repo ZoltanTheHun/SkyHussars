@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine;
 
-import com.codebetyars.skyhussars.engine.gamestates.MainMenuControls;
+import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.codebetyars.skyhussars.engine.gamestates.MissionControls;
 import com.codebetyars.skyhussars.engine.gamestates.SingleMissionMenu;
 import com.jme3.asset.AssetManager;
@@ -62,7 +62,7 @@ public class GuiManager implements ScreenController, InitializingBean {
     private ViewPort guiViewPort;
 
     @Autowired
-    private MainMenuControls mainMenuControls;
+    private MainMenu mainMenuControls;
 
     @Autowired
     private MissionControls missionControls;
