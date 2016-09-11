@@ -26,62 +26,19 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.mission.MissionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MenuState implements GameState {
 
-    private enum Action {
-
-        IDLE, START_MISSION, EXIT_GAME
-    };
-
-    private Action action = Action.IDLE;
-
-    @Autowired
-    private MissionFactory missionFactory;
-
     @Autowired
     private GuiManager guiManager;
 
-    private int enemyCount = 0;
-
-    public int getEnemyCount() {
-        return enemyCount;
-    }
-
-    public void setEnemyCount(int enemyCount) {
-        this.enemyCount = enemyCount;
-    }
-
-    public String getPlaneType() {
-        return planeType;
-    }
-
-    public void setPlaneType(String planeType) {
-        this.planeType = planeType;
-    }
-
-    private String planeType;
+    private GameState nextState = this;
 
     @Override
-    public GameState update(float tpf) {
-        GameState nextState = null;
-        switch (action) {
-            case IDLE: 
-                nextState = this;
-                break;
-            case START_MISSION:
-                nextState = missionFactory.mission(planeType, enemyCount);
-                action = Action.IDLE;
-                break;
-            case EXIT_GAME:
-                nextState = null;
-                action = Action.IDLE;    
-                break;
-        }
+    public synchronized GameState update(float tpf) {
         return nextState;
     }
 
@@ -94,12 +51,12 @@ public class MenuState implements GameState {
         guiManager.cursor(true);
     }
 
-    public void startGame() {
-        action = Action.START_MISSION;
+    public synchronized void exitGame() {
+        nextState = null;
     }
-    
-    public void exitGame() {
-        action = Action.EXIT_GAME;
+
+    public synchronized void startMission(Mission mission) {
+        nextState = mission;
     }
 
 }
