@@ -29,8 +29,12 @@ import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.math.Vector3f;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AIPilot {
+
+    private final static Logger logger = LoggerFactory.getLogger(AIPilot.class);
 
     private final Plane plane;
     private final float initialHeight;
@@ -81,7 +85,7 @@ public class AIPilot {
         //if behind, try to turn back
         //let's determine forward plane, then dot product tells us if direction
         //is backwards
-        System.out.println("flyingto: " + flyingDir + ", targeting: " + targetDir + "dot: " + flyingDir.dot(targetDir));
+        logger.debug("flyingto:  {}, targeting: {}, dot: {}", flyingDir, targetDir, flyingDir.dot(targetDir));
         if (isBehind(flyingDir, targetDir)) {
             turnLeft();
         } else {
@@ -98,7 +102,7 @@ public class AIPilot {
     }
 
     private void turnLeft() {
-        System.out.println("turn left when " + plane.roll());
+        logger.debug("turn left when {}", plane.roll());
         if (plane.roll() > -45) {
             plane.setAileron(-1);
         } else if (plane.roll() < -60) {
@@ -106,7 +110,7 @@ public class AIPilot {
         } else {
             plane.setAileron(0);
         }
-       // pullInTurn();
+        // pullInTurn();
     }
 
     public void pullInTurn() {
@@ -121,12 +125,10 @@ public class AIPilot {
     }
 
     private void rollUp() {
-        System.out.println("plane roll:" + plane.roll());
+        logger.debug("plane roll: {}", plane.roll());
         if (plane.roll() > 2f) {
-            System.out.println("left");
             plane.setAileron(-1);
         } else if (plane.roll() < -2f) {
-            System.out.println("right");
             plane.setAileron(1);
         } else {
             plane.setAileron(0);
