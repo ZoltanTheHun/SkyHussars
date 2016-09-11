@@ -29,7 +29,7 @@ import com.codebetyars.skyhussars.engine.CameraManager;
 import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
-import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
+import com.codebetyars.skyhussars.engine.gamestates.MenuState;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.RenderManager;
@@ -63,7 +63,7 @@ public class SkyHussarsContext {
     private GuiManager guiManager;
 
     @Autowired
-    private MainMenu mainMenu;
+    private MenuState mainMenu;
 
     private GameState gameState;
 

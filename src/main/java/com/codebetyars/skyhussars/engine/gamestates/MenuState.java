@@ -27,14 +27,18 @@ package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainMenu implements GameState, ScreenController {
+public class MenuState implements GameState {
+
+    private enum Action {
+
+        IDLE, START_MISSION, EXIT_GAME
+    };
+
+    private Action action = Action.IDLE;
 
     @Autowired
     private MissionFactory missionFactory;
@@ -43,8 +47,6 @@ public class MainMenu implements GameState, ScreenController {
     private GuiManager guiManager;
 
     private int enemyCount = 0;
-
-    private boolean startGame = false;
 
     public int getEnemyCount() {
         return enemyCount;
@@ -66,10 +68,19 @@ public class MainMenu implements GameState, ScreenController {
 
     @Override
     public GameState update(float tpf) {
-        GameState nextState = this;
-        if (startGame) {
-            nextState = missionFactory.mission(planeType, enemyCount);
-            startGame = false;
+        GameState nextState = null;
+        switch (action) {
+            case IDLE: 
+                nextState = this;
+                break;
+            case START_MISSION:
+                nextState = missionFactory.mission(planeType, enemyCount);
+                action = Action.IDLE;
+                break;
+            case EXIT_GAME:
+                nextState = null;
+                action = Action.IDLE;    
+                break;
         }
         return nextState;
     }
@@ -84,16 +95,11 @@ public class MainMenu implements GameState, ScreenController {
     }
 
     public void startGame() {
-        startGame = true;
+        action = Action.START_MISSION;
     }
-
-    public void bind(Nifty nifty, Screen screen) {
-    }
-
-    public void onStartScreen() {
-    }
-
-    public void onEndScreen() {
+    
+    public void exitGame() {
+        action = Action.EXIT_GAME;
     }
 
 }

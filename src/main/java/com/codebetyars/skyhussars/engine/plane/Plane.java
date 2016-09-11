@@ -224,15 +224,14 @@ public class Plane {
     }
 
     public void setAileron(float aileron) {
-        leftWings.forEach(w -> w.controlAileron(maxAileron*aileron));
+        leftWings.forEach(w -> w.controlAileron(maxAileron * aileron));
         rightWings.forEach(w -> w.controlAileron(-1f * maxAileron * aileron));
 
     }
 
-    
     float maxElevator = 10f;
     float maxAileron = 2f;
-     
+
     /**
      * Sets the status of the elevator. If the elevator is negative, it pushes
      * the nose down. If the elevator is positive, it pulls the nose up.
@@ -277,16 +276,16 @@ public class Plane {
     public Vector3f getDirection() {
         return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();
     }
-    
+
     public Vector3f getUp() {
-        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();   
+        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();
     }
 
     public float roll() {
         Vector3f forward = getDirection();
         Vector3f up = getUp();
-        int i = forward.cross(Vector3f.UNIT_Y).dot(up) > 0?1:-1;
-        return i*geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y)*FastMath.RAD_TO_DEG;
+        int i = forward.cross(Vector3f.UNIT_Y).dot(up) > 0 ? 1 : -1;
+        return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG;
     }
 
     public Vector2f getLocation2D() {

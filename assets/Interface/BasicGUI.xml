@@ -10,52 +10,20 @@
             <image filename="Textures/p80-background.jpg" width="100%" height="100%"></image>
         </layer>
         <layer id="foreground" childLayout="vertical">
-            <panel id="padding1" height="35%" width="35%" align="center" childLayout="center"/>
-            <panel id="mainMenuPanel" width="50%"  childLayout="vertical">
-                <control name="button" label="Single Mission" id="singleMissionButton" align="center" valign="center" visibleToMouse="true"> 
-                    <interact onClick="openSingleMissionMenu()"/>
-                </control>
-                <control name="button" label="Options" id="singleMissionButton" align="center" valign="center" visibleToMouse="true"> 
-                    <interact onClick="openOptionsMenu()"/>
-                </control>	
-                <control name="button" label="Exit Game" id="exitGameButton" align="center" valign="center" visibleToMouse="true"> 
-                    <interact onClick="exitGame()"/>
-                </control>				
-            </panel> 
-            <panel id="panel_mid" height="50%" width="75%" align="center" childLayout="vertical" backgroundColor="#00000099">
-                <text text="Welcome to SkyHussars R6. This is a simple flying game made to test out jMonkeyEngine and to learn a little bit about aerodynamics. The plane can be pitched and rolled with the cursor keys. The thrust can be controlled with the number keys from 1 to 5. There is no objective and the only way to fail is to crash to the ground. In that case the plane can be restored to its original position with the R button. To pause the game, the P key can be used. To switch between outer and cockpit view use F1 and F5. Space  can be used to shoot with the gun. Left and right mouse buttons control the field of view. To exit the game please press ESC." font="Interface/Fonts/Default.fnt" width="100%" height="100%" wrap="true" />
-                <panel id="timePanel" width="50%"  childLayout="horizontal">
-                    <text text="Please select start time for flight: " font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
-                    <control id="timeControl" width="50%" name="dropDown">
-                        <interact onChanged="setTime()"/>
-                    </control>  					
-                </panel> 
-                <panel id="planeSelectPanel" width="50%"  childLayout="horizontal">
-                    <text text="Please select the plane type you want to fly " font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
-                    <control id="planeSelect" width="50%" name="dropDown">
-                        <interact onChanged="setPlane()"/>
-                    </control> 
-                </panel>
-                <panel id="enemyCountPanel" width="50%"  childLayout="horizontal">
-                    <text text="Please select the number of enemy planes" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
-                    <control id="enemyCount" width="50%" name="dropDown">
-                        <interact onChanged="setEnemyCount()"/>
-                    </control>  
-                </panel>
-                <panel id="disableWaterPanel" width="50%"  childLayout="horizontal">
-                    <text text="Disable water(can increase performance)" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
-                    <control id="waterEnabled" width="50%" name="dropDown">
-                        <interact onChanged="setWaterEnabled()"/>
-                    </control>  
-                </panel>
-            </panel>				
-            <panel id="button_panel" height="25%" width="50%" align="center" childLayout="horizontal" backgroundColor="#00000099" padding="25px">				
-                <panel id="okPanel" width="50%"  childLayout="center">
-                    <control name="button" label="Start Flying" id="StartButton" align="center" valign="center" visibleToMouse="true"> 
-                        <interact onClick="startGame()"/>
+            <panel id="top_padding" height="40%" width="100%" align="center" childLayout="center"/>
+            <panel id="panel_mid" height="40%" width="75%" align="center" childLayout="vertical" backgroundColor="#00000099">
+                <panel id="mainMenuPanel" width="100%"  childLayout="vertical" align="center">
+                    <control name="button" label="Single Mission" id="singleMissionButton" align="center" valign="center"
+                             visibleToMouse="true" height="50%"> 
+                        <interact onClick="openSingleMissionMenu()"/>
                     </control>
+                    <control name="button" label="Exit Game" id="exitGameButton" align="center" valign="center"
+                             visibleToMouse="true" height="50%"> 
+                        <interact onClick="exitGame()"/>
+                    </control>				
                 </panel>         
             </panel>
+            <panel id="bottom_padding" height="20%" width="100%" align="center" childLayout="center"/>				
         </layer>
     </screen>
     <screen id="main" controller="com.codebetyars.skyhussars.engine.gamestates.MissionControls">
@@ -110,15 +78,9 @@
                     </control> 
                 </panel>
                 <panel id="enemyCountPanel" width="50%"  childLayout="horizontal">
-                    <text text="Please select the number of enemy planes" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
+                    <text text="Enemy planes:" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
                     <control id="enemyCount" width="50%" name="dropDown">
                         <interact onChanged="setEnemyCount()"/>
-                    </control>  
-                </panel>
-                <panel id="disableWaterPanel" width="50%"  childLayout="horizontal">
-                    <text text="Disable water(can increase performance)" font="Interface/Fonts/Default.fnt" width="50%" height="100%" wrap="true" />
-                    <control id="waterEnabled" width="50%" name="dropDown">
-                        <interact onChanged="setWaterEnabled()"/>
                     </control>  
                 </panel>
                 <panel id="button_panel" height="25%" width="50%" align="center" childLayout="horizontal" backgroundColor="#00000099" padding="25px">				

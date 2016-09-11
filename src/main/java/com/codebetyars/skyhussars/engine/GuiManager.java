@@ -67,6 +67,9 @@ public class GuiManager implements ScreenController, InitializingBean {
     @Autowired
     private MissionControls missionControls;
 
+    @Autowired
+    private SingleMissionMenu singleMissionMenu;
+
     private Nifty nifty;
 
     private NiftyJmeDisplay niftyDisplay;
@@ -78,11 +81,10 @@ public class GuiManager implements ScreenController, InitializingBean {
     }
 
     public void createGUI() {
-        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls,new SingleMissionMenu());
+        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls, singleMissionMenu);
         //nifty.addControls();
         nifty.update();
         nifty.setIgnoreKeyboardEvents(true);
-        mainMenuControls.init(nifty);
         guiViewPort.addProcessor(niftyDisplay);
     }
 
