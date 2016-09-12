@@ -79,16 +79,15 @@ public class SingleMissionMenu implements ScreenController {
         planeRegistry.availablePlanes().forEach(planeName
                 -> planeSelect.addItem(planeName));
         planeSelect.selectItemByIndex(0);
-        planeType = planeRegistry.availablePlanes().get(0);
     }
 
     private void populateEnemyCount() {
-        DropDown<String> enemyCount = screen.findNiftyControl("enemyCount", DropDown.class);
-        enemyCount.clear();
+        DropDown<String> enemyCountBtn = screen.findNiftyControl("enemyCount", DropDown.class);
+        enemyCountBtn.clear();
         for (int i = 0; i < 251; i++) {
-            enemyCount.addItem("" + i);
+            enemyCountBtn.addItem("" + i);
         }
-        enemyCount.selectItemByIndex(0);
+        enemyCountBtn.selectItemByIndex(0);
     }
 
     @Override
@@ -120,7 +119,6 @@ public class SingleMissionMenu implements ScreenController {
         int hour;
         if ("Now".equals(time)) {
             hour = Integer.parseInt(dateformat.format(new Date()));
-
         } else {
             hour = Integer.parseInt(time.split(":")[0]);
         }
