@@ -29,9 +29,6 @@ import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.gamestates.MissionState;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.controls.ControlsManager;
-import com.codebetyars.skyhussars.engine.controls.ControlsMapper;
-import com.codebetyars.skyhussars.engine.gamestates.MenuState;
-import com.codebetyars.skyhussars.engine.gamestates.MissionMenu;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.plane.PlaneFactory;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
@@ -47,50 +44,44 @@ public class MissionFactory {
 
     @Autowired
     private Node rootNode;
-
     @Autowired
     private DataModel dataModel;
-
     @Autowired
     private ProjectileManager projectileManager;
-
     @Autowired
     private SoundManager soundManager;
-
     @Autowired
     private CameraManager cameraManager;
-
     @Autowired
     private TerrainManager terrainManager;
-
-    @Autowired
-    private GuiManager guiManager;
-
     @Autowired
     private PlaneFactory planeFactory;
-
     @Autowired
     private DayLightWeatherManager dayLightWeatherManager;
-
     @Autowired
-    private MissionMenu missionControls;     
-    
-    @Autowired 
     private ControlsManager controlsManager;
+    @Autowired
+    private Sky sky;
 
     public MissionState mission(String missionName) {
         MissionDescriptor missionDescriptor = dataModel.getMissionDescriptor(missionName);
         List<Plane> planes = planes(missionDescriptor);
-        MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager);
+        MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
+        terrainManager.loadTerrain();
+        sky.loadSky();
+        dayLightWeatherManager.setLights();
         return mission;
     }
 
     public MissionState mission(String planeType, int enemyCount) {
         MissionDescriptor missionDescriptor = dataModel.getNewMission(planeType, enemyCount);
         List<Plane> planes = planes(missionDescriptor);
-        MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager,dayLightWeatherManager);
+        MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
+        terrainManager.loadTerrain();
+        sky.loadSky();
+        dayLightWeatherManager.setLights();
         return mission;
     }
 

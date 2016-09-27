@@ -29,6 +29,7 @@ import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.scene.Node;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 
 import java.util.List;
@@ -53,11 +54,14 @@ public class MissionState implements GameState {
     private final WorldThread worldThread;
     private Timer timer;
     private GameState nextState = this;
+    private final Node rootNode;
+    private final Sky sky;
 
     public MissionState(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            DayLightWeatherManager dayLightWeatherManager) {
-
+            DayLightWeatherManager dayLightWeatherManager,Node rootNode, Sky sky) {
+        this.rootNode = rootNode;
+        this.sky = sky;
         this.planes = planes;
         this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;
@@ -123,6 +127,7 @@ public class MissionState implements GameState {
     public synchronized GameState update(float tpf) {
         cycles++;
         long millis = System.currentTimeMillis();
+        soundManager.update();
         if (!paused && !ended) {
             startWorldThread();
             updatePlanes(tpf);
@@ -130,7 +135,6 @@ public class MissionState implements GameState {
             if (player.plane().crashed()) {
                 ended = true;
             }
-            soundManager.update();
             /* take another look at it later to get rid of a chance of a null reference */
             if(speedoMeterUI != null) speedoMeterUI.setText(player.plane().getSpeedKmH() + "km/h");
         } else {
@@ -167,6 +171,13 @@ public class MissionState implements GameState {
         if (timer != null) {
             timer.cancel();
         }
+        sky.disableSky();
+        soundManager.muteAllSounds();
+        soundManager.update();
+        rootNode.detachAllChildren();
+        rootNode.getLocalLightList().clear();
+        rootNode.getWorldLightList().clear();
+        /*rootNode.forceRefresh(true, true, true);*/
     }
 
     @Override

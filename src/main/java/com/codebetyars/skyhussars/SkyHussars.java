@@ -62,16 +62,13 @@ public class SkyHussars extends SimpleApplication {
         assetManager.registerLocator(settingsManager.assetDirectory().getPath(), FileLocator.class);
     }
 
-    private Node node = new Node();
-
-    private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) {
-        node = new Node();
+    private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) { 
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("camera", getCamera());
         beanFactory.registerSingleton("settingsManager", settingsManager);
         beanFactory.registerSingleton("renderManager", renderManager);
         beanFactory.registerSingleton("application", this);
-        beanFactory.registerSingleton("rootNode", node);
+        beanFactory.registerSingleton("rootNode", rootNode);
         beanFactory.registerSingleton("assetManager", getAssetManager());
         beanFactory.registerSingleton("inputManager", getInputManager());
         beanFactory.registerSingleton("flyByCamera", getFlyByCamera());

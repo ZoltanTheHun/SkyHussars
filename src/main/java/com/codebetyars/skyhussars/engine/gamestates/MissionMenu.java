@@ -86,14 +86,16 @@ public class MissionMenu implements ScreenController {
         mission.speedoMeterUI(screen.findElementById("speedDisplay").getRenderer(TextRenderer.class));
         inputManager.setCursorVisible(false);
         popupVisible = false;
+        Element exitMenu = screen.findElementById("exitMenuPanel");
+        exitMenu.setVisible(false);
     }
 
     @Override
     public void onEndScreen() {
         this.mission = null;
     }
-    
-    public void switchIngameMenu(){
+
+    public void switchIngameMenu() {
         popupVisible = !popupVisible;
         inputManager.setCursorVisible(popupVisible);
         Element exitMenu = screen.findElementById("exitMenuPanel");

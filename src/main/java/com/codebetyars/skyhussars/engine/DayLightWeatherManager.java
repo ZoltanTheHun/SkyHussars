@@ -27,32 +27,29 @@ package com.codebetyars.skyhussars.engine;
 
 import com.jme3.light.Light;
 import com.jme3.scene.Node;
-import jme3utilities.sky.SkyControl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DayLightWeatherManager implements InitializingBean {
+public class DayLightWeatherManager {
 
     @Autowired
     private Node rootNode;
 
     @Autowired
-    private SkyControl skyControl;
+    private Sky sky;
 
     @Autowired
     private Lighting lighting;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        for (Light light: lighting.getLights()) {
+    public void setLights() {
+        for (Light light : lighting.getLights()) {
             rootNode.addLight(light);
         }
     }
 
     public void setHour(int hour) {
-        skyControl.getSunAndStars().setHour(hour);
-        lighting.setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
+        sky.setHour(hour);
     }
 }

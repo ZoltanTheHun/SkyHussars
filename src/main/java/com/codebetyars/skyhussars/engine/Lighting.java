@@ -53,9 +53,6 @@ public class Lighting implements InitializingBean {
     private final static Logger logger = LoggerFactory.getLogger(Lighting.class);
     
     @Autowired
-    private SkyControl skyControl;
-    
-    @Autowired
     private AssetManager assetManager;
     
     @Autowired
@@ -87,10 +84,7 @@ public class Lighting implements InitializingBean {
         dlsr.setRenderBackFacesShadows(Boolean.FALSE);
         dlsr.setShadowCompareMode(CompareMode.Hardware);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
-        camera.addEffect(dlsr);
-        
-        setLightingBodies(skyControl.getSunAndStars().getSunDirection(), skyControl.getMoonDirection());
-        
+        camera.addEffect(dlsr);      
         float initialWaterHeight = 1500f; // choose a value for your scene
         /*water = new WaterFilter(rootNode, directionalLight.getDirection());
         water.setWaterHeight(initialWaterHeight);*/

@@ -36,12 +36,11 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TerrainManager implements InitializingBean {
+public class TerrainManager {
 
     @Autowired
     private AssetManager assetManager;
@@ -54,8 +53,24 @@ public class TerrainManager implements InitializingBean {
 
     private TerrainQuad terrain;
 
-    @Override
-    public void afterPropertiesSet() {
+    public TerrainQuad getTerrain() {
+        return terrain;
+    }
+
+    public float getHeightAt(Vector2f at) {
+        return terrain.getHeight(at);
+    }
+
+    public boolean checkCollisionWithGround(Plane plane) {
+        boolean collide = false;
+        float height = terrain.getHeight(plane.getLocation2D());
+        if (height > plane.getHeight()) {
+            collide = true;
+        }
+        return collide;
+    }
+    
+    public void loadTerrain(){
         AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/AdriaSmall.bmp").getImage(), 1f);
         heightmap.load();
 
@@ -83,22 +98,5 @@ public class TerrainManager implements InitializingBean {
         terrain.addControl(new TerrainLodControl(terrain, camera.testCamera()));
         terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
         rootNode.attachChild(terrain);
-    }
-
-    public TerrainQuad getTerrain() {
-        return terrain;
-    }
-
-    public float getHeightAt(Vector2f at) {
-        return terrain.getHeight(at);
-    }
-
-    public boolean checkCollisionWithGround(Plane plane) {
-        boolean collide = false;
-        float height = terrain.getHeight(plane.getLocation2D());
-        if (height > plane.getHeight()) {
-            collide = true;
-        }
-        return collide;
     }
 }
