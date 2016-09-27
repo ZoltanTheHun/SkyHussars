@@ -28,6 +28,7 @@ package com.codebetyars.skyhussars.engine.gamestates;
 import com.codebetyars.skyhussars.engine.DayLightWeatherManager;
 import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import com.codebetyars.skyhussars.engine.mission.MissionFactory;
+import com.jme3.input.InputManager;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.DropDown;
@@ -44,18 +45,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class SingleMissionMenu implements ScreenController {
 
-    private Nifty nifty;
-    private Screen screen;
     private final static Logger logger = LoggerFactory.getLogger(SingleMissionMenu.class);
+
+    @Autowired
+    private InputManager inputManager;
 
     @Autowired
     private MenuState menu;
 
     @Autowired
     private PlaneRegistry planeRegistry;
-    
+
     @Autowired
     private MissionFactory missionFactory;
+
+    private Nifty nifty;
+    private Screen screen;
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
@@ -95,6 +100,7 @@ public class SingleMissionMenu implements ScreenController {
         populateTimeControl();
         populatePlaneSelect();
         populateEnemyCount();
+        inputManager.setCursorVisible(true);
     }
 
     @Override
@@ -107,6 +113,7 @@ public class SingleMissionMenu implements ScreenController {
 
     public void startGame() {
         menu.startMission(missionFactory.mission(planeType, enemyCount));
+        nifty.gotoScreen("main");
     }
 
     @Autowired

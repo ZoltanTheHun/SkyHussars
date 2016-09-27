@@ -25,23 +25,20 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.gamestates.Mission;
+import com.codebetyars.skyhussars.engine.gamestates.MissionMenu;
 import com.jme3.input.controls.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MenuControls implements ActionListener {
 
-    /*@Autowired
-    private MessageBuffer messageBuffer;*/ 
-    private final Mission mission;
-    
-    public MenuControls(Mission mission){
-        this.mission = mission;
-    }
+    @Autowired private MissionMenu missionMenu;
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
         if (name.equals(ControlsMapper.MENU_DISPLAY) && isPressed) {
-            mission.switchIngameMenu();
+            missionMenu.switchIngameMenu();
         }
     }
 

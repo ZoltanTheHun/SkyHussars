@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.codebetyars'
-version = "0.8.0"
+version = "R9-DEV"
 
 sourceCompatibility = 1.8
 

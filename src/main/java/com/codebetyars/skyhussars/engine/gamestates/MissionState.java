@@ -29,6 +29,7 @@ import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 
 import java.util.List;
 import java.util.Timer;
@@ -36,12 +37,11 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Mission implements GameState {
+public class MissionState implements GameState {
 
     private Pilot player;
     private final CameraManager cameraManager;
     private final TerrainManager terrainManager;
-    private final GuiManager guiManager;
     private final DayLightWeatherManager dayLightWeatherManager;
     private final ProjectileManager projectileManager;
     private boolean paused = false;
@@ -49,23 +49,21 @@ public class Mission implements GameState {
     private final List<Plane> planes;
     private List<Pilot> pilots;
     private final SoundManager soundManager;
-    private final static Logger logger = LoggerFactory.getLogger(Mission.class);
-    private final MissionControls missionControls;
+    private final static Logger logger = LoggerFactory.getLogger(MissionState.class);
     private final WorldThread worldThread;
     private Timer timer;
+    private GameState nextState = this;
 
-    public Mission(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
+    public MissionState(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            GuiManager guiManager, DayLightWeatherManager dayLightWeatherManager, MissionControls missionControls) {
+            DayLightWeatherManager dayLightWeatherManager) {
 
         this.planes = planes;
         this.projectileManager = projectileManager;
         this.cameraManager = cameraManager;
         this.terrainManager = terrainManager;
-        this.guiManager = guiManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
         this.soundManager = soundManager;
-        this.missionControls = missionControls;
         planes.stream().forEach((plane) -> {
             if (plane.planeMissionDescriptor().player()) {
                 player = new Pilot(plane);
@@ -115,14 +113,15 @@ public class Mission implements GameState {
         cameraManager.init();
     }
 
+    private TextRenderer speedoMeterUI;
+
+    public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) {
+        this.speedoMeterUI = speedoMeterUI;
+    }
+
     @Override
-    public GameState update(float tpf) {
+    public synchronized GameState update(float tpf) {
         cycles++;
-        if (missionControls.popupToBeClosed()) {
-            guiManager.cursor(false);
-            guiManager.exitMenu(false);
-            missionControls.resetPopupToBeClosed();
-        }
         long millis = System.currentTimeMillis();
         if (!paused && !ended) {
             startWorldThread();
@@ -132,18 +131,23 @@ public class Mission implements GameState {
                 ended = true;
             }
             soundManager.update();
-            guiManager.update(player.plane().getSpeedKmH());
+            /* take another look at it later to get rid of a chance of a null reference */
+            if(speedoMeterUI != null) speedoMeterUI.setText(player.plane().getSpeedKmH() + "km/h");
         } else {
             stopWorldThread();
             soundManager.muteAllSounds();
         }
         cameraManager.update(tpf);
-        millis = System.currentTimeMillis() - millis;
+       // millis = System.currentTimeMillis() - millis;
      /*   logger.info("Gamestate update complete in " + millis);
-        logger.info("Current cycle: {}", worldThread.cycle());
-        logger.info("Current render cycle: {}", cycles);*/
-        
-        return missionControls.shouldStop()?null:this;
+         logger.info("Current cycle: {}", worldThread.cycle());
+         logger.info("Current render cycle: {}", cycles);*/
+
+        return nextState;
+    }
+
+    public synchronized void switchState(GameState state) {
+        nextState = state;
     }
 
     private void updatePlanes(float tpf) {
@@ -168,8 +172,6 @@ public class Mission implements GameState {
     @Override
     public void initialize() {
         initializeScene();
-        guiManager.switchScreen("main");
-        guiManager.cursor(false);
         ended = false;
     }
 
@@ -189,9 +191,4 @@ public class Mission implements GameState {
         ended = false;
     }
 
-    public void switchIngameMenu() {
-        boolean nextState = !guiManager.cursor();
-        guiManager.cursor(nextState);
-        guiManager.exitMenu(nextState);
-    }
 }

@@ -26,20 +26,25 @@
 package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.CameraManager;
-import com.codebetyars.skyhussars.engine.gamestates.Mission;
+import com.codebetyars.skyhussars.engine.gamestates.MissionState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ControlsManager {
 
-    private final FlightKeyboardControls inFlightKeyboardControls;
-    private final FlowControls gameFlowControls;
-    private final CameraControls cameraControls;
-    private final MenuControls menuControls;
+    private FlightKeyboardControls inFlightKeyboardControls;
+    private FlowControls gameFlowControls;
+    private CameraControls cameraControls;
+    
+    @Autowired private MenuControls menuControls;
+    @Autowired private ControlsMapper controlsMapper;
+    @Autowired private CameraManager cameraManager;
 
-    public ControlsManager(ControlsMapper controlsMapper, Mission mission,CameraManager cameraManager) {
+    public void missionControls(MissionState mission) {
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
         gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
-        menuControls = new MenuControls(mission);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
         controlsMapper.setupFlowControls(gameFlowControls);
         controlsMapper.setupCameraControls(cameraControls);

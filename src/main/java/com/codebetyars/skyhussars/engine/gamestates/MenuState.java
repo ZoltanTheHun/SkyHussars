@@ -32,10 +32,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenuState implements GameState {
 
-    @Autowired
-    private GuiManager guiManager;
-
     private GameState nextState = this;
+    private MissionState currentMission;
 
     @Override
     public synchronized GameState update(float tpf) {
@@ -48,14 +46,18 @@ public class MenuState implements GameState {
 
     @Override
     public void initialize() {
-        guiManager.cursor(true);
     }
 
     public synchronized void exitGame() {
         nextState = null;
     }
-
-    public synchronized void startMission(Mission mission) {
+    
+    public synchronized MissionState currentMission(){
+        return currentMission;
+    }
+    
+    public synchronized void startMission(MissionState mission) {
+        currentMission = mission;
         nextState = mission;
     }
 

@@ -25,51 +25,79 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.jme3.input.InputManager;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MissionControls implements ScreenController {
+public class MissionMenu implements ScreenController {
 
-    private final static Logger logger = LoggerFactory.getLogger(MissionControls.class);
-    
+    @Autowired
+    private InputManager inputManager;
+
+    @Autowired
+    private MenuState menuState;
+
+    private Nifty nifty;
+    private Screen screen;
+
+    private final static Logger logger = LoggerFactory.getLogger(MissionMenu.class);
+    private MissionState mission;
     private boolean popupToBeClosed;
+    private boolean popupVisible;
 
-    private boolean shouldStop = false;
     public void exitToDesktop() {
-        shouldStop = true;
+        mission.switchState(null);
     }
-    
-    public boolean shouldStop(){
-        return shouldStop;
+
+    public void exitToMenu() {
+        mission.switchState(menuState);
+        nifty.gotoScreen("singleMissionMenu");
     }
-    
-    public void closePopup(){
+
+    public void closePopup() {
         popupToBeClosed = true;
     }
-    
-    public boolean popupToBeClosed(){
+
+    public boolean popupToBeClosed() {
         return popupToBeClosed;
     }
-    
-    public void resetPopupToBeClosed(){
+
+    public void resetPopupToBeClosed() {
         popupToBeClosed = false;
     }
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
+        this.nifty = nifty;
+        this.screen = screen;
     }
 
     @Override
     public void onStartScreen() {
+        mission = menuState.currentMission();
+        mission.speedoMeterUI(screen.findElementById("speedDisplay").getRenderer(TextRenderer.class));
+        inputManager.setCursorVisible(false);
+        popupVisible = false;
     }
 
     @Override
     public void onEndScreen() {
+        this.mission = null;
+    }
+    
+    public void switchIngameMenu(){
+        popupVisible = !popupVisible;
+        inputManager.setCursorVisible(popupVisible);
+        Element exitMenu = screen.findElementById("exitMenuPanel");
+        exitMenu.setVisible(popupVisible);
     }
 
 }
