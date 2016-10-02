@@ -97,8 +97,8 @@ copy {
 run.classpath = run.classpath + files('assets','.')
 
 launch4j {
-    mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
-    icon = 'assets/icons/game.ico'  
-    outfile = 'SkyHussars.exe'
-    chdir = '.'
+            mainClassName = 'com.codebetyars.skyhussars.' + targetclass
+            icon = 'assets/icons/game.ico'  
+            outfile = '' + targetclass + '.exe'
+            chdir = '.'
 }
