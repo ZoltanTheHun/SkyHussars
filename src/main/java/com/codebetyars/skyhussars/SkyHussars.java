@@ -32,7 +32,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioListenerState;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

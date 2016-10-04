@@ -96,6 +96,8 @@ copy {
 //to make it work with gradle run
 run.classpath = run.classpath + files('assets','.')
 
+if(!project.hasProperty('targetexe')) ext.targetexe = 'SkyHussars'
+
 launch4j {
             mainClassName = 'com.codebetyars.skyhussars.' + targetexe
             icon = 'assets/icons/game.ico'  
