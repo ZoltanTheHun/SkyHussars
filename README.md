@@ -12,4 +12,5 @@ gradle launch4j - this will create a windows executable
 ```
 Game assets are stored in the assets folder. All of them are licensed under some open source license or created by _ZoltanTheHun_, with the license indicated in the appropriate folder.
 
+Download the latest release [here](https://github.com/ZoltanTheHun/SkyHussars/releases/tag/R8)
 
