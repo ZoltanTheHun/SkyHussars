@@ -26,11 +26,10 @@
 package com.codebetyars.skyhussars;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PlaneEd extends Application {
@@ -41,20 +40,12 @@ public class PlaneEd extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println("this is a test");
-        stage.setTitle("Hello World!");
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        stage.setTitle("SkyHussars PlaneEd");
+        MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("File");
+        menuBar.getMenus().add(fileMenu);
+        VBox root = new VBox();
+        root.getChildren().add(menuBar);
         stage.setScene(new Scene(root, 300, 250));
         stage.show();
     }
