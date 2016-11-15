@@ -64,7 +64,6 @@ public class SymmetricAirfoil implements Airfoil {
     private final float aspectRatio;
     private Quaternion qIncidence = new Quaternion();
     private final Quaternion dehidral;
-    private Quaternion qAileron = new Quaternion();
     private final Quaternion wingRotation;
     private final float dampingFactor = 1f;
     private final boolean damper;
@@ -72,15 +71,13 @@ public class SymmetricAirfoil implements Airfoil {
 
     @Override
     public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Quaternion situation, Vector3f vAngularVelocity) {
-        //Quaternion foil = wingRotation.mult(qAileron).mult(situation);//situation.mult(wingRotation).mult(qAileron);//situation.mult(qIncidence).mult(qAileron).mult(dehidral);
-        Quaternion foil = situation.mult(wingRotation).mult(qAileron);//situation.mult(qIncidence).mult(qAileron).mult(dehidral);
+        Quaternion foil = situation.mult(wingRotation);
         Vector3f vUp = foil.mult(Vector3f.UNIT_Y).normalize();
         vFlow = addDamping(vFlow, vAngularVelocity, vUp);
         float angleOfAttack = calculateAngleOfAttack(vUp, vFlow.normalize());
         Vector3f vLift = calculateLift(angleOfAttack, airDensity, vFlow, vUp);
         Vector3f vInducedDrag = calculateInducedDrag(airDensity, vFlow, vLift);
         logging(vLift, vUp, angleOfAttack, vInducedDrag);
-
         return vLift.add(vInducedDrag);
     }
 
@@ -172,8 +169,4 @@ public class SymmetricAirfoil implements Airfoil {
         return angleOfAttack;
     }
 
-    public void controlAileron(float aileron) {
-        Quaternion q = new Quaternion();
-        qAileron = q.fromAngles(aileron * FastMath.DEG_TO_RAD, 0, 0);
-    }
 }

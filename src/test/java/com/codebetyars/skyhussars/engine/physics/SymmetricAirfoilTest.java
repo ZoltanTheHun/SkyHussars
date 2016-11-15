@@ -195,8 +195,8 @@ public class SymmetricAirfoilTest {
     public void testControlAileron() {
         logger.debug("controlAileron");
         int aileron = 0;
-        SymmetricAirfoil instance = null;
-        instance.controlAileron(aileron);
+        //SymmetricAirfoil instance = null;
+       // instance.controlAileron(aileron);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

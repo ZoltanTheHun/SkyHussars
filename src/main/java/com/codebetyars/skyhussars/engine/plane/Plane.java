@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
+import com.codebetyars.skyhussars.engine.physics.Aileron;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysicsImpl;
 import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
@@ -94,10 +95,11 @@ public class Plane {
         return planeMissionDescriptor;
     }
 
-    private final List<SymmetricAirfoil> leftWings = new ArrayList<>();
-    private final List<SymmetricAirfoil> rightWings = new ArrayList<>();
-    private final List<SymmetricAirfoil> horizontalStabilizers = new ArrayList<>();
-    private final List<SymmetricAirfoil> verticalStabilizers = new ArrayList<>();
+    private final List<Aileron> horizontalStabilizers = new ArrayList<>();
+    private final List<Aileron> verticalStabilizers = new ArrayList<>();
+
+    private final List<Airfoil> airfoils;
+    private final List<Aileron> ailerons;
 
     public Plane(Spatial model, PlaneDescriptor planeDescriptor,
             AudioHandler engineSound, AudioHandler gunSound,
@@ -117,9 +119,10 @@ public class Plane {
         geom.attachSpatialToModelNode(model);
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
-        List<Airfoil> airfoils = new ArrayList<>();
+        airfoils = new ArrayList<>(planeDescriptor.getAirfolDescriptors().size());
+        ailerons = new ArrayList<>();
         for (AirfoilDescriptor airfoilDescriptor : planeDescriptor.getAirfolDescriptors()) {
-            SymmetricAirfoil symmetricalAirfoil
+            Airfoil airfoil
                     = new SymmetricAirfoil(
                             airfoilDescriptor.getName(),
                             airfoilDescriptor.getCog(),
@@ -128,28 +131,26 @@ public class Plane {
                             airfoilDescriptor.getAspectRatio(),
                             airfoilDescriptor.isDamper(),
                             airfoilDescriptor.getDehidralDegree());
-
-            airfoils.add(symmetricalAirfoil);
-            /*
-             should be temporary solution, use enum or something to indicate
-             */
-            if (symmetricalAirfoil.getName().startsWith("WingLeft")) {
-                leftWings.add(symmetricalAirfoil);
+            
+            /* this solution is still very unsatisfactory */
+            if (airfoil.getName().startsWith("WingLeft")) {
+                airfoil = new Aileron(airfoil, Aileron.Direction.LEFT);
+                ailerons.add((Aileron)airfoil);
             }
-            if (symmetricalAirfoil.getName().startsWith("WingRight")) {
-                rightWings.add(symmetricalAirfoil);
+            if (airfoil.getName().startsWith("WingRight")) {
+                airfoil = new Aileron(airfoil, Aileron.Direction.RIGHT);
+                ailerons.add((Aileron)airfoil);
             }
-            if (symmetricalAirfoil.getName().startsWith("Horizontal")) {
-                horizontalStabilizers.add(symmetricalAirfoil);
+            if (airfoil.getName().startsWith("Horizontal")) {
+                airfoil = new Aileron(airfoil, Aileron.Direction.STABILIZER);
+                horizontalStabilizers.add((Aileron)airfoil);
             }
-            if (symmetricalAirfoil.getName().startsWith("Vertical")) {
-                verticalStabilizers.add(symmetricalAirfoil);
+            if (airfoil.getName().startsWith("Vertical")) {
+                airfoil = new Aileron(airfoil, Aileron.Direction.STABILIZER);
+                verticalStabilizers.add((Aileron)airfoil);
             }
+            airfoils.add(airfoil);
         }
-        /*airfoils.add(leftWing);
-         airfoils.add(rightWing);
-         airfoils.add(horizontalStabilizer);
-         airfoils.add(verticalStabilizer);*/
         for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
             engines.add(new Engine(engineLocation, 1.0f));
         }
@@ -224,9 +225,7 @@ public class Plane {
     }
 
     public void setAileron(float aileron) {
-        leftWings.forEach(w -> w.controlAileron(maxAileron * aileron));
-        rightWings.forEach(w -> w.controlAileron(-1f * maxAileron * aileron));
-
+        ailerons.forEach(w -> w.controlAileron(maxAileron * aileron));
     }
 
     float maxElevator = 10f;

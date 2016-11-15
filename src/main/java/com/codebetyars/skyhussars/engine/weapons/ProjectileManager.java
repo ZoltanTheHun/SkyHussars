@@ -65,7 +65,6 @@ public class ProjectileManager {
     }
 
     public void update(float tpf) {
-        logger.info("Current projectiles: {}", projectileGeometries.size());
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
         projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
         Iterator<Projectile> it = projectiles.iterator();

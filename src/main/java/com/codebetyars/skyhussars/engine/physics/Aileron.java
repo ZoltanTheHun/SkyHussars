@@ -23,10 +23,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.codebetyars.skyhussars.engine.physics;
 
-public interface Airfoil extends LiftProducer,RigidBody {
-    
-    public String getName();
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+
+public class Aileron implements Airfoil {
+
+    private final Airfoil airfoil;
+    private final Direction side;
+    private Quaternion qAileron = new Quaternion();
+
+    @Override
+    public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity) {
+        return airfoil.calculateResultantForce(airDensity, vVelocity, situation.mult(qAileron), angularVelocity);
+    }
+
+    @Override
+    public Vector3f getCenterOfGravity() {
+        return airfoil.getCenterOfGravity();
+    }
+
+    @Override
+    public String getName() {
+        return airfoil.getName();
+    }
+
+    public enum Direction {
+
+        LEFT(1), RIGHT(-1), STABILIZER(1);
+        private final float direction;
+
+        Direction(float direction) {
+            this.direction = direction;
+        }
+
+    }
+
+    public Aileron(Airfoil airfoil, Direction side) {
+        this.airfoil = airfoil;
+        this.side = side;
+    }
+
+    public void controlAileron(float aileron) {
+        Quaternion q = new Quaternion();
+        qAileron = q.fromAngles(side.direction * aileron * FastMath.DEG_TO_RAD, 0, 0);
+    }
+
 }
