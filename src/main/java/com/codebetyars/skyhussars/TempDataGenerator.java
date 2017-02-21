@@ -97,7 +97,17 @@ public class TempDataGenerator {
         AirfoilDescriptor airfoilDescriptor = new AirfoilDescriptor();
         airfoilDescriptor.setName("WingLeft");
         airfoilDescriptor.setCog(new Vector3f(-2.0f, 0, -0.2f));
-        airfoilDescriptor.setWingArea(22.07f / 2f);
+        airfoilDescriptor.setWingArea(22.07f / 4f);
+        airfoilDescriptor.setIncidence(1f);
+        airfoilDescriptor.setAspectRatio(6.37f);
+        airfoilDescriptor.setDamper(true);
+        airfoilDescriptor.setDehidralDegree(0f);
+        airfoilDescriptors.add(airfoilDescriptor);
+
+        airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("WingOuterLeft");
+        airfoilDescriptor.setCog(new Vector3f(-4.0f, 0, -0.2f));
+        airfoilDescriptor.setWingArea(22.07f / 4f);
         airfoilDescriptor.setIncidence(1f);
         airfoilDescriptor.setAspectRatio(6.37f);
         airfoilDescriptor.setDamper(true);
@@ -107,7 +117,16 @@ public class TempDataGenerator {
         airfoilDescriptor = new AirfoilDescriptor();
         airfoilDescriptor.setName("WingRight");
         airfoilDescriptor.setCog(new Vector3f(2.0f, 0, -0.2f));
-        airfoilDescriptor.setWingArea(22.07f / 2f);
+        airfoilDescriptor.setWingArea(22.07f / 4f);
+        airfoilDescriptor.setAspectRatio(6.37f);
+        airfoilDescriptor.setIncidence(1f);
+        airfoilDescriptor.setDamper(true);
+        airfoilDescriptor.setDehidralDegree(0f);
+        airfoilDescriptors.add(airfoilDescriptor);
+        airfoilDescriptor = new AirfoilDescriptor();
+        airfoilDescriptor.setName("WingOuterRight");
+        airfoilDescriptor.setCog(new Vector3f(4.0f, 0, -0.2f));
+        airfoilDescriptor.setWingArea(22.07f / 4f);
         airfoilDescriptor.setAspectRatio(6.37f);
         airfoilDescriptor.setIncidence(1f);
         airfoilDescriptor.setDamper(true);

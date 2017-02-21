@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,53 +25,15 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
-import com.jme3.input.InputManager;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
-public class MainMenu implements ScreenController {
-
-    @Autowired
-    private InputManager inputManager;
+public class Options {
+        
+    private String joystickId;
     
-    private final static Logger logger = LoggerFactory.getLogger(MainMenu.class);
-
-    @Autowired
-    private MenuState menu;
-
-    public void openSingleMissionMenu() {
-        nifty.gotoScreen("singleMissionMenu");
+    public String getJoystickId(){
+        return joystickId;
     }
-    
-    public void openOptionsMenu() {
-        nifty.gotoScreen("optionsMenu");
+    public void setJoystickId(String joystickId){
+        this.joystickId = joystickId;
     }
-
-    public void exitGame() {
-        menu.exitGame();
-    }
-
-    private Nifty nifty;
-    private Screen screen;
-
-    @Override
-    public void bind(Nifty nifty, Screen screen) {
-        this.nifty = nifty;
-        this.screen = screen;
-    }
-
-    @Override
-    public void onStartScreen() {
-        inputManager.setCursorVisible(true);
-    }
-
-    @Override
-    public void onEndScreen() {
-    }
+          
 }

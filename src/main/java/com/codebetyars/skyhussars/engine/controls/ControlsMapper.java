@@ -27,13 +27,15 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.InputManager;
+import com.jme3.input.Joystick;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.JoyAxisTrigger;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -52,8 +54,10 @@ public class ControlsMapper {
     public static final String MOUSE_UP = "MouseUp";
     public static final String CENTER_CAMERA = "CenterCamera";
     public static final String MENU_DISPLAY = "OpenMenu";
+    public static final String ROTATE_LEFT = "RotateLeft";
+    public static final String ROTATE_RIGHT = "RotateRight";
 
-    @Value("#{application.inputManager}")
+    @Autowired
     private InputManager inputManager;
 
     public void setupFlowControls(ActionListener actionListener) {
@@ -65,11 +69,23 @@ public class ControlsMapper {
         inputManager.addListener(actionListener, "Pause", "Camera", "Reset");
     }
 
+    public void setupFlightJoystickControls(FlightJoystickControls flightJoystrictControls) {
+        if (inputManager.getJoysticks() != null) { 
+            for (Joystick joy : inputManager.getJoysticks()) {
+                inputManager.addMapping(ROTATE_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
+                inputManager.addMapping(ROTATE_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
+                inputManager.addMapping(PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
+                inputManager.addMapping(PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
+            }
+        }
+        inputManager.addListener(flightJoystrictControls, ROTATE_LEFT,ROTATE_RIGHT);
+    }
+
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
         inputManager.addMapping(PITCH_DOWN, new KeyTrigger(KeyInput.KEY_UP));
         inputManager.addMapping(PITCH_UP, new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addMapping("RotateLeft", new KeyTrigger(KeyInput.KEY_LEFT));
-        inputManager.addMapping("RotateRight", new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addMapping(ROTATE_LEFT, new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping(ROTATE_RIGHT, new KeyTrigger(KeyInput.KEY_RIGHT));
         inputManager.addMapping("Throttle0%", new KeyTrigger(KeyInput.KEY_1));
         inputManager.addMapping("Throttle20%", new KeyTrigger(KeyInput.KEY_2));
         inputManager.addMapping("Throttle40%", new KeyTrigger(KeyInput.KEY_3));
@@ -79,7 +95,7 @@ public class ControlsMapper {
         inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addListener(flightKeyboardControls, "Throttle0%",
                 "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
-                PITCH_DOWN, PITCH_UP, "RotateLeft", "RotateRight", FIRE);
+                PITCH_DOWN, PITCH_UP, ROTATE_LEFT, ROTATE_RIGHT, FIRE);
     }
 
     public void setupCameraControls(CameraControls cameraControls) {

@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.gamestates.MainMenu;
 import com.codebetyars.skyhussars.engine.gamestates.MissionMenu;
+import com.codebetyars.skyhussars.engine.gamestates.OptionsMenu;
 import com.codebetyars.skyhussars.engine.gamestates.SingleMissionMenu;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
@@ -45,26 +46,14 @@ public class GuiManager implements InitializingBean {
 
     private final static Logger logger = LoggerFactory.getLogger(GuiManager.class);
 
-    @Autowired
-    private AssetManager assetManager;
-
-    @Autowired
-    private InputManager inputManager;
-
-    @Autowired
-    private AudioRenderer audioRenderer;
-
-    @Autowired
-    private ViewPort guiViewPort;
-
-    @Autowired
-    private MainMenu mainMenuControls;
-
-    @Autowired
-    private MissionMenu missionControls;
-
-    @Autowired
-    private SingleMissionMenu singleMissionMenu;
+    @Autowired private AssetManager assetManager;
+    @Autowired private InputManager inputManager;
+    @Autowired private AudioRenderer audioRenderer;
+    @Autowired private ViewPort guiViewPort;
+    @Autowired private MainMenu mainMenuControls;
+    @Autowired private MissionMenu missionControls;
+    @Autowired private SingleMissionMenu singleMissionMenu;
+    @Autowired private OptionsMenu optionsMenu;
 
     private Nifty nifty;
 
@@ -77,8 +66,7 @@ public class GuiManager implements InitializingBean {
     }
 
     public void createGUI() {
-        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls, singleMissionMenu);
-        //nifty.addControls();
+        nifty.fromXml("Interface/BasicGUI.xml", "start", mainMenuControls, missionControls, singleMissionMenu,optionsMenu);
         nifty.update();
         nifty.setIgnoreKeyboardEvents(true);
         guiViewPort.addProcessor(niftyDisplay);

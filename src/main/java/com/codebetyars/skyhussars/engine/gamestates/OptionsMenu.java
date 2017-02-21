@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,22 @@
 package com.codebetyars.skyhussars.engine.gamestates;
 
 import com.jme3.input.InputManager;
+import com.jme3.input.Joystick;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainMenu implements ScreenController {
-
-    @Autowired
-    private InputManager inputManager;
-    
-    private final static Logger logger = LoggerFactory.getLogger(MainMenu.class);
-
-    @Autowired
-    private MenuState menu;
-
-    public void openSingleMissionMenu() {
-        nifty.gotoScreen("singleMissionMenu");
-    }
-    
-    public void openOptionsMenu() {
-        nifty.gotoScreen("optionsMenu");
-    }
-
-    public void exitGame() {
-        menu.exitGame();
-    }
+public class OptionsMenu implements ScreenController {
 
     private Nifty nifty;
     private Screen screen;
+
+    @Autowired
+    private InputManager inputManager;
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
@@ -68,10 +51,23 @@ public class MainMenu implements ScreenController {
 
     @Override
     public void onStartScreen() {
-        inputManager.setCursorVisible(true);
+        DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
+        for (Joystick joystick : inputManager.getJoysticks()) {
+            joystickElement.addItem(joystick.getName());
+        }
+        if(joystickElement.getItems().size()>0) joystickElement.selectItemByIndex(0);
     }
 
     @Override
     public void onEndScreen() {
     }
+
+    public void cancel() {
+        nifty.gotoScreen("start");
+    }
+
+    public void accept() {
+        nifty.gotoScreen("start");
+    }
+
 }

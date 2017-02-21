@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,55 +23,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.gamestates;
+package com.codebetyars.skyhussars.engine.controls;
 
-import com.jme3.input.InputManager;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.codebetyars.skyhussars.engine.Pilot;
+import com.jme3.input.controls.AnalogListener;
 
-@Component
-public class MainMenu implements ScreenController {
+class FlightJoystickControls implements AnalogListener {
 
-    @Autowired
-    private InputManager inputManager;
-    
-    private final static Logger logger = LoggerFactory.getLogger(MainMenu.class);
+    private final Pilot pilot;
 
-    @Autowired
-    private MenuState menu;
-
-    public void openSingleMissionMenu() {
-        nifty.gotoScreen("singleMissionMenu");
-    }
-    
-    public void openOptionsMenu() {
-        nifty.gotoScreen("optionsMenu");
-    }
-
-    public void exitGame() {
-        menu.exitGame();
-    }
-
-    private Nifty nifty;
-    private Screen screen;
-
-    @Override
-    public void bind(Nifty nifty, Screen screen) {
-        this.nifty = nifty;
-        this.screen = screen;
+    public FlightJoystickControls(Pilot pilot) {
+        this.pilot = pilot;
     }
 
     @Override
-    public void onStartScreen() {
-        inputManager.setCursorVisible(true);
+    public void onAnalog(String string, float axis, float tpf) {
+        if (ControlsMapper.ROTATE_LEFT.equals(string)) {
+            pilot.setAileron(-30 * axis);
+        }
+        if (ControlsMapper.ROTATE_RIGHT.equals(string)) {
+            pilot.setAileron(30 * axis);
+        }
+        if (ControlsMapper.PITCH_DOWN.equals(string)) {
+            pilot.setElevator(-30 * axis);
+        }
+        if (ControlsMapper.PITCH_UP.equals(string)) {
+            pilot.setElevator(30 * axis);
+        }
+
     }
 
-    @Override
-    public void onEndScreen() {
-    }
 }

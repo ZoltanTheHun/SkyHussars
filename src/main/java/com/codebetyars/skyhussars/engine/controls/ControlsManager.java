@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 public class ControlsManager {
 
     private FlightKeyboardControls inFlightKeyboardControls;
+    private FlightJoystickControls inFlightJoystickControls;
     private FlowControls gameFlowControls;
     private CameraControls cameraControls;
     
@@ -43,12 +44,14 @@ public class ControlsManager {
 
     public void missionControls(MissionState mission) {
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
+        inFlightJoystickControls = new FlightJoystickControls(mission.player());
         gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);
         controlsMapper.setupFlowControls(gameFlowControls);
         controlsMapper.setupCameraControls(cameraControls);
         controlsMapper.setupMenuControls(menuControls);
+        controlsMapper.setupFlightJoystickControls(inFlightJoystickControls);
     }
     
 }

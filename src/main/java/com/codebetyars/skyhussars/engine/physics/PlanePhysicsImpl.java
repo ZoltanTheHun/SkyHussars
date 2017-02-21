@@ -174,7 +174,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         if (np < 0) {
             angleOfAttack = -angleOfAttack;
         }
-        logger.info("Angle of attack: {}", angleOfAttack);
+        /*logger.info("Angle of attack: {}", angleOfAttack);*/
     }
 
     public void updatePlaneFactor() {

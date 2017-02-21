@@ -48,6 +48,8 @@ public class SkyHussars extends SimpleApplication {
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");
+        settings.setUseJoysticks(true);
+        
         /* the best would be to make this moddable */
         settings.setSettingsDialogImage("images/settings_image.jpg");
         SkyHussars application = new SkyHussars();
@@ -62,6 +64,7 @@ public class SkyHussars extends SimpleApplication {
     }
 
     private void registerCommonFunctionsToContext(GenericApplicationContext appcontext) { 
+         
         DefaultListableBeanFactory beanFactory = appcontext.getDefaultListableBeanFactory();
         beanFactory.registerSingleton("camera", getCamera());
         beanFactory.registerSingleton("settingsManager", settingsManager);
