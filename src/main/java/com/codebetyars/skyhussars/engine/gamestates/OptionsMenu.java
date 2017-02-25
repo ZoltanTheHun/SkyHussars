@@ -50,6 +50,9 @@ public class OptionsMenu implements ScreenController {
     @Autowired
     private InputManager inputManager;
 
+    private  Joystick[] joysticks;
+    private  boolean hasJoysticks;
+
     @Override
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
@@ -58,8 +61,9 @@ public class OptionsMenu implements ScreenController {
 
     @Override
     public void onStartScreen() {
-        Joystick[] joysticks = inputManager.getJoysticks();
-        if (joysticks != null && joysticks.length > 0) {
+        joysticks = inputManager.getJoysticks();
+        hasJoysticks = joysticks != null && joysticks.length > 0;
+        if (hasJoysticks) {
             DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
             int activeElement = 0; //we will default to first element if it is not set in options
             for (int i = 0; i < joysticks.length; i++) {
@@ -86,8 +90,10 @@ public class OptionsMenu implements ScreenController {
     }
 
     private void setJoystick() {
-        DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
-        options.setJoyId(Optional.of(joystickElement.getSelectedIndex()));
-        optionsManager.persistOptions(options);
+        if (hasJoysticks) {
+            DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
+            options.setJoyId(Optional.of(joysticks[joystickElement.getSelectedIndex()].getJoyId()));
+            optionsManager.persistOptions(options);
+        }
     }
 }
