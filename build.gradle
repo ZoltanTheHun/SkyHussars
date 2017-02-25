@@ -29,7 +29,7 @@ repositories {
 
 ext.versions = [
     eventbus: '1.4',
-    jackson: '2.7.0',
+    jackson: '2.8.5',
     jme3: '3.1.0-stable',
     junit: '4.12',
     logback: '1.1.5',
@@ -68,6 +68,7 @@ dependencies {
     compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: versions.jme3
     compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl',      version: versions.jme3
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: versions.jackson
     compile group: 'org.bushe', name: 'eventbus', version: versions.eventbus
     compile group: 'org.springframework', name: 'spring-context',  version: versions.spring
     compile group: 'com.google.guava', name: 'guava', version: '19.0'

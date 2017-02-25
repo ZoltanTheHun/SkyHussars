@@ -25,15 +25,18 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import java.util.Optional;
+
 public class Options {
-        
-    private String joystickId;
-    
-    public String getJoystickId(){
-        return joystickId;
+
+    private Optional<Integer> joyId = Optional.empty();
+
+    public Optional<Integer> getJoyId() {
+        return joyId;
     }
-    public void setJoystickId(String joystickId){
-        this.joystickId = joystickId;
+
+    public void setJoyId(Optional<Integer> joyId) {
+        this.joyId = joyId;
     }
-          
+
 }

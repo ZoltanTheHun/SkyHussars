@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.SettingsManager;
+import com.codebetyars.skyhussars.engine.gamestates.OptionsManager;
 import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
@@ -41,6 +42,7 @@ import org.springframework.context.support.GenericApplicationContext;
 
 public class SkyHussars extends SimpleApplication {
 
+    public static final String APP_ROOT = "./";
     private final SettingsManager settingsManager = new SettingsManager();
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);
@@ -55,6 +57,7 @@ public class SkyHussars extends SimpleApplication {
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
         application.start();
+
     }
 
     private SkyHussarsContext skyHussarsContext;
@@ -78,6 +81,9 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
         beanFactory.registerSingleton("listener", listener);
         beanFactory.registerSingleton("planeRegistry", new PlaneRegistryLoader(settingsManager.assetDirectory()).planeRegistry());
+        OptionsManager optionsManager = new OptionsManager(APP_ROOT);
+        beanFactory.registerSingleton("options",optionsManager.loadOptionsFromFileSystem());
+        beanFactory.registerSingleton("optionsManager",optionsManager);
     }
 
     @Override

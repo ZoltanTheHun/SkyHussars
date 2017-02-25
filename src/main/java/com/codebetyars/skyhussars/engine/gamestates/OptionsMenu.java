@@ -31,6 +31,7 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +40,12 @@ public class OptionsMenu implements ScreenController {
 
     private Nifty nifty;
     private Screen screen;
+
+    @Autowired
+    private Options options;
+
+    @Autowired
+    private OptionsManager optionsManager;
 
     @Autowired
     private InputManager inputManager;
@@ -51,11 +58,18 @@ public class OptionsMenu implements ScreenController {
 
     @Override
     public void onStartScreen() {
-        DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
-        for (Joystick joystick : inputManager.getJoysticks()) {
-            joystickElement.addItem(joystick.getName());
+        Joystick[] joysticks = inputManager.getJoysticks();
+        if (joysticks != null && joysticks.length > 0) {
+            DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
+            int activeElement = 0; //we will default to first element if it is not set in options
+            for (int i = 0; i < joysticks.length; i++) {
+                joystickElement.addItem(joysticks[i].getName());
+                if (options.getJoyId().orElse(-1) == joysticks[i].getJoyId()) {
+                    activeElement = i;
+                }
+            }
+            joystickElement.selectItemByIndex(activeElement);
         }
-        if(joystickElement.getItems().size()>0) joystickElement.selectItemByIndex(0);
     }
 
     @Override
@@ -67,7 +81,13 @@ public class OptionsMenu implements ScreenController {
     }
 
     public void accept() {
+        setJoystick();
         nifty.gotoScreen("start");
     }
 
+    private void setJoystick() {
+        DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
+        options.setJoyId(Optional.of(joystickElement.getSelectedIndex()));
+        optionsManager.persistOptions(options);
+    }
 }
