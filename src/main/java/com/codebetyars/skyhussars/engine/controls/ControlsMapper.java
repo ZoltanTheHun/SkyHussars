@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
+import com.codebetyars.skyhussars.engine.gamestates.Options;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.InputManager;
 import com.jme3.input.Joystick;
@@ -40,7 +41,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ControlsMapper {
-
+    
     public static final String FIRE = "Fire";
     public static final String INCREASE_FOV = "IncreaseFov";
     public static final String DECREASE_FOV = "DecreaseFov";
@@ -56,10 +57,13 @@ public class ControlsMapper {
     public static final String MENU_DISPLAY = "OpenMenu";
     public static final String ROTATE_LEFT = "RotateLeft";
     public static final String ROTATE_RIGHT = "RotateRight";
-
+    
     @Autowired
     private InputManager inputManager;
-
+    
+    @Autowired
+    private Options options;
+    
     public void setupFlowControls(ActionListener actionListener) {
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_HIDE_STATS);
@@ -68,19 +72,22 @@ public class ControlsMapper {
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(actionListener, "Pause", "Camera", "Reset");
     }
-
+    
     public void setupFlightJoystickControls(FlightJoystickControls flightJoystrictControls) {
-        if (inputManager.getJoysticks() != null) { 
+        if (inputManager.getJoysticks() != null && options.getJoyId().isPresent()) {
             for (Joystick joy : inputManager.getJoysticks()) {
-                inputManager.addMapping(ROTATE_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
-                inputManager.addMapping(ROTATE_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
-                inputManager.addMapping(PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
-                inputManager.addMapping(PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
+                if (joy.getJoyId() == options.getJoyId().orElse(-1)) {
+                    inputManager.addMapping(ROTATE_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
+                    inputManager.addMapping(ROTATE_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
+                    inputManager.addMapping(PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
+                    inputManager.addMapping(PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
+                    break;
+                }
             }
         }
-        inputManager.addListener(flightJoystrictControls, ROTATE_LEFT,ROTATE_RIGHT);
+        inputManager.addListener(flightJoystrictControls, ROTATE_LEFT, ROTATE_RIGHT);
     }
-
+    
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
         inputManager.addMapping(PITCH_DOWN, new KeyTrigger(KeyInput.KEY_UP));
         inputManager.addMapping(PITCH_UP, new KeyTrigger(KeyInput.KEY_DOWN));
@@ -97,7 +104,7 @@ public class ControlsMapper {
                 "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
                 PITCH_DOWN, PITCH_UP, ROTATE_LEFT, ROTATE_RIGHT, FIRE);
     }
-
+    
     public void setupCameraControls(CameraControls cameraControls) {
         inputManager.addMapping(INCREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addMapping(DECREASE_FOV, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
@@ -111,7 +118,7 @@ public class ControlsMapper {
         inputManager.addListener(cameraControls, INCREASE_FOV, DECREASE_FOV, COCKPIT_VIEW,
                 OUTER_VIEW, MOUSE_UP, MOUSE_DOWN, MOUSE_RIGHT, MOUSE_LEFT, CENTER_CAMERA);
     }
-
+    
     public void setupMenuControls(MenuControls menuControls) {
         inputManager.addMapping(MENU_DISPLAY, new KeyTrigger(KeyInput.KEY_ESCAPE));
         inputManager.addListener(menuControls, MENU_DISPLAY);
