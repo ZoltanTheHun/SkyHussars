@@ -87,8 +87,8 @@ public class Lighting implements InitializingBean {
         camera.addEffect(dlsr);      
         float initialWaterHeight = 1500f; // choose a value for your scene
         /*water = new WaterFilter(rootNode, directionalLight.getDirection());
-        water.setWaterHeight(initialWaterHeight);*/
-        //camera.addFarEffect(water);
+        water.setWaterHeight(initialWaterHeight);
+        camera.addNearEffect(water);*/
         
         /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
          dlsf.setLight(directionalLight);

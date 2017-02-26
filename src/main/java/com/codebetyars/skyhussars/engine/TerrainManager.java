@@ -71,7 +71,7 @@ public class TerrainManager {
     }
     
     public void loadTerrain(){
-        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/AdriaSmall.bmp").getImage(), 1f);
+        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/AdriaSmall.bmp").getImage(), 12f);
         heightmap.load();
 
         Texture grass = assetManager.loadTexture("Textures/ground.png");
@@ -92,9 +92,9 @@ public class TerrainManager {
         mat_terrain.setTexture("DiffuseMap_1", land);
         mat_terrain.setFloat("DiffuseMap_1_scale", 1024f);
 
-        terrain = new TerrainQuad("my terrain", 17, 513, heightmap.getHeightMap());
+        terrain = new TerrainQuad("my terrain", 9, 513, heightmap.getHeightMap());
         terrain.setMaterial(mat_terrain);
-        terrain.setLocalScale(1000f, 15f, 1000f);
+        terrain.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 
         terrain.addControl(new TerrainLodControl(terrain, camera.testCamera()));
         terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
         rootNode.attachChild(terrain);

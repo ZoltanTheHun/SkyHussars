@@ -59,7 +59,7 @@ public class MissionState implements GameState {
 
     public MissionState(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
-            DayLightWeatherManager dayLightWeatherManager,Node rootNode, Sky sky) {
+            DayLightWeatherManager dayLightWeatherManager, Node rootNode, Sky sky) {
         this.rootNode = rootNode;
         this.sky = sky;
         this.planes = planes;
@@ -118,9 +118,14 @@ public class MissionState implements GameState {
     }
 
     private TextRenderer speedoMeterUI;
+    private TextRenderer altimeterUI;
 
     public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) {
         this.speedoMeterUI = speedoMeterUI;
+    }
+
+    public synchronized void altimeterUI(TextRenderer altimeterUI) {
+        this.altimeterUI = altimeterUI;
     }
 
     @Override
@@ -136,13 +141,16 @@ public class MissionState implements GameState {
                 ended = true;
             }
             /* take another look at it later to get rid of a chance of a null reference */
-            if(speedoMeterUI != null) speedoMeterUI.setText(player.plane().getSpeedKmH() + "km/h");
+            if (speedoMeterUI != null && altimeterUI != null) {
+                speedoMeterUI.setText(player.plane().getSpeedKmH() + "km/h");
+                altimeterUI.setText((player.plane().getHeight() + "m"));
+            }
         } else {
             stopWorldThread();
             soundManager.muteAllSounds();
         }
         cameraManager.update(tpf);
-       // millis = System.currentTimeMillis() - millis;
+        // millis = System.currentTimeMillis() - millis;
      /*   logger.info("Gamestate update complete in " + millis);
          logger.info("Current cycle: {}", worldThread.cycle());
          logger.info("Current render cycle: {}", cycles);*/
