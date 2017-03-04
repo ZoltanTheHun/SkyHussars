@@ -56,11 +56,11 @@ public class CameraManager {
 
     private CameraMode cameraMode = CameraMode.OUTER_VIEW;
 
-    private boolean fovChangeActive;
-    private boolean fovNarrowing;
     private final int minFov = 20;
     private final int maxFov = 100;
     private final float fovChangeRate = 12f;
+    private boolean disableCameraRotation = false;
+    private FovMode fovMode = FovMode.STABLE;
 
     private PlaneGeometry focus;
 
@@ -80,13 +80,13 @@ public class CameraManager {
     }
 
     private void updateFov(float tpf) {
-        if (fovChangeActive) {
-            if (fovNarrowing && camera.fov() > minFov) {
-                fov(camera.fov() - fovChangeRate * tpf);
-            }
-            if (!fovNarrowing && camera.fov() < maxFov) {
-                fov(camera.fov() + fovChangeRate * tpf);
-            }
+        switch(fovMode) {
+            case DECREASE: 
+                if(camera.fov() > minFov) fov(camera.fov() - fovChangeRate * tpf);
+                break;
+            case INCREASE:
+                if(camera.fov() < maxFov) fov(camera.fov() + fovChangeRate * tpf);
+                break;
         }
     }
 
@@ -124,13 +124,9 @@ public class CameraManager {
         return camera.fov();
     }
 
-    public void setFovChangeActive(boolean fovChangeActive) {
-        this.fovChangeActive = fovChangeActive;
-    }
-
-    public void setFovChangeActive(boolean active, boolean fovNarrowing) {
-        this.fovChangeActive = active;
-        this.fovNarrowing = fovNarrowing;
+    
+    public void setFovMode(FovMode fovMode){
+        this.fovMode = fovMode;
     }
 
     public void moveCameraTo(Vector3f location) {
@@ -144,7 +140,27 @@ public class CameraManager {
 
     private final float DEG170 = 2.96706f;
 
-    public void rotateCameraX(float value, float tpf) {
+    public enum CameraPlane {
+
+        X, Y
+    };
+    
+    public enum FovMode{
+        INCREASE,DECREASE,STABLE
+    }
+
+    public void rotateCamera(CameraPlane p, float value, float tpf) {
+        if (!disableCameraRotation) {
+            switch (p) {
+                case X:
+                    rotateCameraX(value, tpf); break;
+                case Y:
+                    rotateCameraY(value, tpf); break;
+            }
+        }
+    }
+
+    private void rotateCameraX(float value, float tpf) {
         if (cameraMode == CameraMode.COCKPIT_VIEW) {
             Quaternion rotation = new Quaternion();
             //naive approach!!!
@@ -160,7 +176,7 @@ public class CameraManager {
 
     private final float DEG80 = 1.39626f;
 
-    public void rotateCameraY(float value, float tpf) {
+    private void rotateCameraY(float value, float tpf) {
         if (cameraMode == CameraMode.COCKPIT_VIEW) {
             Quaternion rotation = new Quaternion();
             //naive approach!!!

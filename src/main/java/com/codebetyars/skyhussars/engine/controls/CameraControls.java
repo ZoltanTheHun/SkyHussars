@@ -41,10 +41,10 @@ public class CameraControls implements ActionListener,AnalogListener {
     public void onAction(String name, boolean isPressed, float tpf) {
         if (isPressed) {
             if (name.equals(ControlsMapper.INCREASE_FOV)) {
-                cameraManager.setFovChangeActive(true, false);
+                cameraManager.setFovMode(CameraManager.FovMode.INCREASE);
             }
             if (name.equals(ControlsMapper.DECREASE_FOV)) {
-                cameraManager.setFovChangeActive(true, true);
+                cameraManager.setFovMode(CameraManager.FovMode.DECREASE);
             }
             if (name.equals(ControlsMapper.COCKPIT_VIEW)) {
                 cameraManager.switchToView(CameraManager.CameraMode.COCKPIT_VIEW);
@@ -56,11 +56,8 @@ public class CameraControls implements ActionListener,AnalogListener {
                 cameraManager.centerCamera();
             }
         } else {
-            if (name.equals(ControlsMapper.INCREASE_FOV)) {
-                cameraManager.setFovChangeActive(false);
-            }
-            if (name.equals(ControlsMapper.DECREASE_FOV)) {
-                cameraManager.setFovChangeActive(false);
+            if (name.equals(ControlsMapper.INCREASE_FOV) || name.equals(ControlsMapper.DECREASE_FOV)) {
+                cameraManager.setFovMode(CameraManager.FovMode.STABLE);
             }
         }
     }
@@ -69,16 +66,16 @@ public class CameraControls implements ActionListener,AnalogListener {
     public void onAnalog(String name, float value, float tpf) {
         switch (name) {
             case ControlsMapper.MOUSE_LEFT:
-                cameraManager.rotateCameraX(-value,tpf);
+                cameraManager.rotateCamera(CameraManager.CameraPlane.X,-value,tpf);
                 break;
             case ControlsMapper.MOUSE_RIGHT:
-                cameraManager.rotateCameraX(value,tpf);
+                cameraManager.rotateCamera(CameraManager.CameraPlane.X,value,tpf);
                 break;
             case ControlsMapper.MOUSE_UP:
-                cameraManager.rotateCameraY(value,tpf);
+                cameraManager.rotateCamera(CameraManager.CameraPlane.Y,value,tpf);
                 break;
             case ControlsMapper.MOUSE_DOWN:
-                cameraManager.rotateCameraY(-value,tpf);
+                cameraManager.rotateCamera(CameraManager.CameraPlane.Y,-value,tpf);
                 break;
         }
     }
