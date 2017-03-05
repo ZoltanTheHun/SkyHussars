@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.CameraManager;
 import com.jme3.input.InputManager;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
@@ -44,6 +45,9 @@ public class MissionMenu implements ScreenController {
 
     @Autowired
     private MenuState menuState;
+
+    @Autowired
+    private CameraManager cameraManager;
 
     private Nifty nifty;
     private Screen screen;
@@ -85,7 +89,7 @@ public class MissionMenu implements ScreenController {
         mission = menuState.currentMission();
         mission.speedoMeterUI(screen.findElementById("speedDisplay").getRenderer(TextRenderer.class));
         mission.altimeterUI(screen.findElementById("altimeter").getRenderer(TextRenderer.class));
-        
+
         inputManager.setCursorVisible(false);
         popupVisible = false;
         Element exitMenu = screen.findElementById("exitMenuPanel");
@@ -100,6 +104,7 @@ public class MissionMenu implements ScreenController {
     public void switchIngameMenu() {
         popupVisible = !popupVisible;
         inputManager.setCursorVisible(popupVisible);
+        cameraManager.disableCameraRotation(popupVisible);
         Element exitMenu = screen.findElementById("exitMenuPanel");
         exitMenu.setVisible(popupVisible);
     }

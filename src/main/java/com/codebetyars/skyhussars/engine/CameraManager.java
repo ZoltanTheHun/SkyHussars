@@ -194,4 +194,8 @@ public class CameraManager {
         rotationX.fromAngles(0, 0, 0);
         rotationY.fromAngles(0, 0, 0);
     }
+    
+    public void disableCameraRotation(boolean state){
+        this.disableCameraRotation = state;
+    }
 }
