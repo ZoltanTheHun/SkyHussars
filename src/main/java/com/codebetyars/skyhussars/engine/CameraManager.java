@@ -30,6 +30,7 @@ import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +43,15 @@ public class CameraManager {
 
     public static enum CameraMode {
 
-        COCKPIT_VIEW(GeometryMode.COCKPIT_MODE), OUTER_VIEW(GeometryMode.MODEL_MODE);
+        COCKPIT_VIEW(GeometryMode.COCKPIT_MODE, CameraManager::showCockpit), OUTER_VIEW(GeometryMode.MODEL_MODE, CameraManager::follow);
 
-        CameraMode(GeometryMode geometryMode) {
+        CameraMode(GeometryMode geometryMode, UnaryOperator<CameraManager> updateCam) {
             this.geometryMode = geometryMode;
+            this.updateCam = updateCam;
         }
 
         public final GeometryMode geometryMode;
+        public final UnaryOperator<CameraManager> updateCam;
     }
 
     @Autowired
@@ -66,49 +69,47 @@ public class CameraManager {
 
     private final Quaternion rotationX = new Quaternion();
     private final Quaternion rotationY = new Quaternion();
+    private final Quaternion rotationOuterX = new Quaternion();
+    private final Quaternion rotationOuterY = new Quaternion();
 
     public void update(float tpf) {
-        switch (cameraMode) {
-            case OUTER_VIEW:
-                follow();
-                break;
-            case COCKPIT_VIEW:
-                showCockpit();
-                break;
-        }
+        cameraMode.updateCam.apply(this);
         updateFov(tpf);
     }
 
     private void updateFov(float tpf) {
-        switch(fovMode) {
-            case DECREASE: 
-                if(camera.fov() > minFov) fov(camera.fov() - fovChangeRate * tpf);
+        switch (fovMode) {
+            case DECREASE:
+                if (camera.fov() > minFov) {
+                    fov(camera.fov() - fovChangeRate * tpf);
+                }
                 break;
             case INCREASE:
-                if(camera.fov() < maxFov) fov(camera.fov() + fovChangeRate * tpf);
+                if (camera.fov() < maxFov) {
+                    fov(camera.fov() + fovChangeRate * tpf);
+                }
                 break;
         }
     }
 
-    private void follow() {
+    public static CameraManager follow(CameraManager cm) {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        Node node = focus.root();
-        camera.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
-        camera.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
+        Node node = cm.focus.root();
+        cm.camera.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
+        cm.camera.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
+        return cm;
     }
 
-    private void showCockpit() {
-        camera.moveCameraTo(focus.root().getLocalTranslation());
-        Node node = focus.root();
-        camera.lookAtDirection(node.getLocalRotation().mult(rotationX).
-                mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
+    public static CameraManager showCockpit(CameraManager cm) {
+        cm.camera.moveCameraTo(cm.focus.root().getLocalTranslation());
+        Node node = cm.focus.root();
+        cm.camera.lookAtDirection(node.getLocalRotation().mult(cm.rotationX).
+                mult(cm.rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
                 mult(Vector3f.UNIT_Y));
+        return cm;
     }
 
     public void init() {
-        if (focus != null) {
-            follow();
-        }
     }
 
     public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
@@ -124,8 +125,7 @@ public class CameraManager {
         return camera.fov();
     }
 
-    
-    public void setFovMode(FovMode fovMode){
+    public void setFovMode(FovMode fovMode) {
         this.fovMode = fovMode;
     }
 
@@ -144,18 +144,21 @@ public class CameraManager {
 
         X, Y
     };
-    
-    public enum FovMode{
-        INCREASE,DECREASE,STABLE
+
+    public enum FovMode {
+
+        INCREASE, DECREASE, STABLE
     }
 
     public void rotateCamera(CameraPlane p, float value, float tpf) {
         if (!disableCameraRotation) {
             switch (p) {
                 case X:
-                    rotateCameraX(value, tpf); break;
+                    rotateCameraX(value, tpf);
+                    break;
                 case Y:
-                    rotateCameraY(value, tpf); break;
+                    rotateCameraY(value, tpf);
+                    break;
             }
         }
     }
@@ -194,8 +197,8 @@ public class CameraManager {
         rotationX.fromAngles(0, 0, 0);
         rotationY.fromAngles(0, 0, 0);
     }
-    
-    public void disableCameraRotation(boolean state){
+
+    public void disableCameraRotation(boolean state) {
         this.disableCameraRotation = state;
     }
 }

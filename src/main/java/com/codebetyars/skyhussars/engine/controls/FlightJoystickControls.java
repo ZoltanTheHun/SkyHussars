@@ -27,8 +27,12 @@ package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.Pilot;
 import com.jme3.input.controls.AnalogListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class FlightJoystickControls implements AnalogListener {
+
+    private final static Logger logger = LoggerFactory.getLogger(FlightJoystickControls.class);
 
     private final Pilot pilot;
 
@@ -38,17 +42,19 @@ class FlightJoystickControls implements AnalogListener {
 
     @Override
     public void onAnalog(String string, float axis, float tpf) {
+
+        logger.info("Joy is at: {}, tpf: {}", axis, tpf);
         if (ControlsMapper.ROTATE_LEFT.equals(string)) {
-            pilot.setAileron(-30 * axis);
+            pilot.setAileron(-1 * axis / tpf);
         }
         if (ControlsMapper.ROTATE_RIGHT.equals(string)) {
-            pilot.setAileron(30 * axis);
+            pilot.setAileron(axis / tpf);
         }
         if (ControlsMapper.PITCH_DOWN.equals(string)) {
-            pilot.setElevator(-30 * axis);
+            pilot.setElevator(-1 * axis / tpf);
         }
         if (ControlsMapper.PITCH_UP.equals(string)) {
-            pilot.setElevator(30 * axis);
+            pilot.setElevator(axis / tpf);
         }
 
     }
