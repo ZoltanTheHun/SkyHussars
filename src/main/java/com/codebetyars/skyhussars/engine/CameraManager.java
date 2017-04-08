@@ -69,8 +69,6 @@ public class CameraManager {
 
     private final Quaternion rotationX = new Quaternion();
     private final Quaternion rotationY = new Quaternion();
-    private final Quaternion rotationOuterX = new Quaternion();
-    private final Quaternion rotationOuterY = new Quaternion();
 
     public void update(float tpf) {
         cameraMode.updateCam.apply(this);
@@ -109,9 +107,6 @@ public class CameraManager {
         return cm;
     }
 
-    public void init() {
-    }
-
     public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
         focus = planeGeometry;
         switchToView(cameraMode);
@@ -146,7 +141,6 @@ public class CameraManager {
     };
 
     public enum FovMode {
-
         INCREASE, DECREASE, STABLE
     }
 

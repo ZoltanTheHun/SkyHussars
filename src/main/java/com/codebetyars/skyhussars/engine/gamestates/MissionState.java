@@ -114,7 +114,6 @@ public class MissionState implements GameState {
         Plane plane = player.plane();
         cameraManager.moveCameraTo(plane.getLocation());
         cameraManager.followWithCamera(plane.planeGeometry());
-        cameraManager.init();
     }
 
     private TextRenderer speedoMeterUI;

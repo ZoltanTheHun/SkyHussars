@@ -93,8 +93,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public void update(float tpf,Environment environment) {
         updateAuxiliary(rotation, translation,environment);
         logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
-        ActingForces engineForces = calculateEngineForces(rotation);
-        ActingForces airfoilForces = calculateAirfoilForces(rotation, vVelocity.negate());
+        ActingForces engineForces = engineForces(rotation);
+        ActingForces airfoilForces = airfoilForces(rotation, vVelocity.negate());
         logger.debug("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
@@ -102,6 +102,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 .add(airfoilForces.vLinearComponent)
                 .add(calculateParasiticDrag()).divide(mass);
         logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
+        
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
@@ -137,7 +138,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         }*/
     }
 
-    private ActingForces calculateEngineForces(Quaternion situation) {
+    private ActingForces engineForces(Quaternion situation) {
         Vector3f vLinearAcceleration = Vector3f.ZERO;
         for (Engine engine : engines) {
             vLinearAcceleration = vLinearAcceleration.add(situation.mult(engine.getThrust()));
@@ -145,7 +146,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         return new ActingForces(vLinearAcceleration, Vector3f.ZERO);
     }
 
-    private ActingForces calculateAirfoilForces(Quaternion rotation, Vector3f vFlow) {
+    private ActingForces airfoilForces(Quaternion rotation, Vector3f vFlow) {
         Vector3f vLinearAcceleration = Vector3f.ZERO;
         Vector3f vTorque = Vector3f.ZERO;
         for (Airfoil airfoil : airfoils) {

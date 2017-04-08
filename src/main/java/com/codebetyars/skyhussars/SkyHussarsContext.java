@@ -25,11 +25,9 @@
  */
 package com.codebetyars.skyhussars;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
 import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.GuiManager;
 import com.codebetyars.skyhussars.engine.gamestates.MenuState;
-import com.jme3.renderer.RenderManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,20 +35,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 public class SkyHussarsContext {
-   
-    @Autowired
-    private CameraManager cameraManager;
-    
+      
     @Autowired
     private GuiManager guiManager;
 
     @Autowired
     private MenuState mainMenu;
 
-    private GameState gameState;
-
     public GameState init() {
-        cameraManager.init();
         guiManager.createGUI();
         mainMenu.initialize();
         return mainMenu;
