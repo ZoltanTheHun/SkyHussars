@@ -49,25 +49,10 @@ public class SkyHussarsContext {
 
     private GameState gameState;
 
-    public void simpleInitApp() {
+    public GameState init() {
         cameraManager.init();
         guiManager.createGUI();
         mainMenu.initialize();
-        gameState = mainMenu;
+        return mainMenu;
     }
-
-    public boolean simpleUpdate(float tpf) {
-        GameState nextState = gameState.update(tpf);
-        if ( nextState != gameState ) {
-            gameState.close();
-            gameState = nextState;
-            if(nextState != null) gameState.initialize();
-        }
-        //if nextState is null, exit
-        return nextState != null;
-    }
-
-    public void simpleRender(RenderManager rm) {
-    }
-
 }

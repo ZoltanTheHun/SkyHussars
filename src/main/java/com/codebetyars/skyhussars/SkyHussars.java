@@ -26,13 +26,13 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.SettingsManager;
+import com.codebetyars.skyhussars.engine.gamestates.GameState;
 import com.codebetyars.skyhussars.engine.gamestates.OptionsManager;
 import com.codebetyars.skyhussars.engine.loader.PlaneRegistryLoader;
 import com.codebetyars.skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioListenerState;
-import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +44,7 @@ public class SkyHussars extends SimpleApplication {
 
     public static final String APP_ROOT = "./";
     private final SettingsManager settingsManager = new SettingsManager();
+    private GameState gameState; 
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
@@ -52,15 +53,13 @@ public class SkyHussars extends SimpleApplication {
         settings.setTitle("SkyHussars");
         settings.setUseJoysticks(true);
         
-        /* the best would be to make this moddable */
+        /* TODO: make it moddable */
         settings.setSettingsDialogImage("images/settings_image.jpg");
         SkyHussars application = new SkyHussars();
         application.setSettings(settings);
         application.start();
 
     }
-
-    private SkyHussarsContext skyHussarsContext;
 
     private void setupAssetRoot() {
         assetManager.registerLocator(settingsManager.assetDirectory().getPath(), FileLocator.class);
@@ -93,8 +92,7 @@ public class SkyHussars extends SimpleApplication {
         registerCommonFunctionsToContext(appcontext);
         appcontext.register(SkyHussarsContext.class);
         appcontext.refresh();
-        skyHussarsContext = appcontext.getBean(SkyHussarsContext.class);
-        skyHussarsContext.simpleInitApp();
+        gameState = appcontext.getBean(SkyHussarsContext.class).init();
         flyCam.setEnabled(false);
         setDisplayStatView(false);
         stateManager.getState(AudioListenerState.class).setEnabled(false);
@@ -102,14 +100,16 @@ public class SkyHussars extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (!skyHussarsContext.simpleUpdate(tpf)) {
+        GameState nextState = gameState.update(tpf);
+        if ( nextState != gameState ) {
+            gameState.close();
+            gameState = nextState;
+            if(nextState != null) gameState.initialize();
+        }
+        //if nextState is null, exit
+        if (nextState != null) {
             this.stop();
         }
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        skyHussarsContext.simpleRender(rm);
     }
 
 }
