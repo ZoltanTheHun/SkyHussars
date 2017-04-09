@@ -23,14 +23,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.camera;
 
+import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +42,15 @@ public class CameraManager {
 
     public static enum CameraMode {
 
-        COCKPIT_VIEW(GeometryMode.COCKPIT_MODE, CameraManager::showCockpit), OUTER_VIEW(GeometryMode.MODEL_MODE, CameraManager::follow);
+        COCKPIT_VIEW(GeometryMode.COCKPIT_MODE, new CockpitCamera()), OUTER_VIEW(GeometryMode.MODEL_MODE, new FollowCamera());
 
-        CameraMode(GeometryMode geometryMode, UnaryOperator<CameraManager> updateCam) {
+        CameraMode(GeometryMode geometryMode, CameraBehaviour behaviour) {
             this.geometryMode = geometryMode;
-            this.updateCam = updateCam;
+            this.behaviour = behaviour;
         }
 
         public final GeometryMode geometryMode;
-        public final UnaryOperator<CameraManager> updateCam;
+        public final CameraBehaviour behaviour;
     }
 
     @Autowired
@@ -67,11 +66,8 @@ public class CameraManager {
 
     private PlaneGeometry focus;
 
-    private final Quaternion rotationX = new Quaternion();
-    private final Quaternion rotationY = new Quaternion();
-
     public void update(float tpf) {
-        cameraMode.updateCam.apply(this);
+        cameraMode.behaviour.updateCam(camera, focus);
         updateFov(tpf);
     }
 
@@ -88,23 +84,6 @@ public class CameraManager {
                 }
                 break;
         }
-    }
-
-    public static CameraManager follow(CameraManager cm) {
-        Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
-        Node node = cm.focus.root();
-        cm.camera.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
-        cm.camera.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
-        return cm;
-    }
-
-    public static CameraManager showCockpit(CameraManager cm) {
-        cm.camera.moveCameraTo(cm.focus.root().getLocalTranslation());
-        Node node = cm.focus.root();
-        cm.camera.lookAtDirection(node.getLocalRotation().mult(cm.rotationX).
-                mult(cm.rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
-                mult(Vector3f.UNIT_Y));
-        return cm;
     }
 
     public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
@@ -133,14 +112,13 @@ public class CameraManager {
         this.cameraMode = view;
     }
 
-    private final float DEG170 = 2.96706f;
-
     public enum CameraPlane {
 
         X, Y
     };
 
     public enum FovMode {
+
         INCREASE, DECREASE, STABLE
     }
 
@@ -148,48 +126,17 @@ public class CameraManager {
         if (!disableCameraRotation) {
             switch (p) {
                 case X:
-                    rotateCameraX(value, tpf);
+                    cameraMode.behaviour.rotateX(value);
                     break;
                 case Y:
-                    rotateCameraY(value, tpf);
+                    cameraMode.behaviour.rotateY(value);
                     break;
-            }
-        }
-    }
-
-    private void rotateCameraX(float value, float tpf) {
-        if (cameraMode == CameraMode.COCKPIT_VIEW) {
-            Quaternion rotation = new Quaternion();
-            //naive approach!!!
-            rotationX.multLocal(rotation.fromAngles(0, value, 0));
-            float[] angles = rotationX.toAngles(null);
-            if (angles[1] > DEG170) {
-                rotationX.fromAngles(0, DEG170, 0);
-            } else if (angles[1] < -DEG170) {
-                rotationX.fromAngles(0, -DEG170, 0);
-            }
-        }
-    }
-
-    private final float DEG80 = 1.39626f;
-
-    private void rotateCameraY(float value, float tpf) {
-        if (cameraMode == CameraMode.COCKPIT_VIEW) {
-            Quaternion rotation = new Quaternion();
-            //naive approach!!!
-            rotationY.multLocal(rotation.fromAngles(value, 0, 0));
-            float[] angles = rotationY.toAngles(null);
-            if (angles[0] > DEG80) {
-                rotationY.fromAngles(DEG80, 0, 0);
-            } else if (angles[0] < -DEG80) {
-                rotationY.fromAngles(-DEG80, 0, 0);
             }
         }
     }
 
     public void centerCamera() {
-        rotationX.fromAngles(0, 0, 0);
-        rotationY.fromAngles(0, 0, 0);
+        cameraMode.behaviour.center();
     }
 
     public void disableCameraRotation(boolean state) {

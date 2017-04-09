@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
+import com.codebetyars.skyhussars.engine.camera.CameraManager;
 import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.*;
 import com.codebetyars.skyhussars.engine.plane.Plane;

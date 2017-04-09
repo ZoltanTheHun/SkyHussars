@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
+import com.codebetyars.skyhussars.engine.camera.CameraManager;
 import com.jme3.input.InputManager;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;

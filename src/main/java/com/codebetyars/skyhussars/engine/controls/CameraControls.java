@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
+import com.codebetyars.skyhussars.engine.camera.CameraManager;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 

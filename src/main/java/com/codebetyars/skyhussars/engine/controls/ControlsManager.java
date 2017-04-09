@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
-import com.codebetyars.skyhussars.engine.CameraManager;
+import com.codebetyars.skyhussars.engine.camera.CameraManager;
 import com.codebetyars.skyhussars.engine.gamestates.MissionState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
