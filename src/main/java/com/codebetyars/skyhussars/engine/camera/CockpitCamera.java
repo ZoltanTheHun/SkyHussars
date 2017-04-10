@@ -84,5 +84,4 @@ public class CockpitCamera implements CameraBehaviour{
         return this;
     }
 
-
 }

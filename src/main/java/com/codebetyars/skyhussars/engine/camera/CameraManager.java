@@ -28,7 +28,6 @@ package com.codebetyars.skyhussars.engine.camera;
 import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry.GeometryMode;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

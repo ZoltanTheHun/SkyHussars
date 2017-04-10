@@ -27,32 +27,44 @@ package com.codebetyars.skyhussars.engine.camera;
 
 import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.plane.PlaneGeometry;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 public class FollowCamera implements CameraBehaviour {
 
+    private final Quaternion rotationX = new Quaternion();
+    private final Quaternion rotationY = new Quaternion();
+
     @Override
     public CameraBehaviour updateCam(ComplexCamera cam, PlaneGeometry focus) {
         Vector3f cameraLocation = new Vector3f(0, 3.5f, -12);
         Node node = focus.root();
-        cam.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(cameraLocation)));
+        cam.moveCameraTo((node.getLocalTranslation()).add(node.getLocalRotation().mult(rotationX).mult(rotationY).mult(cameraLocation)));
         cam.lookAt(node.getLocalTranslation(), node.getLocalRotation().mult(Vector3f.UNIT_Y));
         return this;
     }
 
     @Override
     public CameraBehaviour center() {
+        rotationX.fromAngles(0, 0, 0);
+        rotationY.fromAngles(0, 0, 0);
         return this;
     }
 
     @Override
     public CameraBehaviour rotateX(float value) {
+        Quaternion rotation = new Quaternion();
+        //naive approach!!!
+        rotationX.multLocal(rotation.fromAngles(0, value, 0));
         return this;
-    }
+    } 
 
     @Override
     public CameraBehaviour rotateY(float value) {
+        Quaternion rotation = new Quaternion();
+        //naive approach!!!
+        rotationY.multLocal(rotation.fromAngles(value, 0, 0));
         return this;
     }
 
