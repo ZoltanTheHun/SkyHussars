@@ -71,18 +71,7 @@ public class CameraManager {
     }
 
     private void updateFov(float tpf) {
-        switch (fovMode) {
-            case DECREASE:
-                if (camera.fov() > minFov) {
-                    fov(camera.fov() - fovChangeRate * tpf);
-                }
-                break;
-            case INCREASE:
-                if (camera.fov() < maxFov) {
-                    fov(camera.fov() + fovChangeRate * tpf);
-                }
-                break;
-        }
+        if(FovMode.STABLE != fovMode) fov(camera.fov() + fovMode.sign * fovChangeRate * tpf);
     }
 
     public synchronized void followWithCamera(PlaneGeometry planeGeometry) {
@@ -91,6 +80,8 @@ public class CameraManager {
     }
 
     public void fov(float fov) {
+        if(fov < minFov) fov = minFov;
+        if(fov > maxFov) fov = maxFov;
         camera.fov(fov);
     }
 
@@ -118,7 +109,13 @@ public class CameraManager {
 
     public enum FovMode {
 
-        INCREASE, DECREASE, STABLE
+        INCREASE(1), DECREASE(-1), STABLE(0);
+        
+        FovMode(int dir){
+            this.sign = dir;
+        }
+        
+        public final int sign;
     }
 
     public void rotateCamera(CameraPlane p, float value, float tpf) {

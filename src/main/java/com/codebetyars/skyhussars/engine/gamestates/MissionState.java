@@ -113,6 +113,7 @@ public class MissionState implements GameState {
 
     private void initiliazePlayer() {
         Plane plane = player.plane();
+        cameraManager.disableCameraRotation(false);
         cameraManager.moveCameraTo(plane.getLocation());
         cameraManager.followWithCamera(plane.planeGeometry());
     }
