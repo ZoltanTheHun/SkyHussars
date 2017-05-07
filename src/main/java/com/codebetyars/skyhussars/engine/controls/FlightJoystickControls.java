@@ -30,7 +30,7 @@ import com.jme3.input.controls.AnalogListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class FlightJoystickControls implements AnalogListener {
+public class FlightJoystickControls implements AnalogListener {
 
     private final static Logger logger = LoggerFactory.getLogger(FlightJoystickControls.class);
 
@@ -42,7 +42,6 @@ class FlightJoystickControls implements AnalogListener {
 
     @Override
     public void onAnalog(String string, float axis, float tpf) {
-
         logger.info("Joy is at: {}, tpf: {}", axis, tpf);
         if (ControlsMapper.ROTATE_LEFT.equals(string)) {
             pilot.setAileron(-1 * axis / tpf);
@@ -56,7 +55,6 @@ class FlightJoystickControls implements AnalogListener {
         if (ControlsMapper.PITCH_UP.equals(string)) {
             pilot.setElevator(axis / tpf);
         }
-
     }
 
 }
