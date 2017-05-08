@@ -59,7 +59,7 @@ public class Sky {
                 new Vector3f(0.8f, 1f, 1f).normalize()/*Vector3f.UNIT_XYZ*/, true, 200050);
     }
 
-    public void loadSky() {
+    public void init() {
         Calendar now = new GregorianCalendar();
         skyControl = new SkyControl(assetManager, camera.testCamera(), 0.9f, true, true);
         skyControl.getSunAndStars().setHour(now.get(Calendar.HOUR_OF_DAY));

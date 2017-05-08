@@ -70,7 +70,7 @@ public class MissionFactory {
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
         terrainManager.loadTerrain();
-        sky.loadSky();
+        sky.init();
         dayLightWeatherManager.setLights();
         return mission;
     }
@@ -81,7 +81,7 @@ public class MissionFactory {
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
         terrainManager.loadTerrain();
-        sky.loadSky();
+        sky.init();
         dayLightWeatherManager.setLights();
         return mission;
     }

@@ -73,10 +73,10 @@ public class FlightKeyboardControls implements ActionListener {
                 case ControlsMapper.PITCH_UP:
                     noseUp = true;
                     break;
-                case "RotateLeft":
+                case ControlsMapper.ROTATE_LEFT:
                     rotateLeft = true;
                     break;
-                case "RotateRight":
+                case ControlsMapper.ROTATE_RIGHT:
                     rotateRight = true;
                     break;
                 case ControlsMapper.FIRE:
@@ -91,10 +91,10 @@ public class FlightKeyboardControls implements ActionListener {
                 case ControlsMapper.PITCH_UP:
                     noseUp = false;
                     break;
-                case "RotateLeft":
+                case ControlsMapper.ROTATE_LEFT:
                     rotateLeft = false;
                     break;
-                case "RotateRight":
+                case ControlsMapper.ROTATE_RIGHT:
                     rotateRight = false;
                     break;
                 case ControlsMapper.FIRE:
