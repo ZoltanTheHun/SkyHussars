@@ -25,11 +25,17 @@
  */
 package com.codebetyars.skyhussars;
 
+import java.io.File;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class PlaneEd extends Application {
@@ -38,15 +44,38 @@ public class PlaneEd extends Application {
         launch(args);
     }
 
+    private Text wText = new Text("No text yet");
+    
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("SkyHussars PlaneEd");
-        MenuBar menuBar = new MenuBar();
-        Menu fileMenu = new Menu("File");
-        menuBar.getMenus().add(fileMenu);
         VBox root = new VBox();
-        root.getChildren().add(menuBar);
+        root.getChildren().add(createMenuBar(stage));
+        root.getChildren().add(wText);
         stage.setScene(new Scene(root, 300, 250));
         stage.show();
+    }
+    
+    private MenuBar createMenuBar(Stage stage){
+        MenuBar menuBar = new MenuBar();
+       
+        Menu fileMenu = new Menu("File");
+        fileMenu.getItems().add(createLoadMenuItem(stage));
+        menuBar.getMenus().add(fileMenu);
+        
+        return menuBar;
+    }
+    
+    private MenuItem createLoadMenuItem(Stage stage){
+        MenuItem loadMenu = new MenuItem("Load plane");
+        loadMenu.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open Plane Definition");
+                File file = fileChooser.showOpenDialog(stage);
+                wText.textProperty().setValue(file.getName());
+            }
+        });
+        return loadMenu;
     }
 }
