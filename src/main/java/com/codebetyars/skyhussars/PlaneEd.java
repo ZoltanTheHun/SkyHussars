@@ -25,57 +25,45 @@
  */
 package com.codebetyars.skyhussars;
 
+import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorLoader;
+import com.codebetyars.skyhussars.planeed.EditorView;
+import com.codebetyars.skyhussars.planeed.PlaneEdState;
+import com.codebetyars.skyhussars.planeed.PlaneProperties;
 import java.io.File;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class PlaneEd extends Application {
+
+    private PlaneProperties planeProperties = new PlaneProperties();
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    private PlaneEdState state = new PlaneEdState();
+    private final PlaneDescriptorLoader pdl = new PlaneDescriptorLoader();
+
     private Text wText = new Text("No text yet");
-    
+
     @Override
     public void start(Stage stage) throws Exception {
+        EditorView ev = new EditorView();
         stage.setTitle("SkyHussars PlaneEd");
         VBox root = new VBox();
-        root.getChildren().add(createMenuBar(stage));
+        root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(wText);
+        root.getChildren().add(ev.items(planeProperties));
         stage.setScene(new Scene(root, 300, 250));
         stage.show();
     }
-    
-    private MenuBar createMenuBar(Stage stage){
-        MenuBar menuBar = new MenuBar();
-       
-        Menu fileMenu = new Menu("File");
-        fileMenu.getItems().add(createLoadMenuItem(stage));
-        menuBar.getMenus().add(fileMenu);
-        
-        return menuBar;
-    }
-    
-    private MenuItem createLoadMenuItem(Stage stage){
-        MenuItem loadMenu = new MenuItem("Load plane");
-        loadMenu.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Plane Definition");
-                File file = fileChooser.showOpenDialog(stage);
-                wText.textProperty().setValue(file.getName());
-            }
-        });
-        return loadMenu;
+
+    public void loadPlane(File file) {
+        state = state.planeDescriptor(pdl.unmarshall(file)).openFile(file);
+        wText.textProperty().setValue(state.openFile().map(fi -> fi.getName()).orElse("No file selected yet."));
+        planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
     }
 }

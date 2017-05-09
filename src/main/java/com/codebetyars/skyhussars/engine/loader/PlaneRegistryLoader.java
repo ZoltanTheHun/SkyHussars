@@ -27,9 +27,7 @@ package com.codebetyars.skyhussars.engine.loader;
 
 import com.codebetyars.skyhussars.engine.data.PlaneRegistry;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class PlaneRegistryLoader {
 
     private final String planesFolderName = "/Planes";
     private final String jsonDescriptorname = "/plane.json";
-    private final ObjectMapper mapper = new ObjectMapper();
+
 
     private final PlaneRegistry planeRegistry;
 
@@ -46,9 +44,10 @@ public class PlaneRegistryLoader {
     }
 
     private List<PlaneDescriptor> loadplaneDescriptors(File assetFolder) {
+        PlaneDescriptorLoader pdl = new PlaneDescriptorLoader();
         List<PlaneDescriptor> planeDescriptors = new ArrayList<>();
         for (File planeDirectory : collectPlaneDirectories(assetFolder)) {
-            PlaneDescriptor planeDescriptor = unmarshall(openDescriptorFile(planeDirectory));
+            PlaneDescriptor planeDescriptor = pdl.unmarshall(openDescriptorFile(planeDirectory));
             planeDescriptors.add(planeDescriptor);
         }
         return planeDescriptors;
@@ -87,16 +86,5 @@ public class PlaneRegistryLoader {
                     + descriptorFile.getPath());
         }
         return descriptorFile;
-    }
-
-    private PlaneDescriptor unmarshall(File descriptorFile) {
-        PlaneDescriptor planeDescriptor = null;
-        try {
-            planeDescriptor = mapper.readValue(descriptorFile, PlaneDescriptor.class);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Unable to unmarshall descriptor file at "
-                    + descriptorFile.getPath(), ex);
-        }
-        return planeDescriptor;
     }
 }
