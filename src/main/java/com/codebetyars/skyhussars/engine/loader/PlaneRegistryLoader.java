@@ -44,10 +44,10 @@ public class PlaneRegistryLoader {
     }
 
     private List<PlaneDescriptor> loadplaneDescriptors(File assetFolder) {
-        PlaneDescriptorLoader pdl = new PlaneDescriptorLoader();
+        PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
         List<PlaneDescriptor> planeDescriptors = new ArrayList<>();
         for (File planeDirectory : collectPlaneDirectories(assetFolder)) {
-            PlaneDescriptor planeDescriptor = pdl.unmarshall(openDescriptorFile(planeDirectory));
+            PlaneDescriptor planeDescriptor = pdl.unmarshal(openDescriptorFile(planeDirectory));
             planeDescriptors.add(planeDescriptor);
         }
         return planeDescriptors;

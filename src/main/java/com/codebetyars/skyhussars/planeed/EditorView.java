@@ -27,12 +27,13 @@ package com.codebetyars.skyhussars.planeed;
 
 import com.codebetyars.skyhussars.PlaneEd;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -40,7 +41,7 @@ import javafx.util.converter.NumberStringConverter;
 public class EditorView {
 
     private final FileChooser fileChooser = new FileChooser();
-    { fileChooser.setTitle("Open Plane Definition"); }
+    {fileChooser.setTitle("Open Plane Definition");}
 
     public MenuBar createMenuBar(Stage stage, PlaneEd planeEd) {
         MenuBar menuBar = new MenuBar();
@@ -60,7 +61,7 @@ public class EditorView {
         return loadMenu;
     }
 
-    public HBox items(PlaneProperties planeProperties) {
+    public GridPane items(PlaneProperties planeProperties) {
         Label lName = new Label("Name:");
         TextField tfName = new TextField();
         tfName.textProperty().bindBidirectional(planeProperties.getName());
@@ -80,17 +81,25 @@ public class EditorView {
         Label lMassEmpty = new Label("Mass, Gross: ");
         TextField tfMassEmpty = new TextField();
         tfMassEmpty.textProperty().bindBidirectional(planeProperties.getMassEmpty(), new NumberStringConverter());
+        return populateGrid(2, lName, tfName,
+                lModelName, tfModelName,
+                lMassTakeOffMax, tfMassTakeOffMax,
+                lMassGross, tfMassGross, 
+                lMassEmpty, tfMassEmpty
+        );
+    }
 
-        HBox hb = new HBox();
-        
-        hb.getChildren().addAll(lName, tfName);
-        hb.getChildren().addAll(lModelName, tfModelName);
-        hb.getChildren().addAll(lMassTakeOffMax, tfMassTakeOffMax);
-        hb.getChildren().addAll(lMassGross, tfMassGross);
-        hb.getChildren().addAll(lMassEmpty, tfMassEmpty);
-
-        hb.setSpacing(10);
-        return hb;
+    private GridPane populateGrid(int nElementInRow, Node... nodes) {
+        GridPane gp = new GridPane();
+        int cRow = 0;
+        for(int i=0;i<nodes.length;i=i+nElementInRow){
+            Node[] n = new Node[nElementInRow];
+            for(int h = 0;h<nElementInRow && h+i < nodes.length ;h++){
+                n[h] = nodes[h+i];
+            }
+            gp.addRow(cRow++,n);
+        }
+        return gp;
     }
 
 }

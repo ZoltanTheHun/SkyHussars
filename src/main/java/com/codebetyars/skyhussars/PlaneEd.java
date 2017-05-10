@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars;
 
-import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorLoader;
+import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorMarshal;
 import com.codebetyars.skyhussars.planeed.EditorView;
 import com.codebetyars.skyhussars.planeed.PlaneEdState;
 import com.codebetyars.skyhussars.planeed.PlaneProperties;
@@ -45,7 +45,7 @@ public class PlaneEd extends Application {
     }
 
     private PlaneEdState state = new PlaneEdState();
-    private final PlaneDescriptorLoader pdl = new PlaneDescriptorLoader();
+    private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
 
     private Text wText = new Text("No text yet");
 
@@ -62,8 +62,15 @@ public class PlaneEd extends Application {
     }
 
     public void loadPlane(File file) {
-        state = state.planeDescriptor(pdl.unmarshall(file)).openFile(file);
+        state = state.planeDescriptor(pdl.unmarshal(file)).openFile(file);
         wText.textProperty().setValue(state.openFile().map(fi -> fi.getName()).orElse("No file selected yet."));
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
+        planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
+        planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
+        planeProperties.getMassEmpty().setValue(state.planeDescriptor().map(p -> p.getMassEmpty()).orElse(0.f));
+    }
+    
+    public void savePlane(File file) {
+        
     }
 }

@@ -30,11 +30,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
-public class PlaneDescriptorLoader {
+public class PlaneDescriptorMarshal {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
+    
+    public void marshal(PlaneDescriptor planeDescriptor,File file){
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, planeDescriptor);
+        } catch (IOException ex) {
+           throw new RuntimeException(ex);
+        }
+    }
 
-    public PlaneDescriptor unmarshall(File descriptorFile) {
+    public PlaneDescriptor unmarshal(File descriptorFile) {
         PlaneDescriptor planeDescriptor = null;
         try {
             planeDescriptor = mapper.readValue(descriptorFile, PlaneDescriptor.class);
