@@ -23,13 +23,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.terrain;
 
+import java.util.Optional;
 
 public class TerrainDefinition {
-    
+
     private String name;
     private int size; //km
     private String heightmapPath;
     
+    public TerrainDefinition(){};
+    public TerrainDefinition(TerrainDefinition td){
+        this.heightmapPath = td.heightmapPath;
+        this.size = td.size;
+        this.name = td.name;
+    }
+    
+    public TerrainDefinition heightMapPath(String path){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.heightmapPath = path;
+        return td;
+    }
+    
+    public TerrainDefinition size(int siye){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.size = size;
+        return td;
+    }
+    
+    public TerrainDefinition name(String path){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.name = name;
+        return td;
+    }
+    
+    public Optional<String> name(){
+        return Optional.of(name);
+    }
+    
+    public Optional<Integer> size(){
+        return Optional.of(size);
+    }
+    
+    public Optional<String> heightMapPath(){
+        return Optional.of(heightmapPath);
+    }
 }

@@ -106,7 +106,7 @@ public class SkyHussars extends SimpleApplication {
             if(nextState != null) {
                 gameState = nextState;
                 gameState.initialize();
-            } else {this.stop();};
+            } else {this.stop();}
         }
     }
 

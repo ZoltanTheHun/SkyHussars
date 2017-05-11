@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

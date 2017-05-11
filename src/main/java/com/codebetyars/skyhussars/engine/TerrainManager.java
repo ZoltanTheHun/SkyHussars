@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine;
 
 import com.codebetyars.skyhussars.engine.plane.Plane;
+import com.codebetyars.skyhussars.engine.terrain.TerrainDefinition;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
@@ -33,7 +34,6 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +57,8 @@ public class TerrainManager {
         return terrain;
     }
 
+    private TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp");
+
     public float getHeightAt(Vector2f at) {
         return terrain.getHeight(at);
     }
@@ -69,11 +71,8 @@ public class TerrainManager {
         }
         return collide;
     }
-    
-    public void loadTerrain(){
-        AbstractHeightMap heightmap = new ImageBasedHeightMap(assetManager.loadTexture("Textures/AdriaSmall.bmp").getImage(), 12f);
-        heightmap.load();
 
+    public void loadTerrain() {
         Texture grass = assetManager.loadTexture("Textures/ground.png");
         grass.setWrap(Texture.WrapMode.Repeat);
 
@@ -92,11 +91,19 @@ public class TerrainManager {
         mat_terrain.setTexture("DiffuseMap_1", land);
         mat_terrain.setFloat("DiffuseMap_1_scale", 1024f);
 
-        terrain = new TerrainQuad("my terrain", 9, 513, heightmap.getHeightMap());
-        terrain.setMaterial(mat_terrain);
-        terrain.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 
-        terrain.addControl(new TerrainLodControl(terrain, camera.testCamera()));
-        terrain.setShadowMode(RenderQueue.ShadowMode.Receive);
-        rootNode.attachChild(terrain);
+        terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
+                .getImage()).map(i -> new ImageBasedHeightMap(i, 12f))
+                .map(hm -> {
+                    hm.load();
+                    return new TerrainQuad("my terrain", 9, 513, hm.getHeightMap());
+                }).map(tq -> {
+                    tq.setMaterial(mat_terrain);
+                    tq.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 
+                    tq.addControl(new TerrainLodControl(tq, camera.testCamera()));
+                    tq.setShadowMode(RenderQueue.ShadowMode.Receive);
+                    rootNode.attachChild(terrain);
+                    terrain = tq;
+                    return this;
+                });
     }
 }
