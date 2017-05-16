@@ -36,6 +36,7 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,21 +52,21 @@ public class TerrainManager {
     @Autowired
     private Node rootNode;
 
-    private TerrainQuad terrain;
+    private Optional<TerrainQuad> terrain;
 
     public TerrainQuad getTerrain() {
-        return terrain;
+        return terrain.get(); //yeah, this is unsafe for now
     }
 
     private TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp");
 
     public float getHeightAt(Vector2f at) {
-        return terrain.getHeight(at);
+        return terrain.get().getHeight(at); // unsafe for now
     }
 
     public boolean checkCollisionWithGround(Plane plane) {
         boolean collide = false;
-        float height = terrain.getHeight(plane.getLocation2D());
+        float height = terrain.map(t -> t.getHeight(plane.getLocation2D())).orElse(.0f);
         if (height > plane.getHeight()) {
             collide = true;
         }
@@ -91,7 +92,7 @@ public class TerrainManager {
         mat_terrain.setTexture("DiffuseMap_1", land);
         mat_terrain.setFloat("DiffuseMap_1_scale", 1024f);
 
-        terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
+        terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
                 .getImage()).map(i -> new ImageBasedHeightMap(i, 12f))
                 .map(hm -> {
                     hm.load();
@@ -101,9 +102,8 @@ public class TerrainManager {
                     tq.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 
                     tq.addControl(new TerrainLodControl(tq, camera.testCamera()));
                     tq.setShadowMode(RenderQueue.ShadowMode.Receive);
-                    rootNode.attachChild(terrain);
-                    terrain = tq;
-                    return this;
+                    rootNode.attachChild(tq);
+                    return tq;
                 });
     }
 }
