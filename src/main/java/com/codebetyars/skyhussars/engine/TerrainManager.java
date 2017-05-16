@@ -58,19 +58,14 @@ public class TerrainManager {
         return terrain.get(); //yeah, this is unsafe for now
     }
 
-    private TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp");
+    private final TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp");
 
     public float getHeightAt(Vector2f at) {
         return terrain.get().getHeight(at); // unsafe for now
     }
 
     public boolean checkCollisionWithGround(Plane plane) {
-        boolean collide = false;
-        float height = terrain.map(t -> t.getHeight(plane.getLocation2D())).orElse(.0f);
-        if (height > plane.getHeight()) {
-            collide = true;
-        }
-        return collide;
+        return terrain.map(t -> t.getHeight(plane.getLocation2D()) > plane.getHeight()).orElse(false);
     }
 
     public void loadTerrain() {
