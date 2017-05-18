@@ -142,10 +142,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private ActingForces engineForces(Quaternion situation) {
-        Vector3f vLinearAcceleration = Vector3f.ZERO;
-        for (Engine engine : engines) {
-            vLinearAcceleration = vLinearAcceleration.add(situation.mult(engine.getThrust()));
-        }
+        Vector3f vLinearAcceleration = engines.stream().map(e -> situation.mult(e.getThrust())).
+                reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2));
         return new ActingForces(vLinearAcceleration, Vector3f.ZERO);
     }
 
