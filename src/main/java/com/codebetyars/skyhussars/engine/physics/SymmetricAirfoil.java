@@ -169,4 +169,22 @@ public class SymmetricAirfoil implements Airfoil {
         return angleOfAttack;
     }
 
+    Vector3f linearAcceleration = Vector3f.ZERO;
+
+    @Override
+    public LiftProducer tick(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity) {
+        linearAcceleration = calculateResultantForce(airDensity, vVelocity, situation, angularVelocity);
+        return this;
+    }
+
+    @Override
+    public Vector3f linearAcceleration() {
+        return linearAcceleration;
+    }
+
+    @Override
+    public Vector3f torque(Quaternion rotInverse) {
+        return cog.cross(rotInverse.mult(linearAcceleration));
+    }
+
 }

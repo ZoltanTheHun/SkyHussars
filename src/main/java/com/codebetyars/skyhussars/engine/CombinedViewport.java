@@ -71,7 +71,6 @@ public class CombinedViewport {
         
         viewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
         viewPort.setClearFlags(false, true, true);
-
         viewPort.attachScene(node);  
         viewPort.addProcessor(fpp);
         

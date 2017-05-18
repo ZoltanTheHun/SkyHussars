@@ -81,9 +81,7 @@ public class WorldThread extends TimerTask {
     }
 
     public synchronized void updatePlaneLocations() {
-        planes.stream().forEach(plane -> {
-            plane.update(tpf);
-        });
+        planes.stream().forEach(p -> p.update(tpf));
     }
 
 }

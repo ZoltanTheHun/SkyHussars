@@ -90,19 +90,22 @@ public class PlanePhysicsImpl implements PlanePhysics {
     Quaternion tempQuaternion = new Quaternion();
 
     @Override
-    public void update(float tpf,Environment environment) {
-        updateAuxiliary(rotation, translation,environment);
+    public void update(float tpf, Environment environment) {
+        updateAuxiliary(rotation, translation, environment);
         logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
         ActingForces engineForces = engineForces(rotation);
         ActingForces airfoilForces = airfoilForces(rotation, vVelocity.negate());
         logger.debug("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
+        airfoils.stream().forEach(a -> a.tick(airDensity,  vVelocity.negate(), rotation, vAngularVelocity));
+        airfoils.stream().map(a -> a.linearAcceleration());
+
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineForces.vLinearComponent)
                 .add(airfoilForces.vLinearComponent)
                 .add(calculateParasiticDrag()).divide(mass);
         logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
-        
+
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
@@ -121,21 +124,21 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private void moderateRoll() {
-      /*  if (vAngularVelocity.x > 2) {
-            vAngularVelocity.x = 2;
-        } else if (vAngularVelocity.x < -2) {
-            vAngularVelocity.x = -2;
-        }
-        if (vAngularVelocity.y > 2) {
-            vAngularVelocity.y = 2;
-        } else if (vAngularVelocity.y < -2) {
-            vAngularVelocity.y = -2;
-        }
-        if (vAngularVelocity.z > 2) {
-            vAngularVelocity.z = 2;
-        } else if (vAngularVelocity.z < -2) {
-            vAngularVelocity.z = -2;
-        }*/
+        /*  if (vAngularVelocity.x > 2) {
+         vAngularVelocity.x = 2;
+         } else if (vAngularVelocity.x < -2) {
+         vAngularVelocity.x = -2;
+         }
+         if (vAngularVelocity.y > 2) {
+         vAngularVelocity.y = 2;
+         } else if (vAngularVelocity.y < -2) {
+         vAngularVelocity.y = -2;
+         }
+         if (vAngularVelocity.z > 2) {
+         vAngularVelocity.z = 2;
+         } else if (vAngularVelocity.z < -2) {
+         vAngularVelocity.z = -2;
+         }*/
     }
 
     private ActingForces engineForces(Quaternion situation) {
@@ -147,15 +150,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private ActingForces airfoilForces(Quaternion rotation, Vector3f vFlow) {
-        Vector3f vLinearAcceleration = Vector3f.ZERO;
-        Vector3f vTorque = Vector3f.ZERO;
-        for (Airfoil airfoil : airfoils) {
-            Vector3f airfoilForce = airfoil.calculateResultantForce(airDensity, vFlow, rotation, vAngularVelocity);
-            vLinearAcceleration = vLinearAcceleration.add(airfoilForce);
-            airfoilForce = rotation.inverse().mult(airfoilForce);
-            Vector3f distFromCenter = airfoil.getCenterOfGravity();
-            vTorque = vTorque.add(distFromCenter.cross(airfoilForce));
-        }
+        airfoils.stream().forEach(a -> a.tick(airDensity, vFlow, rotation, vAngularVelocity));
+        Vector3f vLinearAcceleration = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
+        Vector3f vTorque = (airfoils.stream().map(a ->a.torque(rotation.inverse())).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
         return new ActingForces(vLinearAcceleration, vTorque);
     }
 
@@ -163,8 +160,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
         return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
 
-    private void updateAuxiliary(Quaternion rotation, Vector3f translation,Environment environment) {
-        updateHelpers(translation,environment);
+    private void updateAuxiliary(Quaternion rotation, Vector3f translation, Environment environment) {
+        updateHelpers(translation, environment);
         updateAngleOfAttack(rotation);
         updatePlaneFactor();
     }
@@ -180,7 +177,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     public void updatePlaneFactor() {
         planeFactor = 0.2566f;
-        
+
         /*if (angleOfAttack > 30 || angleOfAttack < - 30) {
          planeFactor = wingArea * 1.2f;     // let's pretend rest of the body area is half of body area
          } else {
@@ -188,7 +185,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
          }*/
     }
 
-    private void updateHelpers(Vector3f translation,Environment environment) {
+    private void updateHelpers(Vector3f translation, Environment environment) {
         height = translation.getY();
         airDensity = environment.airDensity((int) height);
     }

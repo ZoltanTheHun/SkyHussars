@@ -39,7 +39,24 @@ public class Aileron implements Airfoil {
     public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity) {
         return airfoil.calculateResultantForce(airDensity, vVelocity, situation.mult(qAileron), angularVelocity);
     }
+    
+    @Override
+    public Airfoil tick(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity){
+        airfoil.tick(airDensity, vVelocity, situation.mult(qAileron), angularVelocity);
+        return this;
+    }
 
+    @Override
+    public Vector3f linearAcceleration(){
+        return airfoil.linearAcceleration();
+    }
+    
+    @Override
+    public Vector3f torque(Quaternion rotInverse){
+        return airfoil.torque(rotInverse);
+    }
+    
+    
     @Override
     public Vector3f getCenterOfGravity() {
         return airfoil.getCenterOfGravity();
