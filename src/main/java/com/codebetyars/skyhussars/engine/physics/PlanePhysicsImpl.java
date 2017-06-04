@@ -109,7 +109,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
-        moderateRoll();
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
@@ -121,24 +120,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public synchronized void updateScene(Node model) {
         model.setLocalRotation(rotation);
         model.setLocalTranslation(translation);
-    }
-
-    private void moderateRoll() {
-        /*  if (vAngularVelocity.x > 2) {
-         vAngularVelocity.x = 2;
-         } else if (vAngularVelocity.x < -2) {
-         vAngularVelocity.x = -2;
-         }
-         if (vAngularVelocity.y > 2) {
-         vAngularVelocity.y = 2;
-         } else if (vAngularVelocity.y < -2) {
-         vAngularVelocity.y = -2;
-         }
-         if (vAngularVelocity.z > 2) {
-         vAngularVelocity.z = 2;
-         } else if (vAngularVelocity.z < -2) {
-         vAngularVelocity.z = -2;
-         }*/
     }
 
     private ActingForces engineForces(Quaternion situation) {
