@@ -79,7 +79,7 @@ public class AIPilot {
         /**
          * TODO: revise direction code, this should not be negated
          */
-        Vector3f flyingDir = plane.getDirection();
+        Vector3f flyingDir = plane.forward();
         Vector3f targetDir = direction;
         //the all too naive AI
         //if behind, try to turn back

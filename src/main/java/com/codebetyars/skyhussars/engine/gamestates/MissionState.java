@@ -143,7 +143,7 @@ public class MissionState implements GameState {
             }
             /* take another look at it later to get rid of a chance of a null reference */
             if (speedoMeterUI != null && altimeterUI != null) {
-                speedoMeterUI.setText(player.plane().getSpeedKmH() + "km/h");
+                speedoMeterUI.setText(player.plane().velocityKmh() + "km/h");
                 altimeterUI.setText((player.plane().getHeight() + "m"));
             }
         } else {

@@ -261,29 +261,16 @@ public class Plane {
     public void setLocation(Vector3f location) {
         geom.root().setLocalTranslation(location);
         physics.setTranslation(location);
-
     }
 
-    public float getHeight() {
-        return geom.root().getLocalTranslation().y;
-    }
+    public float getHeight() {return geom.root().getLocalTranslation().y;}
+    public Vector3f getLocation() { return geom.root().getLocalTranslation();}
 
-    public Vector3f getLocation() {
-        return geom.root().getLocalTranslation();
-    }
-
-    public Vector3f getDirection() {
-        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();
-    }
-
-    public Vector3f getUp() {
-        return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();
-    }
+    public Vector3f forward() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
+    public Vector3f up() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}
 
     public float roll() {
-        Vector3f forward = getDirection();
-        Vector3f up = getUp();
-        int i = forward.cross(Vector3f.UNIT_Y).dot(up) > 0 ? 1 : -1;
+        int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
         return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG;
     }
 
@@ -291,19 +278,8 @@ public class Plane {
         return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z);
     }
 
-    public String getSpeedKmH() {
-        return physics.getSpeedKmH();
-    }
-
-    public void setFiring(boolean trigger) {
-        firing = trigger;
-    }
-
-    public void crashed(boolean crashed) {
-        this.crashed = crashed;
-    }
-
-    public boolean crashed() {
-        return crashed;
-    }
+    public String velocityKmh() { return physics.getSpeedKmH(); }
+    public void firing(boolean trigger) { firing = trigger; }
+    public void crashed(boolean crashed) { this.crashed = crashed; }
+    public boolean crashed() { return crashed; }
 }

@@ -40,7 +40,7 @@ public class Pilot {
     }
 
     public void firing(boolean firing) {
-        plane.setFiring(firing);
+        plane.firing(firing);
     }
 
     /**
