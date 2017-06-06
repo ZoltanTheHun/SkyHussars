@@ -47,7 +47,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private float planeFactor = 0.2566f; // cross section and drag coeff together
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
-    private float pi = 3.14f;
     private float angleOfAttack;
 
     private Vector3f vVelocity = new Vector3f(0f, 0f, 0f);
@@ -57,26 +56,30 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private float height;
     private final float length = 10.49f;
     private final float rPlane = 1.3f;
-    private final Matrix3f momentOfInertiaTensor;
-    private List<Airfoil> airfoils = new ArrayList<>();
-    private List<Engine> engines = new ArrayList<>();
 
     private Quaternion rotation;
-
-    public void setRotation(Quaternion rotation) {
+    private Vector3f translation;
+    
+    public synchronized void setRotation(Quaternion rotation) {
         this.rotation = new Quaternion(rotation);
     }
 
-    public void setTranslation(Vector3f translation) {
+    public synchronized void setTranslation(Vector3f translation) {
         this.translation = new Vector3f(translation);
     }
-    private Vector3f translation;
+    
+    private final Matrix3f momentOfInertiaTensor;
+        
+    private List<Airfoil> airfoils = new ArrayList<>();
+    private List<Engine> engines = new ArrayList<>();
+
     private final float tick = (float) 1 / (float) 60;
 
     public PlanePhysicsImpl(Quaternion rotation,
-            Vector3f translation,
-            float mass,
-            List<Engine> engines, List<Airfoil> airfoils) {
+                            Vector3f translation,
+                            float mass,
+                            List<Engine> engines, 
+                            List<Airfoil> airfoils) {
         this.mass = mass;
         momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
                 0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
@@ -87,13 +90,10 @@ public class PlanePhysicsImpl implements PlanePhysics {
         this.translation = new Vector3f(translation);
     }
 
-    Quaternion tempQuaternion = new Quaternion();
-
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
         Vector3f flow = rotation.inverse().mult(vVelocity.negate()); // localized to plane coordinate space
-        logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
         Vector3f engineLinear = rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2)));
         Vector3f engineTorque = Vector3f.ZERO; // to be added later
         airfoils.stream().forEach(a -> a.tick(airDensity, flow, vAngularVelocity));
@@ -112,7 +112,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
-        Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        Quaternion rotationQuaternion = Quaternion.IDENTITY.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
             rotation = rotation.mult(rotationQuaternion);
             translation = translation.add(vVelocity.mult(tpf));
