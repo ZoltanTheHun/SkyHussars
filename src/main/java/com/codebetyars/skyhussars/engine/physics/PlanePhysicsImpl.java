@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars.engine.physics;
 
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
+import com.codebetyars.skyhussars.utility.NumberFormats;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -47,7 +48,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private float planeFactor = 0.2566f; // cross section and drag coeff together
     //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
-    private float angleOfAttack;
+    private float aoa;
 
     private Vector3f vVelocity = new Vector3f(0f, 0f, 0f);
     private Vector3f vAngularAcceleration = new Vector3f(0, 0, 0);
@@ -89,27 +90,31 @@ public class PlanePhysicsImpl implements PlanePhysics {
         this.rotation = new Quaternion(rotation);
         this.translation = new Vector3f(translation);
     }
+    
 
+    
+    /* Airfoil calculations*/
+    private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
+    private void updateAirfoils() { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow(), vAngularVelocity));}
+    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));}
+    private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));}
+    
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
-        Vector3f flow = rotation.inverse().mult(vVelocity.negate()); // localized to plane coordinate space
         Vector3f engineLinear = rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2)));
         Vector3f engineTorque = Vector3f.ZERO; // to be added later
-        airfoils.stream().forEach(a -> a.tick(airDensity, flow, vAngularVelocity));
-        Vector3f airfoilLinear = rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
-        Vector3f airfoilTorque = (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
-
-        
+        updateAirfoils();
+       
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineLinear)
-                .add(airfoilLinear)
+                .add(airfoilLinear())
                 .add(calculateParasiticDrag()).divide(mass);
         logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
 
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
-        vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque);
+        vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque());
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = Quaternion.IDENTITY.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
@@ -135,22 +140,15 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private void updateAngleOfAttack(Quaternion rotation) {
-        angleOfAttack = rotation.mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
+        aoa = rotation.mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
         float np = rotation.mult(Vector3f.UNIT_Y).dot(vVelocity.negate().normalize());
         if (np < 0) {
-            angleOfAttack = -angleOfAttack;
+            aoa = -aoa;
         }
-        /*logger.info("Angle of attack: {}", angleOfAttack);*/
     }
 
     public void updatePlaneFactor() {
         planeFactor = 0.2566f;
-
-        /*if (angleOfAttack > 30 || angleOfAttack < - 30) {
-         planeFactor = wingArea * 1.2f;     // let's pretend rest of the body area is half of body area
-         } else {
-         planeFactor = 0.2566f;
-         }*/
     }
 
     private void updateHelpers(Vector3f translation, Environment environment) {
@@ -160,39 +158,19 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     @Override
     public String getSpeedKmH() {
-        NumberFormat fractionless = NumberFormat.getInstance();
-        fractionless.setMaximumFractionDigits(0);
-        fractionless.setMinimumIntegerDigits(3);
-        NumberFormat bigFractionless = NumberFormat.getInstance();
-        bigFractionless.setMaximumFractionDigits(0);
-        bigFractionless.setMinimumIntegerDigits(6);
-        return fractionless.format(vVelocity.length() * 3.6);
+        return NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6);
     }
 
     @Override
     public String getInfo() {
-        NumberFormat fraction2Format = NumberFormat.getInstance();
-        fraction2Format.setMaximumFractionDigits(2);
-        fraction2Format.setMinimumFractionDigits(2);
-        NumberFormat accF = NumberFormat.getInstance();
-        accF.setMaximumFractionDigits(2);
-        accF.setMinimumFractionDigits(2);
-        accF.setMaximumIntegerDigits(3);
-        accF.setMinimumIntegerDigits(3);
-        NumberFormat fractionless = NumberFormat.getInstance();
-        fractionless.setMaximumFractionDigits(0);
-        fractionless.setMinimumIntegerDigits(3);
-        NumberFormat bigFractionless = NumberFormat.getInstance();
-        bigFractionless.setMaximumFractionDigits(0);
-        bigFractionless.setMinimumIntegerDigits(6);
         return "Thrust: " + engines.get(0).getThrust().length()
-                + ", CurrentSpeed: " + fractionless.format(vVelocity.length())
-                + ", CurrentSpeed km/h: " + fractionless.format(vVelocity.length() * 3.6)
-                + ", Height: " + fractionless.format(height)
+                + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
+                + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)
+                + ", Height: " + NumberFormats.toMin3Integer0Fraction(height)
                 //+ ", AirSpeed: " + fractionless.format(airSpeed)
-                + ", AOA: " + fractionless.format(angleOfAttack)
-                + ", AngularVelocity: " + fraction2Format.format(vAngularVelocity.length())
-                + ", AngularAcceleration: " + fraction2Format.format(vAngularAcceleration.length());
+                + ", AOA: " + NumberFormats.toMin3Integer0Fraction(aoa)
+                + ", AngularVelocity: " + NumberFormats.toFix2Fraction(vAngularVelocity.length())
+                + ", AngularAcceleration: " + NumberFormats.toFix2Fraction(vAngularAcceleration.length());
     }
 
     @Override
