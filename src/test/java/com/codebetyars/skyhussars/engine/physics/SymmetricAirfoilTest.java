@@ -89,8 +89,8 @@ public class SymmetricAirfoilTest {
         Quaternion situation = null;
         SymmetricAirfoil instance = null;
         Vector3f expResult = null;
-        Vector3f result = instance.calculateLift(angleOfAttack, airDensity, vFlow, situation.mult(Vector3f.UNIT_Y));
-        assertEquals(expResult, result);
+       // Vector3f result = instance.lift( airDensity, vFlow);
+       //assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

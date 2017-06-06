@@ -97,9 +97,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
         Vector3f engineLinear = rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2)));
         Vector3f engineTorque = Vector3f.ZERO; // to be added later
         airfoils.stream().forEach(a -> a.tick(airDensity, flow, vAngularVelocity));
-        Vector3f airfoilLinear = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
-        airfoilLinear = rotation.mult(airfoilLinear);
-        Vector3f afTorque = (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
+        Vector3f airfoilLinear = rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
+        Vector3f airfoilTorque = (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
 
         
         Vector3f vLinearAcceleration = Vector3f.ZERO
@@ -110,7 +109,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
 
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
-        vAngularAcceleration = momentOfInertiaTensor.invert().mult(afTorque);
+        vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);

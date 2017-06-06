@@ -54,7 +54,7 @@ public class SymmetricAirfoil implements Airfoil {
             }
         }
     }
-    private final int[] aoa = {0, 2, 4, 6, 8, 10, 15, 30};
+    private final int[] constAoa = {0, 2, 4, 6, 8, 10, 15, 30};
     private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f};
     // private float[]
     private final float wingArea;
@@ -73,10 +73,8 @@ public class SymmetricAirfoil implements Airfoil {
     public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
         Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
         vFlow = addDamping(vFlow, vAngularVelocity, vUp);
-        float angleOfAttack = calculateAngleOfAttack(vUp, vFlow.normalize());
-        Vector3f vLift = calculateLift(angleOfAttack, airDensity, vFlow, vUp);
+        Vector3f vLift = lift(airDensity, vFlow, vUp);
         Vector3f vInducedDrag = calculateInducedDrag(airDensity, vFlow, vLift);
-        logging(vLift, vUp, angleOfAttack, vInducedDrag);
         return vLift.add(vInducedDrag);
     }
 
@@ -106,13 +104,14 @@ public class SymmetricAirfoil implements Airfoil {
         return vFlow;
     }
 
-    public Vector3f calculateLift(float angleOfAttack, float airDensity, Vector3f vFlow, Vector3f vUp) {
-        float scLift = calculateLift(angleOfAttack, airDensity, vFlow);
-        Vector3f liftDirection = vFlow.cross(vUp).cross(vFlow).normalize();
-        if (angleOfAttack < 0) {
-            liftDirection = liftDirection.negate();
+    public Vector3f lift(float airDensity, Vector3f vFlow, Vector3f vUp) {
+        float aoa = aoa(vUp, vFlow.normalize());
+        float scLift = calculateLift(aoa, airDensity, vFlow);
+        Vector3f direction = vFlow.cross(vUp).cross(vFlow).normalize();
+        if (aoa < 0) {
+            direction = direction.negate();
         }
-        return liftDirection.mult(scLift);
+        return direction.mult(scLift);
     }
 
     public float calculateLift(float angleOfAttack, float airDensity, Vector3f vFlow) {
@@ -122,11 +121,11 @@ public class SymmetricAirfoil implements Airfoil {
 
     public float getLiftCoefficient(float angleOfAttack) {
         float liftCoefficient = 0f;
-        for (int i = 1; i < aoa.length; i++) {
-            if (angleOfAttack < aoa[i]) {
+        for (int i = 1; i < constAoa.length; i++) {
+            if (angleOfAttack < constAoa[i]) {
                 /*let's approximate the real  values with interpolation*/
-                float diff = aoa[i] - aoa[i - 1];
-                float real = angleOfAttack - aoa[i - 1];
+                float diff = constAoa[i] - constAoa[i - 1];
+                float real = angleOfAttack - constAoa[i - 1];
                 float a = real / diff;
                 float b = 1f - a;
                 liftCoefficient = clm05[i] * a + clm05[i - 1] * b;
@@ -159,7 +158,7 @@ public class SymmetricAirfoil implements Airfoil {
         return name;
     }
 
-    private float calculateAngleOfAttack(Vector3f vUp, Vector3f vFlow) {
+    private float aoa(Vector3f vUp, Vector3f vFlow) {
         float angleOfAttack = vFlow.cross(vUp).cross(vFlow).normalize().angleBetween(vUp) * FastMath.RAD_TO_DEG;
         float np = vUp.dot(vFlow);
         if (np < 0) {
