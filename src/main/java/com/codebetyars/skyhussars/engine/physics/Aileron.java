@@ -36,8 +36,8 @@ public class Aileron implements Airfoil {
     private Quaternion qAileron = new Quaternion();
 
     @Override
-    public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity) {
-        return airfoil.calculateResultantForce(airDensity, vVelocity, situation.mult(qAileron), angularVelocity);
+    public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
+        return airfoil.calculateResultantForce(airDensity, vVelocity,angularVelocity);
     }
     
     @Override

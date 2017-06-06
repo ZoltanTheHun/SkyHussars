@@ -70,14 +70,12 @@ public class SymmetricAirfoil implements Airfoil {
     private boolean leftDamper;
 
     @Override
-    public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Quaternion situation, Vector3f vAngularVelocity) {
-        Vector3f localizedFlow = situation.inverse().mult(vFlow);
-        /*Quaternion foil = situation.mult(wingRotation);*/
+    public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
         Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
-        localizedFlow = addDamping(localizedFlow, vAngularVelocity, vUp);
-        float angleOfAttack = calculateAngleOfAttack(vUp, localizedFlow.normalize());
-        Vector3f vLift = calculateLift(angleOfAttack, airDensity, localizedFlow, vUp);
-        Vector3f vInducedDrag = calculateInducedDrag(airDensity, localizedFlow, vLift);
+        vFlow = addDamping(vFlow, vAngularVelocity, vUp);
+        float angleOfAttack = calculateAngleOfAttack(vUp, vFlow.normalize());
+        Vector3f vLift = calculateLift(angleOfAttack, airDensity, vFlow, vUp);
+        Vector3f vInducedDrag = calculateInducedDrag(airDensity, vFlow, vLift);
         logging(vLift, vUp, angleOfAttack, vInducedDrag);
         return vLift.add(vInducedDrag);
     }
@@ -174,7 +172,7 @@ public class SymmetricAirfoil implements Airfoil {
 
     @Override
     public LiftProducer tick(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity) {
-        linearAcceleration = situation.mult(calculateResultantForce(airDensity, vVelocity, situation, angularVelocity));
+        linearAcceleration = situation.mult(calculateResultantForce(airDensity, situation.inverse().mult(vVelocity), angularVelocity));
         return this;
     }
 
