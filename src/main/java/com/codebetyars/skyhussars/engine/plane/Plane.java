@@ -73,8 +73,6 @@ public class Plane {
         logger.debug(getInfo());
     }
 
-    Vector3f accG = new Vector3f(0f, -10f, 0f);
-
     public String getInfo() {
         return physics.getInfo();
     }
