@@ -92,22 +92,22 @@ public class PlanePhysicsImpl implements PlanePhysics {
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
+        Vector3f vFlow = vVelocity.negate();
         logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
         ActingForces engineForces = engineForces(rotation);
-        ActingForces airfoilForces = airfoilForces(rotation, vVelocity.negate());
-        logger.debug("Airfoil linear: " + airfoilForces.vLinearComponent.length() + ", torque: " + airfoilForces.vTorqueComponent.length());
-        airfoils.stream().forEach(a -> a.tick(airDensity,  vVelocity.negate(), rotation, vAngularVelocity));
-        airfoils.stream().map(a -> a.linearAcceleration());
+        airfoils.stream().forEach(a -> a.tick(airDensity, vFlow, rotation, vAngularVelocity));
+        Vector3f afLAcc = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
+        Vector3f afTorque = (airfoils.stream().map(a ->a.torque(rotation.inverse())).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
 
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineForces.vLinearComponent)
-                .add(airfoilForces.vLinearComponent)
+                .add(afLAcc)
                 .add(calculateParasiticDrag()).divide(mass);
         logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
 
         vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
-        vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilForces.vTorqueComponent);
+        vAngularAcceleration = momentOfInertiaTensor.invert().mult(afTorque);
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = tempQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
@@ -127,14 +127,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2));
         return new ActingForces(vLinearAcceleration, Vector3f.ZERO);
     }
-
-    private ActingForces airfoilForces(Quaternion rotation, Vector3f vFlow) {
-        airfoils.stream().forEach(a -> a.tick(airDensity, vFlow, rotation, vAngularVelocity));
-        Vector3f vLinearAcceleration = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
-        Vector3f vTorque = (airfoils.stream().map(a ->a.torque(rotation.inverse())).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
-        return new ActingForces(vLinearAcceleration, vTorque);
-    }
-
+    
     private Vector3f calculateParasiticDrag() {
         return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
