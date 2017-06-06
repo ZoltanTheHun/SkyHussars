@@ -162,7 +162,7 @@ public class SymmetricAirfoil implements Airfoil {
     Vector3f torque = Vector3f.ZERO;
 
     @Override
-    public synchronized LiftProducer tick(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
+    public synchronized Airfoil tick(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
         Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
         vFlow = damp(vFlow, vAngularVelocity, vUp);
         Vector3f vLift = lift(airDensity, vFlow, vUp);

@@ -36,7 +36,6 @@ import com.jme3.scene.Spatial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +54,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
 
     private float height;
-    private final float length = 10.49f;
-    private final float rPlane = 1.3f;
 
     private Quaternion rotation;
     private Vector3f translation;
@@ -69,6 +66,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
         this.translation = new Vector3f(translation);
     }
     
+    private final float length = 10.49f;
+    private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
         
     private List<Airfoil> airfoils = new ArrayList<>();
