@@ -34,11 +34,6 @@ public class Aileron implements Airfoil {
     private final Airfoil airfoil;
     private final Direction side;
     private Quaternion qAileron = new Quaternion();
-
-    @Override
-    public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
-        return airfoil.calculateResultantForce(airDensity, vVelocity,angularVelocity);
-    }
     
     @Override
     public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity){

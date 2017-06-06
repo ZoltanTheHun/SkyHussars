@@ -29,7 +29,6 @@ package com.codebetyars.skyhussars.engine.physics;
 import com.jme3.math.Vector3f;
 
 public interface LiftProducer {
-        public Vector3f calculateResultantForce(float airDensity, Vector3f vVelocity, Vector3f angularVelocity);
         public LiftProducer tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity);
         public Vector3f linearAcceleration();
         public Vector3f torque();

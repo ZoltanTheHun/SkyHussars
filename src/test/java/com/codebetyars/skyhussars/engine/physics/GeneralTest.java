@@ -50,7 +50,7 @@ public class GeneralTest {
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion();
         Vector3f angularVelocity = Vector3f.ZERO;
-        test.calculateResultantForce(airDensity, flow, angularVelocity);
+      //  test.calculateResultantForce(airDensity, flow, angularVelocity);
     }
     
     @Test 
@@ -62,7 +62,7 @@ public class GeneralTest {
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion();
         Vector3f angularVelocity = Vector3f.ZERO;
-        test.calculateResultantForce(airDensity, flow, angularVelocity);
+      //  test.calculateResultantForce(airDensity, flow, angularVelocity);
     }
     
     @Test
@@ -74,7 +74,7 @@ public class GeneralTest {
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion().fromAngles(0, 0, 90*FastMath.DEG_TO_RAD);
         Vector3f angularVelocity = Vector3f.ZERO;
-        test.calculateResultantForce(airDensity, flow, angularVelocity);
+       // test.calculateResultantForce(airDensity, flow, angularVelocity);
     }
     
     @Test
@@ -86,7 +86,7 @@ public class GeneralTest {
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion().fromAngles(0, 0, 180*FastMath.DEG_TO_RAD);
         Vector3f angularVelocity = Vector3f.ZERO;
-        test.calculateResultantForce(airDensity, flow,angularVelocity);
+      //  test.calculateResultantForce(airDensity, flow,angularVelocity);
     }
     
     @Test
@@ -100,7 +100,7 @@ public class GeneralTest {
 
         Quaternion situation = new Quaternion().fromAngles(10, 0, 0);
         Vector3f angularVelocity = Vector3f.ZERO;
-        test.calculateResultantForce(airDensity, flow, angularVelocity);
+      //  test.calculateResultantForce(airDensity, flow, angularVelocity);
     }
     
     

@@ -70,8 +70,8 @@ public class SymmetricAirfoilTest {
         Vector3f angularVelocity = null;
         SymmetricAirfoil instance = null;
         Vector3f expResult = null;
-        Vector3f result = instance.calculateResultantForce(airDensity, vVelocity, angularVelocity);
-        assertEquals(expResult, result);
+     //   Vector3f result = instance.calculateResultantForce(airDensity, vVelocity, angularVelocity);
+     //   assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -138,7 +138,7 @@ public class SymmetricAirfoilTest {
         Vector3f vLift = null;
         SymmetricAirfoil instance = null;
         Vector3f expResult = null;
-        Vector3f result = instance.calculateInducedDrag(airDensity, vFlow, vLift);
+        Vector3f result = instance.inducedDrag(airDensity, vFlow, vLift);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

@@ -69,15 +69,6 @@ public class SymmetricAirfoil implements Airfoil {
     private final boolean damper;
     private boolean leftDamper;
 
-    @Override
-    public Vector3f calculateResultantForce(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
-        Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
-        vFlow = addDamping(vFlow, vAngularVelocity, vUp);
-        Vector3f vLift = lift(airDensity, vFlow, vUp);
-        Vector3f vInducedDrag = calculateInducedDrag(airDensity, vFlow, vLift);
-        return vLift.add(vInducedDrag);
-    }
-
     private void logging(Vector3f vLift, Vector3f vUp, float angleOfAttack, Vector3f vInducedDrag) {
         String direction = "up";
         if (vLift.normalize().dot(vUp) < 0) {
@@ -86,7 +77,7 @@ public class SymmetricAirfoil implements Airfoil {
         logger.debug(name + " at " + angleOfAttack + " degrees generated " + direction + "forces: vLift " + vLift.length() + ", induced drag " + vInducedDrag.length());
     }
 
-    public Vector3f addDamping(Vector3f vFlow, Vector3f vAngularVelocity, Vector3f vUp) {
+    public Vector3f damp(Vector3f vFlow, Vector3f vAngularVelocity, Vector3f vUp) {
         float zDamping = vAngularVelocity.z * cog.length() * dampingFactor;
         float xDamping = vAngularVelocity.x * cog.length() * 2;
         float yDamping = vAngularVelocity.y * cog.length() * 1;
@@ -135,7 +126,7 @@ public class SymmetricAirfoil implements Airfoil {
         return liftCoefficient;
     }
 
-    public Vector3f calculateInducedDrag(float airDensity, Vector3f vFlow, Vector3f vLift) {
+    public Vector3f inducedDrag(float airDensity, Vector3f vFlow, Vector3f vLift) {
         float dividened = (0.5f * airDensity * aspectRatio * vFlow.lengthSquared() * FastMath.PI * wingArea);
         //logger.debug("Airdensity: " + airDensity + ", Velocity: " + vVelocity.length() + ", lift: " + vLift.length() + );
         if (dividened == 0) {
@@ -168,21 +159,27 @@ public class SymmetricAirfoil implements Airfoil {
     }
 
     Vector3f linearAcceleration = Vector3f.ZERO;
+    Vector3f torque = Vector3f.ZERO;
 
     @Override
-    public LiftProducer tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
-        linearAcceleration = calculateResultantForce(airDensity, vVelocity, angularVelocity);
+    public synchronized LiftProducer tick(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
+        Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
+        vFlow = damp(vFlow, vAngularVelocity, vUp);
+        Vector3f vLift = lift(airDensity, vFlow, vUp);
+        Vector3f vInducedDrag = inducedDrag(airDensity, vFlow, vLift);
+        linearAcceleration =  vLift.add(vInducedDrag);
+        torque = cog.cross(linearAcceleration);
         return this;
     }
 
     @Override
-    public Vector3f linearAcceleration() {
+    public synchronized Vector3f linearAcceleration() {
         return linearAcceleration;
     }
 
     @Override
-    public Vector3f torque() {
-        return cog.cross(linearAcceleration);
+    public synchronized Vector3f torque() {
+        return torque;
     }
 
 }
