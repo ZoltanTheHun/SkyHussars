@@ -91,33 +91,35 @@ public class PlanePhysicsImpl implements PlanePhysics {
         this.translation = new Vector3f(translation);
     }
     
-
+    private final Quaternion helperQuaternion = new Quaternion();
     
-    /* Airfoil calculations*/
+    /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
     private void updateAirfoils() { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow(), vAngularVelocity));}
-    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));}
-    private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));}
+    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,Vector3f::add));}
+    private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,Vector3f::add));}
     
+    /* Engine calculations */
+    private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,Vector3f::add));}
+    private Vector3f engineTorque() {return Vector3f.ZERO;}  // to be added later
+
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
-        Vector3f engineLinear = rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,(e1,e2) -> e1.add(e2)));
-        Vector3f engineTorque = Vector3f.ZERO; // to be added later
         updateAirfoils();
        
-        Vector3f vLinearAcceleration = Vector3f.ZERO
+        Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
-                .add(engineLinear)
+                .add(engineLinear())
                 .add(airfoilLinear())
-                .add(calculateParasiticDrag()).divide(mass);
-        logger.debug("Linear velocity: " + vVelocity + ", linear acceleration: " + vLinearAcceleration);
+                .add(parasiticDrag()).divide(mass);
 
-        vVelocity = vVelocity.add(vLinearAcceleration.mult(tpf));
+        vVelocity = vVelocity.add(linearAcc.mult(tpf));
+        
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque());
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
-        Quaternion rotationQuaternion = Quaternion.IDENTITY.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        Quaternion rotationQuaternion = helperQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
             rotation = rotation.mult(rotationQuaternion);
             translation = translation.add(vVelocity.mult(tpf));
@@ -129,7 +131,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         model.setLocalTranslation(translation);
     }
 
-    private Vector3f calculateParasiticDrag() {
+    private Vector3f parasiticDrag() {
         return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
 
