@@ -99,7 +99,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         airfoils.stream().forEach(a -> a.tick(airDensity, vFlow, rotation, vAngularVelocity));
         Vector3f afLAcc = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
         Vector3f afTorque = (airfoils.stream().map(a ->a.torque(qRotationInv)).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
-
+        afLAcc = rotation.mult(afLAcc);
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineForces.vLinearComponent)
