@@ -96,9 +96,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
         Quaternion qRotationInv = rotation.inverse();
         logger.debug("Plane roll: " + (rotation.mult(Vector3f.UNIT_X).cross(Vector3f.UNIT_Z.negate()).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG));
         ActingForces engineForces = engineForces(rotation);
-        airfoils.stream().forEach(a -> a.tick(airDensity, vFlow, rotation, vAngularVelocity));
+        airfoils.stream().forEach(a -> a.tick(airDensity, qRotationInv.mult(vFlow), vAngularVelocity));
         Vector3f afLAcc = airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,(a,b) -> a.add(b));
-        Vector3f afTorque = (airfoils.stream().map(a ->a.torque(qRotationInv)).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
+        Vector3f afTorque = (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,(a,b) -> a.add(b)));
         afLAcc = rotation.mult(afLAcc);
         Vector3f vLinearAcceleration = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))

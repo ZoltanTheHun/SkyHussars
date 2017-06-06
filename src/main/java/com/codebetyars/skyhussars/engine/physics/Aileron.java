@@ -41,8 +41,8 @@ public class Aileron implements Airfoil {
     }
     
     @Override
-    public Airfoil tick(float airDensity, Vector3f vVelocity, Quaternion situation, Vector3f angularVelocity){
-        airfoil.tick(airDensity, vVelocity, situation.mult(qAileron), angularVelocity);
+    public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity){
+        airfoil.tick(airDensity, qAileron.inverse().mult(vVelocity), angularVelocity);
         return this;
     }
 
@@ -52,8 +52,8 @@ public class Aileron implements Airfoil {
     }
     
     @Override
-    public Vector3f torque(Quaternion rotInverse){
-        return airfoil.torque(rotInverse);
+    public Vector3f torque(){
+        return airfoil.torque();
     }
     
     
