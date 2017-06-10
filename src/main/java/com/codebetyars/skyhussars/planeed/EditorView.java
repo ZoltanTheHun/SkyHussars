@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.planeed;
 
 import com.codebetyars.skyhussars.PlaneEd;
 import static com.codebetyars.skyhussars.planeed.UiHelpers.*;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -45,18 +46,27 @@ public class EditorView {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
-        fileMenu.getItems().add(loadMenuItem(stage, planeEd));
+        ObservableList<MenuItem> mis = fileMenu.getItems();
+        mis.add(loadMenu(stage, planeEd));
+        mis.add(saveMenu(planeEd));
         menuBar.getMenus().add(fileMenu);
-
         return menuBar;
     }
 
-    private MenuItem loadMenuItem(Stage stage, PlaneEd planeEd) {
+    private MenuItem loadMenu(Stage stage, PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
         loadMenu.setOnAction((ActionEvent t) -> {
             planeEd.loadPlane(fileChooser.showOpenDialog(stage));
         });
         return loadMenu;
+    }
+    
+    private MenuItem saveMenu(PlaneEd planeEd){
+        MenuItem saveMenu = new MenuItem("Save");
+        saveMenu.setOnAction((ActionEvent t) -> {
+            planeEd.save();
+        });
+        return saveMenu;
     }
 
     public GridPane items(PlaneProperties planeProperties) {       

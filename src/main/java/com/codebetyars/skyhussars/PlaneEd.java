@@ -26,6 +26,7 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorMarshal;
+import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.planeed.EditorView;
 import com.codebetyars.skyhussars.planeed.PlaneEdState;
 import com.codebetyars.skyhussars.planeed.PlaneProperties;
@@ -45,6 +46,7 @@ public class PlaneEd extends Application {
 
     private PlaneEdState state = new PlaneEdState();
     private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
+    private File openFile;
 
 
     @Override
@@ -54,7 +56,7 @@ public class PlaneEd extends Application {
         VBox root = new VBox();
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
-        stage.setScene(new Scene(root, 300, 250));
+        stage.setScene(new Scene(root, 500, 400));
         stage.show();
     }
 
@@ -64,9 +66,16 @@ public class PlaneEd extends Application {
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
         planeProperties.getMassEmpty().setValue(state.planeDescriptor().map(p -> p.getMassEmpty()).orElse(0.f));
+        openFile = file; // we set this only if no issue unmarshalling the file
     }
     
-    public void savePlane(File file) {
-        
+    public void save() {
+        PlaneDescriptor pd = state.planeDescriptor().orElseThrow(IllegalStateException::new);
+        PlaneProperties pp = planeProperties;
+        pd.setName(pp.getName().getValue());
+        pd.setMassTakeOffMax(pp.getMassTakeOffMax().getValue());
+        pd.setMassGross(pp.getMassGross().getValue());
+        pd.setMassEmpty(pp.getMassEmpty().getValue());
+        if(openFile != null) pdl.marshal(pd, openFile); //this is fine for now
     }
 }

@@ -36,6 +36,7 @@ public class UiHelpers {
     
     public static TextField textFieldFor(Property p){
         TextField tf = new TextField();
+        tf.setMinWidth(300);
         tf.textProperty().bindBidirectional(p);
         return tf;
     }
