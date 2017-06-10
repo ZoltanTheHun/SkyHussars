@@ -26,17 +26,15 @@
 package com.codebetyars.skyhussars.planeed;
 
 import com.codebetyars.skyhussars.PlaneEd;
+import static com.codebetyars.skyhussars.planeed.UiHelpers.*;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
 
 public class EditorView {
 
@@ -47,13 +45,13 @@ public class EditorView {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
-        fileMenu.getItems().add(createLoadMenuItem(stage, planeEd));
+        fileMenu.getItems().add(loadMenuItem(stage, planeEd));
         menuBar.getMenus().add(fileMenu);
 
         return menuBar;
     }
 
-    private MenuItem createLoadMenuItem(Stage stage, PlaneEd planeEd) {
+    private MenuItem loadMenuItem(Stage stage, PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
         loadMenu.setOnAction((ActionEvent t) -> {
             planeEd.loadPlane(fileChooser.showOpenDialog(stage));
@@ -61,45 +59,13 @@ public class EditorView {
         return loadMenu;
     }
 
-    public GridPane items(PlaneProperties planeProperties) {
-        Label lName = new Label("Name:");
-        TextField tfName = new TextField();
-        tfName.textProperty().bindBidirectional(planeProperties.getName());
-
-        Label lModelName = new Label("Model Name:");
-        TextField tfModelName = new TextField();
-        tfModelName.textProperty().bindBidirectional(planeProperties.getModelName());
-
-        Label lMassTakeOffMax = new Label("Mass, Take Off Max:");
-        TextField tfMassTakeOffMax = new TextField();
-        tfMassTakeOffMax.textProperty().bindBidirectional(planeProperties.getMassTakeOffMax(), new NumberStringConverter());
-
-        Label lMassGross = new Label("Mass, Gross: ");
-        TextField tfMassGross = new TextField();
-        tfMassGross.textProperty().bindBidirectional(planeProperties.getMassGross(), new NumberStringConverter());
-
-        Label lMassEmpty = new Label("Mass, Gross: ");
-        TextField tfMassEmpty = new TextField();
-        tfMassEmpty.textProperty().bindBidirectional(planeProperties.getMassEmpty(), new NumberStringConverter());
-        return populateGrid(2, lName, tfName,
-                lModelName, tfModelName,
-                lMassTakeOffMax, tfMassTakeOffMax,
-                lMassGross, tfMassGross, 
-                lMassEmpty, tfMassEmpty
+    public GridPane items(PlaneProperties planeProperties) {       
+        return populateGrid(2,  new Label("Name:"), textFieldFor(planeProperties.getName()),
+                new Label("Model Name:"), textFieldFor(planeProperties.getModelName()),
+                new Label("Mass, TakeOff Max: "), numberFieldFor(planeProperties.getMassTakeOffMax()),
+                new Label("Mass, Gross: "), numberFieldFor(planeProperties.getMassTakeOffMax()), 
+                new Label("Mass, Empty: "), numberFieldFor(planeProperties.getMassEmpty())
         );
     }
-
-    private GridPane populateGrid(int nElementInRow, Node... nodes) {
-        GridPane gp = new GridPane();
-        int cRow = 0;
-        for(int i=0;i<nodes.length;i=i+nElementInRow){
-            Node[] n = new Node[nElementInRow];
-            for(int h = 0;h<nElementInRow && h+i < nodes.length ;h++){
-                n[h] = nodes[h+i];
-            }
-            gp.addRow(cRow++,n);
-        }
-        return gp;
-    }
-
+    
 }

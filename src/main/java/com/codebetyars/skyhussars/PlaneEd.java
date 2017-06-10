@@ -33,12 +33,11 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class PlaneEd extends Application {
 
-    private PlaneProperties planeProperties = new PlaneProperties();
+    private final PlaneProperties planeProperties = new PlaneProperties();
 
     public static void main(String[] args) {
         launch(args);
@@ -47,7 +46,6 @@ public class PlaneEd extends Application {
     private PlaneEdState state = new PlaneEdState();
     private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
 
-    private Text wText = new Text("No text yet");
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -55,7 +53,6 @@ public class PlaneEd extends Application {
         stage.setTitle("SkyHussars PlaneEd");
         VBox root = new VBox();
         root.getChildren().add(ev.createMenuBar(stage, this));
-        root.getChildren().add(wText);
         root.getChildren().add(ev.items(planeProperties));
         stage.setScene(new Scene(root, 300, 250));
         stage.show();
@@ -63,7 +60,6 @@ public class PlaneEd extends Application {
 
     public void loadPlane(File file) {
         state = state.planeDescriptor(pdl.unmarshal(file)).openFile(file);
-        wText.textProperty().setValue(state.openFile().map(fi -> fi.getName()).orElse("No file selected yet."));
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));

@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.ModelManager;
+import com.codebetyars.skyhussars.engine.physics.Engine;
 import com.codebetyars.skyhussars.engine.plane.instruments.BarometricAltimeter;
 import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
@@ -35,6 +36,8 @@ import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,8 +66,13 @@ public class PlaneFactory {
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
         Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
-                gunSound, projectileManager,dataManager.getCockpit(),instruments);
+                gunSound, projectileManager,dataManager.getCockpit(),instruments,engines(planeDescriptor.getEngineLocations()));
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }
+    
+    private List<Engine> engines(List<EngineLocation> engineLocations){
+        return engineLocations.stream().map(el -> new Engine(el, 1.0f)).collect(Collectors.toList());
+    }
+
 }

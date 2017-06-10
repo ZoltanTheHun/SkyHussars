@@ -53,7 +53,6 @@ public class Plane {
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
-    private final PlaneDescriptor planeDescriptor;
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
     private final PlanePhysicsImpl physics;
@@ -102,8 +101,7 @@ public class Plane {
     public Plane(Spatial model, PlaneDescriptor planeDescriptor,
             AudioHandler engineSound, AudioHandler gunSound,
             ProjectileManager projectileManager, Geometry cockpit,
-            Instruments instruments) {
-        this.planeDescriptor = planeDescriptor;
+            Instruments instruments, List<Engine> engines) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         //engineSound.setPositional(true);
@@ -111,7 +109,7 @@ public class Plane {
         //test model is backwards
         model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
         this.projectileManager = projectileManager;
-        initializeGunGroup();
+        initializeGunGroup(planeDescriptor);
         geom = new PlaneGeometry();
         geom.attachSpatialToCockpitNode(cockpit);
         geom.attachSpatialToModelNode(model);
@@ -149,9 +147,7 @@ public class Plane {
             }
             airfoils.add(airfoil);
         }
-        for (EngineLocation engineLocation : planeDescriptor.getEngineLocations()) {
-            engines.add(new Engine(engineLocation, 1.0f));
-        }
+
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
         Vector3f translation = geom.root().getLocalTranslation();
@@ -159,7 +155,7 @@ public class Plane {
         this.physics.setSpeedForward(model, 300f);
     }
 
-    private void initializeGunGroup() {
+    private void initializeGunGroup(PlaneDescriptor planeDescriptor) {
         gunGroups = new ArrayList<>();
         for (GunGroupDescriptor gunGroupDescriptor : planeDescriptor.getGunGroupDescriptors()) {
             gunGroups.add(new GunGroup(gunGroupDescriptor, projectileManager));
