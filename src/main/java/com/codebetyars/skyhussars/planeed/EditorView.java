@@ -71,7 +71,6 @@ public class EditorView {
 
     public GridPane items(PlaneProperties planeProperties) {       
         return populateGrid(2,  new Label("Name:"), textFieldFor(planeProperties.getName()),
-                new Label("Model Name:"), textFieldFor(planeProperties.getModelName()),
                 new Label("Mass, TakeOff Max: "), numberFieldFor(planeProperties.getMassTakeOffMax()),
                 new Label("Mass, Gross: "), numberFieldFor(planeProperties.getMassTakeOffMax()), 
                 new Label("Mass, Empty: "), numberFieldFor(planeProperties.getMassEmpty())
