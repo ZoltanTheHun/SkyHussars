@@ -63,6 +63,7 @@ public class MissionMenu implements ScreenController {
 
     public void exitToMenu() {
         mission.switchState(menuState);
+        menuState.reset();
         nifty.gotoScreen("singleMissionMenu");
     }
 

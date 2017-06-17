@@ -25,8 +25,6 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
-import com.codebetyars.skyhussars.engine.GuiManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -52,6 +50,9 @@ public class MenuState implements GameState {
         nextState = null;
     }
     
+    public synchronized void reset(){ /*temporary hack to stop MissinState close looping*/
+        nextState = this;
+    }
     public synchronized MissionState currentMission(){
         return currentMission;
     }

@@ -58,6 +58,9 @@ public class ControlsMapper {
     public static final String MENU_DISPLAY = "OpenMenu";
     public static final String ROTATE_LEFT = "RotateLeft";
     public static final String ROTATE_RIGHT = "RotateRight";
+    public static final String PAUSE = "Pause";
+    public static final String CAMERA = "Camera";
+    public static final String RESET = "Reset";
     
     @Autowired
     private InputManager inputManager;
@@ -68,10 +71,10 @@ public class ControlsMapper {
     public void setupFlowControls(ActionListener actionListener) {
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_HIDE_STATS);
-        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
-        inputManager.addMapping("Camera", new KeyTrigger(KeyInput.KEY_C));
-        inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_R));
-        inputManager.addListener(actionListener, "Pause", "Camera", "Reset");
+        inputManager.addMapping(PAUSE, new KeyTrigger(KeyInput.KEY_P));
+        inputManager.addMapping(CAMERA, new KeyTrigger(KeyInput.KEY_C));
+        inputManager.addMapping(RESET, new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addListener(actionListener, PAUSE, CAMERA, RESET);
     }
     
     public void setupFlightJoystickControls(FlightJoystickControls flightJoystrictControls) {
