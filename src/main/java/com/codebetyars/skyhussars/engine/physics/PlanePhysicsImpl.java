@@ -101,15 +101,19 @@ public class PlanePhysicsImpl implements PlanePhysics {
     /* Engine calculations */
     private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,Vector3f::add));}
     private Vector3f engineTorque() {return Vector3f.ZERO;}  // to be added later
-
+    
+    /* Other calculations */
+    private Vector3f parasiticDrag() {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
+    
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
         updateAirfoils();
-       
+        
+        /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
-                .add(engineLinear())
+                .add(engineLinear())   
                 .add(airfoilLinear())
                 .add(parasiticDrag()).divide(mass);
 
@@ -128,10 +132,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public synchronized void updateScene(Node model) {
         model.setLocalRotation(rotation);
         model.setLocalTranslation(translation);
-    }
-
-    private Vector3f parasiticDrag() {
-        return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());
     }
 
     private void updateAuxiliary(Quaternion rotation, Vector3f translation, Environment environment) {
