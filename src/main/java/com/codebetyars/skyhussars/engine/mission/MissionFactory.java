@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.mission;
 
+import com.codebetyars.skyhussars.engine.terrain.TerrainManager;
 import com.codebetyars.skyhussars.engine.camera.CameraManager;
 import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.gamestates.MissionState;

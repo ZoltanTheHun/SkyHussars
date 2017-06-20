@@ -81,8 +81,7 @@ public class SingleMissionMenu implements ScreenController {
     private void populatePlaneSelect() {
         DropDown<String> planeSelect = screen.findNiftyControl("planeSelect", DropDown.class);
         planeSelect.clear();
-        planeRegistry.availablePlanes().forEach(planeName
-                -> planeSelect.addItem(planeName));
+        planeRegistry.availablePlanes().forEach(planeName -> planeSelect.addItem(planeName));
         planeSelect.selectItemByIndex(0);
     }
 

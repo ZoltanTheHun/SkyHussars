@@ -23,29 +23,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.terrain;
 
-import com.codebetyars.skyhussars.engine.terrain.TerrainManager;
-import com.codebetyars.skyhussars.engine.plane.Plane;
-import java.util.List;
-import java.util.Optional;
-
-public class World {
-
-    private final TerrainManager terrainManager;
-    private Plane target;
-
-    public World(List<Plane> planes, TerrainManager terrainManager) {
-        this.terrainManager = terrainManager;
-        planes.stream().filter(p -> p.planeMissionDescriptor().player())
-                .findFirst().ifPresent(p -> target = p);
-    }
-
-    public Optional<Plane> lookAround() {
-        return Optional.of(target);
+public class TerrainTexture {
+   
+    private String description;
+    private String path;
+    private float scale;
+    public TerrainTexture(){};
+    public TerrainTexture(TerrainTexture tt){
+        this.description = tt.description;
+        this.path = tt.path;
+        this.scale = tt.scale;
     }
     
-    public float getStandardHeightFor(Plane plane){
-        return plane.getHeight() - terrainManager.getHeightAt(plane.getLocation2D());
+    public TerrainTexture description(String desc){
+        TerrainTexture tt = new TerrainTexture(this);
+        tt.description = desc;
+        return tt;
     }
+    
+    public TerrainTexture path(String path){
+        TerrainTexture tt = new TerrainTexture(this);
+        tt.path = path;
+        return tt;
+    } 
+    
+    public TerrainTexture scale(float scale){
+        TerrainTexture tt = new TerrainTexture(this);
+        tt.scale = scale;
+        return tt;
+    }     
+    
+    public String description(){ return description;}
+    public String path(){ return path;}
+    public float scale(){return scale;}
 }

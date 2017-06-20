@@ -25,7 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.gamestates;
 
-import com.codebetyars.skyhussars.engine.TerrainManager;
+import com.codebetyars.skyhussars.engine.terrain.TerrainManager;
 import com.codebetyars.skyhussars.engine.World;
 import com.codebetyars.skyhussars.engine.ai.AIPilot;
 import com.codebetyars.skyhussars.engine.physics.environment.AtmosphereImpl;

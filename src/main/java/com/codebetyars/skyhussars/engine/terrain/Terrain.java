@@ -23,29 +23,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.terrain;
 
-import com.codebetyars.skyhussars.engine.terrain.TerrainManager;
-import com.codebetyars.skyhussars.engine.plane.Plane;
-import java.util.List;
-import java.util.Optional;
+import com.jme3.material.Material;
+import com.jme3.texture.Texture;
 
-public class World {
+public class Terrain {
 
-    private final TerrainManager terrainManager;
-    private Plane target;
-
-    public World(List<Plane> planes, TerrainManager terrainManager) {
-        this.terrainManager = terrainManager;
-        planes.stream().filter(p -> p.planeMissionDescriptor().player())
-                .findFirst().ifPresent(p -> target = p);
+    public Terrain(Material mat,Texture tx1, Texture tx2, Texture tx3) {
+        this.tx1 = tx1;
+        this.tx2 = tx2;
+        this.tx3 = tx3;
     }
-
-    public Optional<Plane> lookAround() {
-        return Optional.of(target);
-    }
-    
-    public float getStandardHeightFor(Plane plane){
-        return plane.getHeight() - terrainManager.getHeightAt(plane.getLocation2D());
-    }
+    private Texture tx1, tx2, tx3;
 }

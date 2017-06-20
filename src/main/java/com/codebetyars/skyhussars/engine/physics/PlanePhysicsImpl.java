@@ -128,7 +128,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
             translation = translation.add(vVelocity.mult(tpf));
         }
     }
-
+    
+    /* model can only be updated from main thread atm */
     public synchronized void updateScene(Node model) {
         model.setLocalRotation(rotation);
         model.setLocalTranslation(translation);

@@ -23,10 +23,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine;
+package com.codebetyars.skyhussars.engine.terrain;
 
+import com.codebetyars.skyhussars.engine.ComplexCamera;
 import com.codebetyars.skyhussars.engine.plane.Plane;
-import com.codebetyars.skyhussars.engine.terrain.TerrainDefinition;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
@@ -58,7 +58,15 @@ public class TerrainManager {
         return terrain.get(); //yeah, this is unsafe for now
     }
 
-    private final TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp");
+    private TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp")
+            .name("Adria")
+            .size(500)
+            .tx1(new TerrainTexture().description("Ground texture")
+                                    .path("Textures/ground.png").scale(128f))
+            .tx2(new TerrainTexture().description("Water texture")
+                                    .path("Textures/water.png").scale(1024f))
+            .tx3(new TerrainTexture().description("Forest texture")
+                                    .path("Textures/forest.png").scale(1024f));
 
     public float getHeightAt(Vector2f at) {
         return terrain.get().getHeight(at); // unsafe for now
@@ -68,24 +76,29 @@ public class TerrainManager {
         return terrain.map(t -> t.getHeight(plane.getLocation2D()) > plane.getHeight()).orElse(false);
     }
 
+    private Texture texture(String path){
+        Texture texture = assetManager.loadTexture(path);
+        texture.setWrap(Texture.WrapMode.Repeat);
+        return texture;
+    }
     public void loadTerrain() {
-        Texture grass = assetManager.loadTexture("Textures/ground.png");
+        Texture grass = assetManager.loadTexture(terrainDefinition.tx1().path());
         grass.setWrap(Texture.WrapMode.Repeat);
 
-        Texture water = assetManager.loadTexture("Textures/water.png");
+        Texture water = assetManager.loadTexture(terrainDefinition.tx2().path());
         water.setWrap(Texture.WrapMode.Repeat);
 
-        Texture land = assetManager.loadTexture("Textures/forest.png");
+        Texture land = assetManager.loadTexture(terrainDefinition.tx3().path());
         land.setWrap(Texture.WrapMode.Repeat);
 
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/AdriaSmall_alpha.png"));
-        mat_terrain.setTexture("DiffuseMap", grass);
-        mat_terrain.setFloat("DiffuseMap_0_scale", 128f);
-        mat_terrain.setTexture("DiffuseMap_2", water);
-        mat_terrain.setFloat("DiffuseMap_2_scale", 1024f);
-        mat_terrain.setTexture("DiffuseMap_1", land);
-        mat_terrain.setFloat("DiffuseMap_1_scale", 1024f);
+        mat_terrain.setTexture("DiffuseMap", texture(terrainDefinition.tx1().path()));
+        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale());
+        mat_terrain.setTexture("DiffuseMap_2", texture(terrainDefinition.tx2().path()));
+        mat_terrain.setFloat("DiffuseMap_2_scale", terrainDefinition.tx2().scale());
+        mat_terrain.setTexture("DiffuseMap_1", texture(terrainDefinition.tx3().path()));
+        mat_terrain.setFloat("DiffuseMap_1_scale", terrainDefinition.tx3().scale());
 
         terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
                 .getImage()).map(i -> new ImageBasedHeightMap(i, 12f))

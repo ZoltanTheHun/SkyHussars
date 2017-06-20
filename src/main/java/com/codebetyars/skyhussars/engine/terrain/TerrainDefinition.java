@@ -32,12 +32,15 @@ public class TerrainDefinition {
     private String name;
     private int size; //km
     private String heightmapPath;
-    
+    private TerrainTexture tx1,tx2,tx3;    
     public TerrainDefinition(){};
     public TerrainDefinition(TerrainDefinition td){
         this.heightmapPath = td.heightmapPath;
         this.size = td.size;
         this.name = td.name;
+        this.tx1 = td.tx1;
+        this.tx2 = td.tx2;
+        this.tx3 = td.tx3;
     }
     
     public TerrainDefinition heightMapPath(String path){
@@ -46,7 +49,7 @@ public class TerrainDefinition {
         return td;
     }
     
-    public TerrainDefinition size(int siye){
+    public TerrainDefinition size(int size){
         TerrainDefinition td = new TerrainDefinition(this);
         td.size = size;
         return td;
@@ -58,15 +61,28 @@ public class TerrainDefinition {
         return td;
     }
     
-    public Optional<String> name(){
-        return Optional.of(name);
+    public TerrainDefinition tx1(TerrainTexture tx){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.tx1 = tx;
+        return td;
     }
     
-    public Optional<Integer> size(){
-        return Optional.of(size);
+    public TerrainDefinition tx2(TerrainTexture tx){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.tx2 = tx;
+        return td;
     }
     
-    public Optional<String> heightMapPath(){
-        return Optional.of(heightmapPath);
+    public TerrainDefinition tx3(TerrainTexture tx){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.tx3 = tx;
+        return td;
     }
+    
+    public Optional<String> name(){return Optional.of(name);}
+    public Optional<Integer> size(){return Optional.of(size);}
+    public Optional<String> heightMapPath(){return Optional.of(heightmapPath);}
+    public TerrainTexture tx1(){return tx1;}
+    public TerrainTexture tx2(){return tx2;}   
+    public TerrainTexture tx3(){return tx3;}
 }
