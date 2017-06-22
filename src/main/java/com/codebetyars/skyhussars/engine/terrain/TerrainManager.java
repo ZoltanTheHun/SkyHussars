@@ -100,11 +100,12 @@ public class TerrainManager {
         mat_terrain.setTexture("DiffuseMap_1", texture(terrainDefinition.tx3().path()));
         mat_terrain.setFloat("DiffuseMap_1_scale", terrainDefinition.tx3().scale());
 
+        int patchSize = 9;
         terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
                 .getImage()).map(i -> new ImageBasedHeightMap(i, 12f))
                 .map(hm -> {
                     hm.load();
-                    return new TerrainQuad("my terrain", 9, 513, hm.getHeightMap());
+                    return new TerrainQuad("Terrain", patchSize, hm.getSize()+1, hm.getHeightMap());
                 }).map(tq -> {
                     tq.setMaterial(mat_terrain);
                     tq.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 

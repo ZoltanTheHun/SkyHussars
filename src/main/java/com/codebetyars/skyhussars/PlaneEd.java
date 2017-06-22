@@ -30,6 +30,7 @@ import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.planeed.EditorView;
 import com.codebetyars.skyhussars.planeed.PlaneEdState;
 import com.codebetyars.skyhussars.planeed.PlaneProperties;
+import com.codebetyars.skyhussars.planeed.WingTable;
 import java.io.File;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -56,6 +57,7 @@ public class PlaneEd extends Application {
         VBox root = new VBox();
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
+        root.getChildren().add(new WingTable().wingTable());
         stage.setScene(new Scene(root, 500, 400));
         stage.show();
     }
