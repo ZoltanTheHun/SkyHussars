@@ -26,12 +26,15 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorMarshal;
+import com.codebetyars.skyhussars.engine.plane.AirfoilDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.planeed.EditorView;
 import com.codebetyars.skyhussars.planeed.PlaneEdState;
 import com.codebetyars.skyhussars.planeed.PlaneProperties;
-import com.codebetyars.skyhussars.planeed.WingTable;
+import com.codebetyars.skyhussars.planeed.AirfoilTable;
+import com.google.common.collect.Lists;
 import java.io.File;
+import java.util.Arrays;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -57,7 +60,9 @@ public class PlaneEd extends Application {
         VBox root = new VBox();
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
-        root.getChildren().add(new WingTable().wingTable());
+        AirfoilDescriptor afd = new AirfoilDescriptor();
+        afd.setName("MyTestName");
+        root.getChildren().add(new AirfoilTable().airfoils(Lists.newArrayList(afd)).wingTable());
         stage.setScene(new Scene(root, 500, 400));
         stage.show();
     }

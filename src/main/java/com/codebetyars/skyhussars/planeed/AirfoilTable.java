@@ -25,11 +25,13 @@
  */
 package com.codebetyars.skyhussars.planeed;
 
+import com.codebetyars.skyhussars.engine.plane.AirfoilDescriptor;
+import com.codebetyars.skyhussars.engine.plane.Plane;
+import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -37,34 +39,34 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class WingTable {
+public class AirfoilTable {
      
+    private  ObservableList<Airfoil> data = FXCollections.observableArrayList();
+    
     public TableView wingTable(){
         TableView table = new TableView();
         table.setEditable(true);
-        
-        table.getColumns().addAll(column("Wing Name","name",Wing::setName), 
-                column("Direction","direction",Wing::setDirection),
-                column("CoG","cog",Wing::setCog),
-                column("Wing Area","wingArea",Wing::setWingArea),
-                column("Incidence","incidence",Wing::setIncidence), 
-                column("Aspect Ratio","aspectRatio",Wing::setAspectRatio),
-                column("Damper","damper",Wing::setDamper),
-                column("Dehidral Degree","dehidralDegree",Wing::setDehidralDegree));
-       ObservableList<Wing> data = FXCollections.observableArrayList(new Wing("TT", "TT", "TT", "TT", "TT", "TT", "TT", "TT"));
+        table.getColumns().addAll(column("Wing Name","name",Airfoil::setName), 
+                column("Direction","direction",Airfoil::setDirection),
+                column("CoG","cog",Airfoil::setCog),
+                column("Wing Area","wingArea",Airfoil::setWingArea),
+                column("Incidence","incidence",Airfoil::setIncidence), 
+                column("Aspect Ratio","aspectRatio",Airfoil::setAspectRatio),
+                column("Damper","damper",Airfoil::setDamper),
+                column("Dehidral Degree","dehidralDegree",Airfoil::setDehidralDegree)); 
        table.setItems(data);
        return table;
     }
     
-    private TableColumn column(String name,String method,final BiFunction<Wing,String,Wing> f){
+    private TableColumn column(String name,String method,final BiFunction<Airfoil,String,Airfoil> f){
         TableColumn column = new TableColumn(name);
         column.setCellValueFactory(new PropertyValueFactory<>(method));  
         column.setEditable(true);
         column.setCellFactory(TextFieldTableCell.forTableColumn());
-        column.setOnEditCommit(new EventHandler<CellEditEvent<Wing, String>>() {
+        column.setOnEditCommit(new EventHandler<CellEditEvent<Airfoil, String>>() {
             @Override
-            public void handle(CellEditEvent<Wing, String> t) {
-                Wing wing = ((Wing) t.getTableView().getItems().get(
+            public void handle(CellEditEvent<Airfoil, String> t) {
+                Airfoil wing = ((Airfoil) t.getTableView().getItems().get(
                     t.getTablePosition().getRow()));
                 f.apply(wing,t.getNewValue());
             }
@@ -72,4 +74,9 @@ public class WingTable {
         return column;
     }
 
+    public AirfoilTable airfoils(List<AirfoilDescriptor> afDescs){
+        data.clear();
+        data.addAll(afDescs.stream().map( afDesc -> new Airfoil().setName(afDesc.getName())).collect(Collectors.toList()));
+        return this;
+    }
 }
