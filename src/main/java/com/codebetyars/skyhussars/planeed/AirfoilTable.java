@@ -26,7 +26,6 @@
 package com.codebetyars.skyhussars.planeed;
 
 import com.codebetyars.skyhussars.engine.plane.AirfoilDescriptor;
-import com.codebetyars.skyhussars.engine.plane.Plane;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -42,9 +41,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 public class AirfoilTable {
      
     private  ObservableList<Airfoil> data = FXCollections.observableArrayList();
+    private  TableView table = new TableView();
     
     public TableView wingTable(){
-        TableView table = new TableView();
         table.setEditable(true);
         table.getColumns().addAll(column("Wing Name","name",Airfoil::setName), 
                 column("Direction","direction",Airfoil::setDirection),
@@ -53,11 +52,11 @@ public class AirfoilTable {
                 column("Incidence","incidence",Airfoil::setIncidence), 
                 column("Aspect Ratio","aspectRatio",Airfoil::setAspectRatio),
                 column("Damper","damper",Airfoil::setDamper),
-                column("Dehidral Degree","dehidralDegree",Airfoil::setDehidralDegree)); 
+                column("Dhidral Degree","dehidralDegree",Airfoil::setDehidralDegree)); 
        table.setItems(data);
        return table;
     }
-    
+            
     private TableColumn column(String name,String method,final BiFunction<Airfoil,String,Airfoil> f){
         TableColumn column = new TableColumn(name);
         column.setCellValueFactory(new PropertyValueFactory<>(method));  
@@ -76,7 +75,18 @@ public class AirfoilTable {
 
     public AirfoilTable airfoils(List<AirfoilDescriptor> afDescs){
         data.clear();
-        data.addAll(afDescs.stream().map( afDesc -> new Airfoil().setName(afDesc.getName())).collect(Collectors.toList()));
+        data.addAll(toAirfoils(afDescs));
         return this;
+    }
+    
+    private List<Airfoil> toAirfoils(List<AirfoilDescriptor> afDescs){
+        return afDescs.stream().map( afDesc -> 
+                new Airfoil().setName(afDesc.getName())
+                            .setAspectRatio(Float.toString(afDesc.getAspectRatio()))
+                            .setCog(afDesc.getCog().toString())
+                            .setDehidralDegree(Float.toString(afDesc.getDehidralDegree()))
+                            .setIncidence(Float.toString(afDesc.getIncidence()))
+                            .setWingArea(Float.toString(afDesc.getWingArea()))
+        ).collect(Collectors.toList());
     }
 }

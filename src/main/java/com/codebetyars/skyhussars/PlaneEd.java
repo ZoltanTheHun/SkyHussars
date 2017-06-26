@@ -26,15 +26,12 @@
 package com.codebetyars.skyhussars;
 
 import com.codebetyars.skyhussars.engine.loader.PlaneDescriptorMarshal;
-import com.codebetyars.skyhussars.engine.plane.AirfoilDescriptor;
 import com.codebetyars.skyhussars.engine.plane.PlaneDescriptor;
 import com.codebetyars.skyhussars.planeed.EditorView;
 import com.codebetyars.skyhussars.planeed.PlaneEdState;
 import com.codebetyars.skyhussars.planeed.PlaneProperties;
 import com.codebetyars.skyhussars.planeed.AirfoilTable;
-import com.google.common.collect.Lists;
 import java.io.File;
-import java.util.Arrays;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -51,8 +48,8 @@ public class PlaneEd extends Application {
     private PlaneEdState state = new PlaneEdState();
     private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
     private File openFile;
-
-
+    private AirfoilTable airfoilTable = new AirfoilTable();
+   
     @Override
     public void start(Stage stage) throws Exception {
         EditorView ev = new EditorView();
@@ -60,9 +57,7 @@ public class PlaneEd extends Application {
         VBox root = new VBox();
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
-        AirfoilDescriptor afd = new AirfoilDescriptor();
-        afd.setName("MyTestName");
-        root.getChildren().add(new AirfoilTable().airfoils(Lists.newArrayList(afd)).wingTable());
+        root.getChildren().add(airfoilTable.wingTable());
         stage.setScene(new Scene(root, 500, 400));
         stage.show();
     }
@@ -73,9 +68,12 @@ public class PlaneEd extends Application {
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
         planeProperties.getMassEmpty().setValue(state.planeDescriptor().map(p -> p.getMassEmpty()).orElse(0.f));
+        state.planeDescriptor().map(pd -> airfoilTable.airfoils(pd.getAirfolDescriptors()));
         openFile = file; // we set this only if no issue unmarshalling the file
+        
     }
     
+
     public void save() {
         PlaneDescriptor pd = state.planeDescriptor().orElseThrow(IllegalStateException::new);
         PlaneProperties pp = planeProperties;
