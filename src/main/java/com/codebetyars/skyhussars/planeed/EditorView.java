@@ -26,7 +26,9 @@
 package com.codebetyars.skyhussars.planeed;
 
 import com.codebetyars.skyhussars.PlaneEd;
+import com.codebetyars.skyhussars.SkyHussars;
 import static com.codebetyars.skyhussars.planeed.UiHelpers.*;
+import java.io.File;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
@@ -40,7 +42,9 @@ import javafx.stage.Stage;
 public class EditorView {
 
     private final FileChooser fileChooser = new FileChooser();
-    {fileChooser.setTitle("Open Plane Definition");}
+    {fileChooser.setTitle("Open Plane Definition");
+    fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
+    }
 
     public MenuBar createMenuBar(Stage stage, PlaneEd planeEd) {
         MenuBar menuBar = new MenuBar();
@@ -56,6 +60,7 @@ public class EditorView {
     private MenuItem loadMenu(Stage stage, PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
         loadMenu.setOnAction((ActionEvent t) -> {
+            
             planeEd.loadPlane(fileChooser.showOpenDialog(stage));
         });
         return loadMenu;
