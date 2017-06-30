@@ -72,7 +72,7 @@ public class Lighting implements InitializingBean {
         directionalLight.setColor(ColorRGBA.White.mult(0.5f));
         directionalLight.setDirection(new Vector3f(0.0f, -1.0f, 0.0f));
         ambientLight = new AmbientLight();
-        ambientLight.setColor(ColorRGBA.White.mult(0.5f));
+        ambientLight.setColor(ColorRGBA.White.mult(0.15f));
         lights = new LinkedList<>();
         lights.add(directionalLight);
         lights.add(ambientLight);
@@ -105,7 +105,7 @@ public class Lighting implements InitializingBean {
         logger.debug("Sun at: " + sunAt + ", moon at: " + moonAt);
         if (sunAt < FastMath.HALF_PI) {
             directionalLight.setDirection(sun.negate());
-            ColorRGBA lightStrength = ColorRGBA.White.mult(1f - sunAt / 4f);
+            ColorRGBA lightStrength = ColorRGBA.White.mult(0.8f - sunAt / 4f);
             directionalLight.setColor(lightStrength);
             ambientLight.setColor(lightStrength);
         } else if (moonAt < FastMath.HALF_PI) {

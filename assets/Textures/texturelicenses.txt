@@ -1,5 +1,6 @@
 water.png from OpenGameArt.com via Attribution-ShareAlike 3.0 Unported @ http://creativecommons.org/licenses/by-sa/3.0/
-forest.png and ground.png via GPL2/3 @ http://www.gnu.org/licenses/gpl-3.0.en.html
+grass2.png and ground.png via GPL2/3 @ http://www.gnu.org/licenses/gpl-3.0.en.html
+grass.png by http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 circle-01.png from OpenGameArt via Attribution-ShareAlike 3.0 Unported @ http://creativecommons.org/licenses/by-sa/3.0/
 p80-background.jpg from NASA, original filename: Lockheed_P-80A_Airplane_-_GPN-2000-001755.jpg, Great Images of NASA
 p80_getin_original.jpg from NASA, original filename: 16327309062_c676836f52_o.jpg from NASA on Commons

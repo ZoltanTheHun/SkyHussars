@@ -62,11 +62,11 @@ public class TerrainManager {
             .name("Adria")
             .size(500)
             .tx1(new TerrainTexture().description("Ground texture")
-                                    .path("Textures/ground.png").scale(128f))
+                                    .path("Textures/grass.png").scale(16384f))
             .tx2(new TerrainTexture().description("Water texture")
                                     .path("Textures/water.png").scale(1024f))
-            .tx3(new TerrainTexture().description("Forest texture")
-                                    .path("Textures/forest.png").scale(1024f));
+            .tx3(new TerrainTexture().description("Grass texture")
+                                    .path("Textures/grass.png").scale(1024f));
 
     public float getHeightAt(Vector2f at) {
         return terrain.get().getHeight(at); // unsafe for now

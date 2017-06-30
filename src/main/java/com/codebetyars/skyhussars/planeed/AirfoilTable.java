@@ -52,7 +52,7 @@ public class AirfoilTable {
                 column("Incidence","incidence",Airfoil::setIncidence), 
                 column("Aspect Ratio","aspectRatio",Airfoil::setAspectRatio),
                 column("Damper","damper",Airfoil::setDamper),
-                column("Dhidral Degree","dehidralDegree",Airfoil::setDehidralDegree)); 
+                column("Dehidral Degree","dehidralDegree",Airfoil::setDehidralDegree)); 
        table.setItems(data);
        return table;
     }
