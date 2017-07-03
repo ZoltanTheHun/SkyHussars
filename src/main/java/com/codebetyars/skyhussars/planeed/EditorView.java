@@ -60,7 +60,6 @@ public class EditorView {
     private MenuItem loadMenu(Stage stage, PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
         loadMenu.setOnAction((ActionEvent t) -> {
-            
             planeEd.loadPlane(fileChooser.showOpenDialog(stage));
         });
         return loadMenu;

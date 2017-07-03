@@ -58,16 +58,16 @@ public class TerrainManager {
         return terrain.get(); //yeah, this is unsafe for now
     }
 
-    private TerrainDefinition terrainDefinition = new TerrainDefinition().heightMapPath("Textures/AdriaSmall.bmp")
-            .name("Adria")
-            .size(500)
-            .tx1(new TerrainTexture().description("Ground texture")
-                                    .path("Textures/grass.png").scale(16384f))
-            .tx2(new TerrainTexture().description("Water texture")
-                                    .path("Textures/water.png").scale(1024f))
-            .tx3(new TerrainTexture().description("Grass texture")
-                                    .path("Textures/grass.png").scale(1024f));
-
+    private TerrainDefinition adria = new TerrainDefinition().heightMapPath("Maps/Adria/Adria4.bmp")
+        .name("Adria")
+        .size(500)
+        .tx1(new TerrainTexture().description("Ground texture")
+                                .path("Maps/Adria/grass.png").scale(1f))
+        .tx2(new TerrainTexture().description("Water texture")
+                                .path("Maps/Adria/water.png").scale(1024f))
+        .tx3(new TerrainTexture().description("Grass texture")
+                                .path("Maps/Adria/grass.png").scale(1f));
+    
     public float getHeightAt(Vector2f at) {
         return terrain.get().getHeight(at); // unsafe for now
     }
@@ -81,7 +81,11 @@ public class TerrainManager {
         texture.setWrap(Texture.WrapMode.Repeat);
         return texture;
     }
+    
     public void loadTerrain() {
+        loadTerrain(adria);
+    }
+    public void loadTerrain(TerrainDefinition terrainDefinition) {
         Texture grass = assetManager.loadTexture(terrainDefinition.tx1().path());
         grass.setWrap(Texture.WrapMode.Repeat);
 
@@ -90,29 +94,35 @@ public class TerrainManager {
 
         Texture land = assetManager.loadTexture(terrainDefinition.tx3().path());
         land.setWrap(Texture.WrapMode.Repeat);
-
+        float scale = 500;
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
-        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/AdriaSmall_alpha.png"));
+        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Maps/Adria/AdriaSmall_alpha.png"));
         mat_terrain.setTexture("DiffuseMap", texture(terrainDefinition.tx1().path()));
-        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale());
+        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale()*16*scale);  //playing with scales
         mat_terrain.setTexture("DiffuseMap_2", texture(terrainDefinition.tx2().path()));
         mat_terrain.setFloat("DiffuseMap_2_scale", terrainDefinition.tx2().scale());
         mat_terrain.setTexture("DiffuseMap_1", texture(terrainDefinition.tx3().path()));
         mat_terrain.setFloat("DiffuseMap_1_scale", terrainDefinition.tx3().scale());
 
-        int patchSize = 9;
+        int patchSize = 17;
         terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
-                .getImage()).map(i -> new ImageBasedHeightMap(i, 12f))
+                .getImage()).map(i -> new ImageBasedHeightMap(i, 10f))
                 .map(hm -> {
                     hm.load();
                     return new TerrainQuad("Terrain", patchSize, hm.getSize()+1, hm.getHeightMap());
                 }).map(tq -> {
                     tq.setMaterial(mat_terrain);
-                    tq.setLocalScale(1000f, 1f, 1000f); //heightmap size: we used a 512px heightmap to represent a 512km area? 1pixel 1m*1000 
+                    tq.setLocalScale(scale, 1f, scale); // 1pixel 1m * scale * m
                     tq.addControl(new TerrainLodControl(tq, camera.testCamera()));
                     tq.setShadowMode(RenderQueue.ShadowMode.Receive);
+                    setLocation(tq,99,512,2048,scale);
                     rootNode.attachChild(tq);
                     return tq;
                 });
+    }
+    
+    private void setLocation(TerrainQuad tq, float x, float y, float size,float scale){
+        float shift = size * scale / 2;
+        tq.setLocalTranslation(x*scale - shift, 0, y*scale - shift);
     }
 }
