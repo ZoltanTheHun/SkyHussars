@@ -100,7 +100,7 @@ public class Plane {
 
     public Plane(Spatial model, PlaneDescriptor planeDescriptor,
             AudioHandler engineSound, AudioHandler gunSound,
-            ProjectileManager projectileManager, Geometry cockpit,
+            ProjectileManager projectileManager, Geometry cockpit,Spatial cockpitModel,
             Instruments instruments, List<Engine> engines) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
@@ -111,7 +111,10 @@ public class Plane {
         this.projectileManager = projectileManager;
         initializeGunGroup(planeDescriptor);
         geom = new PlaneGeometry();
-        geom.attachSpatialToCockpitNode(cockpit);
+        
+
+        geom.attachSpatialToCockpitNode(cockpitModel);
+                geom.attachSpatialToCockpitNode(cockpit);
         geom.attachSpatialToModelNode(model);
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());

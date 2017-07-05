@@ -59,7 +59,7 @@ public class PlaneGeometry {
          */
         cockpitNode.attachChild(cockpit);
         cockpitNode.rotate(0, FastMath.PI, 0);
-        cockpitNode.move(0.015f, -0.015f, 0.7f);
+        //cockpitNode.move(0.015f, -0.015f, 0.7f);
     }
 
     public void attachSpatialToRootNode(Spatial spatial) {

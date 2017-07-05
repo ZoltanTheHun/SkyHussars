@@ -84,6 +84,7 @@ public class DataManager {
                 "Textures/circle-01.png"));
         geom.setMaterial(mat);
         geom.setQueueBucket(Bucket.Translucent);
+        geom.setLocalTranslation(new Vector3f(0, 0.8f, 2.6f).add(0.015f, -0.015f, 0.7f));
         return geom;
     }
 

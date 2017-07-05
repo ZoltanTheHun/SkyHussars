@@ -62,7 +62,7 @@ public class TerrainManager {
         .name("Adria")
         .size(500)
         .tx1(new TerrainTexture().description("Ground texture")
-                                .path("Maps/Adria/grass.png").scale(1f))
+                                .path("Maps/Adria/grass.png").scale(2048f))
         .tx2(new TerrainTexture().description("Water texture")
                                 .path("Maps/Adria/water.png").scale(1024f))
         .tx3(new TerrainTexture().description("Grass texture")
@@ -94,15 +94,16 @@ public class TerrainManager {
 
         Texture land = assetManager.loadTexture(terrainDefinition.tx3().path());
         land.setWrap(Texture.WrapMode.Repeat);
-        float scale = 500;
+        float scale = 100;
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Maps/Adria/AdriaSmall_alpha.png"));
         mat_terrain.setTexture("DiffuseMap", texture(terrainDefinition.tx1().path()));
-        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale()*16*scale);  //playing with scales
+        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale());  //playing with scales
         mat_terrain.setTexture("DiffuseMap_2", texture(terrainDefinition.tx2().path()));
         mat_terrain.setFloat("DiffuseMap_2_scale", terrainDefinition.tx2().scale());
         mat_terrain.setTexture("DiffuseMap_1", texture(terrainDefinition.tx3().path()));
         mat_terrain.setFloat("DiffuseMap_1_scale", terrainDefinition.tx3().scale());
+        
 
         int patchSize = 17;
         terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)

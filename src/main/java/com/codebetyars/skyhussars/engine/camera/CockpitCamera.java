@@ -76,8 +76,9 @@ public class CockpitCamera implements CameraBehaviour{
     
     @Override
     public CockpitCamera updateCam(ComplexCamera cam, PlaneGeometry focus){
-        cam.moveCameraTo(focus.root().getLocalTranslation());
+        Vector3f cameraLocation = new Vector3f(0, 0.8f, 1.6f);
         Node node = focus.root();
+        cam.moveCameraTo(focus.root().getLocalTranslation().add(node.getLocalRotation().mult(cameraLocation)));
         cam.lookAtDirection(node.getLocalRotation().mult(rotationX).
                 mult(rotationY).mult(Vector3f.UNIT_Z), node.getLocalRotation().
                 mult(Vector3f.UNIT_Y));

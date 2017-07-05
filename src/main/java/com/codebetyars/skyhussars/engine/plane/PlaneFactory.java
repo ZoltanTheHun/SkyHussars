@@ -59,6 +59,9 @@ public class PlaneFactory {
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
         Spatial model = modelManager.model("p80", "p80_material").clone();
+        Spatial cockpitModel = modelManager.model("p80cabin", "p80_material").clone();
+        //cockpitModel.setCullHint(Spatial.CullHint.Always);
+        cockpitModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         AudioHandler engineSound = soundManager.sound("engine");
         AudioHandler gunSound = soundManager.sound("gun");
@@ -66,7 +69,7 @@ public class PlaneFactory {
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
         Plane plane = new Plane(
                 model, planeDescriptor, engineSound,
-                gunSound, projectileManager,dataManager.getCockpit(),instruments,engines(planeDescriptor.getEngineLocations()));
+                gunSound, projectileManager,dataManager.getCockpit(),cockpitModel,instruments,engines(planeDescriptor.getEngineLocations()));
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }

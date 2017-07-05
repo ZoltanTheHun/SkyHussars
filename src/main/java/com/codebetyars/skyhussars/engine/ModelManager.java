@@ -55,9 +55,8 @@ public class ModelManager implements InitializingBean {
     }
 
     private void loadModels() {
-        Spatial p80 = assetManager.loadModel("Models/p80/p80_16_game.j3o");
-        spatials.put("p80", p80);
-
+        spatials.put("p80", assetManager.loadModel("Models/p80/p80_16_game.j3o"));
+        spatials.put("p80cabin",assetManager.loadModel("Models/p80/p80cabin/p80cabin.j3o"));
     }
 
     private void loadMaterials() {
