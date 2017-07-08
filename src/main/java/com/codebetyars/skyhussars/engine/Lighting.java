@@ -77,10 +77,11 @@ public class Lighting implements InitializingBean {
         lights.add(directionalLight);
         lights.add(ambientLight);
         
-        final int SHADOWMAP_SIZE = 1024;
-        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        final int SHADOWMAP_SIZE = 4096;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
-        dlsr.setRenderBackFacesShadows(Boolean.FALSE);
+        
+        dlsr.setRenderBackFacesShadows(Boolean.TRUE);
         dlsr.setShadowCompareMode(CompareMode.Hardware);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
         camera.addEffect(dlsr);      
