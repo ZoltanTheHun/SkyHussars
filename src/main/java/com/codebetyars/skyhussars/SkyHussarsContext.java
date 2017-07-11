@@ -44,7 +44,6 @@ public class SkyHussarsContext {
 
     public GameState init() {
         guiManager.createGUI();
-        mainMenu.initialize();
         return mainMenu;
     }
 }

@@ -132,6 +132,7 @@ public class MissionState implements GameState {
 
     @Override
     public synchronized GameState update(float tpf) {
+        if(nextState == null) initialize();
         cycles++;
         long millis = System.currentTimeMillis();
         soundManager.update();
@@ -156,12 +157,13 @@ public class MissionState implements GameState {
      /*   logger.info("Gamestate update complete in " + millis);
          logger.info("Current cycle: {}", worldThread.cycle());
          logger.info("Current render cycle: {}", cycles);*/
-
+        if(nextState != this) close();
         return nextState;
     }
 
     public synchronized void switchState(GameState state) {
         nextState = state;
+
     }
 
     private void updatePlanes(float tpf) {
@@ -176,8 +178,7 @@ public class MissionState implements GameState {
         });
     }
 
-    @Override
-    public void close() {
+    private void close() {
         if (timer != null) {
             timer.cancel();
         }
@@ -190,8 +191,7 @@ public class MissionState implements GameState {
         /*rootNode.forceRefresh(true, true, true);*/
     }
 
-    @Override
-    public void initialize() {
+    private void initialize() {
         initializeScene();
         ended = false;
     }

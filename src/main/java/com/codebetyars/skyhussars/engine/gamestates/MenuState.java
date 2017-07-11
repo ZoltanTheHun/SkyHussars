@@ -38,14 +38,6 @@ public class MenuState implements GameState {
         return nextState;
     }
 
-    @Override
-    public void close() {
-    }
-
-    @Override
-    public void initialize() {
-    }
-
     public synchronized void exitGame() {
         nextState = null;
     }

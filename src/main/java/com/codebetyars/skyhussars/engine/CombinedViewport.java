@@ -66,7 +66,7 @@ public class CombinedViewport {
         setupView();
     }
 
-    private void setupView() {
+    private CombinedViewport setupView() {
         cam.setFrustumPerspective(fov, aspect, near, far);
         
         viewPort.setBackgroundColor(ColorRGBA.BlackNoAlpha);
@@ -75,6 +75,7 @@ public class CombinedViewport {
         viewPort.addProcessor(fpp);
         
         fpp.setNumSamples(8);
+        return this;
     }
 
     public Camera cam() {
@@ -89,12 +90,14 @@ public class CombinedViewport {
         return name;
     }
 
-    public void fov(float fov) {
+    public CombinedViewport fov(float fov) {
         this.fov = fov;
         cam.setFrustumPerspective(fov, aspect, near, far);
+        return this;
     }
     
-    public void addFilter(Filter filter) {
+    public CombinedViewport addFilter(Filter filter) {
         fpp.addFilter(filter);
+        return this;
     }
 }

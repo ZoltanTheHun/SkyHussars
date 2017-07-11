@@ -28,6 +28,4 @@ package com.codebetyars.skyhussars.engine.gamestates;
 
 public abstract interface GameState {
     public abstract GameState update(float tpf);
-    public abstract void close();
-    public abstract void initialize();
 }
