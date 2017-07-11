@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.mission.PlaneMissionDescriptor;
 import com.codebetyars.skyhussars.engine.physics.Aileron;
+import com.codebetyars.skyhussars.engine.physics.Aileron.Direction;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysicsImpl;
 import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Plane {
 
@@ -95,10 +97,10 @@ public class Plane {
     private final List<Aileron> horizontalStabilizers = new ArrayList<>();
     private final List<Aileron> verticalStabilizers = new ArrayList<>();
 
-    private final List<Airfoil> airfoils;
+    private final List<Airfoil> airfoils = new ArrayList<>();
     private final List<Aileron> ailerons;
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor,
+    public Plane(Spatial model, PlaneDescriptor planeDescriptor,List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
             ProjectileManager projectileManager, Geometry cockpit,Spatial cockpitModel,
             Instruments instruments, List<Engine> engines) {
@@ -118,38 +120,20 @@ public class Plane {
         geom.attachSpatialToModelNode(model);
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
-        airfoils = new ArrayList<>(planeDescriptor.getAirfolDescriptors().size());
         ailerons = new ArrayList<>();
-        for (AirfoilDescriptor airfoilDescriptor : planeDescriptor.getAirfolDescriptors()) {
-            Airfoil airfoil
-                    = new SymmetricAirfoil(
-                            airfoilDescriptor.getName(),
-                            airfoilDescriptor.getCog(),
-                            airfoilDescriptor.getWingArea(),
-                            airfoilDescriptor.getIncidence(),
-                            airfoilDescriptor.getAspectRatio(),
-                            airfoilDescriptor.isDamper(),
-                            airfoilDescriptor.getDehidralDegree());
-            
-            /* this solution is still very unsatisfactory */
-            if (airfoil.getName().startsWith("WingLeft")) {
-                airfoil = new Aileron(airfoil, Aileron.Direction.LEFT);
-                ailerons.add((Aileron)airfoil);
-            }
-            if (airfoil.getName().startsWith("WingRight")) {
-                airfoil = new Aileron(airfoil, Aileron.Direction.RIGHT);
-                ailerons.add((Aileron)airfoil);
-            }
-            if (airfoil.getName().startsWith("Horizontal")) {
-                airfoil = new Aileron(airfoil, Aileron.Direction.STABILIZER);
-                horizontalStabilizers.add((Aileron)airfoil);
-            }
-            if (airfoil.getName().startsWith("Vertical")) {
-                airfoil = new Aileron(airfoil, Aileron.Direction.STABILIZER);
-                verticalStabilizers.add((Aileron)airfoil);
-            }
-            airfoils.add(airfoil);
-        }
+        ailerons.addAll(airfoils.stream() 
+                .filter( af -> af.direction().equals(Direction.LEFT) || af.direction().equals(Direction.RIGHT))
+                .map(af -> (Aileron) af).collect(Collectors.toList()));
+        horizontalStabilizers.addAll(airfoils.stream()
+                .filter( af -> af.direction().equals(Direction.HORIZONTAL_STABILIZER))
+                .map(af -> (Aileron) af)
+                .collect(Collectors.toList()));
+        verticalStabilizers.addAll(airfoils.stream()
+                .filter( af -> af.direction().equals(Direction.VERTICAL_STABILIZER))
+                .map(af -> (Aileron) af)
+                .collect(Collectors.toList()));
+        this.airfoils.addAll(airfoils);
+        
 
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 

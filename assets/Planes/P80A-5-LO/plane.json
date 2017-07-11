@@ -22,11 +22,25 @@
       "y" : 0.0,
       "z" : -0.2
     },
-    "wingArea" : 11.035,
+    "wingArea" : 5.5175,
     "incidence" : 1.0,
     "aspectRatio" : 6.37,
     "damper" : true,
-    "dehidralDegree" : 0.0
+    "dehidralDegree" : 0.0,
+    "direction" : "LEFT"
+  }, {
+    "name" : "WingOuterLeft",
+    "cog" : {
+      "x" : -4.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "LEFT"
   }, {
     "name" : "WingRight",
     "cog" : {
@@ -34,11 +48,25 @@
       "y" : 0.0,
       "z" : -0.2
     },
-    "wingArea" : 11.035,
+    "wingArea" : 5.5175,
     "incidence" : 1.0,
     "aspectRatio" : 6.37,
     "damper" : true,
-    "dehidralDegree" : 0.0
+    "dehidralDegree" : 0.0,
+    "direction" : "RIGHT"
+  }, {
+    "name" : "WingOuterRight",
+    "cog" : {
+      "x" : 4.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "RIGHT"
   }, {
     "name" : "HorizontalStabilizer",
     "cog" : {
@@ -50,7 +78,8 @@
     "incidence" : -3.0,
     "aspectRatio" : 4.2466664,
     "damper" : false,
-    "dehidralDegree" : 0.0
+    "dehidralDegree" : 0.0,
+    "direction" : "HORIZONTAL_STABILIZER"
   }, {
     "name" : "VerticalStabilizer",
     "cog" : {
@@ -62,7 +91,8 @@
     "incidence" : 0.0,
     "aspectRatio" : 4.2466664,
     "damper" : false,
-    "dehidralDegree" : 90.0
+    "dehidralDegree" : 90.0,
+    "direction" : "VERTICAL_STABILIZER"
   } ],
   "gunGroupDescriptors" : [ {
     "name" : "6x .50 M3 Browning",

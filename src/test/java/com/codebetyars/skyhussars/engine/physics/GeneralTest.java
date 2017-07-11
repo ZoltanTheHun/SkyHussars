@@ -46,7 +46,7 @@ public class GeneralTest {
         Vector3f wingLocation =  new Vector3f(0, 0, 0);
         float incidence = 0;
         float dehidralDegree = 0;
-        SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
+      //  SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion();
         Vector3f angularVelocity = Vector3f.ZERO;
@@ -58,7 +58,7 @@ public class GeneralTest {
         Vector3f wingLocation =  new Vector3f(0, 0, 0);
         float incidence = 1;
         float dehidralDegree = 0;
-        SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
+        //SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion();
         Vector3f angularVelocity = Vector3f.ZERO;
@@ -70,7 +70,7 @@ public class GeneralTest {
         Vector3f wingLocation =  new Vector3f(0, 0, 0);
         float incidence = 1;
         float dehidralDegree = 0;
-        SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
+        //SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion().fromAngles(0, 0, 90*FastMath.DEG_TO_RAD);
         Vector3f angularVelocity = Vector3f.ZERO;
@@ -82,7 +82,7 @@ public class GeneralTest {
         Vector3f wingLocation =  new Vector3f(0, 0, 0);
         float incidence = 1;
         float dehidralDegree = 0;
-        SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
+        //SymmetricAirfoil test = new SymmetricAirfoil("WingA", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
         Vector3f flow = Vector3f.UNIT_Z.mult(300).negate();
         Quaternion situation = new Quaternion().fromAngles(0, 0, 180*FastMath.DEG_TO_RAD);
         Vector3f angularVelocity = Vector3f.ZERO;
@@ -94,7 +94,7 @@ public class GeneralTest {
         Vector3f wingLocation =  new Vector3f(0, 0, 0);
         float incidence = 0;
         float dehidralDegree = 90;
-        SymmetricAirfoil test = new SymmetricAirfoil("VerticalStabilizer", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
+        //SymmetricAirfoil test = new SymmetricAirfoil("VerticalStabilizer", wingLocation, wingArea, incidence, aspectRatio,  true,dehidralDegree);
         /*Vector3f flow = new Quaternion().fromAngles(-1*FastMath.DEG_TO_RAD,0,0).mult(Vector3f.UNIT_Z).mult(300).negate();*/
         Vector3f flow = new Quaternion().fromAngles(0,0,0).mult(Vector3f.UNIT_Z).mult(300).negate();
 

@@ -27,7 +27,10 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.DataManager;
 import com.codebetyars.skyhussars.engine.ModelManager;
+import com.codebetyars.skyhussars.engine.physics.Aileron;
+import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
+import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.plane.instruments.BarometricAltimeter;
 import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
@@ -36,6 +39,7 @@ import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,15 +71,34 @@ public class PlaneFactory {
         AudioHandler gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
-        Plane plane = new Plane(
-                model, planeDescriptor, engineSound,
-                gunSound, projectileManager,dataManager.getCockpit(),cockpitModel,instruments,engines(planeDescriptor.getEngineLocations()));
-        plane.fireEffect(dataManager.fireEffect());
-        return plane;
+        Plane plane = new Plane(model,
+                        planeDescriptor, 
+                        airfoils(planeDescriptor.getAirfolDescriptors()),
+                        engineSound,
+                        gunSound, projectileManager,
+                        dataManager.getCockpit(),
+                        cockpitModel,instruments,engines(planeDescriptor.getEngineLocations()));
+                        plane.fireEffect(dataManager.fireEffect());
+            return plane;
     }
     
     private List<Engine> engines(List<EngineLocation> engineLocations){
         return engineLocations.stream().map(el -> new Engine(el, 1.0f)).collect(Collectors.toList());
     }
 
+    private List<Airfoil> airfoils(List<AirfoilDescriptor> afs){
+        return afs.stream().map( af -> 
+            new Aileron(new SymmetricAirfoil(af.getName(),
+                                            af.getCog(),
+                                            af.getWingArea(),
+                                            af.getIncidence(),
+                                            af.getAspectRatio(),
+                                            af.isDamper(),
+                                            af.getDehidralDegree(),
+                                            af.getDirection()),
+                        af.getDirection())
+        ).collect(Collectors.toList());
+    }
+   
 }
+

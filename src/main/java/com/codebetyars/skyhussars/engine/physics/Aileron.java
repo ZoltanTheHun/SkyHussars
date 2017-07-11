@@ -64,7 +64,7 @@ public class Aileron implements Airfoil {
 
     public enum Direction {
 
-        LEFT(1), RIGHT(-1), STABILIZER(1);
+        LEFT(1), RIGHT(-1), HORIZONTAL_STABILIZER(1), VERTICAL_STABILIZER(1);
         private final float direction;
 
         Direction(float direction) {
@@ -77,6 +77,9 @@ public class Aileron implements Airfoil {
         this.airfoil = airfoil;
         this.side = side;
     }
+    
+    @Override
+    public Aileron.Direction direction() {return this.side;}
 
     public void controlAileron(float aileron) {
         Quaternion q = new Quaternion();

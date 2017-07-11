@@ -27,6 +27,7 @@ package com.codebetyars.skyhussars.engine.plane;
 
 import com.codebetyars.skyhussars.engine.loader.converters.Point3fToVector3fConverter;
 import com.codebetyars.skyhussars.engine.loader.converters.Vector3fToPoint3fConverter;
+import com.codebetyars.skyhussars.engine.physics.Aileron;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jme3.math.Vector3f;
@@ -40,13 +41,15 @@ public class AirfoilDescriptor {
     private float aspectRatio;
     private boolean damper;
     private float dehidralDegree;
+    private Aileron.Direction direction;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public AirfoilDescriptor setName(String name) {
         this.name = name;
+        return this;
     }
 
     @JsonSerialize(converter = Vector3fToPoint3fConverter.class)
@@ -55,48 +58,27 @@ public class AirfoilDescriptor {
     }
 
     @JsonDeserialize(converter = Point3fToVector3fConverter.class)
-    public void setCog(Vector3f cog) {
+    public AirfoilDescriptor setCog(Vector3f cog) {
         this.cog = cog;
+        return this;
     }
 
-    public float getWingArea() {
-        return wingArea;
-    }
-
-    public void setWingArea(float wingArea) {
-        this.wingArea = wingArea;
-    }
-
-    public float getIncidence() {
-        return incidence;
-    }
-
-    public void setIncidence(float incidence) {
-        this.incidence = incidence;
-    }
-
-    public float getAspectRatio() {
-        return aspectRatio;
-    }
-
-    public void setAspectRatio(float aspectRatio) {
-        this.aspectRatio = aspectRatio;
-    }
-
-    public boolean isDamper() {
-        return damper;
-    }
-
-    public void setDamper(boolean damper) {
-        this.damper = damper;
-    }
-
-    public float getDehidralDegree() {
-        return dehidralDegree;
-    }
-
-    public void setDehidralDegree(float dehidralDegree) {
-        this.dehidralDegree = dehidralDegree;
-    }
+    public float getWingArea() {return wingArea;}
+    public AirfoilDescriptor setWingArea(float wingArea) {this.wingArea = wingArea; return this;}
+    
+    public float getIncidence() {return incidence;}
+    public AirfoilDescriptor setIncidence(float incidence) {this.incidence = incidence;return this;}
+    
+    public float getAspectRatio() {return aspectRatio;}
+    public AirfoilDescriptor setAspectRatio(float aspectRatio) {this.aspectRatio = aspectRatio;return this;}
+    
+    public boolean isDamper() {return damper;}
+    public AirfoilDescriptor setDamper(boolean damper) {this.damper = damper;return this;}
+    
+    public float getDehidralDegree() {return dehidralDegree; }
+    public AirfoilDescriptor setDehidralDegree(float dehidralDegree) {this.dehidralDegree = dehidralDegree;return this;}
+    
+    public Aileron.Direction getDirection() {return direction; }
+    public AirfoilDescriptor setDirection(Aileron.Direction direction) {this.direction = direction;return this;}
 
 }

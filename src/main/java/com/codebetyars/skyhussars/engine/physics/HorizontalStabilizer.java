@@ -30,8 +30,8 @@ import com.jme3.math.Vector3f;
 
 public class HorizontalStabilizer extends SymmetricAirfoil{
 
-    public HorizontalStabilizer(String name,Vector3f cog,float wingArea, float incidence,float aspectRatio) {
-        super(name,cog,wingArea, incidence,aspectRatio,false,90f);
+    public HorizontalStabilizer(String name,Vector3f cog,float wingArea, float incidence,float aspectRatio, Aileron.Direction direction) {
+       super(name,cog,wingArea, incidence,aspectRatio,false,90f,direction);
     }
     
     //public float calculateDrag();

@@ -87,6 +87,8 @@ public class AirfoilTable {
                             .setDehidralDegree(Float.toString(afDesc.getDehidralDegree()))
                             .setIncidence(Float.toString(afDesc.getIncidence()))
                             .setWingArea(Float.toString(afDesc.getWingArea()))
+                            .setDamper(Boolean.toString(afDesc.isDamper()))
+                            .setDirection(afDesc.getDirection().toString())
         ).collect(Collectors.toList());
     }
 }
