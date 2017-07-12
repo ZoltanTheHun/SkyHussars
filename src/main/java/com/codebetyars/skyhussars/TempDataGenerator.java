@@ -38,6 +38,7 @@ import com.jme3.math.Vector3f;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,66 +89,63 @@ public class TempDataGenerator {
         List<EngineLocation> engineLocations = new LinkedList<>();
         engineLocations.add(engineLocation);
 
-        List<AirfoilDescriptor> airfoilDescriptors = new LinkedList<>();
+
 
         /*
          private float wingArea = 22.07f; //m2
          private float aspectRatio = 6.37f;
          */
         /*SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);*/
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("WingLeft")
-                                                    .setCog(new Vector3f(-2.0f, 0, -0.2f))
-                                                    .setWingArea(22.07f / 4f)
-                                                    .setIncidence(1f)
-                                                    .setAspectRatio(6.37f)
-                                                    .setDamper(true)
-                                                    .setDehidralDegree(0f)
-                                                    .setDirection(Aileron.Direction.LEFT));
-
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("WingOuterLeft")
-                                                    .setCog(new Vector3f(-4.0f, 0, -0.2f))
-                                                    .setWingArea(22.07f / 4f)
-                                                    .setIncidence(1f)
-                                                    .setAspectRatio(6.37f)
-                                                    .setDamper(true)
-                                                    .setDehidralDegree(0f)
-                                                    .setDirection(Aileron.Direction.LEFT));
-        /*SymmetricAirfoil rightWing = new SymmetricAirfoil("WingB", new Vector3f(2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);*/
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("WingRight")
-                                                    .setCog(new Vector3f(2.0f, 0, -0.2f))
-                                                    .setWingArea(22.07f / 4f)
-                                                    .setAspectRatio(6.37f)
-                                                    .setIncidence(1f)
-                                                    .setDamper(true)
-                                                    .setDehidralDegree(0f)
-                                                    .setDirection(Aileron.Direction.RIGHT));
-
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("WingOuterRight")
-                                                    .setCog(new Vector3f(4.0f, 0, -0.2f))
-                                                    .setWingArea(22.07f / 4f)
-                                                    .setAspectRatio(6.37f)
-                                                    .setIncidence(1f)
-                                                    .setDamper(true)
-                                                    .setDehidralDegree(0f)
-                                                    .setDirection(Aileron.Direction.RIGHT));
-        /*SymmetricAirfoil horizontalStabilizer = new SymmetricAirfoil("HorizontalStabilizer", new Vector3f(0, 0, -6.0f), 5f, -3f, aspectRatio / 1.5f, false, 0f);*/
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("HorizontalStabilizer")
-                                                    .setCog(new Vector3f(0, 0, -6f))
-                                                    .setWingArea(5f)
-                                                    .setIncidence(-3f)
-                                                    .setAspectRatio(6.37f / 1.5f)
-                                                    .setDamper(false)
-                                                    .setDehidralDegree(0f)
-                                                    .setDirection(Aileron.Direction.HORIZONTAL_STABILIZER));
-        /*      private SymmetricAirfoil verticalStabilizer = new SymmetricAirfoil("VerticalStabilizer", new Vector3f(0, 0, -6.0f), 5.0f, 0f, aspectRatio / 1.5f, false, 90f);*/
-        airfoilDescriptors.add(new AirfoilDescriptor().setName("VerticalStabilizer")
-                                                    .setCog(new Vector3f(0, 0, -6f))
-                                                    .setWingArea(5f)
-                                                    .setIncidence(0f)
-                                                    .setAspectRatio(6.37f / 1.5f)
-                                                    .setDamper(false)
-                                                    .setDehidralDegree(90f)
-                                                    .setDirection(Aileron.Direction.VERTICAL_STABILIZER));
+        
+        List<AirfoilDescriptor> airfoilDescriptors  = Arrays.asList(
+                new AirfoilDescriptor().setName("WingLeft")
+                                    .setCog(new Vector3f(-2.0f, 0, -0.2f))
+                                    .setWingArea(22.07f / 4f)
+                                    .setIncidence(1f)
+                                    .setAspectRatio(6.37f)
+                                    .setDamper(true)
+                                    .setDehidralDegree(0f)
+                                    .setDirection(Aileron.Direction.LEFT),
+                new AirfoilDescriptor().setName("WingOuterLeft")
+                                    .setCog(new Vector3f(-4.0f, 0, -0.2f))
+                                    .setWingArea(22.07f / 4f)
+                                    .setIncidence(1f)
+                                    .setAspectRatio(6.37f)
+                                    .setDamper(true)
+                                    .setDehidralDegree(0f)
+                                    .setDirection(Aileron.Direction.LEFT),
+                new AirfoilDescriptor().setName("WingRight")
+                                    .setCog(new Vector3f(2.0f, 0, -0.2f))
+                                    .setWingArea(22.07f / 4f)
+                                    .setAspectRatio(6.37f)
+                                    .setIncidence(1f)
+                                    .setDamper(true)
+                                    .setDehidralDegree(0f)
+                                    .setDirection(Aileron.Direction.RIGHT),
+                new AirfoilDescriptor().setName("WingOuterRight")
+                                    .setCog(new Vector3f(4.0f, 0, -0.2f))
+                                    .setWingArea(22.07f / 4f)
+                                    .setAspectRatio(6.37f)
+                                    .setIncidence(1f)
+                                    .setDamper(true)
+                                    .setDehidralDegree(0f)
+                                    .setDirection(Aileron.Direction.RIGHT),
+                new AirfoilDescriptor().setName("HorizontalStabilizer")
+                                    .setCog(new Vector3f(0, 0, -6f))
+                                    .setWingArea(5f)
+                                    .setIncidence(-3f)
+                                    .setAspectRatio(6.37f / 1.5f)
+                                    .setDamper(false)
+                                    .setDehidralDegree(0f)
+                                    .setDirection(Aileron.Direction.HORIZONTAL_STABILIZER),
+                new AirfoilDescriptor().setName("VerticalStabilizer")
+                                    .setCog(new Vector3f(0, 0, -6f))
+                                    .setWingArea(5f)
+                                    .setIncidence(0f)
+                                    .setAspectRatio(6.37f / 1.5f)
+                                    .setDamper(false)
+                                    .setDehidralDegree(90f)
+                                    .setDirection(Aileron.Direction.VERTICAL_STABILIZER));
 
         PlaneDescriptor planeDescriptor = new PlaneDescriptor();
         planeDescriptor.setName("Lockheed P-80A-1-LO Shooting Star");
