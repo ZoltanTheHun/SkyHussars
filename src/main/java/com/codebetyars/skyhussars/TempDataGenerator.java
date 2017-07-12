@@ -89,14 +89,6 @@ public class TempDataGenerator {
         List<EngineLocation> engineLocations = new LinkedList<>();
         engineLocations.add(engineLocation);
 
-
-
-        /*
-         private float wingArea = 22.07f; //m2
-         private float aspectRatio = 6.37f;
-         */
-        /*SymmetricAirfoil leftWing = new SymmetricAirfoil("WingA", new Vector3f(-2.0f, 0, -0.2f), wingArea / 2, 1f, aspectRatio, true, 0f);*/
-        
         List<AirfoilDescriptor> airfoilDescriptors  = Arrays.asList(
                 new AirfoilDescriptor().setName("WingLeft")
                                     .setCog(new Vector3f(-2.0f, 0, -0.2f))
