@@ -31,7 +31,6 @@ import com.codebetyars.skyhussars.engine.physics.Aileron.Direction;
 import com.codebetyars.skyhussars.engine.physics.PlanePhysicsImpl;
 import com.codebetyars.skyhussars.engine.physics.Airfoil;
 import com.codebetyars.skyhussars.engine.physics.Engine;
-import com.codebetyars.skyhussars.engine.physics.SymmetricAirfoil;
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
 import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
@@ -42,7 +41,6 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,26 +98,22 @@ public class Plane {
     private final List<Airfoil> airfoils = new ArrayList<>();
     private final List<Aileron> ailerons;
 
-    public Plane(Spatial model, PlaneDescriptor planeDescriptor,List<Airfoil> airfoils,
+    public Plane(PlaneDescriptor planeDescriptor,List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
-            ProjectileManager projectileManager, Geometry cockpit,Spatial cockpitModel,
+            ProjectileManager projectileManager, PlaneGeometry planeGeometry,
             Instruments instruments, List<Engine> engines) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         //engineSound.setPositional(true);
         this.gunSound = gunSound;
         //test model is backwards
-        model.rotate(0, 0, 0 * FastMath.DEG_TO_RAD);
-        this.projectileManager = projectileManager;
-        initializeGunGroup(planeDescriptor);
-        geom = new PlaneGeometry();
-        
 
-        geom.attachSpatialToCockpitNode(cockpitModel);
-                geom.attachSpatialToCockpitNode(cockpit);
-        geom.attachSpatialToModelNode(model);
+        geom = planeGeometry;
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
+        this.projectileManager = projectileManager;
+        initializeGunGroup(planeDescriptor);
+
         ailerons = new ArrayList<>();
         ailerons.addAll(airfoils.stream() 
                 .filter( af -> af.direction().equals(Direction.LEFT) || af.direction().equals(Direction.RIGHT))
@@ -134,12 +128,11 @@ public class Plane {
                 .collect(Collectors.toList()));
         this.airfoils.addAll(airfoils);
         
-
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new PlanePhysicsImpl(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
-        this.physics.setSpeedForward(model, 300f);
+        this.physics.setSpeedForward(geom.root().getLocalRotation(), 300f);
     }
 
     private void initializeGunGroup(PlaneDescriptor planeDescriptor) {

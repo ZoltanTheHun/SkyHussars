@@ -27,13 +27,13 @@
 package com.codebetyars.skyhussars.engine.physics;
 
 import com.codebetyars.skyhussars.engine.physics.environment.Environment;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 
 public interface PlanePhysics {
     public void update(float tpf,Environment environment);
     public String getInfo();
-    public void setSpeedForward(Spatial model,float kmh);
+    public void setSpeedForward(Quaternion rotation,float kmh);
     public Vector3f getVVelovity();
     public String getSpeedKmH();
 }

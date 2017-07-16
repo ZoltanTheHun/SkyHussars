@@ -36,6 +36,7 @@ import com.codebetyars.skyhussars.engine.plane.instruments.Instruments;
 import com.codebetyars.skyhussars.engine.sound.AudioHandler;
 import com.codebetyars.skyhussars.engine.sound.SoundManager;
 import com.codebetyars.skyhussars.engine.weapons.ProjectileManager;
+import com.jme3.math.FastMath;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -62,22 +63,17 @@ public class PlaneFactory {
 
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
-        Spatial model = modelManager.model("p80", "p80_material").clone();
-        Spatial cockpitModel = modelManager.model("p80cabin", "p80_material").clone();
-        //cockpitModel.setCullHint(Spatial.CullHint.Always);
-        cockpitModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+
         AudioHandler engineSound = soundManager.sound("engine");
         AudioHandler gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
-        Plane plane = new Plane(model,
+        Plane plane = new Plane(
                         planeDescriptor, 
                         airfoils(planeDescriptor.getAirfolDescriptors()),
                         engineSound,
                         gunSound, projectileManager,
-                        dataManager.getCockpit(),
-                        cockpitModel,instruments,engines(planeDescriptor.getEngineLocations()));
+                        planeGeometry(),instruments,engines(planeDescriptor.getEngineLocations()));
                         plane.fireEffect(dataManager.fireEffect());
             return plane;
     }
@@ -98,6 +94,19 @@ public class PlaneFactory {
                                             af.getDirection()),
                         af.getDirection())
         ).collect(Collectors.toList());
+    }
+    
+    private PlaneGeometry planeGeometry(){
+        Spatial model = modelManager.model("p80", "p80_material").clone();
+        model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        Spatial cockpitModel = modelManager.model("p80cabin", "p80_material").clone();
+        //cockpitModel.setCullHint(Spatial.CullHint.Always);
+        cockpitModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        return new PlaneGeometry()
+                .attachSpatialToCockpitNode(cockpitModel)
+                .attachSpatialToCockpitNode(dataManager.getCockpit())
+                .attachSpatialToModelNode(model);
+
     }
    
 }

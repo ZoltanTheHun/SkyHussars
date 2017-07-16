@@ -53,21 +53,19 @@ public class PlaneGeometry {
         rootNode.attachChild(soundNode);
     }
 
-    public void attachSpatialToCockpitNode(Spatial cockpit) {
-        /*
-         This is an ugly hack for now, the cockpit should be parameters from configuration
-         */
+    public PlaneGeometry attachSpatialToCockpitNode(Spatial cockpit) {
         cockpitNode.attachChild(cockpit);
-        cockpitNode.rotate(0, FastMath.PI, 0);
-        //cockpitNode.move(0.015f, -0.015f, 0.7f);
+        return this;
     }
 
-    public void attachSpatialToRootNode(Spatial spatial) {
+    public PlaneGeometry attachSpatialToRootNode(Spatial spatial) {
         soundNode.attachChild(spatial);
+        return this;
     }
 
-    public void attachSpatialToModelNode(Spatial model) {
+    public PlaneGeometry attachSpatialToModelNode(Spatial model) {
         modelNode.attachChild(model);
+        return this;
     }
 
     public synchronized void switchTo(GeometryMode geometryMode) {

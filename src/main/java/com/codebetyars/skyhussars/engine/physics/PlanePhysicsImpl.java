@@ -181,7 +181,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     @Override
-    public void setSpeedForward(Spatial model, float kmh) {
-        vVelocity = model.getLocalRotation().mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
+    public void setSpeedForward(Quaternion rotation, float kmh) {
+        vVelocity = rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
     }
 }

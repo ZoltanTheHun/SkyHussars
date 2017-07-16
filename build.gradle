@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.codebetyars'
-version = "R9"
+version = "R10"
 
 sourceCompatibility = 1.8
 
@@ -24,7 +24,6 @@ repositories {
     maven { url 'http://updates.jmonkeyengine.org/maven'}
     maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'}
     maven { url 'https://jcenter.bintray.com/' }
-    maven { url 'file://C:/Users/Zolko/.m2/repository'}
 }
 
 ext.versions = [

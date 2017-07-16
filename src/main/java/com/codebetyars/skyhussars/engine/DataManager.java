@@ -32,6 +32,7 @@ import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
@@ -84,6 +85,7 @@ public class DataManager {
                 "Textures/circle-01.png"));
         geom.setMaterial(mat);
         geom.setQueueBucket(Bucket.Translucent);
+        geom.rotate(0, FastMath.PI, 0);
         geom.setLocalTranslation(new Vector3f(0, 0.8f, 2.6f).add(0.015f, -0.015f, 0.7f));
         return geom;
     }
