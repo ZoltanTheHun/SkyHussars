@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.controls;
 
+import com.codebetyars.skyhussars.engine.controls.FlightKeyboardMap.Trigger;
 import com.codebetyars.skyhussars.engine.gamestates.Options;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.InputManager;
@@ -32,6 +33,7 @@ import com.jme3.input.Joystick;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.InputListener;
 import com.jme3.input.controls.JoyAxisTrigger;
 import com.jme3.input.controls.JoyButtonTrigger;
 import com.jme3.input.controls.KeyTrigger;
@@ -61,6 +63,12 @@ public class ControlsMapper {
     public static final String PAUSE = "Pause";
     public static final String CAMERA = "Camera";
     public static final String RESET = "Reset";
+    public static final String THROTTLE_0 = "Throttle0";
+    public static final String THROTTLE_20 = "Throttle20%";
+    public static final String THROTTLE_40 = "Throttle40%";
+    public static final String THROTTLE_60 = "Throttle60%";
+    public static final String THROTTLE_80 = "Throttle80%";
+    public static final String THROTTLE_100 = "Throttle100%";
     
     @Autowired
     private InputManager inputManager;
@@ -94,20 +102,25 @@ public class ControlsMapper {
     }
     
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
-        inputManager.addMapping(PITCH_DOWN, new KeyTrigger(KeyInput.KEY_UP));
+        FlightKeyboardMap flightKbMap = new FlightKeyboardMap();
+        for(Trigger t : Trigger.values()){
+            inputManager.deleteMapping(t.name());
+            inputManager.addMapping(t.name(),new KeyTrigger(flightKbMap.getMapping(t)));
+        }
+
         inputManager.addMapping(PITCH_UP, new KeyTrigger(KeyInput.KEY_DOWN));
         inputManager.addMapping(ROTATE_LEFT, new KeyTrigger(KeyInput.KEY_LEFT));
         inputManager.addMapping(ROTATE_RIGHT, new KeyTrigger(KeyInput.KEY_RIGHT));
-        inputManager.addMapping("Throttle0%", new KeyTrigger(KeyInput.KEY_1));
-        inputManager.addMapping("Throttle20%", new KeyTrigger(KeyInput.KEY_2));
-        inputManager.addMapping("Throttle40%", new KeyTrigger(KeyInput.KEY_3));
-        inputManager.addMapping("Throttle60%", new KeyTrigger(KeyInput.KEY_4));
-        inputManager.addMapping("Throttle80%", new KeyTrigger(KeyInput.KEY_5));
-        inputManager.addMapping("Throttle100%", new KeyTrigger(KeyInput.KEY_6));
+        inputManager.addMapping(THROTTLE_0, new KeyTrigger(KeyInput.KEY_1));
+        inputManager.addMapping(THROTTLE_20, new KeyTrigger(KeyInput.KEY_2));
+        inputManager.addMapping(THROTTLE_40, new KeyTrigger(KeyInput.KEY_3));
+        inputManager.addMapping(THROTTLE_60, new KeyTrigger(KeyInput.KEY_4));
+        inputManager.addMapping(THROTTLE_80, new KeyTrigger(KeyInput.KEY_5));
+        inputManager.addMapping(THROTTLE_100, new KeyTrigger(KeyInput.KEY_6));
         inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addListener(flightKeyboardControls, "Throttle0%",
-                "Throttle20%", "Throttle40%", "Throttle60%", "Throttle80%", "Throttle100%",
-                PITCH_DOWN, PITCH_UP, ROTATE_LEFT, ROTATE_RIGHT, FIRE);
+        inputManager.addListener(flightKeyboardControls, THROTTLE_0,
+                THROTTLE_20, THROTTLE_40, THROTTLE_60 ,THROTTLE_80, THROTTLE_100,
+                Trigger.PITCH_DOWN.name(), PITCH_UP, ROTATE_LEFT, ROTATE_RIGHT, FIRE);
     }
     
     public void setupCameraControls(CameraControls cameraControls) {
@@ -127,5 +140,9 @@ public class ControlsMapper {
     public void setupMenuControls(MenuControls menuControls) {
         inputManager.addMapping(MENU_DISPLAY, new KeyTrigger(KeyInput.KEY_ESCAPE));
         inputManager.addListener(menuControls, MENU_DISPLAY);
+    }
+    
+    public void stripControl(InputListener... listeners){
+        for(InputListener l : listeners){ inputManager.removeListener(l);}
     }
 }

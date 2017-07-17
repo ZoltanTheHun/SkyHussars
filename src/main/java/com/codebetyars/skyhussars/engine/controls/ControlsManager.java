@@ -54,4 +54,10 @@ public class ControlsManager {
         controlsMapper.setupFlightJoystickControls(inFlightJoystickControls);
     }
     
+    public void stripMissionControls(){
+        controlsMapper.stripControl(inFlightKeyboardControls,
+                gameFlowControls,cameraControls,
+                menuControls,inFlightJoystickControls);
+    }
+    
 }

@@ -26,6 +26,8 @@
 package com.codebetyars.skyhussars.engine.controls;
 
 import com.codebetyars.skyhussars.engine.Pilot;
+import static com.codebetyars.skyhussars.engine.controls.ControlsMapper.*;
+import com.codebetyars.skyhussars.engine.controls.FlightKeyboardMap.Trigger;
 import com.jme3.input.controls.ActionListener;
 
 public class FlightKeyboardControls implements ActionListener {
@@ -47,59 +49,32 @@ public class FlightKeyboardControls implements ActionListener {
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
+        final String pitchDown = Trigger.PITCH_DOWN.name();
         if (isPressed) {
             switch (name) {
-                case "Throttle0%":
-                    pilot.setThrottle(0);
-                    break;
-                case "Throttle20%":
-                    pilot.setThrottle(0.2f);
-                    break;
-                case "Throttle40%":
-                    pilot.setThrottle(0.4f);
-                    break;
-                case "Throttle60%":
-                    pilot.setThrottle(0.6f);
-                    break;
-                case "Throttle80%":
-                    pilot.setThrottle(0.8f);
-                    break;
-                case "Throttle100%":
-                    pilot.setThrottle(1.0f);
-                    break;
-                case ControlsMapper.PITCH_DOWN:
-                    noseDown = true;
-                    break;
-                case ControlsMapper.PITCH_UP:
-                    noseUp = true;
-                    break;
-                case ControlsMapper.ROTATE_LEFT:
-                    rotateLeft = true;
-                    break;
-                case ControlsMapper.ROTATE_RIGHT:
-                    rotateRight = true;
-                    break;
-                case ControlsMapper.FIRE:
-                    fire = true;
-                    break;          
+                case THROTTLE_0: pilot.setThrottle(0); break;
+                case THROTTLE_20: pilot.setThrottle(0.2f); break;
+                case THROTTLE_40: pilot.setThrottle(0.4f); break;
+                case THROTTLE_60: pilot.setThrottle(0.6f); break;
+                case THROTTLE_80: pilot.setThrottle(0.8f); break;
+                case THROTTLE_100: pilot.setThrottle(1.0f); break;
+                case PITCH_UP: noseUp = true; break;
+                case ROTATE_LEFT: rotateLeft = true; break;
+                case ROTATE_RIGHT: rotateRight = true; break;
+                case FIRE: fire = true; break;          
+            }
+            if(name.equals(Trigger.PITCH_DOWN.name())){
+                noseDown = true; 
             }
         } else {
             switch (name) {
-                case ControlsMapper.PITCH_DOWN:
-                    noseDown = false;
-                    break;
-                case ControlsMapper.PITCH_UP:
-                    noseUp = false;
-                    break;
-                case ControlsMapper.ROTATE_LEFT:
-                    rotateLeft = false;
-                    break;
-                case ControlsMapper.ROTATE_RIGHT:
-                    rotateRight = false;
-                    break;
-                case ControlsMapper.FIRE:
-                    fire = false;
-                    break;
+                case PITCH_UP: noseUp = false; break;
+                case ROTATE_LEFT: rotateLeft = false; break;
+                case ROTATE_RIGHT: rotateRight = false; break;
+                case FIRE: fire = false;  break;
+            }
+            if(name.equals(Trigger.PITCH_DOWN.name())){
+                    noseDown = true; 
             }
         }
         setNoseControl();
