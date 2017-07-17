@@ -49,7 +49,6 @@ public class FlightKeyboardControls implements ActionListener {
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
-        final String pitchDown = Trigger.PITCH_DOWN.name();
         if (isPressed) {
             switch (name) {
                 case THROTTLE_0: pilot.setThrottle(0); break;
@@ -58,24 +57,28 @@ public class FlightKeyboardControls implements ActionListener {
                 case THROTTLE_60: pilot.setThrottle(0.6f); break;
                 case THROTTLE_80: pilot.setThrottle(0.8f); break;
                 case THROTTLE_100: pilot.setThrottle(1.0f); break;
-                case PITCH_UP: noseUp = true; break;
-                case ROTATE_LEFT: rotateLeft = true; break;
-                case ROTATE_RIGHT: rotateRight = true; break;
                 case FIRE: fire = true; break;          
             }
-            if(name.equals(Trigger.PITCH_DOWN.name())){
-                noseDown = true; 
-            }
+            try{
+                switch(Trigger.valueOf(name)){
+                    case PITCH_DOWN : noseDown = true; break;
+                    case PITCH_UP: noseUp = true; break;
+                    case ROLL_LEFT: rotateLeft = true; break;
+                    case ROLL_RIGHT: rotateRight = true; break;
+                }
+            }catch(Exception ex){/*let's ignore it for now*/  }
         } else {
             switch (name) {
-                case PITCH_UP: noseUp = false; break;
-                case ROTATE_LEFT: rotateLeft = false; break;
-                case ROTATE_RIGHT: rotateRight = false; break;
                 case FIRE: fire = false;  break;
             }
-            if(name.equals(Trigger.PITCH_DOWN.name())){
-                    noseDown = true; 
-            }
+            try{
+                switch(Trigger.valueOf(name)){
+                    case PITCH_DOWN : noseDown = false; break;
+                    case PITCH_UP: noseUp = false; break;
+                    case ROLL_LEFT: rotateLeft = false; break;
+                    case ROLL_RIGHT: rotateRight = false; break;
+                }
+            }catch(Exception ex){/*let's ignore it for now*/  }
         }
         setNoseControl();
         setRotationControl();

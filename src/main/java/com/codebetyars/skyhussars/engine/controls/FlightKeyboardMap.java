@@ -33,12 +33,14 @@ import java.util.Map;
 public class FlightKeyboardMap{
     
     public static enum Trigger{
-        PITCH_DOWN
+        PITCH_DOWN,PITCH_UP,ROLL_LEFT,ROLL_RIGHT
     }
     
     Map<Trigger,Integer> keys = new HashMap<>();
     {keys.put(Trigger.PITCH_DOWN,KeyInput.KEY_UP);} 
-    
+    {keys.put(Trigger.PITCH_UP,KeyInput.KEY_DOWN);}   
+    {keys.put(Trigger.ROLL_LEFT,KeyInput.KEY_LEFT);}   
+    {keys.put(Trigger.ROLL_RIGHT,KeyInput.KEY_RIGHT);}
     public int getMapping(Trigger trigger){
        return keys.get(trigger);
     }   

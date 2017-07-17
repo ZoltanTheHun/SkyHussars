@@ -39,6 +39,9 @@ import com.jme3.input.controls.JoyButtonTrigger;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -107,10 +110,9 @@ public class ControlsMapper {
             inputManager.deleteMapping(t.name());
             inputManager.addMapping(t.name(),new KeyTrigger(flightKbMap.getMapping(t)));
         }
-
-        inputManager.addMapping(PITCH_UP, new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addMapping(ROTATE_LEFT, new KeyTrigger(KeyInput.KEY_LEFT));
-        inputManager.addMapping(ROTATE_RIGHT, new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addListener(flightKeyboardControls,
+                Arrays.stream(Trigger.values()).map( t -> t.name()).toArray(String[]::new));
+        
         inputManager.addMapping(THROTTLE_0, new KeyTrigger(KeyInput.KEY_1));
         inputManager.addMapping(THROTTLE_20, new KeyTrigger(KeyInput.KEY_2));
         inputManager.addMapping(THROTTLE_40, new KeyTrigger(KeyInput.KEY_3));
@@ -118,9 +120,9 @@ public class ControlsMapper {
         inputManager.addMapping(THROTTLE_80, new KeyTrigger(KeyInput.KEY_5));
         inputManager.addMapping(THROTTLE_100, new KeyTrigger(KeyInput.KEY_6));
         inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addListener(flightKeyboardControls, THROTTLE_0,
-                THROTTLE_20, THROTTLE_40, THROTTLE_60 ,THROTTLE_80, THROTTLE_100,
-                Trigger.PITCH_DOWN.name(), PITCH_UP, ROTATE_LEFT, ROTATE_RIGHT, FIRE);
+
+        inputManager.addListener(flightKeyboardControls,THROTTLE_0,
+                THROTTLE_20, THROTTLE_40, THROTTLE_60 ,THROTTLE_80, THROTTLE_100,FIRE);
     }
     
     public void setupCameraControls(CameraControls cameraControls) {
