@@ -16,9 +16,7 @@ if (!hasProperty('mainClass')) {
 mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
 
 repositories {
-    flatDir {
-        dirs 'libs'
-    }
+    flatDir { dirs 'libs' }
 
     mavenCentral()
     maven { url 'http://updates.jmonkeyengine.org/maven'}
@@ -37,18 +35,10 @@ ext.versions = [
 
 sourceSets {
     main {
-        java {
-            srcDir 'src/java'
-        }
-        resources {
-            srcDir 'src/resources'
-        }
+        java { srcDir 'src/java' }
+        resources { srcDir 'src/resources' }
     }
-    valami {
-        java {
-            srcDir 'test'
-        }
-    }
+    valami { java { srcDir 'test' }}
 }
 
 dependencies {
@@ -76,20 +66,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit',          version: versions.junit
 }
 
-distributions {
-    sources {
-        contents {
-            from ('.') {
-                exclude file('.gitignore').readLines()
-            }
-        }
-    }
-}
+distributions { sources { contents { from ('.') { exclude file('.gitignore').readLines() }}}}
 
 applicationDistribution.from('assets') into 'assets'
-copy {
-    from('assets') into 'build/launch4j/assets'
-}
+copy { from('assets') into 'build/launch4j/assets' }
 
 //sourceSets.main.runtimeClasspath = sourceSets.main.runtimeClasspath + files('.','../assets')
 
@@ -99,8 +79,8 @@ run.classpath = run.classpath + files('assets','.')
 if(!project.hasProperty('targetexe')) ext.targetexe = 'SkyHussars'
 
 launch4j {
-            mainClassName = 'com.codebetyars.skyhussars.' + targetexe
-            icon = 'assets/icons/game.ico'  
-            outfile = '' + targetexe + '.exe'
-            chdir = '.'
+    mainClassName = 'com.codebetyars.skyhussars.' + targetexe
+    icon = 'assets/icons/game.ico'  
+    outfile = '' + targetexe + '.exe'
+    chdir = '.'
 }
