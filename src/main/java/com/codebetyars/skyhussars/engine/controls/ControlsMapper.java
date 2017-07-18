@@ -45,8 +45,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ControlsMapper {
-    
-    public static final String FIRE = "Fire";
+
     public static final String INCREASE_FOV = "IncreaseFov";
     public static final String DECREASE_FOV = "DecreaseFov";
     public static final String JOY_PITCH_UP = "PitchUp";
@@ -64,13 +63,7 @@ public class ControlsMapper {
     public static final String PAUSE = "Pause";
     public static final String CAMERA = "Camera";
     public static final String RESET = "Reset";
-    public static final String THROTTLE_0 = "Throttle0";
-    public static final String THROTTLE_20 = "Throttle20%";
-    public static final String THROTTLE_40 = "Throttle40%";
-    public static final String THROTTLE_60 = "Throttle60%";
-    public static final String THROTTLE_80 = "Throttle80%";
-    public static final String THROTTLE_100 = "Throttle100%";
-    
+
     @Autowired
     private InputManager inputManager;
     
@@ -94,7 +87,7 @@ public class ControlsMapper {
                     inputManager.addMapping(JOY_ROLL_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
                     inputManager.addMapping(JOY_PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
                     inputManager.addMapping(JOY_PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
-                    inputManager.addMapping(FIRE, new JoyButtonTrigger(joy.getJoyId(),0));
+                    inputManager.addMapping(Trigger.FIRE.name(), new JoyButtonTrigger(joy.getJoyId(),0));
                     break;
                 }
             }
@@ -110,17 +103,6 @@ public class ControlsMapper {
         }
         inputManager.addListener(flightKeyboardControls,
                 Arrays.stream(Trigger.values()).map( t -> t.name()).toArray(String[]::new));
-        
-        inputManager.addMapping(THROTTLE_0, new KeyTrigger(KeyInput.KEY_1));
-        inputManager.addMapping(THROTTLE_20, new KeyTrigger(KeyInput.KEY_2));
-        inputManager.addMapping(THROTTLE_40, new KeyTrigger(KeyInput.KEY_3));
-        inputManager.addMapping(THROTTLE_60, new KeyTrigger(KeyInput.KEY_4));
-        inputManager.addMapping(THROTTLE_80, new KeyTrigger(KeyInput.KEY_5));
-        inputManager.addMapping(THROTTLE_100, new KeyTrigger(KeyInput.KEY_6));
-        inputManager.addMapping(FIRE, new KeyTrigger(KeyInput.KEY_SPACE));
-
-        inputManager.addListener(flightKeyboardControls,THROTTLE_0,
-                THROTTLE_20, THROTTLE_40, THROTTLE_60 ,THROTTLE_80, THROTTLE_100,FIRE);
     }
     
     public void setupCameraControls(CameraControls cameraControls) {
