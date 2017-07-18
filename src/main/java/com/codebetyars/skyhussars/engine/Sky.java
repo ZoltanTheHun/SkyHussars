@@ -65,7 +65,7 @@ public class Sky {
         skyControl.getSunAndStars().setHour(now.get(Calendar.HOUR_OF_DAY));
         skyControl.getSunAndStars().setSolarLongitude(now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
         skyControl.getSunAndStars().setObserverLatitude(37.4046f * FastMath.DEG_TO_RAD);
-        skyControl.setCloudiness(0f);
+        skyControl.setCloudiness(1f);
         rootNode.addControl(skyControl);
         skyControl.setEnabled(true);
         skyControl.getSunAndStars().setHour(hour);

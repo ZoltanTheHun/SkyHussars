@@ -49,8 +49,8 @@ public class ControlsMapper {
     public static final String FIRE = "Fire";
     public static final String INCREASE_FOV = "IncreaseFov";
     public static final String DECREASE_FOV = "DecreaseFov";
-    public static final String PITCH_UP = "PitchUp";
-    public static final String PITCH_DOWN = "PitchDown";
+    public static final String JOY_PITCH_UP = "PitchUp";
+    public static final String JOY_PITCH_DOWN = "PitchDown";
     public static final String COCKPIT_VIEW = "CockpitView";
     public static final String OUTER_VIEW = "OuterView";
     public static final String MOUSE_LEFT = "MouseLeft";
@@ -59,8 +59,8 @@ public class ControlsMapper {
     public static final String MOUSE_UP = "MouseUp";
     public static final String CENTER_CAMERA = "CenterCamera";
     public static final String MENU_DISPLAY = "OpenMenu";
-    public static final String ROTATE_LEFT = "RotateLeft";
-    public static final String ROTATE_RIGHT = "RotateRight";
+    public static final String JOY_ROLL_LEFT = "RotateLeft";
+    public static final String JOY_ROLL_RIGHT = "RotateRight";
     public static final String PAUSE = "Pause";
     public static final String CAMERA = "Camera";
     public static final String RESET = "Reset";
@@ -90,16 +90,16 @@ public class ControlsMapper {
         if (inputManager.getJoysticks() != null && options.getJoyId().isPresent()) {
             for (Joystick joy : inputManager.getJoysticks()) {
                 if (joy.getJoyId() == options.getJoyId().orElse(-1)) {
-                    inputManager.addMapping(ROTATE_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
-                    inputManager.addMapping(ROTATE_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
-                    inputManager.addMapping(PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
-                    inputManager.addMapping(PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
+                    inputManager.addMapping(JOY_ROLL_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
+                    inputManager.addMapping(JOY_ROLL_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
+                    inputManager.addMapping(JOY_PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
+                    inputManager.addMapping(JOY_PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
                     inputManager.addMapping(FIRE, new JoyButtonTrigger(joy.getJoyId(),0));
                     break;
                 }
             }
         }
-        inputManager.addListener(flightJoystrictControls, ROTATE_LEFT, ROTATE_RIGHT);
+        inputManager.addListener(flightJoystrictControls, JOY_PITCH_UP, JOY_PITCH_DOWN, JOY_ROLL_LEFT, JOY_ROLL_RIGHT);
     }
     
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
