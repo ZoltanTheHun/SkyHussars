@@ -144,7 +144,7 @@ public class SymmetricAirfoil implements Airfoil {
     }
 
     @Override
-    public Vector3f getCenterOfGravity() {
+    public Vector3f cog() {
         return cog;
     }
 

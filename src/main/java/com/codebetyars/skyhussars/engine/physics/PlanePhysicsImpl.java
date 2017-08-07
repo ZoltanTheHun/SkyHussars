@@ -98,8 +98,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,Vector3f::add));}
     
     /* Engine calculations */
-    private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::getThrust).reduce(Vector3f.ZERO,Vector3f::add));}
-    private Vector3f engineTorque() {return Vector3f.ZERO;}  // to be added later
+    private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::thrust).reduce(Vector3f.ZERO,Vector3f::add));}
+    private Vector3f engineTorque() {return rotation.mult(engines.stream().map(Engine::torque).reduce(Vector3f.ZERO,Vector3f::add));}  // to be added later
     
     /* Other calculations */
     private Vector3f parasiticDrag() {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
@@ -118,7 +118,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
         vVelocity = vVelocity.add(linearAcc.mult(tpf));
         
-        vAngularAcceleration = momentOfInertiaTensor.invert().mult(airfoilTorque());
+        vAngularAcceleration = momentOfInertiaTensor.invert().mult(
+                Vector3f.ZERO.add(airfoilTorque())
+                             .add(engineTorque()));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = helperQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
@@ -164,7 +166,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     @Override
     public String getInfo() {
-        return "Thrust: " + engines.get(0).getThrust().length()
+        return "Thrust: " + engines.get(0).thrust().length()
                 + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
                 + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)
                 + ", Height: " + NumberFormats.toMin3Integer0Fraction(height)

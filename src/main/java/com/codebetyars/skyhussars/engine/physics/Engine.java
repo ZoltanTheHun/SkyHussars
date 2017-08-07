@@ -30,35 +30,42 @@ import com.jme3.math.Vector3f;
 
 public class Engine implements ThrustProducer, RigidBody {
 
-    private EngineLocation engineLocation;
-    private Vector3f centerOfGravity;
-    private Vector3f vMaxThrust;
+    private final Vector3f cog;
+    private final Vector3f vMaxThrust;
     private float throttle = 0.0f;
     private float engineStatus = 1.0f;
+    private Vector3f thrust = Vector3f.ZERO;
+    private Vector3f torque = Vector3f.ZERO;
+    
 
     public Engine(EngineLocation engineLocation,float engineStatus) {
-        this.engineLocation = engineLocation;
-        this.centerOfGravity = engineLocation.getLocation();
+        this.cog = engineLocation.getLocation();
         this.vMaxThrust = new Vector3f(0, 0, engineLocation.getEngineDescriptor().getThrustMax());
         this.engineStatus = engineStatus;
     }
 
     @Override
-    public Vector3f getCenterOfGravity() {
-        return centerOfGravity;
+    public synchronized Vector3f cog() {
+        return cog;
     }
     /*throttle between 0 and 1*/
     @Override
-    public Vector3f getThrust() {
-        return vMaxThrust.mult(throttle).mult(engineStatus);
+    public synchronized Vector3f thrust() {
+        return thrust;
     }
 
-    @Override
-    public void setThrottle(float throttle) {
-        this.throttle = throttle;
+    public synchronized Vector3f torque() {
+        return torque;
     }
     
-    public void damage(float damage){
+    @Override
+    public synchronized void setThrottle(float throttle) {
+        this.throttle = throttle;   
+        thrust = vMaxThrust.mult(throttle).mult(engineStatus);
+        torque = cog.cross(thrust());
+    }
+    
+    public synchronized void damage(float damage){
         engineStatus -= damage;
         if(engineStatus < 0){
             engineStatus = 0;

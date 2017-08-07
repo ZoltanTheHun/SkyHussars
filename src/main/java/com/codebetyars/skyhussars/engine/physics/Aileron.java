@@ -53,8 +53,8 @@ public class Aileron implements Airfoil {
     
     
     @Override
-    public Vector3f getCenterOfGravity() {
-        return airfoil.getCenterOfGravity();
+    public Vector3f cog() {
+        return airfoil.cog();
     }
 
     @Override

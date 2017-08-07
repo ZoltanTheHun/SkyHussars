@@ -168,7 +168,7 @@ public class SymmetricAirfoilTest {
         logger.debug("getCenterOfGravity");
         SymmetricAirfoil instance = null;
         Vector3f expResult = null;
-        Vector3f result = instance.getCenterOfGravity();
+        Vector3f result = instance.cog();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
