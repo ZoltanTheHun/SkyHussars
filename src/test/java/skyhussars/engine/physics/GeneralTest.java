@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.codebetyars.skyhussars.engine.physics;
+package skyhussars.engine.physics;
 
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;

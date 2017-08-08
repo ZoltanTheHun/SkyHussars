@@ -23,7 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package com.codebetyars.skyhussars.engine.physics;
+package skyhussars.engine.physics;
 
 import skyhussars.engine.physics.SymmetricAirfoil;
 import com.jme3.math.Quaternion;
