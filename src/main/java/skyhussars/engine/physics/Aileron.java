@@ -83,7 +83,7 @@ public class Aileron implements Airfoil {
 
     public void controlAileron(float aileron) {
         Quaternion q = new Quaternion();
-        qAileron = q.fromAngles(side.direction * aileron * FastMath.DEG_TO_RAD, 0, 0);
+        qAileron = q.fromAngles(side.direction * aileron * FastMath.DEG_TO_RAD * 2f, 0, 0);
     }
 
 }

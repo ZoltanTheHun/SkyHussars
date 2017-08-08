@@ -10,11 +10,11 @@ sourceCompatibility = 1.8
 
 //this for debugging
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'com.codebetyars.skyhussars.SkyHussars'
+    ext.mainClass = 'skyhussars.SkyHussars'
 }
 
-mainClassName = 'com.codebetyars.skyhussars.SkyHussars'
-
+//mainClassName = 'skyhussars.PlaneEd'
+mainClassName = 'skyhussars.SkyHussars'
 repositories {
     flatDir { dirs 'libs' }
 
@@ -79,7 +79,7 @@ run.classpath = run.classpath + files('assets','.')
 if(!project.hasProperty('targetexe')) ext.targetexe = 'SkyHussars'
 
 launch4j {
-    mainClassName = 'com.codebetyars.skyhussars.' + targetexe
+    mainClassName = 'skyhussars.' + targetexe
     icon = 'assets/icons/game.ico'  
     outfile = '' + targetexe + '.exe'
     chdir = '.'

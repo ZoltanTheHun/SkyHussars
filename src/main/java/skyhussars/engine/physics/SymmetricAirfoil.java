@@ -34,6 +34,24 @@ import org.slf4j.LoggerFactory;
 public class SymmetricAirfoil implements Airfoil {
 
     private final static Logger logger = LoggerFactory.getLogger(SymmetricAirfoil.class);
+    public static class Builder{
+        private String name; 
+        private Vector3f cog; 
+        private float wingArea,incidence,aspectRatio,dehidralDegree;
+        private boolean damper;
+        private Aileron.Direction direction;
+        public Builder name(String name){ this.name = name; return this;}
+        public Builder cog(Vector3f cog){ this.cog = cog; return this;}
+        public Builder wingArea(float wingArea){ this.wingArea = wingArea; return this;}
+        public Builder incidence(float incidence){ this.incidence = incidence; return this;}
+        public Builder aspectRatio(float aspectRatio){ this.aspectRatio = aspectRatio; return this;}
+        public Builder dehidralDegree(float dehidralDegree){ this.dehidralDegree = dehidralDegree; return this;}
+        public Builder damper(boolean damper){ this.damper = damper; return this;}
+        public Builder direction(Aileron.Direction direction){ this.direction = direction; return this;} 
+        public SymmetricAirfoil build(){
+            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction);
+        }
+    }
 
     public SymmetricAirfoil(String name, Vector3f cog, float wingArea, float incidence, float aspectRatio, boolean damper, float dehidralDegree, Aileron.Direction direction) {
         this.wingArea = wingArea;
@@ -66,7 +84,7 @@ public class SymmetricAirfoil implements Airfoil {
     private Quaternion qIncidence = new Quaternion();
     private final Quaternion dehidral;
     private final Quaternion wingRotation;
-    private final float dampingFactor = 2f;
+    private final float dampingFactor = 1.3f;
     private final boolean damper;
     private int leftDamper;
     private Aileron.Direction direction;
@@ -83,7 +101,8 @@ public class SymmetricAirfoil implements Airfoil {
     }
 
     public Vector3f damp(Vector3f vFlow, Vector3f vAngularVelocity, Vector3f vUp) {
-        float zDamping = vAngularVelocity.z * cog.length() * dampingFactor;
+        float dir =vAngularVelocity.z >0 ? 1 : -1;
+        float zDamping = dir * vAngularVelocity.z * vAngularVelocity.z * dampingFactor;
         float xDamping = vAngularVelocity.x * cog.length() * 1f;
         float yDamping = vAngularVelocity.y * cog.length() * 1f;
         if (damper) vFlow = vFlow.add(vUp.mult(zDamping).mult(leftDamper));
