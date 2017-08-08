@@ -25,6 +25,7 @@
  */
 package com.codebetyars.skyhussars.engine.physics;
 
+import skyhussars.engine.physics.SymmetricAirfoil;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import org.junit.*;
