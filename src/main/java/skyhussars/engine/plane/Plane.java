@@ -41,7 +41,6 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
