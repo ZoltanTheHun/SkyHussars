@@ -177,7 +177,7 @@ public class SymmetricAirfoil implements Airfoil {
         return this;
     }
 
-    @Override public synchronized Vector3f linearAcceleration() {return linearAcceleration;}
+    @Override public synchronized Vector3f linearForce() {return linearAcceleration;}
     @Override public synchronized Vector3f torque() {return torque;}
 
 }

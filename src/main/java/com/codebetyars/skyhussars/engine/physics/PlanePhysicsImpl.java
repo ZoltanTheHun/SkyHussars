@@ -94,7 +94,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
     private void updateAirfoils() { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow(), vAngularVelocity));}
-    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linearAcceleration).reduce(Vector3f.ZERO,Vector3f::add));}
+    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linearForce).reduce(Vector3f.ZERO,Vector3f::add));}
     private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,Vector3f::add));}
     
     /* Engine calculations */

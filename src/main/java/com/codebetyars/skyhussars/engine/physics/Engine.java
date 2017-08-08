@@ -65,6 +65,10 @@ public class Engine implements ThrustProducer, RigidBody {
         torque = cog.cross(thrust());
     }
     
+    public void tick(){
+        
+    }
+    
     public synchronized void damage(float damage){
         engineStatus -= damage;
         if(engineStatus < 0){

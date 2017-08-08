@@ -42,8 +42,8 @@ public class Aileron implements Airfoil {
     }
 
     @Override
-    public Vector3f linearAcceleration(){
-        return airfoil.linearAcceleration();
+    public Vector3f linearForce(){
+        return airfoil.linearForce();
     }
     
     @Override

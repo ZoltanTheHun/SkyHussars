@@ -42,7 +42,6 @@ public class FlightJoystickControls implements AnalogListener {
 
     @Override
     public void onAnalog(String string, float axis, float tpf) {
-        logger.info("Joy is at: {}, tpf: {}", axis, tpf);
         if (ControlsMapper.JOY_ROLL_LEFT.equals(string)) {
             pilot.setAileron(-1 * axis / tpf);
         }
