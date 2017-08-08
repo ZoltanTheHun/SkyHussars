@@ -31,6 +31,9 @@ import static skyhussars.planeed.UiHelpers.*;
 import java.io.File;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -42,8 +45,10 @@ import javafx.stage.Stage;
 public class EditorView {
 
     private final FileChooser fileChooser = new FileChooser();
-    {fileChooser.setTitle("Open Plane Definition");
-    fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
+
+    {
+        fileChooser.setTitle("Open Plane Definition");
+        fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
     }
 
     public MenuBar createMenuBar(Stage stage, PlaneEd planeEd) {
@@ -64,8 +69,8 @@ public class EditorView {
         });
         return loadMenu;
     }
-    
-    private MenuItem saveMenu(PlaneEd planeEd){
+
+    private MenuItem saveMenu(PlaneEd planeEd) {
         MenuItem saveMenu = new MenuItem("Save");
         saveMenu.setOnAction((ActionEvent t) -> {
             planeEd.save();
@@ -73,12 +78,40 @@ public class EditorView {
         return saveMenu;
     }
 
-    public GridPane items(PlaneProperties planeProperties) {       
-        return populateGrid(2,  new Label("Name:"), textFieldFor(planeProperties.getName()),
+    public GridPane items(PlaneProperties planeProperties) {
+        return populateGrid(2, new Label("Name:"), textFieldFor(planeProperties.getName()),
                 new Label("Mass, TakeOff Max: "), numberFieldFor(planeProperties.getMassTakeOffMax()),
-                new Label("Mass, Gross: "), numberFieldFor(planeProperties.getMassTakeOffMax()), 
+                new Label("Mass, Gross: "), numberFieldFor(planeProperties.getMassTakeOffMax()),
                 new Label("Mass, Empty: "), numberFieldFor(planeProperties.getMassEmpty())
         );
     }
-    
+
+    public LineChart createChart() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Test Axis");
+        final LineChart<Number, Number> lineChart
+                = new LineChart<Number, Number>(xAxis, yAxis);
+        lineChart.setTitle("Test Chart");
+        //defining a series
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Test Value");
+        //populating the series with data
+        series.getData().add(new XYChart.Data(1, 23));
+        series.getData().add(new XYChart.Data(2, 14));
+        series.getData().add(new XYChart.Data(3, 15));
+        series.getData().add(new XYChart.Data(4, 24));
+        series.getData().add(new XYChart.Data(5, 34));
+        series.getData().add(new XYChart.Data(6, 36));
+        series.getData().add(new XYChart.Data(7, 22));
+        series.getData().add(new XYChart.Data(8, 45));
+        series.getData().add(new XYChart.Data(9, 43));
+        series.getData().add(new XYChart.Data(10, 17));
+        series.getData().add(new XYChart.Data(11, 29));
+        series.getData().add(new XYChart.Data(12, 25));
+
+        lineChart.getData().add(series);
+        return lineChart;
+    }
+
 }

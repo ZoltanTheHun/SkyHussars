@@ -58,6 +58,7 @@ public class PlaneEd extends Application {
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
         root.getChildren().add(airfoilTable.wingTable());
+        root.getChildren().add(ev.createChart());
         stage.setScene(new Scene(root, 500, 400));
         stage.show();
     }
