@@ -66,8 +66,9 @@
                 <panel id="panel_empty" valign="bottom"  height="100%" width="75%" childLayout="vertical">
                 </panel>
                 <panel id="panel_information"  childLayout="horizontal" align="right" valign="bottom" backgroundColor="#00000099" height="100%" width="25%">
-                    <text id="speedDisplay" text="" font="Interface/Fonts/Default.fnt" width="50%" height="100%"/>
-                    <text id="altimeter" text="" font="Interface/Fonts/Default.fnt" width="50%" height="100%"/>
+                    <text id="speedDisplay" text="" font="Interface/Fonts/Default.fnt" width="20%" height="100%"/>
+                    <text id="altimeter" text="" font="Interface/Fonts/Default.fnt" width="20%" height="100%"/>
+                    <text id="aoa" text="" font="Interface/Fonts/Default.fnt" width="60%" height="100%"/>
                 </panel>
             </panel>
         </layer>
