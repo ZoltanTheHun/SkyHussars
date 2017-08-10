@@ -34,24 +34,23 @@ public class Aileron implements Airfoil {
     private final Airfoil airfoil;
     private final Direction side;
     private Quaternion qAileron = new Quaternion();
-    
+
     @Override
-    public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity){
+    public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
         airfoil.tick(airDensity, qAileron.inverse().mult(vVelocity), angularVelocity);
         return this;
     }
 
     @Override
-    public Vector3f linear(){
+    public Vector3f linear() {
         return airfoil.linear();
     }
-    
+
     @Override
-    public Vector3f torque(){
+    public Vector3f torque() {
         return airfoil.torque();
     }
-    
-    
+
     @Override
     public Vector3f cog() {
         return airfoil.cog();
@@ -78,12 +77,26 @@ public class Aileron implements Airfoil {
         this.side = side;
     }
     
-    @Override
-    public Aileron.Direction direction() {return this.side;}
+    public Aileron(Airfoil airfoil, Direction side,float maxDeflection) {
+        this.airfoil = airfoil;
+        this.side = side;
+    }
 
+    @Override
+    public Aileron.Direction direction() {
+        return this.side;
+    }
+
+    @Override
+    public float aoa() {
+        return airfoil.aoa();
+    }
+
+    private float maxDeflection = 2f;   //degree
     public void controlAileron(float aileron) {
         Quaternion q = new Quaternion();
-        qAileron = q.fromAngles(side.direction * aileron * FastMath.DEG_TO_RAD * 2f, 0, 0);
+        float deflection = side.direction * aileron * FastMath.DEG_TO_RAD * maxDeflection;
+        qAileron = q.fromAngles(deflection, 0, 0);
     }
 
 }

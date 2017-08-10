@@ -70,5 +70,30 @@ public class SymmetricAirfoilTest {
         Assert.assertEquals(1f, af.aoa(), 0.1);
         logger.info("Generated lift: " + af.linear() + " , generated torque: " + af.torque());
     }
-
+    
+    @Test
+    public void aileronTest(){
+        SymmetricAirfoil af = new SymmetricAirfoil.Builder()
+                .name("Simple right wing")
+                .aspectRatio(6.37f)
+                .damper(true)
+                .dehidralDegree(0.0f)
+                .direction(Aileron.Direction.RIGHT)
+                .incidence(1f)
+                .cog(new Vector3f(4, 0, -0.2f)).build();
+        Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
+        aileron.controlAileron(0);
+        logger.info("Simple aileron test."); 
+        logger.info("Aileron at rest.");
+        aileron.controlAileron(0);
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        logger.info("Actual AoA: " + aileron.aoa());
+        Assert.assertEquals(1f, aileron.aoa(), 0.1);
+        logger.info("Aileron at max deflection.");
+        aileron.controlAileron(1);
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        logger.info("Actual AoA: " + aileron.aoa());
+        Assert.assertEquals(3f, aileron.aoa(), 0.1);
+    }
+    
 }
