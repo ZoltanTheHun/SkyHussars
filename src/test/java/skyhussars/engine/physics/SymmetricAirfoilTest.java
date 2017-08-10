@@ -25,17 +25,11 @@
  */
 package skyhussars.engine.physics;
 
-import skyhussars.engine.physics.SymmetricAirfoil;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-@Ignore
 public class SymmetricAirfoilTest {
 
     private final static Logger logger = LoggerFactory.getLogger(SymmetricAirfoilTest.class);
@@ -58,147 +52,23 @@ public class SymmetricAirfoilTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of calculateResultantForce method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testCalculateResultantForce() {
-        logger.debug("calculateResultantForce");
-        float airDensity = 0.0F;
-        Vector3f vVelocity = null;
-        Quaternion horizontal = null;
-        Vector3f angularVelocity = null;
-        SymmetricAirfoil instance = null;
-        Vector3f expResult = null;
-     //   Vector3f result = instance.calculateResultantForce(airDensity, vVelocity, angularVelocity);
-     //   assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
     
-    /**
-     * Test of calculateLift method, of class SymmetricAirfoil.
-     */
     @Test
-    public void testCalculateLift_4args() {
-        logger.debug("calculateLift");
-        float angleOfAttack = 0.0F;
-        float airDensity = 0.0F;
-        Vector3f vFlow = null;
-        Quaternion situation = null;
-        SymmetricAirfoil instance = null;
-        Vector3f expResult = null;
-       // Vector3f result = instance.lift( airDensity, vFlow);
-       //assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void symmetricAirfoilTest(){
+        SymmetricAirfoil af = new SymmetricAirfoil.Builder()
+                .name("Simple right wing")
+                .aspectRatio(6.37f)
+                .damper(true)
+                .dehidralDegree(0.0f)
+                .direction(Aileron.Direction.RIGHT)
+                .incidence(1f)
+                .cog(new Vector3f(4, 0, -0.2f)).build();
+        af.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        logger.info("Simple wing setup test."); 
+        logger.info("Frontal wind, 1 degree of dihedral. Expected 1 degree of AoA");
+        logger.info("Actual AoA: " + af.aoa());
+        Assert.assertEquals(1f, af.aoa(), 0.1);
+        logger.info("Generated lift: " + af.linear() + " , generated torque: " + af.torque());
     }
 
-    /**
-     * Test of calculateLift method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testCalculateLift_3args() {
-        logger.debug("calculateLift");
-        float angleOfAttack = 0.0F;
-        float airDensity = 0.0F;
-        Vector3f vFlow = null;
-        SymmetricAirfoil instance = null;
-        float expResult = 0.0F;
-        float result = instance.calculateLift(angleOfAttack, airDensity, vFlow);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getLiftCoefficient method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testGetLiftCoefficient() {
-        logger.debug("getLiftCoefficient");
-        float angleOfAttack = 0.0F;
-        SymmetricAirfoil instance = null;
-        float expResult = 0.0F;
-        float result = instance.getLiftCoefficient(angleOfAttack);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of calculateInducedDrag method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testCalculateInducedDrag_3args() {
-        logger.debug("calculateInducedDrag");
-        float airDensity = 0.0F;
-        Vector3f vFlow = null;
-        Vector3f vLift = null;
-        SymmetricAirfoil instance = null;
-        Vector3f expResult = null;
-        Vector3f result = instance.inducedDrag(airDensity, vFlow, vLift);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of calculateInducedDrag method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testCalculateInducedDrag_float_Vector3f() {
-        logger.debug("calculateInducedDrag");
-        float airDensity = 0.0F;
-        Vector3f vVelocity = null;
-        SymmetricAirfoil instance = null;
-        float expResult = 0.0F;
-        float result = instance.calculateInducedDrag(airDensity, vVelocity);
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCenterOfGravity method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testGetCenterOfGravity() {
-        logger.debug("getCenterOfGravity");
-        SymmetricAirfoil instance = null;
-        Vector3f expResult = null;
-        Vector3f result = instance.cog();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getName method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testGetName() {
-        logger.debug("getName");
-        SymmetricAirfoil instance = null;
-        String expResult = "";
-        String result = instance.getName();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of controlAileron method, of class SymmetricAirfoil.
-     */
-    @Test
-    public void testControlAileron() {
-        logger.debug("controlAileron");
-        int aileron = 0;
-        //SymmetricAirfoil instance = null;
-       // instance.controlAileron(aileron);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 }

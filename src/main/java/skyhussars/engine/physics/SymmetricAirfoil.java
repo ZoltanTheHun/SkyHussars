@@ -113,8 +113,9 @@ public class SymmetricAirfoil implements Airfoil {
         return vFlow;
     }
 
+    private float aoa;
+    public float aoa(){return aoa;}
     public Vector3f lift(float airDensity, Vector3f vFlow, Vector3f vUp) {
-        float aoa = aoa(vUp, vFlow.normalize());
         float scLift = calculateLift(aoa, airDensity, vFlow);
         Vector3f direction = vFlow.cross(vUp).cross(vFlow).normalize();
         if (aoa < 0) {
@@ -122,6 +123,7 @@ public class SymmetricAirfoil implements Airfoil {
         }
         return direction.mult(scLift);
     }
+
 
     public float calculateLift(float angleOfAttack, float airDensity, Vector3f vFlow) {
         //abs is used for symmetric wings? not perfect
@@ -167,7 +169,8 @@ public class SymmetricAirfoil implements Airfoil {
         return name;
     }
 
-    private float aoa(Vector3f vUp, Vector3f vFlow) {
+    
+    private float calcAoa(Vector3f vUp, Vector3f vFlow) {
         float angleOfAttack = vFlow.cross(vUp).cross(vFlow).normalize().angleBetween(vUp) * FastMath.RAD_TO_DEG;
         float np = vUp.dot(vFlow);
         if (np < 0) {
@@ -176,23 +179,24 @@ public class SymmetricAirfoil implements Airfoil {
         return angleOfAttack;
     }
 
-    Vector3f linearAcceleration = Vector3f.ZERO;
+    Vector3f linear = Vector3f.ZERO;
     Vector3f torque = Vector3f.ZERO;
 
     @Override
     public Airfoil tick(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
         Vector3f vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
+        aoa = calcAoa(vUp, vFlow.normalize());
         vFlow = damp(vFlow, vAngularVelocity, vUp);
         Vector3f lift = lift(airDensity, vFlow, vUp);
         Vector3f inducedDrag = inducedDrag(airDensity, vFlow, lift);
         synchronized(this) {
-            linearAcceleration =  lift.add(inducedDrag);
-            torque = cog.cross(linearAcceleration);
+            linear =  lift.add(inducedDrag);
+            torque = cog.cross(linear);
         }
         return this;
     }
 
-    @Override public synchronized Vector3f linearForce() {return linearAcceleration;}
+    @Override public synchronized Vector3f linear() {return linear;}
     @Override public synchronized Vector3f torque() {return torque;}
 
 }
