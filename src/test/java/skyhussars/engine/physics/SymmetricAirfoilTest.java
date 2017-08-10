@@ -62,13 +62,17 @@ public class SymmetricAirfoilTest {
                 .dehidralDegree(0.0f)
                 .direction(Aileron.Direction.RIGHT)
                 .incidence(1f)
+                .wingArea(5.5175f)
                 .cog(new Vector3f(4, 0, -0.2f)).build();
         af.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Simple wing setup test."); 
         logger.info("Frontal wind, 1 degree of dihedral. Expected 1 degree of AoA");
         logger.info("Actual AoA: " + af.aoa());
         Assert.assertEquals(1f, af.aoa(), 0.1);
-        logger.info("Generated lift: " + af.linear() + " , generated torque: " + af.torque());
+        logger.info("Current damp: " + af.damp());
+        logger.info("Current lift: " + af.lift());
+        logger.info("Current induced drag: " + af.inducedDrag());
+        logger.info("Generated linear: " + af.linear() + " , generated torque: " + af.torque());
     }
     
     @Test
@@ -80,19 +84,22 @@ public class SymmetricAirfoilTest {
                 .dehidralDegree(0.0f)
                 .direction(Aileron.Direction.RIGHT)
                 .incidence(1f)
+                .wingArea(5.5175f)
                 .cog(new Vector3f(4, 0, -0.2f)).build();
         Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple aileron test."); 
         logger.info("Aileron at rest.");
         aileron.controlAileron(0);
-        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(30000), Vector3f.ZERO);
         logger.info("Actual AoA: " + aileron.aoa());
         Assert.assertEquals(1f, aileron.aoa(), 0.1);
+        logger.info("Current damp: " + af.damp());
         logger.info("Aileron at max deflection.");
         aileron.controlAileron(1);
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Actual AoA: " + aileron.aoa());
+        logger.info("Current damp: " + af.damp());
         Assert.assertEquals(3f, aileron.aoa(), 0.1);
     }
     
