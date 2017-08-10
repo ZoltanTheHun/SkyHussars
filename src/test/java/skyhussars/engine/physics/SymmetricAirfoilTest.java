@@ -86,7 +86,7 @@ public class SymmetricAirfoilTest {
                 .direction(Aileron.Direction.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
-                .cog(new Vector3f(4, 0, -0.2f)).build();
+                .cog(new Vector3f(-4, 0, -0.2f)).build();
         Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple aileron test."); 
@@ -114,7 +114,7 @@ public class SymmetricAirfoilTest {
                 .direction(Aileron.Direction.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
-                .cog(new Vector3f(4, 0, -0.2f)).build();
+                .cog(new Vector3f(-4, 0, -0.2f)).build();
         Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple damping test."); 

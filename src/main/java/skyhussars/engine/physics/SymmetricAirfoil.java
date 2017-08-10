@@ -65,7 +65,7 @@ public class SymmetricAirfoil implements Airfoil {
     private final Quaternion dehidral;
     private final Quaternion wingRotation;
     private final Vector3f vUp;
-    private final float dampingFactor = 5;
+    private final float dampingFactor = 2;
     private final boolean damper;
     private boolean leftDamper;
     private Aileron.Direction direction;
@@ -120,14 +120,16 @@ public class SymmetricAirfoil implements Airfoil {
 
     public Vector3f damp(Vector3f vAngularVelocity) {
         Vector3f locDamp = Vector3f.ZERO;
-        float zDamping = vAngularVelocity.z * vAngularVelocity.z * dampingFactor;
+        float zDamping = vAngularVelocity.z * dampingFactor;
         float xDamping = vAngularVelocity.x * cog.length() * 1f;
         float yDamping = vAngularVelocity.y * cog.length() * 1f;
+        logger.info("Left damper: " + leftDamper);
         if (damper && leftDamper) {
             locDamp = locDamp.add(vUp.mult(zDamping));
         } else if (damper && !leftDamper) {
             locDamp = locDamp.add(vUp.mult(zDamping).negate());
         }
+        logger.info("Damping force: " + locDamp);
         switch(direction){
             case HORIZONTAL_STABILIZER : locDamp = locDamp.add(vUp.mult(xDamping).negate()); break;
             case VERTICAL_STABILIZER : locDamp = locDamp.add(vUp.mult(yDamping).negate()); break;
