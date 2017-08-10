@@ -57,8 +57,8 @@ public class Aileron implements Airfoil {
     }
 
     @Override
-    public String getName() {
-        return airfoil.getName();
+    public String name() {
+        return airfoil.name();
     }
 
     public enum Direction {

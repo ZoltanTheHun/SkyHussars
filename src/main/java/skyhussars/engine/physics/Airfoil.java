@@ -30,7 +30,7 @@ import com.jme3.math.Vector3f;
 
 public interface Airfoil extends RigidBody {
     
-    public String getName();
+    public String name();
     public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity);
     public Vector3f linear();
     public Vector3f torque();

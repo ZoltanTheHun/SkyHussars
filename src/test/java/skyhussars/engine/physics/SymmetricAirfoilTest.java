@@ -70,6 +70,7 @@ public class SymmetricAirfoilTest {
         logger.info("Actual AoA: " + af.aoa());
         Assert.assertEquals(1f, af.aoa(), 0.1);
         logger.info("Current damp: " + af.damp());
+        Assert.assertEquals(new Vector3f(0,0,0), af.damp());
         logger.info("Current lift: " + af.lift());
         logger.info("Current induced drag: " + af.inducedDrag());
         logger.info("Generated linear: " + af.linear() + " , generated torque: " + af.torque());
@@ -100,6 +101,34 @@ public class SymmetricAirfoilTest {
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Actual AoA: " + aileron.aoa());
         logger.info("Current damp: " + af.damp());
+        Assert.assertEquals(3f, aileron.aoa(), 0.1);
+    }
+    
+    @Test
+    public void dampingTest(){
+        SymmetricAirfoil af = new SymmetricAirfoil.Builder()
+                .name("Simple right wing")
+                .aspectRatio(6.37f)
+                .damper(true)
+                .dehidralDegree(0.0f)
+                .direction(Aileron.Direction.RIGHT)
+                .incidence(1f)
+                .wingArea(5.5175f)
+                .cog(new Vector3f(4, 0, -0.2f)).build();
+        Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
+        aileron.controlAileron(0);
+        logger.info("Simple damping test."); 
+        logger.info("Damping test: Aileron at rest.");
+        aileron.controlAileron(0);
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,2.79253f)); //max rate of roll should be 160degree
+        logger.info("Damping test: Actual AoA: " + aileron.aoa());
+        Assert.assertEquals(1f, aileron.aoa(), 0.1);
+        logger.info("Damping test: Current damp: " + af.damp());
+        logger.info("Damping test: Aileron at max deflection.");
+        aileron.controlAileron(1);
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        logger.info("Damping test: Actual AoA: " + aileron.aoa());
+        logger.info("Damping test: Current damp: " + af.damp());
         Assert.assertEquals(3f, aileron.aoa(), 0.1);
     }
     
