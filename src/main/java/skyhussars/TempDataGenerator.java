@@ -97,7 +97,7 @@ public class TempDataGenerator {
                                     .setAspectRatio(6.37f)
                                     .setDamper(true)
                                     .setDehidralDegree(0f)
-                                    .setDirection(Aileron.Direction.LEFT),
+                                    .setDirection(Aileron.ControlDir.LEFT),
                 new AirfoilDescriptor().setName("WingOuterLeft")
                                     .setCog(new Vector3f(-4.0f, 0, -0.2f))
                                     .setWingArea(22.07f / 4f)
@@ -105,7 +105,7 @@ public class TempDataGenerator {
                                     .setAspectRatio(6.37f)
                                     .setDamper(true)
                                     .setDehidralDegree(0f)
-                                    .setDirection(Aileron.Direction.LEFT),
+                                    .setDirection(Aileron.ControlDir.LEFT),
                 new AirfoilDescriptor().setName("WingRight")
                                     .setCog(new Vector3f(2.0f, 0, -0.2f))
                                     .setWingArea(22.07f / 4f)
@@ -113,7 +113,7 @@ public class TempDataGenerator {
                                     .setIncidence(1f)
                                     .setDamper(true)
                                     .setDehidralDegree(0f)
-                                    .setDirection(Aileron.Direction.RIGHT),
+                                    .setDirection(Aileron.ControlDir.RIGHT),
                 new AirfoilDescriptor().setName("WingOuterRight")
                                     .setCog(new Vector3f(4.0f, 0, -0.2f))
                                     .setWingArea(22.07f / 4f)
@@ -121,7 +121,7 @@ public class TempDataGenerator {
                                     .setIncidence(1f)
                                     .setDamper(true)
                                     .setDehidralDegree(0f)
-                                    .setDirection(Aileron.Direction.RIGHT),
+                                    .setDirection(Aileron.ControlDir.RIGHT),
                 new AirfoilDescriptor().setName("HorizontalStabilizer")
                                     .setCog(new Vector3f(0, 0, -6f))
                                     .setWingArea(5f)
@@ -129,7 +129,7 @@ public class TempDataGenerator {
                                     .setAspectRatio(6.37f / 1.5f)
                                     .setDamper(false)
                                     .setDehidralDegree(0f)
-                                    .setDirection(Aileron.Direction.HORIZONTAL_STABILIZER),
+                                    .setDirection(Aileron.ControlDir.HORIZONTAL_STABILIZER),
                 new AirfoilDescriptor().setName("VerticalStabilizer")
                                     .setCog(new Vector3f(0, 0, -6f))
                                     .setWingArea(5f)
@@ -137,7 +137,7 @@ public class TempDataGenerator {
                                     .setAspectRatio(6.37f / 1.5f)
                                     .setDamper(false)
                                     .setDehidralDegree(90f)
-                                    .setDirection(Aileron.Direction.VERTICAL_STABILIZER));
+                                    .setDirection(Aileron.ControlDir.VERTICAL_STABILIZER));
 
         PlaneDescriptor planeDescriptor = new PlaneDescriptor();
         planeDescriptor.setName("Lockheed P-80A-1-LO Shooting Star");

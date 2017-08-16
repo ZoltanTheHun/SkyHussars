@@ -25,14 +25,16 @@
  */
 package skyhussars.engine.physics;
 
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import static com.jme3.math.FastMath.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Aileron implements Airfoil {
-
+    private final static Logger logger = LoggerFactory.getLogger(Aileron.class);
     private final Airfoil airfoil;
-    private final Direction side;
+    private final ControlDir side;
     private Quaternion qAileron = new Quaternion();
 
     @Override
@@ -61,29 +63,30 @@ public class Aileron implements Airfoil {
         return airfoil.name();
     }
 
-    public enum Direction {
+    public enum ControlDir {
 
         LEFT(1), RIGHT(-1), HORIZONTAL_STABILIZER(1), VERTICAL_STABILIZER(1);
         private final float direction;
 
-        Direction(float direction) {
+        ControlDir(float direction) {
             this.direction = direction;
         }
 
     }
 
-    public Aileron(Airfoil airfoil, Direction side) {
+    public Aileron(Airfoil airfoil, ControlDir side) {
         this.airfoil = airfoil;
         this.side = side;
     }
     
-    public Aileron(Airfoil airfoil, Direction side,float maxDeflection) {
+    public Aileron(Airfoil airfoil, ControlDir side,float maxDeflection) {
         this.airfoil = airfoil;
         this.side = side;
+        this.maxDeflection = maxDeflection;
     }
 
     @Override
-    public Aileron.Direction direction() {
+    public Aileron.ControlDir direction() {
         return this.side;
     }
 
@@ -94,9 +97,9 @@ public class Aileron implements Airfoil {
 
     private float maxDeflection = 2f;   //degree
     public void controlAileron(float aileron) {
-        Quaternion q = new Quaternion();
-        float deflection = side.direction * aileron * FastMath.DEG_TO_RAD * maxDeflection;
-        qAileron = q.fromAngles(deflection, 0, 0);
+        aileron = abs(aileron) > 0.15 ? aileron : 0; /* magical value until proper joystick sentitivity is added */ 
+        float deflection = side.direction * aileron * DEG_TO_RAD * maxDeflection;
+        qAileron = new Quaternion().fromAngles(deflection, 0, 0);
     }
 
 }

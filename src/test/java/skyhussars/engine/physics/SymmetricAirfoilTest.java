@@ -25,10 +25,14 @@
  */
 package skyhussars.engine.physics;
 
+import static com.jme3.math.FastMath.*;
+import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
+import java.util.Arrays;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class SymmetricAirfoilTest {
 
@@ -60,7 +64,7 @@ public class SymmetricAirfoilTest {
                 .aspectRatio(6.37f)
                 .damper(true)
                 .dehidralDegree(0.0f)
-                .direction(Aileron.Direction.RIGHT)
+                .direction(Aileron.ControlDir.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
                 .cog(new Vector3f(4, 0, -0.2f)).build();
@@ -68,9 +72,11 @@ public class SymmetricAirfoilTest {
         logger.info("Simple wing setup test."); 
         logger.info("Frontal wind, 1 degree of dihedral. Expected 1 degree of AoA");
         logger.info("Actual AoA: " + af.aoa());
-        Assert.assertEquals(1f, af.aoa(), 0.1);
-        logger.info("Current damp: " + af.damp());
-        Assert.assertEquals(new Vector3f(0,0,0), af.damp());
+        Assert.assertEquals(1f, af.aoa(), 0.1f);
+        float[] dampAngles = new float[3];
+        af.damp().toAngles(dampAngles);
+        logger.info("Damp angles: " + Arrays.toString(dampAngles));
+        Assert.assertEquals("Z Damp angle : ",0f, RAD_TO_DEG * dampAngles[2], 0.1f);
         logger.info("Current lift: " + af.lift());
         logger.info("Current induced drag: " + af.inducedDrag());
         logger.info("Generated linear: " + af.linear() + " , generated torque: " + af.torque());
@@ -83,11 +89,11 @@ public class SymmetricAirfoilTest {
                 .aspectRatio(6.37f)
                 .damper(true)
                 .dehidralDegree(0.0f)
-                .direction(Aileron.Direction.RIGHT)
+                .direction(Aileron.ControlDir.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
                 .cog(new Vector3f(-4, 0, -0.2f)).build();
-        Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
+        Aileron aileron = new Aileron(af, Aileron.ControlDir.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple aileron test."); 
         logger.info("Aileron at rest.");
@@ -95,15 +101,26 @@ public class SymmetricAirfoilTest {
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(30000), Vector3f.ZERO);
         logger.info("Actual AoA: " + aileron.aoa());
         Assert.assertEquals(1f, aileron.aoa(), 0.1);
-        logger.info("Current damp: " + af.damp());
+        float[] dampAngles = new float[3];
+        af.damp().toAngles(dampAngles);
+        logger.info("Damp angles: " + Arrays.toString(dampAngles));
         logger.info("Aileron at max deflection.");
         aileron.controlAileron(1);
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Actual AoA: " + aileron.aoa());
-        logger.info("Current damp: " + af.damp());
+        dampAngles = new float[3];
+        af.damp().toAngles(dampAngles);
+        logger.info("Damp angles: " + Arrays.toString(dampAngles));
         Assert.assertEquals(3f, aileron.aoa(), 0.1);
     }
     
+    
+    private final float mass = 5307.0f;
+    private final float rPlane = 1.3f;
+    private float length = length = 10.49f;
+    private Matrix3f  momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
+                0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
+                0f, 0f, (mass / 2) * (rPlane * rPlane));
     @Test
     public void dampingTest(){
         SymmetricAirfoil af = new SymmetricAirfoil.Builder()
@@ -111,24 +128,34 @@ public class SymmetricAirfoilTest {
                 .aspectRatio(6.37f)
                 .damper(true)
                 .dehidralDegree(0.0f)
-                .direction(Aileron.Direction.RIGHT)
+                .direction(Aileron.ControlDir.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
-                .cog(new Vector3f(-4, 0, -0.2f)).build();
-        Aileron aileron = new Aileron(af, Aileron.Direction.RIGHT);
+                .cog(new Vector3f(-4, 0, -0.2f))
+                .dampingFactor(2)
+                .build();
+        Aileron aileron = new Aileron(af, Aileron.ControlDir.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple damping test."); 
         logger.info("Damping test: Aileron at rest.");
         aileron.controlAileron(0);
-        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,2.79253f)); //max rate of roll should be 160degree
+        //aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,2.79253f)); //max rate of roll should be 160degree
+        logger.info("Rolling: 1 degree.");
+        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,0.01745f));  // 1 degree of roll
         logger.info("Damping test: Actual AoA: " + aileron.aoa());
         Assert.assertEquals(1f, aileron.aoa(), 0.1);
-        logger.info("Damping test: Current damp: " + af.damp());
+        Vector3f angAcc = momentOfInertiaTensor.invert().mult(aileron.torque());
+        logger.info("Damping test: Angular Acceleration: " + angAcc);
+        float[] dampAngles = new float[3];
+        af.damp().toAngles(dampAngles);
+        logger.info("Damping test: Damp angles: " + Arrays.toString(dampAngles));
         logger.info("Damping test: Aileron at max deflection.");
         aileron.controlAileron(1);
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Damping test: Actual AoA: " + aileron.aoa());
-        logger.info("Damping test: Current damp: " + af.damp());
+        dampAngles = new float[3];
+        af.damp().toAngles(dampAngles);
+        logger.info("Damping test: Damp angles: " + Arrays.toString(dampAngles));
         Assert.assertEquals(3f, aileron.aoa(), 0.1);
     }
     

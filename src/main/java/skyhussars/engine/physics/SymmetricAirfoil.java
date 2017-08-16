@@ -25,7 +25,7 @@
  */
 package skyhussars.engine.physics;
 
-import com.jme3.math.FastMath;
+import static com.jme3.math.FastMath.*;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import org.slf4j.Logger;
@@ -37,9 +37,9 @@ public class SymmetricAirfoil implements Airfoil {
     public static class Builder{
         private String name; 
         private Vector3f cog; 
-        private float wingArea,incidence,aspectRatio,dehidralDegree;
+        private float wingArea,incidence,aspectRatio,dehidralDegree,dampingFactor = 2;
         private boolean damper;
-        private Aileron.Direction direction;
+        private Aileron.ControlDir direction;
         public Builder name(String name){ this.name = name; return this;}
         public Builder cog(Vector3f cog){ this.cog = cog; return this;}
         public Builder wingArea(float wingArea){ this.wingArea = wingArea; return this;}
@@ -47,9 +47,10 @@ public class SymmetricAirfoil implements Airfoil {
         public Builder aspectRatio(float aspectRatio){ this.aspectRatio = aspectRatio; return this;}
         public Builder dehidralDegree(float dehidralDegree){ this.dehidralDegree = dehidralDegree; return this;}
         public Builder damper(boolean damper){ this.damper = damper; return this;}
-        public Builder direction(Aileron.Direction direction){ this.direction = direction; return this;} 
+        public Builder direction(Aileron.ControlDir direction){ this.direction = direction; return this;} 
+        public Builder dampingFactor(float dampingFactor){ this.dampingFactor = dampingFactor; return this;} 
         public SymmetricAirfoil build(){
-            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction);
+            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction,dampingFactor);
         }
     }
     
@@ -64,85 +65,77 @@ public class SymmetricAirfoil implements Airfoil {
     private Quaternion qIncidence = new Quaternion();
     private final Quaternion dehidral;
     private final Quaternion wingRotation;
-    private final Vector3f vUp;
-    private final float dampingFactor = 2;
+    private final Vector3f upNorm;
+    private float dampCf;
     private final boolean damper;
-    private boolean leftDamper;
-    private Aileron.Direction direction;
+    private Aileron.ControlDir direction;
     private Vector3f linear = Vector3f.ZERO;
     private Vector3f torque = Vector3f.ZERO;
-    private Vector3f damp = Vector3f.ZERO;
+    private Quaternion damp = new Quaternion();
     private Vector3f inducedDrag;
-     private Vector3f lift;
+    private Vector3f lift;
     private float aoa;
+    private float dampDir;
     
     public float aoa(){return aoa;}
     public Vector3f lift(){return lift;}
     public Vector3f inducedDrag(){return inducedDrag;}
     @Override public Vector3f cog() { return cog; }
     @Override public String name() { return name; }
-    public Vector3f damp(){return damp;}
+    public Quaternion damp(){return damp;}
     @Override public synchronized Vector3f linear() {return linear;}
     @Override public synchronized Vector3f torque() {return torque;}
-
-    public SymmetricAirfoil(String name, Vector3f cog, float wingArea, float incidence, float aspectRatio, boolean damper, float dehidralDegree, Aileron.Direction direction) {
+    public SymmetricAirfoil(String name, Vector3f cog, 
+            float wingArea, float incidence, float aspectRatio, 
+            boolean damper, float dehidralDegree, Aileron.ControlDir direction) {
+        this( name,  cog, wingArea,  incidence,  aspectRatio, damper, dehidralDegree,direction,1f);
+    }
+    public SymmetricAirfoil(String name, Vector3f cog, 
+            float wingArea, float incidence, float aspectRatio, 
+            boolean damper, float dehidralDegree, Aileron.ControlDir direction,float dampingFactor) {
         this.wingArea = wingArea;
-        this.incidence = incidence;// * FastMath.DEG_TO_RAD;
+        this.incidence = incidence;
         this.cog = cog;
         this.name = name;
         this.aspectRatio = aspectRatio;
-        this.qIncidence = qIncidence.fromAngles((-incidence) * FastMath.DEG_TO_RAD, 0, 0);
-        this.dehidral = new Quaternion().fromAngleAxis(dehidralDegree * FastMath.DEG_TO_RAD, Vector3f.UNIT_Z);//vertical ? Vector3f.UNIT_X : Vector3f.UNIT_Y;
+        this.qIncidence = qIncidence.fromAngles((-incidence) * DEG_TO_RAD, 0, 0);
+        this.dehidral = new Quaternion().fromAngleAxis(dehidralDegree * DEG_TO_RAD, Vector3f.UNIT_Z);//vertical ? Vector3f.UNIT_X : Vector3f.UNIT_Y;
         wingRotation = qIncidence.mult(dehidral);
-        vUp = wingRotation.mult(Vector3f.UNIT_Y).normalize();
+        upNorm = wingRotation.mult(Vector3f.UNIT_Y).normalize();
         logger.debug(name + " pointing to " + qIncidence.mult(dehidral).mult(Vector3f.UNIT_Y));
         this.damper = damper;
-        if (damper) {
-            if (this.cog.dot(Vector3f.UNIT_X) < 0) {
-                leftDamper = true;
-            } else {
-                leftDamper = false;
-            }
-        }
+        this.dampCf = dampingFactor;
+        if (damper) dampDir = this.cog.dot(Vector3f.UNIT_X) < 0 ? 1 : -1; 
         this.direction = direction;
     }
 
     @Override
-    public Aileron.Direction direction(){return direction;}
+    public Aileron.ControlDir direction(){return direction;}
     
     private void logging(Vector3f vLift, Vector3f vUp, float angleOfAttack, Vector3f vInducedDrag) {
-        String direction = "up";
-        if (vLift.normalize().dot(vUp) < 0) {
-            direction = "down";
-        }
-        logger.debug(name + " at " + angleOfAttack + " degrees generated " + direction + "forces: vLift " + vLift.length() + ", induced drag " + vInducedDrag.length());
+        String dir = vLift.normalize().dot(vUp) > 0 ? "up" : "down";
+        logger.debug(name + " at " + angleOfAttack + " degrees generated " + dir + "forces: vLift " + vLift.length() + ", induced drag " + vInducedDrag.length());
     }
 
-    public Vector3f damp(Vector3f vAngularVelocity) {
-        Vector3f locDamp = Vector3f.ZERO;
-        float zDamping = vAngularVelocity.z * dampingFactor;
-        float xDamping = vAngularVelocity.x * cog.length() * 1f;
-        float yDamping = vAngularVelocity.y * cog.length() * 1f;
-        logger.info("Left damper: " + leftDamper);
-        if (damper && leftDamper) {
-            locDamp = locDamp.add(vUp.mult(zDamping));
-        } else if (damper && !leftDamper) {
-            locDamp = locDamp.add(vUp.mult(zDamping).negate());
-        }
-        logger.info("Damping force: " + locDamp);
+    private Quaternion damp(Vector3f vAngularVelocity) {
+        float zDamp = 0;
+        if(damper) zDamp = dampDir * vAngularVelocity.z * dampCf;
+        float xDamp = 0;
+        float yDamp = 0;
         switch(direction){
-            case HORIZONTAL_STABILIZER : locDamp = locDamp.add(vUp.mult(xDamping).negate()); break;
-            case VERTICAL_STABILIZER : locDamp = locDamp.add(vUp.mult(yDamping).negate()); break;
+            case HORIZONTAL_STABILIZER : xDamp = vAngularVelocity.x * 1f ; break;
+            case VERTICAL_STABILIZER : yDamp = vAngularVelocity.y * 1f; break;
         }
-        return locDamp;
+        float[] angles = new float[]{zDamp,-yDamp,-xDamp};
+        return new Quaternion(angles);
     }
 
     
     private Vector3f lift(float airDensity, Vector3f vFlow) {
         float scLift = calculateLift(airDensity, vFlow);
-        Vector3f direction = vFlow.cross(vUp).cross(vFlow).normalize();
-        if (aoa < 0) direction = direction.negate();
-        return direction.mult(scLift);
+        Vector3f dir = vFlow.cross(upNorm).cross(vFlow).normalize();
+        if (aoa < 0) dir = dir.negate();
+        return dir.mult(scLift);
     }
 
 
@@ -152,7 +145,7 @@ public class SymmetricAirfoil implements Airfoil {
 
     private float getLiftCoefficient() {
         //abs is used for symmetric wings? not perfect
-        float absAoa = FastMath.abs(aoa);
+        float absAoa = abs(aoa);
         float liftCoefficient = 0f;
         for (int i = 1; i < constAoa.length; i++) {
             if (absAoa < constAoa[i]) {
@@ -168,35 +161,27 @@ public class SymmetricAirfoil implements Airfoil {
     }
 
     private  Vector3f inducedDrag(float airDensity, Vector3f vFlow) {
-        float dividened = (0.5f * airDensity * aspectRatio * vFlow.lengthSquared() * FastMath.PI * wingArea);
-        //logger.debug("Airdensity: " + airDensity + ", Velocity: " + vVelocity.length() + ", lift: " + vLift.length() + );
-        if (dividened == 0) {
-            return Vector3f.ZERO;
-        }
-        float scInducedDrag = (lift.lengthSquared()) / dividened;
+        float dividened = (0.5f * airDensity * aspectRatio * vFlow.lengthSquared() * PI * wingArea);
+        if (abs(dividened) < 0.0001f) return Vector3f.ZERO;
+        float scInducedDrag = lift.lengthSquared() / dividened;
         return vFlow.normalize().mult(scInducedDrag);
     }
 
-    private float calcAoa(Vector3f vUp, Vector3f vFlow) {
-        float angleOfAttack = vFlow.cross(vUp).cross(vFlow).normalize().angleBetween(vUp) * FastMath.RAD_TO_DEG;
-        float np = vUp.dot(vFlow);
-        if (np < 0) {
-            angleOfAttack = -angleOfAttack;
-        }
-        return angleOfAttack;
+    private float calcAoa(Vector3f flow) {
+        flow = flow.normalize();
+        float locAoa = flow.cross(upNorm).cross(flow).normalize().angleBetween(upNorm) * RAD_TO_DEG;
+        return upNorm.dot(flow) > 0 ? locAoa : - locAoa;
     }
     
     @Override
-    public Airfoil tick(float airDensity, Vector3f vFlow, Vector3f vAngularVelocity) {
-        damp = damp(vAngularVelocity);
-        vFlow = vFlow.add(damp);
-        aoa = calcAoa(vUp, vFlow.normalize());
-        lift = lift(airDensity, vFlow);
-        inducedDrag = inducedDrag(airDensity, vFlow);
-        synchronized(this) {
-            linear =  lift.add(inducedDrag);
-            torque = cog.cross(linear);
-        }
+    public synchronized Airfoil tick(float airDensity, Vector3f flow, Vector3f angV) {
+        damp = damp(angV);
+        flow = damp.mult(flow);
+        aoa = calcAoa(flow);
+        lift = lift(airDensity, flow);
+        inducedDrag = inducedDrag(airDensity, flow);
+        linear =  lift.add(inducedDrag);
+        torque = cog.cross(linear);      
         return this;
     }
 

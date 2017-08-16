@@ -27,7 +27,7 @@ package skyhussars.engine.plane;
 
 import skyhussars.engine.mission.PlaneMissionDescriptor;
 import skyhussars.engine.physics.Aileron;
-import skyhussars.engine.physics.Aileron.Direction;
+import skyhussars.engine.physics.Aileron.ControlDir;
 import skyhussars.engine.physics.PlanePhysicsImpl;
 import skyhussars.engine.physics.Airfoil;
 import skyhussars.engine.physics.Engine;
@@ -115,14 +115,14 @@ public class Plane {
 
         ailerons = new ArrayList<>();
         ailerons.addAll(airfoils.stream() 
-                .filter( af -> af.direction().equals(Direction.LEFT) || af.direction().equals(Direction.RIGHT))
+                .filter(af -> af.direction().equals(ControlDir.LEFT) || af.direction().equals(ControlDir.RIGHT))
                 .map(af -> (Aileron) af).collect(Collectors.toList()));
         horizontalStabilizers.addAll(airfoils.stream()
-                .filter( af -> af.direction().equals(Direction.HORIZONTAL_STABILIZER))
+                .filter(af -> af.direction().equals(ControlDir.HORIZONTAL_STABILIZER))
                 .map(af -> (Aileron) af)
                 .collect(Collectors.toList()));
         verticalStabilizers.addAll(airfoils.stream()
-                .filter( af -> af.direction().equals(Direction.VERTICAL_STABILIZER))
+                .filter(af -> af.direction().equals(ControlDir.VERTICAL_STABILIZER))
                 .map(af -> (Aileron) af)
                 .collect(Collectors.toList()));
         this.airfoils.addAll(airfoils);

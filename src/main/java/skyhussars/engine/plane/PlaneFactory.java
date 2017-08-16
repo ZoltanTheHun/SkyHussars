@@ -36,11 +36,9 @@ import skyhussars.engine.plane.instruments.Instruments;
 import skyhussars.engine.sound.AudioHandler;
 import skyhussars.engine.sound.SoundManager;
 import skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.math.FastMath;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,8 +89,7 @@ public class PlaneFactory {
                                             af.getAspectRatio(),
                                             af.isDamper(),
                                             af.getDehidralDegree(),
-                                            af.getDirection()),
-                        af.getDirection())
+                                            af.getDirection(),0.01f), af.getDirection(),1f)
         ).collect(Collectors.toList());
     }
     
@@ -106,7 +103,6 @@ public class PlaneFactory {
                 .attachSpatialToCockpitNode(cockpitModel)
                 .attachSpatialToCockpitNode(dataManager.getCockpit())
                 .attachSpatialToModelNode(model);
-
     }
    
 }

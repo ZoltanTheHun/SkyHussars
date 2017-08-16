@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlanePhysicsImpl implements PlanePhysics {
 
@@ -93,7 +94,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
-    private void updateAirfoils() { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow(), vAngularVelocity));}
+    private void updateAirfoils(Vector3f localFlow) { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow, vAngularVelocity));}
     private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linear).reduce(Vector3f.ZERO,Vector3f::add));}
     private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,Vector3f::add));}
     
@@ -107,7 +108,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
-        updateAirfoils();
+        updateAirfoils(localFlow());
         
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
@@ -122,12 +123,14 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 Vector3f.ZERO.add(airfoilTorque())
                              .add(engineTorque()));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
+       // logger.info("Angular velocity: " + vAngularVelocity);
         //fromangles is selfmodifying
         Quaternion rotationQuaternion = helperQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
             rotation = rotation.mult(rotationQuaternion);
             translation = translation.add(vVelocity.mult(tpf));
         }
+       // logger.info("Airfoil Linears: " + airfoils.stream().map(af -> af.name() + " " +  af.linear() + "; ").collect(Collectors.toList()).toString());
     }
     
     /* model can only be updated from main thread atm */

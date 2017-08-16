@@ -35,5 +35,5 @@ public interface Airfoil extends RigidBody {
     public Vector3f linear();
     public Vector3f torque();
     public float aoa();
-    public Aileron.Direction direction();
+    public Aileron.ControlDir direction();
 }

@@ -41,7 +41,7 @@ public class AirfoilDescriptor {
     private float aspectRatio;
     private boolean damper;
     private float dehidralDegree;
-    private Aileron.Direction direction;
+    private Aileron.ControlDir direction;
 
     public String getName() {
         return name;
@@ -78,7 +78,7 @@ public class AirfoilDescriptor {
     public float getDehidralDegree() {return dehidralDegree; }
     public AirfoilDescriptor setDehidralDegree(float dehidralDegree) {this.dehidralDegree = dehidralDegree;return this;}
     
-    public Aileron.Direction getDirection() {return direction; }
-    public AirfoilDescriptor setDirection(Aileron.Direction direction) {this.direction = direction;return this;}
+    public Aileron.ControlDir getDirection() {return direction; }
+    public AirfoilDescriptor setDirection(Aileron.ControlDir direction) {this.direction = direction;return this;}
 
 }
