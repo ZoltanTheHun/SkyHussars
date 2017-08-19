@@ -73,12 +73,7 @@ public class SymmetricAirfoil implements Airfoil {
     @Override public Vector3f cog() { return cog; }
     @Override public String name() { return name; }
     
-    public SymmetricAirfoil(String name, Vector3f cog, 
-            float wingArea, float incidence, float aspectRatio, 
-            boolean damper, float dehidralDegree, Aileron.ControlDir direction) {
-        this( name,  cog, wingArea,  incidence,  aspectRatio, damper, dehidralDegree,direction,1f);
-    }
-    public SymmetricAirfoil(String name, Vector3f cog, 
+    private SymmetricAirfoil(String name, Vector3f cog, 
             float wingArea, float incidence, float aspectRatio, 
             boolean damper, float dehidralDegree, Aileron.ControlDir direction,float dampingFactor) {
         this.wingArea = wingArea;

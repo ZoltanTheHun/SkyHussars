@@ -82,14 +82,16 @@ public class PlaneFactory {
 
     private List<Airfoil> airfoils(List<AirfoilDescriptor> afs){
         return afs.stream().map( af -> 
-            new Aileron(new SymmetricAirfoil(af.getName(),
-                                            af.getCog(),
-                                            af.getWingArea(),
-                                            af.getIncidence(),
-                                            af.getAspectRatio(),
-                                            af.isDamper(),
-                                            af.getDehidralDegree(),
-                                            af.getDirection(),0.01f), af.getDirection(),1f)
+            new Aileron(new SymmetricAirfoil.Builder()
+                    .name(af.getName())
+                    .cog(af.getCog())
+                    .wingArea(af.getWingArea())
+                    .incidence(af.getIncidence())
+                    .aspectRatio(af.getAspectRatio())
+                    .damper(af.isDamper())
+                    .dehidralDegree(af.getDehidralDegree())
+                    .direction(af.getDirection())
+                    .dampingFactor(0.01f).build(),af.getDirection(),1f)
         ).collect(Collectors.toList());
     }
     
