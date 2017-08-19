@@ -68,18 +68,18 @@ public class SymmetricAirfoilTest {
                 .incidence(1f)
                 .wingArea(5.5175f)
                 .cog(new Vector3f(4, 0, -0.2f)).build();
-        af.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
+        AirfoilResponse afp = af.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Simple wing setup test."); 
         logger.info("Frontal wind, 1 degree of dihedral. Expected 1 degree of AoA");
-        logger.info("Actual AoA: " + af.aoa());
-        Assert.assertEquals(1f, af.aoa(), 0.1f);
+        logger.info("Actual AoA: " + afp.aoa);
+        Assert.assertEquals(1f, afp.aoa, 0.1f);
         float[] dampAngles = new float[3];
-        af.damp().toAngles(dampAngles);
+        afp.damp.toAngles(dampAngles);
         logger.info("Damp angles: " + Arrays.toString(dampAngles));
         Assert.assertEquals("Z Damp angle : ",0f, RAD_TO_DEG * dampAngles[2], 0.1f);
-        logger.info("Current lift: " + af.lift());
-        logger.info("Current induced drag: " + af.inducedDrag());
-        logger.info("Generated linear: " + af.linear() + " , generated torque: " + af.torque());
+        logger.info("Current lift: " + afp.lift);
+        logger.info("Current induced drag: " + afp.inducedDrag);
+        logger.info("Generated linear: " + afp.linear + " , generated torque: " + afp.torque);
     }
     
     @Test
@@ -98,20 +98,20 @@ public class SymmetricAirfoilTest {
         logger.info("Simple aileron test."); 
         logger.info("Aileron at rest.");
         aileron.controlAileron(0);
-        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(30000), Vector3f.ZERO);
-        logger.info("Actual AoA: " + aileron.aoa());
-        Assert.assertEquals(1f, aileron.aoa(), 0.1);
+        AirfoilResponse afp = aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(30000), Vector3f.ZERO);
+        logger.info("Actual AoA: " + afp.aoa);
+        Assert.assertEquals(1f, afp.aoa, 0.1);
         float[] dampAngles = new float[3];
-        af.damp().toAngles(dampAngles);
+        afp.damp.toAngles(dampAngles);
         logger.info("Damp angles: " + Arrays.toString(dampAngles));
         logger.info("Aileron at max deflection.");
         aileron.controlAileron(1);
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
-        logger.info("Actual AoA: " + aileron.aoa());
+        logger.info("Actual AoA: " + afp.aoa);
         dampAngles = new float[3];
-        af.damp().toAngles(dampAngles);
+        afp.damp.toAngles(dampAngles);
         logger.info("Damp angles: " + Arrays.toString(dampAngles));
-        Assert.assertEquals(3f, aileron.aoa(), 0.1);
+        Assert.assertEquals(3f, afp.aoa, 0.1);
     }
     
     
@@ -141,22 +141,22 @@ public class SymmetricAirfoilTest {
         aileron.controlAileron(0);
         //aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,2.79253f)); //max rate of roll should be 160degree
         logger.info("Rolling: 1 degree.");
-        aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,0.01745f));  // 1 degree of roll
-        logger.info("Damping test: Actual AoA: " + aileron.aoa());
-        Assert.assertEquals(1f, aileron.aoa(), 0.1);
-        Vector3f angAcc = momentOfInertiaTensor.invert().mult(aileron.torque());
+        AirfoilResponse afp = aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,0.01745f));  // 1 degree of roll
+        logger.info("Damping test: Actual AoA: " + afp.aoa);
+        Assert.assertEquals(1f, afp.aoa, 0.1);
+        Vector3f angAcc = momentOfInertiaTensor.invert().mult(afp.torque);
         logger.info("Damping test: Angular Acceleration: " + angAcc);
         float[] dampAngles = new float[3];
-        af.damp().toAngles(dampAngles);
+        afp.damp.toAngles(dampAngles);
         logger.info("Damping test: Damp angles: " + Arrays.toString(dampAngles));
         logger.info("Damping test: Aileron at max deflection.");
         aileron.controlAileron(1);
         aileron.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
-        logger.info("Damping test: Actual AoA: " + aileron.aoa());
+        logger.info("Damping test: Actual AoA: " + afp.aoa);
         dampAngles = new float[3];
-        af.damp().toAngles(dampAngles);
+        afp.damp.toAngles(dampAngles);
         logger.info("Damping test: Damp angles: " + Arrays.toString(dampAngles));
-        Assert.assertEquals(3f, aileron.aoa(), 0.1);
+        Assert.assertEquals(3f, afp.aoa, 0.1);
     }
     
 }

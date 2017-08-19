@@ -23,14 +23,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.engine.physics;
 
-import com.jme3.math.Vector3f;
+import com.jme3.math.*;
 
-public interface Airfoil extends RigidBody {
+public class AirfoilResponse {
+    public final Quaternion damp;
+    public final float aoa;
+    public final Vector3f lift;
+    public final Vector3f inducedDrag;
+    public final Vector3f linear;
+    public final Vector3f torque;
+
+    public AirfoilResponse(Quaternion damp, float aoa, Vector3f lift, Vector3f inducedDrag, Vector3f linear, Vector3f torque) {
+        this.damp = damp;
+        this.aoa = aoa;
+        this.lift = lift;
+        this.inducedDrag = inducedDrag;
+        this.linear = linear;
+        this.torque = torque;
+    }
     
-    public String name();
-    public AirfoilResponse tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity);
-    public Aileron.ControlDir direction();
+
 }

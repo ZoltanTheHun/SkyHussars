@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class PlanePhysicsImpl implements PlanePhysics {
@@ -94,9 +95,12 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
-    private void updateAirfoils(Vector3f localFlow) { airfoils.stream().forEach(a -> a.tick(airDensity, localFlow, vAngularVelocity));}
-    private Vector3f airfoilLinear() {return rotation.mult(airfoils.stream().map(Airfoil::linear).reduce(Vector3f.ZERO,Vector3f::add));}
-    private Vector3f airfoilTorque() {return (airfoils.stream().map(Airfoil::torque).reduce(Vector3f.ZERO,Vector3f::add));}
+    private List<AirfoilResponse> updateAirfoils(Vector3f localFlow) {
+        return airfoils.parallelStream().map(a -> a.tick(airDensity, localFlow, vAngularVelocity)).collect(Collectors.toList());}
+    private Vector3f airfoilLinear(List<AirfoilResponse> afps) {
+        return rotation.mult(afps.stream().map(a -> a.linear).reduce(Vector3f.ZERO,Vector3f::add));}
+    private Vector3f airfoilTorque(List<AirfoilResponse> afps) {
+        return (afps.stream().map(a -> a.torque).reduce(Vector3f.ZERO,Vector3f::add));}
     
     /* Engine calculations */
     private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::thrust).reduce(Vector3f.ZERO,Vector3f::add));}
@@ -108,19 +112,18 @@ public class PlanePhysicsImpl implements PlanePhysics {
     @Override
     public void update(float tpf, Environment environment) {
         updateAuxiliary(rotation, translation, environment);
-        updateAirfoils(localFlow());
-        
+        List<AirfoilResponse> afps = updateAirfoils(localFlow());
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineLinear())   
-                .add(airfoilLinear())
+                .add(airfoilLinear(afps))
                 .add(parasiticDrag()).divide(mass);
 
         vVelocity = vVelocity.add(linearAcc.mult(tpf));
         
         vAngularAcceleration = momentOfInertiaTensor.invert().mult(
-                Vector3f.ZERO.add(airfoilTorque())
+                Vector3f.ZERO.add(airfoilTorque(afps))
                              .add(engineTorque()));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
        // logger.info("Angular velocity: " + vAngularVelocity);

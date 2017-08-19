@@ -38,20 +38,10 @@ public class Aileron implements Airfoil {
     private Quaternion qAileron = new Quaternion();
 
     @Override
-    public Airfoil tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
-        airfoil.tick(airDensity, qAileron.inverse().mult(vVelocity), angularVelocity);
-        return this;
+    public AirfoilResponse tick(float airDensity, Vector3f vVelocity, Vector3f angularVelocity) {
+        return airfoil.tick(airDensity, qAileron.inverse().mult(vVelocity), angularVelocity);
     }
 
-    @Override
-    public Vector3f linear() {
-        return airfoil.linear();
-    }
-
-    @Override
-    public Vector3f torque() {
-        return airfoil.torque();
-    }
 
     @Override
     public Vector3f cog() {
@@ -68,9 +58,7 @@ public class Aileron implements Airfoil {
         LEFT(1), RIGHT(-1), HORIZONTAL_STABILIZER(1), VERTICAL_STABILIZER(1);
         private final float direction;
 
-        ControlDir(float direction) {
-            this.direction = direction;
-        }
+        ControlDir(float direction) { this.direction = direction; }
 
     }
 
@@ -89,12 +77,6 @@ public class Aileron implements Airfoil {
     public Aileron.ControlDir direction() {
         return this.side;
     }
-
-    @Override
-    public float aoa() {
-        return airfoil.aoa();
-    }
-
     private float maxDeflection = 2f;   //degree
     public void controlAileron(float aileron) {
         aileron = abs(aileron) > 0.15 ? aileron : 0; /* magical value until proper joystick sentitivity is added */ 
