@@ -123,6 +123,7 @@ public class MissionState implements GameState {
 
     private TextRenderer speedoMeterUI;
     private TextRenderer altimeterUI;
+    private TextRenderer aoaUI;
 
     public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) {
         this.speedoMeterUI = speedoMeterUI;
@@ -132,6 +133,9 @@ public class MissionState implements GameState {
         this.altimeterUI = altimeterUI;
     }
 
+    public synchronized void aoaUI(TextRenderer aoaUI){
+        this.aoaUI = aoaUI;
+    }
     @Override
     public synchronized GameState update(float tpf) {
         if(nextState == null) initialize();
@@ -149,6 +153,7 @@ public class MissionState implements GameState {
             if (speedoMeterUI != null && altimeterUI != null) {
                 speedoMeterUI.setText(player.plane().velocityKmh() + "km/h");
                 altimeterUI.setText((player.plane().getHeight() + "m"));
+                aoaUI.setText("Aoa: "+(player.plane().aoa()));
             }
         } else {
             stopWorldThread();

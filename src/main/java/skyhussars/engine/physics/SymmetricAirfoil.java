@@ -86,7 +86,8 @@ public class SymmetricAirfoil implements Airfoil {
         this.name = name;
         this.aspectRatio = aspectRatio;
         this.qIncidence = new Quaternion().fromAngles((-incidence) * DEG_TO_RAD, 0, 0);
-        this.dehidral = new Quaternion().fromAngleAxis(dehidralDegree * DEG_TO_RAD, Vector3f.UNIT_Z);//vertical ? Vector3f.UNIT_X : Vector3f.UNIT_Y;
+        //vertical ? Vector3f.UNIT_X : Vector3f.UNIT_Y;
+        this.dehidral = new Quaternion().fromAngleAxis(dehidralDegree * DEG_TO_RAD, Vector3f.UNIT_Z);
         wingRotation = qIncidence.mult(dehidral);
         upNorm = wingRotation.mult(Vector3f.UNIT_Y).normalize();
         this.damper = damper;
@@ -100,9 +101,9 @@ public class SymmetricAirfoil implements Airfoil {
 
     private Quaternion damp(Vector3f vAngularVelocity) {
         float zDamp = 0;
-        if(damper) zDamp = dampDir * vAngularVelocity.z * dampCf;
         float xDamp = 0;
         float yDamp = 0;
+        if(damper) zDamp = dampDir * vAngularVelocity.z * dampCf;
         switch(direction){
             case HORIZONTAL_STABILIZER : xDamp = vAngularVelocity.x * 1f ; break;
             case VERTICAL_STABILIZER : yDamp = vAngularVelocity.y * 1f; break;

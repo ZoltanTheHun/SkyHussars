@@ -55,7 +55,7 @@ public class Aileron implements Airfoil {
 
     public enum ControlDir {
 
-        LEFT(1), RIGHT(-1), HORIZONTAL_STABILIZER(1), VERTICAL_STABILIZER(1);
+        LEFT(1), RIGHT(-1), HORIZONTAL_STABILIZER(1), VERTICAL_STABILIZER(1),NONE(0);
         private final float direction;
 
         ControlDir(float direction) { this.direction = direction; }

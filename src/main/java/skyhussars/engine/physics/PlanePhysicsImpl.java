@@ -27,18 +27,13 @@ package skyhussars.engine.physics;
 
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.utility.NumberFormats;
-import com.jme3.math.FastMath;
-import com.jme3.math.Matrix3f;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
+import com.jme3.math.*;
+import java.util.*;
 import com.jme3.scene.Node;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class PlanePhysicsImpl implements PlanePhysics {
 
@@ -190,5 +185,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
     @Override
     public void setSpeedForward(Quaternion rotation, float kmh) {
         vVelocity = rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
+    }
+    
+    public float aoa(){
+        return aoa;
     }
 }

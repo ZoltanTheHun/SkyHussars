@@ -27,7 +27,7 @@
     "aspectRatio" : 6.37,
     "damper" : true,
     "dehidralDegree" : 0.0,
-    "direction" : "LEFT"
+    "direction" : "NONE"
   }, {
     "name" : "WingOuterLeft",
     "cog" : {
@@ -53,7 +53,7 @@
     "aspectRatio" : 6.37,
     "damper" : true,
     "dehidralDegree" : 0.0,
-    "direction" : "RIGHT"
+    "direction" : "NONE"
   }, {
     "name" : "WingOuterRight",
     "cog" : {

@@ -132,6 +132,11 @@ public class Plane {
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new PlanePhysicsImpl(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
         this.physics.setSpeedForward(geom.root().getLocalRotation(), 300f);
+        
+    }
+    
+    public float aoa(){
+        return physics.aoa();
     }
 
     private void initializeGunGroup(PlaneDescriptor planeDescriptor) {

@@ -90,7 +90,7 @@ public class MissionMenu implements ScreenController {
         mission = menuState.currentMission();
         mission.speedoMeterUI(screen.findElementById("speedDisplay").getRenderer(TextRenderer.class));
         mission.altimeterUI(screen.findElementById("altimeter").getRenderer(TextRenderer.class));
-
+        mission.aoaUI(screen.findElementById("aoa").getRenderer(TextRenderer.class));
         inputManager.setCursorVisible(false);
         popupVisible = false;
         Element exitMenu = screen.findElementById("exitMenuPanel");
