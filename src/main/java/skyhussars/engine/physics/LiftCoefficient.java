@@ -27,7 +27,7 @@ package skyhussars.engine.physics;
 
 import static com.jme3.math.FastMath.abs;
 
-public class AirfoilShape {
+public class LiftCoefficient {
 
     /**
      * 
@@ -35,23 +35,29 @@ public class AirfoilShape {
      * @param machs List of machs speeds
      * @param clfs  List of lift coefficients for angle of attacks and mach speeds
      */
-    public AirfoilShape(float[] aoas, float[] machs,float[][] clfs){               
+    public LiftCoefficient(String name,float[] aoas, float[] machs,float[][] clfs){
+        this.name = name;
+        this.aoas = aoas;
+        this.machs = machs;
+        this.clfs = clfs;      
     }
-    private final float[] constAoa = {0, 2, 4, 6, 8, 10, 15, 30};
-    private final float[] machs = {0.5f};
-    private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f};
+    
+    private final String name;
+    private final float[] aoas;
+    private final float[] machs;
+    private final float[][] clfs;
 
-    public float liftCoefficient(float aoa,float machSpeed) {
+    public float calc(float aoa,float machSpeed) {
         //abs is used for symmetric wings? not perfect
         float absAoa = abs(aoa);
         float liftCoefficient = 0f;
-        for (int i = 1; i < constAoa.length; i++) {
-            if (absAoa < constAoa[i]) {
-                float diff = constAoa[i] - constAoa[i - 1];
-                float real = absAoa - constAoa[i - 1];
+        for (int i = 1; i < aoas.length; i++) {
+            if (absAoa < aoas[i]) {
+                float diff = aoas[i] - aoas[i - 1];
+                float real = absAoa - aoas[i - 1];
                 float a = real / diff;
                 float b = 1f - a;
-                liftCoefficient = clm05[i] * a + clm05[i - 1] * b;
+                liftCoefficient = clfs[0][i] * a + clfs[0][i - 1] * b;
                 break;
             }
         }

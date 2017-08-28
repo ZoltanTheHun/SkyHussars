@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.engine.physics.LiftCoefficient;
 
 @Component
 public class PlaneFactory {
@@ -58,6 +59,8 @@ public class PlaneFactory {
 
     @Autowired
     private ProjectileManager projectileManager;
+    
+    private LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
 
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
@@ -81,7 +84,7 @@ public class PlaneFactory {
     }
 
     private List<Airfoil> airfoils(List<AirfoilDescriptor> afs){
-        return afs.stream().map( af -> 
+        return afs.stream().map(af -> 
             new Aileron(new SymmetricAirfoil.Builder()
                     .name(af.getName())
                     .cog(af.getCog())
@@ -91,9 +94,7 @@ public class PlaneFactory {
                     .damper(af.isDamper())
                     .dehidralDegree(af.getDehidralDegree())
                     .direction(af.getDirection())
-                    .aoaConst( new float[]{0, 2, 4, 6, 8, 10, 15, 30})
-                    .machs(new float[]{0.5f})
-                    .cls(new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}})
+                    .liftCoefficient(testCoef)
                     .dampingFactor(0.01f).build(),af.getDirection(),1f)
         ).collect(Collectors.toList());
     }
