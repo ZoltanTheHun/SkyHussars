@@ -91,6 +91,9 @@ public class PlaneFactory {
                     .damper(af.isDamper())
                     .dehidralDegree(af.getDehidralDegree())
                     .direction(af.getDirection())
+                    .aoaConst( new float[]{0, 2, 4, 6, 8, 10, 15, 30})
+                    .machs(new float[]{0.5f})
+                    .cls(new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}})
                     .dampingFactor(0.01f).build(),af.getDirection(),1f)
         ).collect(Collectors.toList());
     }

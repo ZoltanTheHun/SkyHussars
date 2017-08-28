@@ -40,6 +40,9 @@ public class SymmetricAirfoil implements Airfoil {
         private float wingArea,incidence,aspectRatio,dehidralDegree,dampingFactor = 2;
         private boolean damper;
         private Aileron.ControlDir direction;
+        private float[] aoaConst;
+        private float[] machs;
+        private float[][] cls;
         public Builder name(String name){ this.name = name; return this;}
         public Builder cog(Vector3f cog){ this.cog = cog; return this;}
         public Builder wingArea(float wingArea){ this.wingArea = wingArea; return this;}
@@ -49,14 +52,18 @@ public class SymmetricAirfoil implements Airfoil {
         public Builder damper(boolean damper){ this.damper = damper; return this;}
         public Builder direction(Aileron.ControlDir direction){ this.direction = direction; return this;} 
         public Builder dampingFactor(float dampingFactor){ this.dampingFactor = dampingFactor; return this;} 
+        public Builder aoaConst(float[] aoaConst){ this.aoaConst = aoaConst; return this;}
+        public Builder machs(float[] machs){ this.machs = machs; return this;}
+        public Builder cls(float[][] cls){ this.cls = cls; return this;}
         public SymmetricAirfoil build(){
-            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction,dampingFactor);
+            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction,dampingFactor
+                    ,aoaConst,machs,cls);
         }
     }
        
-    private final int[] constAoa = {0, 2, 4, 6, 8, 10, 15, 30};
-    private final float[] clm05 = {0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f};
-    // private float[]
+    private final float[] aoaConst;
+    private final float[][] cls;
+    private final float[] machs;
     private final float wingArea;
     private final Vector3f cog;
     private final String name;
@@ -65,7 +72,7 @@ public class SymmetricAirfoil implements Airfoil {
     private final Quaternion dehidral;
     private final Quaternion wingRotation;
     private final Vector3f upNorm;
-    private float dampCf;
+    private final float dampCf;
     private final boolean damper;
     private final Aileron.ControlDir direction;
     private final float dampDir;
@@ -75,7 +82,9 @@ public class SymmetricAirfoil implements Airfoil {
     
     private SymmetricAirfoil(String name, Vector3f cog, 
             float wingArea, float incidence, float aspectRatio, 
-            boolean damper, float dehidralDegree, Aileron.ControlDir direction,float dampingFactor) {
+            boolean damper, float dehidralDegree,
+            Aileron.ControlDir direction,float dampingFactor,
+            float[] aoaConst,float[] machs,float[][] cls) {
         this.wingArea = wingArea;
         this.cog = cog;
         this.name = name;
@@ -89,6 +98,9 @@ public class SymmetricAirfoil implements Airfoil {
         this.dampCf = dampingFactor;
         dampDir = damper ? ( this.cog.dot(Vector3f.UNIT_X) < 0 ? 1 : -1 ) : 0; 
         this.direction = direction;
+        this.aoaConst = aoaConst;
+        this.machs = machs;
+        this.cls = cls;
     }
 
     @Override
@@ -124,13 +136,13 @@ public class SymmetricAirfoil implements Airfoil {
         //abs is used for symmetric wings? not perfect
         float absAoa = abs(aoa);
         float liftCoefficient = 0f;
-        for (int i = 1; i < constAoa.length; i++) {
-            if (absAoa < constAoa[i]) {
-                float diff = constAoa[i] - constAoa[i - 1];
-                float real = absAoa - constAoa[i - 1];
+        for (int i = 1; i < aoaConst.length; i++) {
+            if (absAoa < aoaConst[i]) {
+                float diff = aoaConst[i] - aoaConst[i - 1];
+                float real = absAoa - aoaConst[i - 1];
                 float a = real / diff;
                 float b = 1f - a;
-                liftCoefficient = clm05[i] * a + clm05[i - 1] * b;
+                liftCoefficient = cls[0][i] * a + cls[0][i - 1] * b;
                 break;
             }
         }

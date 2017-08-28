@@ -67,6 +67,9 @@ public class SymmetricAirfoilTest {
                 .direction(Aileron.ControlDir.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
+                .aoaConst( new float[]{0, 2, 4, 6, 8, 10, 15, 30})
+                .machs(new float[]{0.5f})
+                .cls(new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}})
                 .cog(new Vector3f(4, 0, -0.2f)).build();
         AirfoilResponse afp = af.tick(1.24f, Vector3f.UNIT_Z.negate().mult(300), Vector3f.ZERO);
         logger.info("Simple wing setup test."); 
@@ -92,7 +95,10 @@ public class SymmetricAirfoilTest {
                 .direction(Aileron.ControlDir.RIGHT)
                 .incidence(1f)
                 .wingArea(5.5175f)
-                .cog(new Vector3f(-4, 0, -0.2f)).build();
+                .cog(new Vector3f(-4, 0, -0.2f))
+                .aoaConst( new float[]{0, 2, 4, 6, 8, 10, 15, 30})
+                .machs(new float[]{0.5f})
+                .cls(new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}}).build();
         Aileron aileron = new Aileron(af, Aileron.ControlDir.RIGHT);
         aileron.controlAileron(0);
         logger.info("Simple aileron test."); 
@@ -133,6 +139,9 @@ public class SymmetricAirfoilTest {
                 .wingArea(5.5175f)
                 .cog(new Vector3f(-4, 0, -0.2f))
                 .dampingFactor(2)
+                .aoaConst( new float[]{0, 2, 4, 6, 8, 10, 15, 30})
+                .machs(new float[]{0.5f})
+                .cls(new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}})
                 .build();
         Aileron aileron = new Aileron(af, Aileron.ControlDir.RIGHT);
         aileron.controlAileron(0);
