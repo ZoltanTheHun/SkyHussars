@@ -95,15 +95,15 @@ public class SymmetricAirfoil implements Airfoil {
     public Aileron.ControlDir direction(){return direction;}
 
     private Quaternion damp(Vector3f vAngularVelocity) {
-        float zDamp = 0;
-        float xDamp = 0;
-        float yDamp = 0;
-        if(damper) zDamp = dampDir * vAngularVelocity.z * dampCf;
+        float roll = 0;
+        float pitch = 0;
+        float yaw = 0;
+        if(damper) roll = dampDir * vAngularVelocity.z * dampCf;
         switch(direction){
-            case HORIZONTAL_STABILIZER : xDamp = vAngularVelocity.x * 1f ; break;
-            case VERTICAL_STABILIZER : yDamp = vAngularVelocity.y * 1f; break;
+            case HORIZONTAL_STABILIZER : pitch = vAngularVelocity.x * 1f ; break;
+            case VERTICAL_STABILIZER : yaw = vAngularVelocity.y * 1f; break;
         }
-        float[] angles = new float[]{zDamp,-yDamp,-xDamp};
+        float[] angles = new float[]{roll,-yaw,-pitch};
         return new Quaternion(angles);
     }
 

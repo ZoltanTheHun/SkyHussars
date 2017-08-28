@@ -90,6 +90,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
+    
     private List<AirfoilResponse> updateAirfoils(Vector3f localFlow) {
         return airfoils.parallelStream().map(a -> a.tick(airDensity, localFlow, vAngularVelocity)).collect(Collectors.toList());}
     private Vector3f airfoilLinear(List<AirfoilResponse> afps) {
@@ -121,14 +122,12 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 Vector3f.ZERO.add(airfoilTorque(afps))
                              .add(engineTorque()));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
-       // logger.info("Angular velocity: " + vAngularVelocity);
-        //fromangles is selfmodifying
+        
         Quaternion rotationQuaternion = helperQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
             rotation = rotation.mult(rotationQuaternion);
             translation = translation.add(vVelocity.mult(tpf));
         }
-       // logger.info("Airfoil Linears: " + airfoils.stream().map(af -> af.name() + " " +  af.linear() + "; ").collect(Collectors.toList()).toString());
     }
     
     /* model can only be updated from main thread atm */
