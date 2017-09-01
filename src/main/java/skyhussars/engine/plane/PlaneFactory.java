@@ -102,7 +102,7 @@ public class PlaneFactory {
     private PlaneGeometry planeGeometry(){
         Spatial model = modelManager.model("p80", "p80_material").clone();
         model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        Spatial cockpitModel = modelManager.model("p80cabin", "p80_material").clone();
+        Spatial cockpitModel = modelManager.model("p80cabin2", "p80_material").clone();
         //cockpitModel.setCullHint(Spatial.CullHint.Always);
         cockpitModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         return new PlaneGeometry()

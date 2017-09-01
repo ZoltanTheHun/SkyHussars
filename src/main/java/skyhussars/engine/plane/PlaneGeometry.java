@@ -25,16 +25,22 @@
  */
 package skyhussars.engine.plane;
 
-import com.jme3.math.FastMath;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlaneGeometry {
 
+    private final static Logger logger = LoggerFactory.getLogger(PlaneGeometry.class);
     private final Node rootNode;
     private final Node cockpitNode;
     private final Node modelNode;
     private final Node soundNode;
+    private Node airspeedInd;
 
     public static enum GeometryMode {
 
@@ -54,8 +60,37 @@ public class PlaneGeometry {
     }
 
     public PlaneGeometry attachSpatialToCockpitNode(Spatial cockpit) {
+        if (cockpit instanceof Geometry) {
+            Geometry geom = (Geometry) cockpit;
+            logger.info("Geom is:" + geom.getName());
+        } 
+        if (cockpit instanceof Node) {
+            Node geom = (Node) cockpit;
+            logger.info("Node is:" + geom.getName());
+            if(geom.getChildren() != null) {
+                Optional<Spatial> spd = geom.getChildren().stream().filter(s -> "spd".equals(s.getName())).findFirst();
+                Optional<Spatial> ind = spd.map(s -> {
+                   List<Spatial> a = ((Node) s).getChildren();
+                   Optional<Spatial> b = a.stream().filter(t -> "indicator".equals(t.getName())).findFirst();
+                   return b;
+                }).orElse(Optional.empty());
+                ind.map(i -> {
+                    airspeedInd = (Node)i;
+                    return i;
+                });
+                
+            }
+        } 
+        if (cockpit instanceof Geometry) {
+            Geometry geom = (Geometry) cockpit;
+            System.out.println(geom.getName());
+        } 
         cockpitNode.attachChild(cockpit);
         return this;
+    }
+    
+    public Node airspeedInd(){
+        return airspeedInd;
     }
 
     public PlaneGeometry attachSpatialToRootNode(Spatial spatial) {

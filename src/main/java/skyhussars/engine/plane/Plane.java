@@ -163,6 +163,7 @@ public class Plane {
 
     public void update(float tpf) {
         physics.updateScene(geom.root());
+        geom.airspeedInd().rotate(0, 0, FastMath.DEG_TO_RAD * 0.1f);
         if (!crashed) {
             gunGroups.parallelStream().forEach(gunGroup -> {
                 gunGroup.firing(firing, geom.root().getLocalTranslation(),
