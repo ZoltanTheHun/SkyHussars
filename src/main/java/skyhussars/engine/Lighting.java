@@ -80,7 +80,7 @@ public class Lighting implements InitializingBean {
         final int SHADOWMAP_SIZE = 4096;
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
         dlsr.setLight(directionalLight);
-        
+        dlsr.setShadowIntensity(0.3f);
         dlsr.setRenderBackFacesShadows(Boolean.TRUE);
         dlsr.setShadowCompareMode(CompareMode.Hardware);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
