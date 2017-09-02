@@ -33,7 +33,7 @@ import com.jme3.math.Vector3f;
 public interface PlanePhysics {
     public void update(float tpf,Environment environment);
     public String getInfo();
-    public void setSpeedForward(Quaternion rotation,float kmh);
+    public void speedForward(Quaternion rotation,float kmh);
     public Vector3f getVVelovity();
     public String getSpeedKmH();
 }

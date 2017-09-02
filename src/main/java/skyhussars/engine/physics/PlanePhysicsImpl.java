@@ -39,9 +39,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     private final static Logger logger = LoggerFactory.getLogger(PlanePhysicsImpl.class);
 
-    private float airDensity = 1.2745f;
     private float planeFactor = 0.2566f; // cross section and drag coeff together
-    //private float mass = 57380;//loaded: 5,738emtpy:38190; //N
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
     private float aoa;
 
@@ -53,15 +51,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     private Quaternion rotation;
     private Vector3f translation;
-    
-    public synchronized void setRotation(Quaternion rotation) {
-        this.rotation = new Quaternion(rotation);
-    }
-
-    public synchronized void setTranslation(Vector3f translation) {
-        this.translation = new Vector3f(translation);
-    }
-    
+        
     private final float length = 10.49f;
     private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
@@ -91,7 +81,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     /* Airfoil calculations */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
     
-    private List<AirfoilResponse> updateAirfoils(Vector3f localFlow) {
+    private List<AirfoilResponse> updateAirfoils(Vector3f localFlow,float airDensity) {
         return airfoils.parallelStream().map(a -> a.tick(airDensity, localFlow, vAngularVelocity)).collect(Collectors.toList());}
     private Vector3f airfoilLinear(List<AirfoilResponse> afps) {
         return rotation.mult(afps.stream().map(a -> a.linear).reduce(Vector3f.ZERO,Vector3f::add));}
@@ -103,18 +93,20 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f engineTorque() {return rotation.mult(engines.stream().map(Engine::torque).reduce(Vector3f.ZERO,Vector3f::add));}  // to be added later
     
     /* Other calculations */
-    private Vector3f parasiticDrag() {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
+    private Vector3f parasiticDrag(float airDensity) {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
     
     @Override
     public void update(float tpf, Environment environment) {
+        float airDensity = environment.airDensity(height);//1.2745f;
+        
         updateAuxiliary(rotation, translation, environment);
-        List<AirfoilResponse> afps = updateAirfoils(localFlow());
+        List<AirfoilResponse> afps = updateAirfoils(localFlow(),airDensity);
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineLinear())   
                 .add(airfoilLinear(afps))
-                .add(parasiticDrag()).divide(mass);
+                .add(parasiticDrag(airDensity)).divide(mass);
 
         vVelocity = vVelocity.add(linearAcc.mult(tpf));
         
@@ -137,7 +129,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
 
     private void updateAuxiliary(Quaternion rotation, Vector3f translation, Environment environment) {
-        updateHelpers(translation, environment);
+        height = translation.getY();
         updateAngleOfAttack(rotation);
         updatePlaneFactor();
     }
@@ -145,19 +137,10 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private void updateAngleOfAttack(Quaternion rotation) {
         aoa = rotation.mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
         float np = rotation.mult(Vector3f.UNIT_Y).dot(vVelocity.negate().normalize());
-        if (np < 0) {
-            aoa = -aoa;
-        }
+        if (np < 0) { aoa = -aoa; }
     }
 
-    public void updatePlaneFactor() {
-        planeFactor = 0.2566f;
-    }
-
-    private void updateHelpers(Vector3f translation, Environment environment) {
-        height = translation.getY();
-        airDensity = environment.airDensity((int) height);
-    }
+    private void updatePlaneFactor() { planeFactor = 0.2566f; }
 
     @Override
     public String getSpeedKmH() {
@@ -170,23 +153,20 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
                 + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)
                 + ", Height: " + NumberFormats.toMin3Integer0Fraction(height)
-                //+ ", AirSpeed: " + fractionless.format(airSpeed)
                 + ", AOA: " + NumberFormats.toMin3Integer0Fraction(aoa)
                 + ", AngularVelocity: " + NumberFormats.toFix2Fraction(vAngularVelocity.length())
                 + ", AngularAcceleration: " + NumberFormats.toFix2Fraction(vAngularAcceleration.length());
     }
 
     @Override
-    public Vector3f getVVelovity() {
-        return vVelocity;
-    }
+    public Vector3f getVVelovity() {return vVelocity;}
 
     @Override
-    public void setSpeedForward(Quaternion rotation, float kmh) {
+    public void speedForward(Quaternion rotation, float kmh) {
         vVelocity = rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
     }
     
-    public float aoa(){
-        return aoa;
-    }
+    public float aoa(){return aoa;}
+    public synchronized PlanePhysics rotation(Quaternion rotation) {this.rotation = new Quaternion(rotation); return this;}
+    public synchronized PlanePhysics translation(Vector3f translation) {this.translation = new Vector3f(translation); return this;}
 }

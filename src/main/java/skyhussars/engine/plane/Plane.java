@@ -131,7 +131,7 @@ public class Plane {
 
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new PlanePhysicsImpl(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
-        this.physics.setSpeedForward(geom.root().getLocalRotation(), 300f);
+        this.physics.speedForward(geom.root().getLocalRotation(), 300f);
         
     }
     
@@ -239,7 +239,7 @@ public class Plane {
 
     public void setLocation(Vector3f location) {
         geom.root().setLocalTranslation(location);
-        physics.setTranslation(location);
+        physics.translation(location);
     }
 
     public float getHeight() {return geom.root().getLocalTranslation().y;}

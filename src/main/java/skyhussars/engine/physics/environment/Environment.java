@@ -37,7 +37,7 @@ public class Environment {
         this.atmosphere = atmosphere;
     }
 
-    public float airDensity(int altitude) {
+    public float airDensity(float altitude) {
         return atmosphere.getAirDensity(altitude);
     }
     

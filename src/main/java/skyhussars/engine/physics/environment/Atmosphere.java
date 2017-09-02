@@ -26,5 +26,5 @@
 package skyhussars.engine.physics.environment;
 
 public interface Atmosphere {
-    public float getAirDensity(int altitude);
+    public float getAirDensity(float altitude);
 }

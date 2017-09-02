@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.engine.physics;
 
 import com.jme3.math.Vector3f;
