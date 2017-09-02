@@ -146,6 +146,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public String getSpeedKmH() {
         return NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6);
     }
+    public float speedKmH() {return vVelocity.length() * 3.6f;}
 
     @Override
     public String getInfo() {
