@@ -39,6 +39,7 @@ import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,13 +71,16 @@ public class PlaneFactory {
         Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
         Plane plane = new Plane(
-                        planeDescriptor, 
                         airfoils(planeDescriptor.getAirfolDescriptors()),
                         engineSound,
                         gunSound, projectileManager,
-                        planeGeometry(),instruments,engines(planeDescriptor.getEngineLocations()));
-                        plane.fireEffect(dataManager.fireEffect());
-            return plane;
+                        planeGeometry(),
+                        instruments,
+                        engines(planeDescriptor.getEngineLocations()),
+                        gunGroups(planeDescriptor.getGunGroupDescriptors()),
+                        planeDescriptor.getMassGross());
+        plane.fireEffect(dataManager.fireEffect());
+        return plane;
     }
     
     private List<Engine> engines(List<EngineLocation> engineLocations){
@@ -110,6 +114,10 @@ public class PlaneFactory {
                 .attachSpatialToCockpitNode(dataManager.getCockpit())
                 .attachSpatialToModelNode(model);
     }
-   
+    
+    private List<GunGroup> gunGroups(List<GunGroupDescriptor> gunGroupDescriptors) {
+         return gunGroupDescriptors.stream().map(ggd  ->new GunGroup(ggd, projectileManager)).collect(Collectors.toList());
+    }
+
 }
 

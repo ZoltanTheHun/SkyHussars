@@ -71,18 +71,6 @@ public class Plane {
         logger.debug(getInfo());
     }
 
-    public String getInfo() {
-        return physics.getInfo();
-    }
-
-    public PlaneGeometry planeGeometry() {
-        return geom;
-    }
-
-    public void fireEffect(ParticleEmitter fireEffect) {
-        this.fireEffect = fireEffect;
-    }
-
     public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
         this.planeMissionDescriptor = planeMissionDescriptor;
     }
@@ -97,10 +85,10 @@ public class Plane {
     private final List<Airfoil> airfoils = new ArrayList<>();
     private final List<Aileron> ailerons;
 
-    public Plane(PlaneDescriptor planeDescriptor,List<Airfoil> airfoils,
+    public Plane(List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
             ProjectileManager projectileManager, PlaneGeometry planeGeometry,
-            Instruments instruments, List<Engine> engines) {
+            Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         //engineSound.setPositional(true);
@@ -111,7 +99,7 @@ public class Plane {
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
         this.projectileManager = projectileManager;
-        initializeGunGroup(planeDescriptor);
+        this.gunGroups = gunGroups;
 
         ailerons = new ArrayList<>();
         ailerons.addAll(airfoils.stream() 
@@ -130,20 +118,13 @@ public class Plane {
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
         Vector3f translation = geom.root().getLocalTranslation();
-        this.physics = new PlanePhysicsImpl(rotation, translation, planeDescriptor.getMassGross(), engines, airfoils);
+        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
         this.physics.speedForward(geom.root().getLocalRotation(), 300f);
         
     }
     
     public float aoa(){
         return physics.aoa();
-    }
-
-    private void initializeGunGroup(PlaneDescriptor planeDescriptor) {
-        gunGroups = new ArrayList<>();
-        for (GunGroupDescriptor gunGroupDescriptor : planeDescriptor.getGunGroupDescriptors()) {
-            gunGroups.add(new GunGroup(gunGroupDescriptor, projectileManager));
-        }
     }
 
     public BoundingVolume getHitBox() {
@@ -262,4 +243,7 @@ public class Plane {
     public void firing(boolean trigger) { firing = trigger; }
     public void crashed(boolean crashed) { this.crashed = crashed; }
     public boolean crashed() { return crashed; }
+    public String getInfo() { return physics.getInfo(); }
+    public PlaneGeometry planeGeometry() { return geom; }
+    public void fireEffect(ParticleEmitter fireEffect) { this.fireEffect = fireEffect; }
 }
