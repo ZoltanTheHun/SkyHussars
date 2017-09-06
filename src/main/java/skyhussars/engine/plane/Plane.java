@@ -83,7 +83,7 @@ public class Plane {
     private final List<Aileron> verticalStabilizers = new ArrayList<>();
 
     private final List<Airfoil> airfoils = new ArrayList<>();
-    private final List<Aileron> ailerons;
+    private final List<Aileron> ailerons = new ArrayList<>();;
 
     public Plane(List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
@@ -91,17 +91,23 @@ public class Plane {
             Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
-        //engineSound.setPositional(true);
         this.gunSound = gunSound;
-        //test model is backwards
-
         geom = planeGeometry;
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
         this.projectileManager = projectileManager;
         this.gunGroups = gunGroups;
+        sortoutAirfoils(airfoils);
+        
+        Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
-        ailerons = new ArrayList<>();
+        Vector3f translation = geom.root().getLocalTranslation();
+        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
+        this.physics.speedForward(geom.root().getLocalRotation(), 300f);
+        
+    }
+    
+    private Plane sortoutAirfoils(List<Airfoil> airfoils){
         ailerons.addAll(airfoils.stream() 
                 .filter(af -> af.direction().equals(ControlDir.LEFT) || af.direction().equals(ControlDir.RIGHT))
                 .map(af -> (Aileron) af).collect(Collectors.toList()));
@@ -114,22 +120,11 @@ public class Plane {
                 .map(af -> (Aileron) af)
                 .collect(Collectors.toList()));
         this.airfoils.addAll(airfoils);
-        
-        Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
-
-        Vector3f translation = geom.root().getLocalTranslation();
-        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
-        this.physics.speedForward(geom.root().getLocalRotation(), 300f);
-        
+        return this;
     }
     
-    public float aoa(){
-        return physics.aoa();
-    }
-
-    public BoundingVolume getHitBox() {
-        return geom.root().getWorldBound();
-    }
+    public float aoa(){ return physics.aoa(); }
+    public BoundingVolume getHitBox() { return geom.root().getWorldBound(); }
 
     public void hit() {
         if (!shotdown) {
@@ -211,13 +206,9 @@ public class Plane {
         setLocation((int) translation.getX(), height, (int) translation.getZ());
     }
 
-    public void setLocation(int x, int z) {
-        setLocation(x, (int) geom.root().getLocalTranslation().y, z);
-    }
+    public void setLocation(int x, int z) { setLocation(x, (int) geom.root().getLocalTranslation().y, z); }
 
-    public void setLocation(int x, int y, int z) {
-        setLocation(new Vector3f(x, y, z));
-    }
+    public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
 
     public void setLocation(Vector3f location) {
         geom.root().setLocalTranslation(location);
@@ -226,7 +217,6 @@ public class Plane {
 
     public float getHeight() {return geom.root().getLocalTranslation().y;}
     public Vector3f getLocation() { return geom.root().getLocalTranslation();}
-
     public Vector3f forward() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
     public Vector3f up() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}
 
@@ -235,9 +225,7 @@ public class Plane {
         return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG;
     }
 
-    public Vector2f getLocation2D() {
-        return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z);
-    }
+    public Vector2f getLocation2D() {  return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z); }
 
     public String velocityKmh() { return physics.getSpeedKmH(); }
     public void firing(boolean trigger) { firing = trigger; }
