@@ -35,6 +35,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,12 +55,10 @@ public class WorldThread extends TimerTask {
 
     public WorldThread(List<Plane> planes, int ticks, TerrainManager terrainManager) {
         this.planes = planes;
-        planes.stream().forEach((plane) -> {
-            if (!plane.planeMissionDescriptor().player()) {
-                aiPilots.add(new AIPilot(plane));
-            }
-        });
 
+        aiPilots.addAll(pf(planes,plane -> !plane.planeMissionDescriptor().player())
+            .map( plane -> new AIPilot(plane)).collect(Collectors.toList()));
+        
         world = new World(planes, terrainManager);
         tpf = (float) 1 / (float) ticks;
     }
@@ -69,14 +71,8 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        synchronized (this) {
-            planes.parallelStream().forEach(plane -> {
-                plane.updatePlanePhysics(tpf, environment);
-            });
-        }
-        aiPilots.parallelStream().forEach(aiPilot -> {
-            aiPilot.update(world);
-        });
+        synchronized (this) {pp(planes,plane -> plane.updatePlanePhysics(tpf, environment)); }    
+        pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }
 
@@ -84,4 +80,15 @@ public class WorldThread extends TimerTask {
         planes.stream().forEach(p -> p.update(tpf));
     }
 
+    private static <T> Stream<T> pf(List<T> obj, Predicate<? super T> predicate){
+        return obj.parallelStream().filter(predicate);
+    }
+    
+    private static <T> void  pp(List<T> obj, Consumer<? super T> action){
+         obj.parallelStream().forEach(action);
+    }
+    
+    private static <T> void  sp(List<T> obj, Consumer<? super T> action){
+         obj.stream().forEach(action);
+    }
 }
