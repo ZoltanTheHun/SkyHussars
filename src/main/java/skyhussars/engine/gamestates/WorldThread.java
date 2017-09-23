@@ -35,12 +35,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.*;
 
 public class WorldThread extends TimerTask {
 
@@ -56,8 +54,8 @@ public class WorldThread extends TimerTask {
     public WorldThread(List<Plane> planes, int ticks, TerrainManager terrainManager) {
         this.planes = planes;
 
-        aiPilots.addAll(pf(planes,plane -> !plane.planeMissionDescriptor().player())
-            .map( plane -> new AIPilot(plane)).collect(Collectors.toList()));
+        aiPilots.addAll(list(pf(planes,plane -> !plane.planeMissionDescriptor().player())
+            .map( plane -> new AIPilot(plane))));
         
         world = new World(planes, terrainManager);
         tpf = (float) 1 / (float) ticks;
@@ -77,18 +75,7 @@ public class WorldThread extends TimerTask {
     }
 
     public synchronized void updatePlaneLocations() {
-        planes.stream().forEach(p -> p.update(tpf));
+        sp(planes,p -> p.update(tpf));
     }
 
-    private static <T> Stream<T> pf(List<T> obj, Predicate<? super T> predicate){
-        return obj.parallelStream().filter(predicate);
-    }
-    
-    private static <T> void  pp(List<T> obj, Consumer<? super T> action){
-         obj.parallelStream().forEach(action);
-    }
-    
-    private static <T> void  sp(List<T> obj, Consumer<? super T> action){
-         obj.stream().forEach(action);
-    }
 }

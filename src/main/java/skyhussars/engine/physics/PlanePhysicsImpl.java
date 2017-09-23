@@ -33,6 +33,7 @@ import com.jme3.scene.Node;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.*;
 
 
 public class PlanePhysicsImpl implements PlanePhysics {
@@ -82,15 +83,13 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
     
     private List<AirfoilResponse> updateAirfoils(Vector3f localFlow,float airDensity) {
-        return airfoils.parallelStream().map(a -> a.tick(airDensity, localFlow, vAngularVelocity)).collect(Collectors.toList());}
-    private Vector3f airfoilLinear(List<AirfoilResponse> afps) {
-        return rotation.mult(afps.stream().map(a -> a.linear).reduce(Vector3f.ZERO,Vector3f::add));}
-    private Vector3f airfoilTorque(List<AirfoilResponse> afps) {
-        return (afps.stream().map(a -> a.torque).reduce(Vector3f.ZERO,Vector3f::add));}
+        return list(pm(airfoils,a -> a.tick(airDensity, localFlow, vAngularVelocity)));}
+    private Vector3f airfoilLinear(List<AirfoilResponse> afps) {return rotation.mult(sum(sm(afps,a -> a.linear)));}
+    private Vector3f airfoilTorque(List<AirfoilResponse> afps) {return sum(sm(afps,a -> a.torque));}
     
     /* Engine calculations */
-    private Vector3f engineLinear() {return rotation.mult(engines.stream().map(Engine::thrust).reduce(Vector3f.ZERO,Vector3f::add));}
-    private Vector3f engineTorque() {return rotation.mult(engines.stream().map(Engine::torque).reduce(Vector3f.ZERO,Vector3f::add));}  // to be added later
+    private Vector3f engineLinear() {return rotation.mult(sum(sm(engines,Engine::thrust)));}
+    private Vector3f engineTorque() {return rotation.mult(sum(sm(engines,Engine::torque)));}  // to be added later
     
     /* Other calculations */
     private Vector3f parasiticDrag(float airDensity) {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
