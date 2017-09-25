@@ -153,11 +153,7 @@ public class Plane {
     public void updateSound() {
         if (!crashed) {
             engineSound.play();
-            if (firing) {
-                gunSound.play();
-            } else {
-                gunSound.stop();
-            }
+            if (firing)gunSound.play(); else  gunSound.stop();
         } else {
             engineSound.pause();
             gunSound.stop();

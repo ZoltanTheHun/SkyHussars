@@ -28,9 +28,10 @@ package skyhussars.engine.physics;
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.utility.NumberFormats;
 import com.jme3.math.*;
+import static com.jme3.math.Vector3f.*;
+import static com.jme3.math.FastMath.RAD_TO_DEG;
 import java.util.*;
 import com.jme3.scene.Node;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static skyhussars.utility.Streams.*;
@@ -80,7 +81,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private final Quaternion helperQuaternion = new Quaternion();
     
     /* Airfoil calculations */
-    private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } // localized to plane coordinate space
+    /* localize flow to plane coordinate space */
+    private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } 
     
     private List<AirfoilResponse> updateAirfoils(Vector3f localFlow,float airDensity) {
         return list(pm(airfoils,a -> a.tick(airDensity, localFlow, vAngularVelocity)));}
@@ -98,7 +100,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public void update(float tpf, Environment environment) {
         float airDensity = environment.airDensity(height);//1.2745f;
         
-        updateAuxiliary(rotation, translation, environment);
+        updateAuxiliary(localFlow(), translation, environment);
         List<AirfoilResponse> afps = updateAirfoils(localFlow(),airDensity);
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
@@ -127,17 +129,18 @@ public class PlanePhysicsImpl implements PlanePhysics {
         model.setLocalTranslation(translation);
     }
 
-    private void updateAuxiliary(Quaternion rotation, Vector3f translation, Environment environment) {
+    private void updateAuxiliary(Vector3f flow, Vector3f translation, Environment environment) {
         height = translation.getY();
-        updateAngleOfAttack(rotation);
+        aoa = calcAoa(flow);
         updatePlaneFactor();
     }
-
-    private void updateAngleOfAttack(Quaternion rotation) {
-        aoa = rotation.mult(Vector3f.UNIT_Z).angleBetween(vVelocity.normalize()) * FastMath.RAD_TO_DEG;
-        float np = rotation.mult(Vector3f.UNIT_Y).dot(vVelocity.negate().normalize());
-        if (np < 0) { aoa = -aoa; }
+    
+    private float calcAoa(Vector3f flow) {
+        flow = flow.normalize();
+        float locAoa = flow.cross(UNIT_Y).cross(flow).normalize().angleBetween(UNIT_Y) * RAD_TO_DEG;
+        return UNIT_Y.dot(flow) > 0 ? locAoa : - locAoa;
     }
+    
 
     private void updatePlaneFactor() { planeFactor = 0.2566f; }
 
