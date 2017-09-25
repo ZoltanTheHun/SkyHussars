@@ -52,7 +52,7 @@ public class Gun {
         /*gunLocation.getGunDescriptor().getMuzzleVelocity();*/
         List<Projectile> projectiles = new LinkedList<>();
         while (bpslu-- > 1) {
-            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO, null);
+            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO);
             projectiles.add(bullet);
             bpslu -= 1;
         }

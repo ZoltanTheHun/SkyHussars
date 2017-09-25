@@ -107,14 +107,12 @@ public class SymmetricAirfoil implements Airfoil {
         return new Quaternion(angles);
     }
 
-    
     private Vector3f lift(float airDensity, Vector3f vFlow,float aoa) {
         float scLift = calculateLift(airDensity, vFlow, aoa);
         Vector3f dir = vFlow.cross(upNorm).cross(vFlow).normalize();
         if (aoa < 0) dir = dir.negate();
         return dir.mult(scLift);
     }
-
 
     private float calculateLift(float airDensity, Vector3f vFlow,float aoa) {
         return 0.5f * airDensity * cl.calc(aoa,0) * wingArea * vFlow.lengthSquared();

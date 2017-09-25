@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import static skyhussars.utility.Streams.pp;
 
 public class Plane {
 
@@ -66,7 +67,7 @@ public class Plane {
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
 
-    public void updatePlanePhysics(float tpf, Environment environment) {
+    public void physicsUpdate(float tpf, Environment environment) {
         physics.update(tpf, environment);
         logger.debug(getInfo());
     }
@@ -142,7 +143,7 @@ public class Plane {
         float ratio = FastMath.PI * 2 * (physics.speedKmH() / 900);
         geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
         if (!crashed) {
-            gunGroups.parallelStream().forEach(gunGroup -> {
+            pp(gunGroups,gunGroup -> {
                 gunGroup.firing(firing, geom.root().getLocalTranslation(),
                         physics.getVVelovity(), geom.root().getWorldRotation());
             });

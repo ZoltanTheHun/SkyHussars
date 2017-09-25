@@ -25,23 +25,20 @@
  */
 package skyhussars.engine.weapons;
 
-import skyhussars.engine.plane.BulletDescriptor;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Vector3f;
 
 public class Bullet extends Projectile {
 
-    private Vector3f vStartLocation;
+    private final Vector3f vStartLocation;
     private Vector3f vLocation;
-    private Vector3f vVelocity;
-    private BulletDescriptor bulletDescriptor;
+    private final Vector3f vVelocity;
 
-    public Bullet(Vector3f vLocation, Vector3f vVelocity, BulletDescriptor bulletDescriptor) {
+    public Bullet(Vector3f vLocation, Vector3f vVelocity) {
         this.vStartLocation = vLocation.clone();
         /*temp fix to avoid self shooting*/
         this.vLocation = vLocation.add(vVelocity.normalize().mult(10));
         this.vVelocity = vVelocity.clone();
-        this.bulletDescriptor = bulletDescriptor;
     }
 
     @Override
@@ -61,7 +58,7 @@ public class Bullet extends Projectile {
 
     @Override
     public BoundingVolume getHitbox() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override 

@@ -35,7 +35,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static skyhussars.utility.Streams.*;
@@ -69,7 +68,7 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        synchronized (this) {pp(planes,plane -> plane.updatePlanePhysics(tpf, environment)); }    
+        synchronized (this) {pp(planes,plane -> plane.physicsUpdate(tpf, environment)); }    
         pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }

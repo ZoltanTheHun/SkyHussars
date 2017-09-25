@@ -27,7 +27,6 @@ package skyhussars.engine.plane;
 
 import skyhussars.engine.weapons.Bullet;
 import skyhussars.engine.weapons.ProjectileManager;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ring;
 import com.jme3.math.Vector3f;
@@ -60,7 +59,7 @@ public class GunLocation {
             Vector3f vMuzzleVelocity = vOrientation.mult(Vector3f.UNIT_Z).mult(gunLocationDescriptor.getGunDescriptor().getMuzzleVelocity());
             Vector3f vBulletVelocity = addSpread(vVelocity.add(vMuzzleVelocity));
 
-            Bullet bullet = new Bullet(vBulletLocation, vBulletVelocity, null);
+            Bullet bullet = new Bullet(vBulletLocation, vBulletVelocity);
             projectileManager.addProjectile(bullet);
         }
     }
