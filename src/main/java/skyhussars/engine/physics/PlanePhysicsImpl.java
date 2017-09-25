@@ -100,8 +100,10 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public void update(float tpf, Environment environment) {
         float airDensity = environment.airDensity(height);//1.2745f;
         
-        updateAuxiliary(localFlow(), translation, environment);
-        List<AirfoilResponse> afps = updateAirfoils(localFlow(),airDensity);
+        Vector3f flow = localFlow();
+        updateAuxiliary(flow, translation, environment);
+        List<AirfoilResponse> afps = updateAirfoils(flow,airDensity);
+        
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
@@ -141,7 +143,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
         return UNIT_Y.dot(flow) > 0 ? locAoa : - locAoa;
     }
     
-
     private void updatePlaneFactor() { planeFactor = 0.2566f; }
 
     @Override

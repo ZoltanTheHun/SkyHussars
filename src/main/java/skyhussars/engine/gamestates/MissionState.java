@@ -41,6 +41,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.pf;
 
 public class MissionState implements GameState {
 
@@ -72,11 +73,9 @@ public class MissionState implements GameState {
         this.terrainManager = terrainManager;
         this.dayLightWeatherManager = dayLightWeatherManager;
         this.soundManager = soundManager;
-        planes.stream().forEach((plane) -> {
-            if (plane.planeMissionDescriptor().player()) {
-                player = new Pilot(plane);
-            }
-        });
+        Plane pilotedPlane = pf(planes,plane -> plane.planeMissionDescriptor().player()).findFirst().get();
+        player = new Pilot(pilotedPlane);
+        
         initiliazePlayer();
         worldThread = new WorldThread(planes, ticks, terrainManager);
     }

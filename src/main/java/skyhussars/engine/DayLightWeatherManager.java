@@ -27,7 +27,6 @@ package skyhussars.engine;
 
 import com.jme3.light.Light;
 import com.jme3.scene.Node;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
