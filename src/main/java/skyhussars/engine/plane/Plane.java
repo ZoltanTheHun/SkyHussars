@@ -143,10 +143,10 @@ public class Plane {
         float ratio = FastMath.PI * 2 * (physics.speedKmH() / 900);
         geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
         if (!crashed) {
-            pp(gunGroups,gunGroup -> {
-                gunGroup.firing(firing, geom.root().getLocalTranslation(),
-                        physics.getVVelovity(), geom.root().getWorldRotation());
-            });
+            Vector3f startLocation = geom.root().getLocalTranslation();
+            Vector3f startVelocity = physics.getVVelovity();
+            Quaternion startRotation = geom.root().getWorldRotation();
+            pp(gunGroups,gunGroup -> gunGroup.firing(firing, startLocation, startVelocity, startRotation));
         }
     }
 
