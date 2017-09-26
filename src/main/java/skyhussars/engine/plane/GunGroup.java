@@ -25,21 +25,23 @@
  */
 package skyhussars.engine.plane;
 
-import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import skyhussars.engine.weapons.Bullet;
+import static skyhussars.utility.Streams.list;
+import static skyhussars.utility.Streams.pm;
 
 public class GunGroup {
-
-    public GunGroup(GunGroupDescriptor gunGroupDescriptor, ProjectileManager projectileManager) {
+    public GunGroup(GunGroupDescriptor gunGroupDescriptor) {
         name = gunGroupDescriptor.getName();
         gunLocations = new ArrayList<>();
         for (GunLocationDescriptor gunLocationDescriptor : gunGroupDescriptor.getGunLocations()) {
             gunLocations.add(new GunLocation(gunLocationDescriptor,
-                    gunLocationDescriptor.getRoundsMax(), projectileManager));
+                    gunLocationDescriptor.getRoundsMax()));
         }
     }
     private String name;
@@ -61,9 +63,8 @@ public class GunGroup {
         this.gunLocations = gunLocations;
     }
 
-    public void firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Quaternion vOrientation) {
-        for (GunLocation gunLocation : gunLocations) {
-            gunLocation.firing(firing,vLocation,vVelocity,vOrientation);
-        }
+    public List<Bullet> firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Quaternion vOrientation) {
+        return list(pm(gunLocations,gunLocation -> gunLocation.firing(firing,vLocation,vVelocity,vOrientation))
+                .filter(Objects::nonNull));
     }
 }

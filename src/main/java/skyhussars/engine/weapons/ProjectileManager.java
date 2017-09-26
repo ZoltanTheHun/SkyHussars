@@ -56,7 +56,7 @@ public class ProjectileManager {
 
     private List<Geometry> projectileGeometries = new LinkedList<>();
 
-    public void addProjectile(Bullet projectile) {
+    public synchronized void addProjectile(Bullet projectile) {
         Geometry newGeometry = dataManager.getBullet();
         projectileGeometries.add(newGeometry);
         rootNode.attachChild(newGeometry);
@@ -64,7 +64,7 @@ public class ProjectileManager {
         projectiles.add(projectile);
     }
 
-    public void update(float tpf) {
+    public synchronized void update(float tpf) {
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
         projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
         Iterator<Projectile> it = projectiles.iterator();

@@ -36,7 +36,6 @@ import java.util.Random;
 public class GunLocation {
 
     private int rounds;
-    private ProjectileManager projectileManager;
     private final Random random;
 
     private final Vector3f location;
@@ -44,10 +43,9 @@ public class GunLocation {
     private final float spread;
     private final float rof;
 
-    public GunLocation(GunLocationDescriptor gunLocationDescriptor, int rounds, ProjectileManager projectileManager) {
+    public GunLocation(GunLocationDescriptor gunLocationDescriptor, int rounds) {
         /*should check if rounnds > maxRounds*/
         this.rounds = rounds;
-        this.projectileManager = projectileManager;
         this.random = new Random();
         this.location = gunLocationDescriptor.getLocation();
         this.muzzleVelocity = gunLocationDescriptor.getGunDescriptor().getMuzzleVelocity();
@@ -60,14 +58,14 @@ public class GunLocation {
         return new Ring(vVelocity, vVelocity.normalize(), locSpread, locSpread).random();
     }
 
-    public void firing(boolean firing, Vector3f vLocation, Vector3f vVelocity, Quaternion vOrientation) {
+    public Bullet firing(boolean firing, Vector3f vLocation, Vector3f vVelocity, Quaternion vOrientation) {
+        Bullet bullet = null;
         if (firing) {
             Vector3f vBulletLocation = vLocation.add(vOrientation.mult(location));
             Vector3f vMuzzleVelocity = vOrientation.mult(Vector3f.UNIT_Z).mult(muzzleVelocity);
             Vector3f vBulletVelocity = addSpread(vVelocity.add(vMuzzleVelocity));
-
-            Bullet bullet = new Bullet(vBulletLocation, vBulletVelocity);
-            projectileManager.addProjectile(bullet);
+            bullet = new Bullet(vBulletLocation, vBulletVelocity);
         }
+        return bullet;
     }
 }

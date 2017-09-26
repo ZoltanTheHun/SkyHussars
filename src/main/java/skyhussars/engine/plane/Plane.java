@@ -47,6 +47,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import skyhussars.engine.weapons.Bullet;
+import static skyhussars.utility.Streams.pm;
 import static skyhussars.utility.Streams.pp;
 
 public class Plane {
@@ -145,8 +147,11 @@ public class Plane {
         if (!crashed) {
             Vector3f startLocation = geom.root().getLocalTranslation();
             Vector3f startVelocity = physics.getVVelovity();
-            Quaternion startRotation = geom.root().getWorldRotation();
-            pp(gunGroups,gunGroup -> gunGroup.firing(firing, startLocation, startVelocity, startRotation));
+            Quaternion startRotation = geom.root().getWorldRotation();          
+            pp(gunGroups,gunGroup -> {
+                List<Bullet> bulletsFired = gunGroup.firing(firing, startLocation, startVelocity, startRotation);
+                pp(bulletsFired, bullet -> projectileManager.addProjectile(bullet));
+            });
         }
     }
 

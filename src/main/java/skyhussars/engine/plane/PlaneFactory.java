@@ -116,7 +116,7 @@ public class PlaneFactory {
     }
     
     private List<GunGroup> gunGroups(List<GunGroupDescriptor> gunGroupDescriptors) {
-         return gunGroupDescriptors.stream().map(ggd  ->new GunGroup(ggd, projectileManager)).collect(Collectors.toList());
+         return gunGroupDescriptors.stream().map(ggd  ->new GunGroup(ggd)).collect(Collectors.toList());
     }
 
 }
