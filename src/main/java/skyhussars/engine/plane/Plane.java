@@ -47,8 +47,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.weapons.Bullet;
-import static skyhussars.utility.Streams.pm;
 import static skyhussars.utility.Streams.pp;
 
 public class Plane {
@@ -68,9 +68,10 @@ public class Plane {
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
+    private PlaneResponse planeResponse = new PlaneResponse(new Quaternion(), new Vector3f(),0);
 
-    public void physicsUpdate(float tpf, Environment environment) {
-        physics.update(tpf, environment);
+    public synchronized void tick(float tpf, Environment environment) {
+        planeResponse = physics.update(tpf, environment,planeResponse);
         logger.debug(getInfo());
     }
 
@@ -126,7 +127,7 @@ public class Plane {
         return this;
     }
     
-    public float aoa(){ return physics.aoa(); }
+    public synchronized float aoa(){ return planeResponse.aoa; }
     public BoundingVolume getHitBox() { return geom.root().getWorldBound(); }
 
     public void hit() {
@@ -141,7 +142,11 @@ public class Plane {
     }
 
     public void update(float tpf) {
-        physics.updateScene(geom.root());
+        synchronized(this){
+            geom.root().setLocalRotation(planeResponse.rotation);
+            geom.root().setLocalTranslation(planeResponse.translation);
+        }
+        
         float ratio = FastMath.PI * 2 * (physics.speedKmH() / 900);
         geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
         if (!crashed) {
@@ -203,21 +208,26 @@ public class Plane {
         verticalStabilizers.forEach(s -> s.controlAileron(rudder));
     }
 
-    public void setHeight(int height) {
-        Vector3f translation = geom.root().getLocalTranslation();
-        setLocation((int) translation.getX(), height, (int) translation.getZ());
+    public synchronized void setHeight(int height) {
+        planeResponse = new PlaneResponse(planeResponse.rotation, planeResponse.translation.setY(height), planeResponse.aoa);
+        /*Vector3f translation = geom.root().getLocalTranslation();
+        setLocation((int) translation.getX(), height, (int) translation.getZ());*/
     }
 
-    public void setLocation(int x, int z) { setLocation(x, (int) geom.root().getLocalTranslation().y, z); }
+    public void setLocation(int x, int z) { 
+        setLocation(x, (int) planeResponse.translation.getY(), z); 
+    }
 
     public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
 
-    public void setLocation(Vector3f location) {
+    public synchronized void setLocation(Vector3f location) {
+        planeResponse = new PlaneResponse(planeResponse.rotation, location, planeResponse.aoa);
+/*
         geom.root().setLocalTranslation(location);
-        physics.translation(location);
+        physics.translation(location);*/
     }
 
-    public float getHeight() {return geom.root().getLocalTranslation().y;}
+    public synchronized float getHeight() {return planeResponse.height();}
     public Vector3f getLocation() { return geom.root().getLocalTranslation();}
     public Vector3f forward() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
     public Vector3f up() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}

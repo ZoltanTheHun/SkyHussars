@@ -23,17 +23,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.engine.physics;
 
-import skyhussars.engine.physics.environment.Environment;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
+import com.jme3.math.*;
 
-public interface PlanePhysics {
-    public PlaneResponse update(float tpf,Environment environment,PlaneResponse planeResponse);
-    public String getInfo();
-    public void speedForward(Quaternion rotation,float kmh);
-    public Vector3f getVVelovity();
-    public String getSpeedKmH();
+public class PlaneResponse {
+    public final Quaternion rotation;
+    public final Vector3f translation;
+    public final float aoa;
+    public final float height(){return translation.y;}
+    
+    public PlaneResponse(Quaternion rotation,Vector3f translation,float aoa){
+        if(rotation == null || translation == null) throw new IllegalArgumentException();
+        this.rotation = rotation;
+        this.translation = translation;
+        this.aoa = aoa;
+    }
 }

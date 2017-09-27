@@ -31,7 +31,6 @@ import com.jme3.math.*;
 import static com.jme3.math.Vector3f.*;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
 import java.util.*;
-import com.jme3.scene.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static skyhussars.utility.Streams.*;
@@ -78,8 +77,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
         this.translation = new Vector3f(translation);
     }
     
-    private final Quaternion helperQuaternion = new Quaternion();
-    
     /* Airfoil calculations */
     /* localize flow to plane coordinate space */
     private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } 
@@ -97,11 +94,14 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f parasiticDrag(float airDensity) {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
     
     @Override
-    public void update(float tpf, Environment environment) {
+    public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
         float airDensity = environment.airDensity(height);//1.2745f;
-        
+        translation = planeRsp.translation;
         Vector3f flow = localFlow();
-        updateAuxiliary(flow, translation, environment);
+        updatePlaneFactor();
+        height = translation.getY();
+        aoa = calcAoa(flow);
+        
         List<AirfoilResponse> afps = updateAirfoils(flow,airDensity);
         
         /* later on world space rotation of vectors could happen once*/
@@ -113,28 +113,17 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
         vVelocity = vVelocity.add(linearAcc.mult(tpf));
         
-        vAngularAcceleration = momentOfInertiaTensor.invert().mult(
-                Vector3f.ZERO.add(airfoilTorque(afps))
-                             .add(engineTorque()));
+        vAngularAcceleration = momentOfInertiaTensor.invert()
+                                                    .mult(Vector3f.ZERO.add(airfoilTorque(afps))
+                                                                       .add(engineTorque()));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         
-        Quaternion rotationQuaternion = helperQuaternion.fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        Quaternion rotationQuaternion = new Quaternion().fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
         synchronized (this) {
             rotation = rotation.mult(rotationQuaternion);
             translation = translation.add(vVelocity.mult(tpf));
         }
-    }
-    
-    /* model can only be updated from main thread atm */
-    public synchronized void updateScene(Node model) {
-        model.setLocalRotation(rotation);
-        model.setLocalTranslation(translation);
-    }
-
-    private void updateAuxiliary(Vector3f flow, Vector3f translation, Environment environment) {
-        height = translation.getY();
-        aoa = calcAoa(flow);
-        updatePlaneFactor();
+        return new PlaneResponse(rotation,translation,aoa);
     }
     
     private float calcAoa(Vector3f flow) {
@@ -170,7 +159,4 @@ public class PlanePhysicsImpl implements PlanePhysics {
         vVelocity = rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
     }
     
-    public float aoa(){return aoa;}
-    public synchronized PlanePhysics rotation(Quaternion rotation) {this.rotation = new Quaternion(rotation); return this;}
-    public synchronized PlanePhysics translation(Vector3f translation) {this.translation = new Vector3f(translation); return this;}
 }

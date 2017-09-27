@@ -68,7 +68,7 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        synchronized (this) {pp(planes,plane -> plane.physicsUpdate(tpf, environment)); }    
+        synchronized (this) {pp(planes,plane -> plane.tick(tpf, environment)); }    
         pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }
