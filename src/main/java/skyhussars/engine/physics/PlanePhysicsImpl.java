@@ -49,10 +49,10 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
 
     private float height;
-
+/*
     private Quaternion rotation;
     private Vector3f translation;
-        
+        */
     private final float length = 10.49f;
     private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
@@ -73,57 +73,52 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 0f, 0f, (mass / 2) * (rPlane * rPlane));
         this.airfoils = airfoils;
         this.engines = engines;
-        this.rotation = new Quaternion(rotation);
-        this.translation = new Vector3f(translation);
     }
-    
-    /* Airfoil calculations */
-    /* localize flow to plane coordinate space */
-    private Vector3f localFlow(){ return rotation.inverse().mult(vVelocity.negate()); } 
-    
-    private List<AirfoilResponse> updateAirfoils(Vector3f localFlow,float airDensity) {
-        return list(pm(airfoils,a -> a.tick(airDensity, localFlow, vAngularVelocity)));}
-    private Vector3f airfoilLinear(List<AirfoilResponse> afps) {return rotation.mult(sum(sm(afps,a -> a.linear)));}
-    private Vector3f airfoilTorque(List<AirfoilResponse> afps) {return sum(sm(afps,a -> a.torque));}
-    
-    /* Engine calculations */
-    private Vector3f engineLinear() {return rotation.mult(sum(sm(engines,Engine::thrust)));}
-    private Vector3f engineTorque() {return rotation.mult(sum(sm(engines,Engine::torque)));}  // to be added later
-    
+           
     /* Other calculations */
     private Vector3f parasiticDrag(float airDensity) {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
     
     @Override
     public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
         float airDensity = environment.airDensity(height);//1.2745f;
-        rotation = planeRsp.rotation;
-        translation = planeRsp.translation;
-        Vector3f flow = localFlow();
+        Quaternion rotation = planeRsp.rotation;
+        Vector3f translation = planeRsp.translation;
+        /* flow to local coordinate space*/
+        Vector3f flow = rotation.inverse().mult(vVelocity.negate());
+        
+        /*plane related values*/
         updatePlaneFactor();
         height = translation.getY();
         aoa = calcAoa(flow);
         
-        List<AirfoilResponse> afps = updateAirfoils(flow,airDensity);
+        /* Airfoil calculation*/
+        List<AirfoilResponse> afps = list(pm(airfoils,a -> a.tick(airDensity, flow, vAngularVelocity)));
+        Vector3f airfoilLinear = rotation.mult(sum(sm(afps,a -> a.linear)));
+        Vector3f airfoilTorque = sum(sm(afps,a -> a.torque));
+        
+        /* Engine calculations */
+        Vector3f engineLinear = rotation.mult(sum(sm(engines,Engine::thrust)));
+        Vector3f engineTorque = rotation.mult(sum(sm(engines,Engine::torque)));
         
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
-                .add(engineLinear())   
-                .add(airfoilLinear(afps))
+                .add(engineLinear)   
+                .add(airfoilLinear)
                 .add(parasiticDrag(airDensity)).divide(mass);
 
         vVelocity = vVelocity.add(linearAcc.mult(tpf));
         
         vAngularAcceleration = momentOfInertiaTensor.invert()
-                                                    .mult(Vector3f.ZERO.add(airfoilTorque(afps))
-                                                                       .add(engineTorque()));
+                                                    .mult(Vector3f.ZERO.add(airfoilTorque)
+                                                                       .add(engineTorque));
         vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
         
         Quaternion rotationQuaternion = new Quaternion().fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
-        synchronized (this) {
-            rotation = rotation.mult(rotationQuaternion);
-            translation = translation.add(vVelocity.mult(tpf));
-        }
+
+        rotation = rotation.mult(rotationQuaternion);
+        translation = translation.add(vVelocity.mult(tpf));
+        
         return new PlaneResponse(rotation,translation,aoa);
     }
     
