@@ -96,6 +96,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     @Override
     public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
         float airDensity = environment.airDensity(height);//1.2745f;
+        rotation = planeRsp.rotation;
         translation = planeRsp.translation;
         Vector3f flow = localFlow();
         updatePlaneFactor();
@@ -126,6 +127,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         return new PlaneResponse(rotation,translation,aoa);
     }
     
+    /*this function uses localized flow, hence calculation uses UNIT_Y vector*/
     private float calcAoa(Vector3f flow) {
         flow = flow.normalize();
         float locAoa = flow.cross(UNIT_Y).cross(flow).normalize().angleBetween(UNIT_Y) * RAD_TO_DEG;
