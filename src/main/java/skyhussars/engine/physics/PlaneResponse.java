@@ -30,13 +30,16 @@ import com.jme3.math.*;
 public class PlaneResponse {
     public final Quaternion rotation;
     public final Vector3f translation;
+    public final Vector3f velocity;
     public final float aoa;
     public final float height(){return translation.y;}
     
-    public PlaneResponse(Quaternion rotation,Vector3f translation,float aoa){
-        if(rotation == null || translation == null) throw new IllegalArgumentException();
+    public PlaneResponse(Quaternion rotation,Vector3f translation,Vector3f velocity, float aoa){
+        if(rotation == null || translation == null
+                || velocity == null) throw new IllegalArgumentException();
         this.rotation = rotation;
         this.translation = translation;
+        this.velocity = velocity;
         this.aoa = aoa;
     }
 }

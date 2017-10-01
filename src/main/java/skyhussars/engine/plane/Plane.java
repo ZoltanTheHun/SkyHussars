@@ -68,7 +68,7 @@ public class Plane {
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
-    private PlaneResponse planeResponse = new PlaneResponse(new Quaternion(), new Vector3f(),0);
+    private PlaneResponse planeResponse = new PlaneResponse(new Quaternion(), new Vector3f(),new Vector3f(),0);
 
     public synchronized void tick(float tpf, Environment environment) {
         planeResponse = physics.update(tpf, environment,planeResponse);
@@ -209,7 +209,9 @@ public class Plane {
     }
 
     public synchronized void setHeight(int height) {
-        planeResponse = new PlaneResponse(planeResponse.rotation, planeResponse.translation.setY(height), planeResponse.aoa);
+        planeResponse = new PlaneResponse(planeResponse.rotation,
+                planeResponse.translation.setY(height),
+                planeResponse.velocity, planeResponse.aoa);
         /*Vector3f translation = geom.root().getLocalTranslation();
         setLocation((int) translation.getX(), height, (int) translation.getZ());*/
     }
@@ -221,7 +223,8 @@ public class Plane {
     public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
 
     public synchronized void setLocation(Vector3f location) {
-        planeResponse = new PlaneResponse(planeResponse.rotation, location, planeResponse.aoa);
+        planeResponse = new PlaneResponse(planeResponse.rotation, 
+                location, planeResponse.velocity, planeResponse.aoa);
 /*
         geom.root().setLocalTranslation(location);
         physics.translation(location);*/

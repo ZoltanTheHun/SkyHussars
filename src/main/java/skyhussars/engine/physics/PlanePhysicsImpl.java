@@ -119,7 +119,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         rotation = rotation.mult(rotationQuaternion);
         translation = translation.add(vVelocity.mult(tpf));
         
-        return new PlaneResponse(rotation,translation,aoa);
+        return new PlaneResponse(rotation,translation,vVelocity,aoa);
     }
     
     /*this function uses localized flow, hence calculation uses UNIT_Y vector*/
