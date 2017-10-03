@@ -49,10 +49,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
 
     private float height;
-/*
-    private Quaternion rotation;
-    private Vector3f translation;
-        */
+    
     private final float length = 10.49f;
     private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
