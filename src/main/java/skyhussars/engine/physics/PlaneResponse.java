@@ -33,6 +33,8 @@ public class PlaneResponse {
     public final Vector3f velocity;
     public final float aoa;
     public final float height(){return translation.y;}
+    public final float velocityMs() {return velocity.length();}
+    public final float velicityKmh() { return velocity.length()*3.6f;}
     
     public PlaneResponse(Quaternion rotation,Vector3f translation,Vector3f velocity, float aoa){
         if(rotation == null || translation == null

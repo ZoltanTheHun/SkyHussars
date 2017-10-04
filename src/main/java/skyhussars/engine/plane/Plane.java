@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.weapons.Bullet;
+import static skyhussars.utility.NumberFormats.*;
 import static skyhussars.utility.Streams.pp;
 
 public class Plane {
@@ -87,7 +88,9 @@ public class Plane {
     private final List<Aileron> verticalStabilizers = new ArrayList<>();
 
     private final List<Airfoil> airfoils = new ArrayList<>();
-    private final List<Aileron> ailerons = new ArrayList<>();;
+    private final List<Aileron> ailerons = new ArrayList<>();
+    
+    private float velocityMs; // velocity in ms
 
     public Plane(List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
@@ -107,7 +110,10 @@ public class Plane {
 
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
-        this.physics.speedForward(geom.root().getLocalRotation(), 300f);
+        float kmh = 300f;
+        this.planeResponse = new PlaneResponse(planeResponse.rotation,
+                                                planeResponse.translation, 
+                planeResponse.rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f), 0);
         
     }
     
@@ -142,17 +148,21 @@ public class Plane {
     }
 
     public void update(float tpf) {
+        PlaneResponse localResponse;
         synchronized(this){
-            geom.root().setLocalRotation(planeResponse.rotation);
-            geom.root().setLocalTranslation(planeResponse.translation);
+            localResponse = planeResponse;
         }
-        
-        float ratio = FastMath.PI * 2 * (physics.speedKmH() / 900);
+        velocityMs = localResponse.velocityMs();
+        float ratio = 0;
+        geom.root().setLocalRotation(localResponse.rotation);
+        geom.root().setLocalTranslation(localResponse.translation);
+        ratio = FastMath.PI * 2 * (localResponse.velicityKmh() / 900);
+
         geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
         if (!crashed) {
-            Vector3f startLocation = geom.root().getLocalTranslation();
-            Vector3f startVelocity = physics.getVVelovity();
-            Quaternion startRotation = geom.root().getWorldRotation();          
+            Vector3f startLocation = localResponse.translation;
+            Vector3f startVelocity = localResponse.velocity;
+            Quaternion startRotation = localResponse.rotation; 
             pp(gunGroups,gunGroup -> {
                 List<Bullet> bulletsFired = gunGroup.firing(firing, startLocation, startVelocity, startRotation);
                 pp(bulletsFired, bullet -> projectileManager.addProjectile(bullet));
@@ -212,8 +222,6 @@ public class Plane {
         planeResponse = new PlaneResponse(planeResponse.rotation,
                 planeResponse.translation.setY(height),
                 planeResponse.velocity, planeResponse.aoa);
-        /*Vector3f translation = geom.root().getLocalTranslation();
-        setLocation((int) translation.getX(), height, (int) translation.getZ());*/
     }
 
     public void setLocation(int x, int z) { 
@@ -225,9 +233,6 @@ public class Plane {
     public synchronized void setLocation(Vector3f location) {
         planeResponse = new PlaneResponse(planeResponse.rotation, 
                 location, planeResponse.velocity, planeResponse.aoa);
-/*
-        geom.root().setLocalTranslation(location);
-        physics.translation(location);*/
     }
 
     public synchronized float getHeight() {return planeResponse.height();}
@@ -242,7 +247,7 @@ public class Plane {
 
     public Vector2f getLocation2D() {  return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z); }
 
-    public String velocityKmh() { return physics.getSpeedKmH(); }
+    public String velocityKmh() { return toMin3Integer0Fraction(velocityMs * 3.6f);}
     public void firing(boolean trigger) { firing = trigger; }
     public void crashed(boolean crashed) { this.crashed = crashed; }
     public boolean crashed() { return crashed; }

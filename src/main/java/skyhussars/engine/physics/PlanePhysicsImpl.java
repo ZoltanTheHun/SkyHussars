@@ -44,7 +44,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
     private float aoa;
 
-    private Vector3f vVelocity = new Vector3f(0f, 0f, 0f);
     private Vector3f vAngularAcceleration = new Vector3f(0, 0, 0);
     private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
 
@@ -73,15 +72,17 @@ public class PlanePhysicsImpl implements PlanePhysics {
     }
            
     /* Other calculations */
-    private Vector3f parasiticDrag(float airDensity) {return vVelocity.negate().normalize().mult(airDensity * planeFactor * vVelocity.lengthSquared());}
+    private Vector3f parasiticDrag(float airDensity, Vector3f velocity) {
+        return velocity.negate().normalize().mult(airDensity * planeFactor * velocity.lengthSquared());}
     
     @Override
     public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
         float airDensity = environment.airDensity(height);//1.2745f;
         Quaternion rotation = planeRsp.rotation;
         Vector3f translation = planeRsp.translation;
+        Vector3f velocity = planeRsp.velocity;
         /* flow to local coordinate space*/
-        Vector3f flow = rotation.inverse().mult(vVelocity.negate());
+        Vector3f flow = rotation.inverse().mult(velocity.negate());
         
         /*plane related values*/
         updatePlaneFactor();
@@ -97,14 +98,16 @@ public class PlanePhysicsImpl implements PlanePhysics {
         Vector3f engineLinear = rotation.mult(sum(sm(engines,Engine::thrust)));
         Vector3f engineTorque = rotation.mult(sum(sm(engines,Engine::torque)));
         
+        Vector3f parasiticDrag =  parasiticDrag(airDensity,velocity); 
+        
         /* later on world space rotation of vectors could happen once*/
         Vector3f linearAcc = Vector3f.ZERO
                 .add(environment.gravity().mult(mass))
                 .add(engineLinear)   
                 .add(airfoilLinear)
-                .add(parasiticDrag(airDensity)).divide(mass);
+                .add(parasiticDrag).divide(mass);
 
-        vVelocity = vVelocity.add(linearAcc.mult(tpf));
+        velocity = velocity.add(linearAcc.mult(tpf));
         
         vAngularAcceleration = momentOfInertiaTensor.invert()
                                                     .mult(Vector3f.ZERO.add(airfoilTorque)
@@ -114,9 +117,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
         Quaternion rotationQuaternion = new Quaternion().fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
 
         rotation = rotation.mult(rotationQuaternion);
-        translation = translation.add(vVelocity.mult(tpf));
+        translation = translation.add(velocity.mult(tpf));
         
-        return new PlaneResponse(rotation,translation,vVelocity,aoa);
+        return new PlaneResponse(rotation,translation,velocity,aoa);
     }
     
     /*this function uses localized flow, hence calculation uses UNIT_Y vector*/
@@ -129,28 +132,14 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private void updatePlaneFactor() { planeFactor = 0.2566f; }
 
     @Override
-    public String getSpeedKmH() {
-        return NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6);
-    }
-    public float speedKmH() {return vVelocity.length() * 3.6f;}
-
-    @Override
     public String getInfo() {
         return "Thrust: " + engines.get(0).thrust().length()
-                + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
-                + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)
+            /*    + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
+                + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)*/
                 + ", Height: " + NumberFormats.toMin3Integer0Fraction(height)
                 + ", AOA: " + NumberFormats.toMin3Integer0Fraction(aoa)
                 + ", AngularVelocity: " + NumberFormats.toFix2Fraction(vAngularVelocity.length())
                 + ", AngularAcceleration: " + NumberFormats.toFix2Fraction(vAngularAcceleration.length());
-    }
-
-    @Override
-    public Vector3f getVVelovity() {return vVelocity;}
-
-    @Override
-    public void speedForward(Quaternion rotation, float kmh) {
-        vVelocity = rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f);
     }
     
 }

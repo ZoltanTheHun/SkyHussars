@@ -27,13 +27,8 @@
 package skyhussars.engine.physics;
 
 import skyhussars.engine.physics.environment.Environment;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 
 public interface PlanePhysics {
     public PlaneResponse update(float tpf,Environment environment,PlaneResponse planeResponse);
     public String getInfo();
-    public void speedForward(Quaternion rotation,float kmh);
-    public Vector3f getVVelovity();
-    public String getSpeedKmH();
 }
