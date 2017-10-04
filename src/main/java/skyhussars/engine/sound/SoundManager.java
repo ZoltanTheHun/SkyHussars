@@ -43,8 +43,8 @@ public class SoundManager implements InitializingBean {
     @Autowired
     private AssetManager assetManager;
 
-    private Map<String, AudioNode> sounds = new HashMap<>();
-    private List<AudioHandler> requestedHandlers = new LinkedList<>();
+    private final Map<String, AudioNode> sounds = new HashMap<>();
+    private final List<AudioHandler> requestedHandlers = new LinkedList<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -76,6 +76,9 @@ public class SoundManager implements InitializingBean {
         sounds.put("gun", gunSound);
     }
 
+    public void clear(){
+        requestedHandlers.clear();
+    }
     public AudioHandler sound(String key) {
         AudioHandler handler = new AudioHandler(sounds.get(key).clone());
         requestedHandlers.add(handler);

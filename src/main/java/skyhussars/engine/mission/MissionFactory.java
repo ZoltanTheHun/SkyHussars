@@ -70,6 +70,7 @@ public class MissionFactory {
     public MissionState mission(String missionName) {
         MissionDescriptor missionDescriptor = dataModel.getMissionDescriptor(missionName);
         List<Plane> planes = planes(missionDescriptor);
+        soundManager.clear();
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
         terrainManager.loadTerrain();

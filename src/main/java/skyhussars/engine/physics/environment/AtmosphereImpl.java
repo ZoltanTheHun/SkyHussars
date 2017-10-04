@@ -35,12 +35,12 @@ public class AtmosphereImpl implements Atmosphere{
 
     @Override
     public float getAirDensity(float altitude) {
-        int index = 0;
+        int index = -1;
         for (int altitudeIndicator : airDensityAltitude) {
+            index++;
             if (altitudeIndicator > altitude) {
                 break;
             }
-            index++;
         }
         return airDensity[index];
     }
