@@ -27,7 +27,7 @@ package skyhussars.engine.physics;
 
 import com.jme3.math.*;
 
-public class PlaneResponse {
+public final class PlaneResponse {
     public final Quaternion rotation;
     public final Vector3f translation;
     public final Vector3f velocity;

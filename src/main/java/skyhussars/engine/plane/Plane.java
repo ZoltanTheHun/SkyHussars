@@ -73,7 +73,6 @@ public class Plane {
 
     public synchronized void tick(float tick, Environment environment) {
         planeResponse = physics.update(tick, environment,planeResponse);
-        logger.debug(getInfo());
     }
 
     public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
@@ -190,9 +189,7 @@ public class Plane {
         if (throttle < 0.0f || throttle > 1.0f) {
             throw new IllegalArgumentException();
         }
-        for (Engine engine : engines) {
-            engine.setThrottle(throttle);
-        }
+        pp(engines,e -> e.setThrottle(throttle));
         engineSound.setPitch(0.5f + throttle);
     }
 
@@ -232,9 +229,9 @@ public class Plane {
     }
 
     public synchronized float getHeight() {return planeResponse.height();}
-    public Vector3f getLocation() { return geom.root().getLocalTranslation();}
-    public Vector3f forward() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
-    public Vector3f up() {return geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}
+    public Vector3f getLocation() { return geom.translation();}
+    public Vector3f forward() {return geom.forwardNormal();}
+    public Vector3f up() {return geom.upNormal();}
 
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;

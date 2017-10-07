@@ -89,7 +89,7 @@ public class ProjectileManager {
     }
 
     public void checkCollision(Plane plane) {
-        Node planeNode = plane.planeGeometry().modelNode();
+        Node planeNode = plane.planeGeometry().outside();
         projectileGeometries.forEach(projectile -> {
             CollisionResults collisionResults = new CollisionResults();
             if (projectile.collideWith(planeNode.getWorldBound(), collisionResults) > 0) {

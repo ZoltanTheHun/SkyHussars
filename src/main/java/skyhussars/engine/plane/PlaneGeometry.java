@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.plane;
 
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -36,9 +37,9 @@ import org.slf4j.LoggerFactory;
 public class PlaneGeometry {
 
     private final static Logger logger = LoggerFactory.getLogger(PlaneGeometry.class);
-    private final Node rootNode;
+    private final Node root;
     private final Node cockpitNode;
-    private final Node modelNode;
+    private final Node outside;
     private final Node soundNode;
     private Node airspeedInd;
 
@@ -48,15 +49,15 @@ public class PlaneGeometry {
     }
 
     public PlaneGeometry() {
-        rootNode = new Node();
+        root = new Node();
         cockpitNode = new Node();
         // rootNode.attachChild(cockpitNode);
 
-        modelNode = new Node();
+        outside = new Node();
         soundNode = new Node();
-        rootNode.attachChild(cockpitNode);
-        rootNode.attachChild(modelNode);
-        rootNode.attachChild(soundNode);
+        root.attachChild(cockpitNode);
+        root.attachChild(outside);
+        root.attachChild(soundNode);
     }
 
     public PlaneGeometry attachSpatialToCockpitNode(Spatial cockpit) {
@@ -99,27 +100,26 @@ public class PlaneGeometry {
     }
 
     public PlaneGeometry attachSpatialToModelNode(Spatial model) {
-        modelNode.attachChild(model);
+        outside.attachChild(model);
         return this;
     }
 
     public synchronized void switchTo(GeometryMode geometryMode) {
         switch (geometryMode) {
             case COCKPIT_MODE:
-                modelNode.setCullHint(Node.CullHint.Always);
+                outside.setCullHint(Node.CullHint.Always);
                 cockpitNode.setCullHint(Node.CullHint.Inherit);
                 break;
             case MODEL_MODE:
                 cockpitNode.setCullHint(Node.CullHint.Always);
-                modelNode.setCullHint(Node.CullHint.Inherit);
+                outside.setCullHint(Node.CullHint.Inherit);
                 break;
         }
     }
 
-    public Node root() {
-        return rootNode;
-    }
-    public Node modelNode() {
-        return modelNode;
-    }
+    public Node root() {return root;}
+    public Node outside() {return outside;}  
+    public Vector3f translation(){return root.getLocalTranslation();}
+    public Vector3f forwardNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
+    public Vector3f upNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}
 }
