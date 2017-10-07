@@ -71,8 +71,8 @@ public class Plane {
     private final PlaneGeometry geom;
     private PlaneResponse planeResponse = new PlaneResponse();
 
-    public synchronized void tick(float tpf, Environment environment) {
-        planeResponse = physics.update(tpf, environment,planeResponse);
+    public synchronized void tick(float tick, Environment environment) {
+        planeResponse = physics.update(tick, environment,planeResponse);
         logger.debug(getInfo());
     }
 

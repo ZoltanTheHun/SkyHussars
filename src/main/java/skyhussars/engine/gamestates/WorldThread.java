@@ -44,20 +44,20 @@ public class WorldThread extends TimerTask {
     private final static Logger logger = LoggerFactory.getLogger(WorldThread.class);
 
     private final List<Plane> planes;
-    private final float tpf;
+    private final float tick;
 
     private final Environment environment = new Environment(10, new AtmosphereImpl());
     private final List<AIPilot> aiPilots = new LinkedList<>();
     private final World world;
 
-    public WorldThread(List<Plane> planes, int ticks, TerrainManager terrainManager) {
+    public WorldThread(List<Plane> planes, int tickrate, TerrainManager terrainManager) {
         this.planes = planes;
 
         aiPilots.addAll(list(pf(planes,plane -> !plane.planeMissionDescriptor().player())
             .map( plane -> new AIPilot(plane))));
         
         world = new World(planes, terrainManager);
-        tpf = (float) 1 / (float) ticks;
+        tick = (float) 1 / (float) tickrate;
     }
 
     private final AtomicLong cycle = new AtomicLong(0);
@@ -68,13 +68,13 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        synchronized (this) {pp(planes,plane -> plane.tick(tpf, environment)); }    
+        synchronized (this) {pp(planes,plane -> plane.tick(tick, environment)); }    
         pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }
 
     public synchronized void updatePlaneLocations() {
-        sp(planes,p -> p.update(tpf));
+        sp(planes,p -> p.update(tick));
     }
 
 }

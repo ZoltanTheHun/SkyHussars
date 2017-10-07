@@ -49,8 +49,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private List<Airfoil> airfoils = new ArrayList<>();
     private List<Engine> engines = new ArrayList<>();
 
-    private final float tick = (float) 1 / (float) 60;
-
     public PlanePhysicsImpl(Quaternion rotation,
                             Vector3f translation,
                             float mass,
@@ -69,7 +67,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         return velocity.negate().normalize().mult(airDensity * planeFactor * velocity.lengthSquared());}
     
     @Override
-    public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
+    public PlaneResponse update(float tick, Environment environment, PlaneResponse planeRsp) {
         float airDensity = environment.airDensity(planeRsp.height());//1.2745f;
         Quaternion rotation = planeRsp.rotation;
         Vector3f translation = planeRsp.translation;
@@ -99,17 +97,17 @@ public class PlanePhysicsImpl implements PlanePhysics {
                 .add(airfoilLinear)
                 .add(parasiticDrag).divide(mass);
 
-        velocity = velocity.add(linearAcc.mult(tpf));
+        velocity = velocity.add(linearAcc.mult(tick));
         
         Vector3f angularAcceleration = momentOfInertiaTensor.invert()
                                                              .mult(Vector3f.ZERO.add(airfoilTorque)
                                                                                 .add(engineTorque));
-        angularVelocity = angularVelocity.add(angularAcceleration.mult(tpf));
+        angularVelocity = angularVelocity.add(angularAcceleration.mult(tick));
         
-        Quaternion rotationQuaternion = new Quaternion().fromAngles(angularVelocity.x * tpf, angularVelocity.y * tpf, angularVelocity.z * tpf);
+        Quaternion rotationQuaternion = new Quaternion().fromAngles(angularVelocity.x * tick, angularVelocity.y * tick, angularVelocity.z * tick);
 
         rotation = rotation.mult(rotationQuaternion);
-        translation = translation.add(velocity.mult(tpf));
+        translation = translation.add(velocity.mult(tick));
         
         return new PlaneResponse(rotation,translation,velocity,aoa,angularAcceleration,angularVelocity);
     }
