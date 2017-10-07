@@ -30,5 +30,4 @@ import skyhussars.engine.physics.environment.Environment;
 
 public interface PlanePhysics {
     public PlaneResponse update(float tpf,Environment environment,PlaneResponse planeResponse);
-    public String getInfo();
 }

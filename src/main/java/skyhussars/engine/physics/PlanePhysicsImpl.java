@@ -26,7 +26,6 @@
 package skyhussars.engine.physics;
 
 import skyhussars.engine.physics.environment.Environment;
-import skyhussars.utility.NumberFormats;
 import com.jme3.math.*;
 import static com.jme3.math.Vector3f.*;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
@@ -40,14 +39,8 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
     private final static Logger logger = LoggerFactory.getLogger(PlanePhysicsImpl.class);
 
-    private float planeFactor = 0.2566f; // cross section and drag coeff together
+    private final float planeFactor = 0.2566f; // cross section and drag coeff together
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
-    private float aoa;
-
-    private Vector3f vAngularAcceleration = new Vector3f(0, 0, 0);
-    private Vector3f vAngularVelocity = new Vector3f(0, 0, 0);
-
-    private float height;
     
     private final float length = 10.49f;
     private final float rPlane = 1.3f;
@@ -77,20 +70,19 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     @Override
     public PlaneResponse update(float tpf, Environment environment, PlaneResponse planeRsp) {
-        float airDensity = environment.airDensity(height);//1.2745f;
+        float airDensity = environment.airDensity(planeRsp.height());//1.2745f;
         Quaternion rotation = planeRsp.rotation;
         Vector3f translation = planeRsp.translation;
         Vector3f velocity = planeRsp.velocity;
+        Vector3f angularVelocity = planeRsp.angularVelocity;
         /* flow to local coordinate space*/
         Vector3f flow = rotation.inverse().mult(velocity.negate());
         
         /*plane related values*/
-        updatePlaneFactor();
-        height = translation.getY();
-        aoa = calcAoa(flow);
-        
+        float aoa = calcAoa(flow);
+        final Vector3f angVel = angularVelocity;
         /* Airfoil calculation*/
-        List<AirfoilResponse> afps = list(pm(airfoils,a -> a.tick(airDensity, flow, vAngularVelocity)));
+        List<AirfoilResponse> afps = list(pm(airfoils,a -> a.tick(airDensity, flow, angVel)));
         Vector3f airfoilLinear = rotation.mult(sum(sm(afps,a -> a.linear)));
         Vector3f airfoilTorque = sum(sm(afps,a -> a.torque));
         
@@ -109,37 +101,24 @@ public class PlanePhysicsImpl implements PlanePhysics {
 
         velocity = velocity.add(linearAcc.mult(tpf));
         
-        vAngularAcceleration = momentOfInertiaTensor.invert()
-                                                    .mult(Vector3f.ZERO.add(airfoilTorque)
-                                                                       .add(engineTorque));
-        vAngularVelocity = vAngularVelocity.add(vAngularAcceleration.mult(tpf));
+        Vector3f angularAcceleration = momentOfInertiaTensor.invert()
+                                                             .mult(Vector3f.ZERO.add(airfoilTorque)
+                                                                                .add(engineTorque));
+        angularVelocity = angularVelocity.add(angularAcceleration.mult(tpf));
         
-        Quaternion rotationQuaternion = new Quaternion().fromAngles(vAngularVelocity.x * tpf, vAngularVelocity.y * tpf, vAngularVelocity.z * tpf);
+        Quaternion rotationQuaternion = new Quaternion().fromAngles(angularVelocity.x * tpf, angularVelocity.y * tpf, angularVelocity.z * tpf);
 
         rotation = rotation.mult(rotationQuaternion);
         translation = translation.add(velocity.mult(tpf));
         
-        return new PlaneResponse(rotation,translation,velocity,aoa);
+        return new PlaneResponse(rotation,translation,velocity,aoa,angularAcceleration,angularVelocity);
     }
     
-    /*this function uses localized flow, hence calculation uses UNIT_Y vector*/
+    /* this function uses localized flow, hence calculation uses UNIT_Y vector */
     private float calcAoa(Vector3f flow) {
         flow = flow.normalize();
         float locAoa = flow.cross(UNIT_Y).cross(flow).normalize().angleBetween(UNIT_Y) * RAD_TO_DEG;
         return UNIT_Y.dot(flow) > 0 ? locAoa : - locAoa;
-    }
-    
-    private void updatePlaneFactor() { planeFactor = 0.2566f; }
-
-    @Override
-    public String getInfo() {
-        return "Thrust: " + engines.get(0).thrust().length()
-            /*    + ", CurrentSpeed: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length())
-                + ", CurrentSpeed km/h: " + NumberFormats.toMin3Integer0Fraction(vVelocity.length() * 3.6)*/
-                + ", Height: " + NumberFormats.toMin3Integer0Fraction(height)
-                + ", AOA: " + NumberFormats.toMin3Integer0Fraction(aoa)
-                + ", AngularVelocity: " + NumberFormats.toFix2Fraction(vAngularVelocity.length())
-                + ", AngularAcceleration: " + NumberFormats.toFix2Fraction(vAngularAcceleration.length());
     }
     
 }

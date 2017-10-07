@@ -69,7 +69,7 @@ public class Plane {
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
-    private PlaneResponse planeResponse = new PlaneResponse(new Quaternion(), new Vector3f(),new Vector3f(),0);
+    private PlaneResponse planeResponse = new PlaneResponse();
 
     public synchronized void tick(float tpf, Environment environment) {
         planeResponse = physics.update(tpf, environment,planeResponse);
@@ -111,10 +111,9 @@ public class Plane {
         Vector3f translation = geom.root().getLocalTranslation();
         this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
         float kmh = 300f;
-        this.planeResponse = new PlaneResponse(planeResponse.rotation,
-                                                planeResponse.translation, 
-                planeResponse.rotation.mult(Vector3f.UNIT_Z).normalize().mult(kmh / 3.6f), 0);
         
+        Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);
+        this.planeResponse = planeResponse.velocity(velocity);
     }
     
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
@@ -219,9 +218,7 @@ public class Plane {
     }
 
     public synchronized void setHeight(int height) {
-        planeResponse = new PlaneResponse(planeResponse.rotation,
-                planeResponse.translation.setY(height),
-                planeResponse.velocity, planeResponse.aoa);
+        planeResponse = planeResponse.height(height);
     }
 
     public void setLocation(int x, int z) { 
@@ -230,9 +227,8 @@ public class Plane {
 
     public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
 
-    public synchronized void setLocation(Vector3f location) {
-        planeResponse = new PlaneResponse(planeResponse.rotation, 
-                location, planeResponse.velocity, planeResponse.aoa);
+    public synchronized void setLocation(Vector3f translation) {
+        planeResponse = planeResponse.translation(translation);
     }
 
     public synchronized float getHeight() {return planeResponse.height();}
@@ -251,7 +247,7 @@ public class Plane {
     public void firing(boolean trigger) { firing = trigger; }
     public void crashed(boolean crashed) { this.crashed = crashed; }
     public boolean crashed() { return crashed; }
-    public String getInfo() { return physics.getInfo(); }
+    public String getInfo() { return planeResponse.toString();}
     public PlaneGeometry planeGeometry() { return geom; }
     public void fireEffect(ParticleEmitter fireEffect) { this.fireEffect = fireEffect; }
 }
