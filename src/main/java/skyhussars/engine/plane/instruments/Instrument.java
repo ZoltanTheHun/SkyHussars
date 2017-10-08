@@ -25,15 +25,8 @@
  */
 package skyhussars.engine.plane.instruments;
 
-public class Instruments {
-    
-    public Instruments(BarometricAltimeter altimeter) {
-        this.altimeter = altimeter;
-    }
-    private final BarometricAltimeter altimeter;
+import skyhussars.engine.physics.PlaneResponse;
 
-    public BarometricAltimeter altimeter() {
-        return altimeter;
-    }
-
+public interface Instrument {
+    public void update(PlaneResponse rsp);
 }

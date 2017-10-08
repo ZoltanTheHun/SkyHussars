@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.plane;
 
+import static com.jme3.math.FastMath.PI;
 import skyhussars.engine.DataManager;
 import skyhussars.engine.ModelManager;
 import skyhussars.engine.physics.Aileron;
@@ -39,12 +40,12 @@ import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import skyhussars.engine.physics.LiftCoefficient;
+import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 
 @Component
 public class PlaneFactory {
@@ -70,15 +71,16 @@ public class PlaneFactory {
         AudioHandler gunSound = soundManager.sound("gun");
         Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
+        AnalogueAirspeedIndicator airspeedIndicator = new AnalogueAirspeedIndicator(0, 900, PI * 2f);
         Plane plane = new Plane(
                         airfoils(planeDescriptor.getAirfolDescriptors()),
                         engineSound,
                         gunSound, projectileManager,
-                        planeGeometry(),
+                        planeGeometry(airspeedIndicator),
                         instruments,
                         engines(planeDescriptor.getEngineLocations()),
                         gunGroups(planeDescriptor.getGunGroupDescriptors()),
-                        planeDescriptor.getMassGross());
+                        planeDescriptor.getMassGross(),airspeedIndicator);
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }
@@ -103,13 +105,13 @@ public class PlaneFactory {
         ).collect(Collectors.toList());
     }
     
-    private PlaneGeometry planeGeometry(){
+    private PlaneGeometry planeGeometry(AnalogueAirspeedIndicator airspeedIndicator){
         Spatial model = modelManager.model("p80", "p80_material").clone();
         model.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         Spatial cockpitModel = modelManager.model("p80cabin2", "p80_material").clone();
         //cockpitModel.setCullHint(Spatial.CullHint.Always);
         cockpitModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        return new PlaneGeometry()
+        return new PlaneGeometry(airspeedIndicator)
                 .attachSpatialToCockpitNode(cockpitModel)
                 .attachSpatialToCockpitNode(dataManager.getCockpit())
                 .attachSpatialToModelNode(model);

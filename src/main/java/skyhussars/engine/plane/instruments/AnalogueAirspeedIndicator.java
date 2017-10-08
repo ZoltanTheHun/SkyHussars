@@ -25,15 +25,35 @@
  */
 package skyhussars.engine.plane.instruments;
 
-public class Instruments {
+import com.jme3.math.Quaternion;
+import skyhussars.engine.physics.PlaneResponse;
+
+public class AnalogueAirspeedIndicator {
     
-    public Instruments(BarometricAltimeter altimeter) {
-        this.altimeter = altimeter;
-    }
-    private final BarometricAltimeter altimeter;
+    private final float interval;
+    private final float minKmh;
+    private final float maxKmh;
+    private final float rotationInterval;
 
-    public BarometricAltimeter altimeter() {
-        return altimeter;
+    private float ratio;
+    
+    public AnalogueAirspeedIndicator(float minKmh,float maxKmh, float rotationInterval){
+        this.interval = maxKmh - minKmh;
+        this.minKmh = minKmh;
+        this.maxKmh = maxKmh; 
+        this.rotationInterval = rotationInterval;
     }
-
+    
+    public void update(PlaneResponse rsp){
+        float velocity = rsp.velicityKmh() < maxKmh ? rsp.velicityKmh() : maxKmh;
+        velocity = velocity > minKmh ?  velocity - minKmh : minKmh; 
+        float locRatio = velocity / interval;
+        synchronized(this) {ratio = locRatio;}
+    }
+    public Quaternion rotation(){
+        float locRatio;
+        synchronized(this) {locRatio = ratio;}
+        return new Quaternion().fromAngles(0, 0, locRatio * rotationInterval);
+    }
+    
 }

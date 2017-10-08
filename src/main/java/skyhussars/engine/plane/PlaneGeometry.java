@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 
 public class PlaneGeometry {
 
@@ -41,14 +42,15 @@ public class PlaneGeometry {
     private final Node cockpitNode;
     private final Node outside;
     private final Node soundNode;
-    private Node airspeedInd;
+    private Optional<Node> airspeedIndicatorNode;
+    private final AnalogueAirspeedIndicator airspeedIndicator;
 
     public static enum GeometryMode {
 
         COCKPIT_MODE, MODEL_MODE
     }
 
-    public PlaneGeometry() {
+    public PlaneGeometry(AnalogueAirspeedIndicator airspeedIndicator) {
         root = new Node();
         cockpitNode = new Node();
         // rootNode.attachChild(cockpitNode);
@@ -58,6 +60,7 @@ public class PlaneGeometry {
         root.attachChild(cockpitNode);
         root.attachChild(outside);
         root.attachChild(soundNode);
+        this.airspeedIndicator = airspeedIndicator;
     }
 
     public PlaneGeometry attachSpatialToCockpitNode(Spatial cockpit) {
@@ -70,16 +73,11 @@ public class PlaneGeometry {
             logger.info("Node is:" + geom.getName());
             if(geom.getChildren() != null) {
                 Optional<Spatial> spd = geom.getChildren().stream().filter(s -> "spd".equals(s.getName())).findFirst();
-                Optional<Spatial> ind = spd.map(s -> {
+                airspeedIndicatorNode = spd.map(s -> {
                    List<Spatial> a = ((Node) s).getChildren();
                    Optional<Spatial> b = a.stream().filter(t -> "indicator".equals(t.getName())).findFirst();
                    return b;
-                }).orElse(Optional.empty());
-                ind.map(i -> {
-                    airspeedInd = (Node)i;
-                    return i;
-                });
-                
+                }).orElse(Optional.empty()).map(i -> (Node) i);               
             }
         } 
         if (cockpit instanceof Geometry) {
@@ -90,8 +88,11 @@ public class PlaneGeometry {
         return this;
     }
     
-    public Node airspeedInd(){
-        return airspeedInd;
+    public void update(){
+        airspeedIndicatorNode.map(n -> {
+            n.setLocalRotation(airspeedIndicator.rotation());
+            return n;
+        });
     }
 
     public PlaneGeometry attachSpatialToRootNode(Spatial spatial) {

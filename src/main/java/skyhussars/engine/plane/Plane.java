@@ -37,7 +37,7 @@ import skyhussars.engine.sound.AudioHandler;
 import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
-import com.jme3.math.FastMath;
+import static com.jme3.math.FastMath.RAD_TO_DEG;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import skyhussars.engine.physics.PlaneResponse;
+import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 import skyhussars.engine.weapons.Bullet;
 import static skyhussars.utility.NumberFormats.*;
 import static skyhussars.utility.Streams.pp;
@@ -70,6 +71,7 @@ public class Plane {
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
     private PlaneResponse planeResponse = new PlaneResponse();
+    private final AnalogueAirspeedIndicator airspeedIndicator;
 
     public void tick(float tick, Environment environment) {
         PlaneResponse localResponse = physics.update(tick, environment,planeResponse);
@@ -106,7 +108,8 @@ public class Plane {
     public Plane(List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,
             ProjectileManager projectileManager, PlaneGeometry planeGeometry,
-            Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass) {
+            Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass
+            , AnalogueAirspeedIndicator airspeedIndicator) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         this.gunSound = gunSound;
@@ -125,6 +128,7 @@ public class Plane {
         
         Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);
         this.planeResponse = planeResponse.velocity(velocity);
+        this.airspeedIndicator = airspeedIndicator;
     }
     
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
@@ -164,8 +168,8 @@ public class Plane {
         float ratio = 0;
         geom.root().setLocalRotation(localResponse.rotation);
         geom.root().setLocalTranslation(localResponse.translation);
-        ratio = FastMath.PI * 2 * (localResponse.velicityKmh() / 900);
-        geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
+        airspeedIndicator.update(localResponse);
+        geom.update();
     }
 
     public synchronized void updateSound() {
@@ -233,7 +237,7 @@ public class Plane {
 
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
-        return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * FastMath.RAD_TO_DEG;
+        return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
 
     public Vector2f getLocation2D() {  return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z); }
