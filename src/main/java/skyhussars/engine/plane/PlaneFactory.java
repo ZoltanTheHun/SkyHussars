@@ -59,9 +59,6 @@ public class PlaneFactory {
     @Autowired
     private SoundManager soundManager;
 
-    @Autowired
-    private ProjectileManager projectileManager;
-    
     private LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
 
     public Plane createPlane(String planeType) {
@@ -75,7 +72,7 @@ public class PlaneFactory {
         Plane plane = new Plane(
                         airfoils(planeDescriptor.getAirfolDescriptors()),
                         engineSound,
-                        gunSound, projectileManager,
+                        gunSound,
                         planeGeometry(airspeedIndicator),
                         instruments,
                         engines(planeDescriptor.getEngineLocations()),

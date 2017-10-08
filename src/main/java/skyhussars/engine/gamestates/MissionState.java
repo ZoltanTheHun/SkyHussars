@@ -77,7 +77,7 @@ public class MissionState implements GameState {
         player = new Pilot(pilotedPlane);
         
         initiliazePlayer();
-        worldThread = new WorldThread(planes, ticks, terrainManager);
+        worldThread = new WorldThread(planes, ticks, terrainManager,projectileManager);
     }
     private final int ticks = 30;
     private int cycles = 0;

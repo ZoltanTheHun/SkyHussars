@@ -57,6 +57,10 @@ public class Streams {
         return obj.collect(Collectors.toList());
     }
     
+    public static <T> List<T> flatList(Stream<List<T>> obj){
+        return obj.flatMap(List::stream).collect(Collectors.toList());
+    }
+    
     public static Vector3f sum(Stream<Vector3f> vectors){
         return vectors.reduce(Vector3f.ZERO,Vector3f::add);
     }

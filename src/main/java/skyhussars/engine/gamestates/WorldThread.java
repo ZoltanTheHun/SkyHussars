@@ -37,6 +37,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skyhussars.engine.weapons.Bullet;
+import skyhussars.engine.weapons.ProjectileManager;
 import static skyhussars.utility.Streams.*;
 
 public class WorldThread extends TimerTask {
@@ -49,8 +51,9 @@ public class WorldThread extends TimerTask {
     private final Environment environment = new Environment(10, new AtmosphereImpl());
     private final List<AIPilot> aiPilots = new LinkedList<>();
     private final World world;
+    private final ProjectileManager projectileManager;
 
-    public WorldThread(List<Plane> planes, int tickrate, TerrainManager terrainManager) {
+    public WorldThread(List<Plane> planes, int tickrate, TerrainManager terrainManager, ProjectileManager projectileManager) {
         this.planes = planes;
 
         aiPilots.addAll(list(pf(planes,plane -> !plane.planeMissionDescriptor().player())
@@ -58,6 +61,7 @@ public class WorldThread extends TimerTask {
         
         world = new World(planes, terrainManager);
         tick = (float) 1 / (float) tickrate;
+        this.projectileManager = projectileManager;
     }
 
     private final AtomicLong cycle = new AtomicLong(0);
@@ -68,12 +72,13 @@ public class WorldThread extends TimerTask {
 
     @Override
     public void run() {
-        synchronized (this) {pp(planes,plane -> plane.tick(tick, environment)); }    
+        List<Bullet> bullets = flatList(pm(planes,plane -> plane.tick(tick, environment)));
+        projectileManager.addProjectiles(bullets);
         pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }
 
-    public synchronized void updatePlaneLocations() {
+    public void updatePlaneLocations() {
         sp(planes,p -> p.update(tick));
     }
 

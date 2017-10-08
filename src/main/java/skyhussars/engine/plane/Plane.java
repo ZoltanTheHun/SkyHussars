@@ -45,13 +45,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import static java.util.Collections.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 import skyhussars.engine.weapons.Bullet;
 import static skyhussars.utility.NumberFormats.*;
-import static skyhussars.utility.Streams.pp;
+import static skyhussars.utility.Streams.*;
 
 public class Plane {
 
@@ -62,10 +63,9 @@ public class Plane {
     private final PlanePhysicsImpl physics;
     private final AudioHandler engineSound;
     private final AudioHandler gunSound;
-    private List<GunGroup> gunGroups;
+    private final List<GunGroup> gunGroups;
     private final List<Engine> engines = new ArrayList<>();
     private boolean firing = false;
-    private final ProjectileManager projectileManager;
     private boolean crashed = false;
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
@@ -73,20 +73,10 @@ public class Plane {
     private PlaneResponse planeResponse = new PlaneResponse();
     private final AnalogueAirspeedIndicator airspeedIndicator;
 
-    public void tick(float tick, Environment environment) {
+    public List<Bullet> tick(float tick, Environment environment) {
         PlaneResponse localResponse = physics.update(tick, environment,planeResponse);
         synchronized(this){ planeResponse = localResponse;}
-        synchronized(this){ //let's eliminate this synchronized block later
-            if (!crashed) {
-                Vector3f startLocation = localResponse.translation;
-                Vector3f startVelocity = localResponse.velocity;
-                Quaternion startRotation = localResponse.rotation; 
-                pp(gunGroups,gunGroup -> {
-                    List<Bullet> bulletsFired = gunGroup.firing(firing, startLocation, startVelocity, startRotation);
-                    pp(bulletsFired, bullet -> projectileManager.addProjectile(bullet));
-                });
-            }
-        }
+        return !crashed ? flatList(pm(gunGroups,gunGroup -> gunGroup.firing(firing, localResponse))) : emptyList();
     }
 
     public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
@@ -106,8 +96,7 @@ public class Plane {
     private float velocityMs; // velocity in ms
 
     public Plane(List<Airfoil> airfoils,
-            AudioHandler engineSound, AudioHandler gunSound,
-            ProjectileManager projectileManager, PlaneGeometry planeGeometry,
+            AudioHandler engineSound, AudioHandler gunSound,PlaneGeometry planeGeometry,
             Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass
             , AnalogueAirspeedIndicator airspeedIndicator) {
         this.engineSound = engineSound;
@@ -116,7 +105,6 @@ public class Plane {
         geom = planeGeometry;
         geom.attachSpatialToRootNode(engineSound.audioNode());
         geom.attachSpatialToRootNode(gunSound.audioNode());
-        this.projectileManager = projectileManager;
         this.gunGroups = gunGroups;
         sortoutAirfoils(airfoils);
         
@@ -165,7 +153,6 @@ public class Plane {
         PlaneResponse localResponse;
         synchronized(this){ localResponse = planeResponse; }
         velocityMs = localResponse.velocityMs();
-        float ratio = 0;
         geom.root().setLocalRotation(localResponse.rotation);
         geom.root().setLocalTranslation(localResponse.translation);
         airspeedIndicator.update(localResponse);
@@ -220,7 +207,7 @@ public class Plane {
         planeResponse = planeResponse.height(height);
     }
 
-    public void setLocation(int x, int z) { 
+    public synchronized void setLocation(int x, int z) { 
         setLocation(x, (int) planeResponse.height(), z); 
     }
 

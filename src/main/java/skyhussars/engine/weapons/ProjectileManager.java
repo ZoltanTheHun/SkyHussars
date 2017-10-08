@@ -58,6 +58,9 @@ public class ProjectileManager {
     private final List<Geometry> projectileGeometries = new LinkedList<>();
     private final List<Geometry> newProjectiles = new LinkedList<>();
 
+    public synchronized void addProjectiles(List<Bullet> bullets){
+        sp(bullets,bullet -> this.addProjectile(bullet));
+    }
     public synchronized void addProjectile(Bullet projectile) {
         Geometry newGeometry = dataManager.getBullet();
         projectileGeometries.add(newGeometry);

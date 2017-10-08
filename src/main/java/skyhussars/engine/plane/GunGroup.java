@@ -31,6 +31,7 @@ import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.weapons.Bullet;
 import static skyhussars.utility.Streams.list;
 import static skyhussars.utility.Streams.pm;
@@ -63,8 +64,11 @@ public class GunGroup {
         this.gunLocations = gunLocations;
     }
 
-    public List<Bullet> firing(boolean firing,Vector3f vLocation, Vector3f vVelocity,Quaternion vOrientation) {
-        return list(pm(gunLocations,gunLocation -> gunLocation.firing(firing,vLocation,vVelocity,vOrientation))
+    public List<Bullet> firing(boolean firing,PlaneResponse planeResponse) {
+        Vector3f startLocation = planeResponse.translation;
+        Vector3f startVelocity = planeResponse.velocity;
+        Quaternion startRotation = planeResponse.rotation; 
+        return list(pm(gunLocations,gunLocation -> gunLocation.firing(firing,startLocation,startVelocity,startRotation))
                 .filter(Objects::nonNull));
     }
 }
