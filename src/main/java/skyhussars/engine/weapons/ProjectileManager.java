@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.sp;
 
 @Component
 public class ProjectileManager {
@@ -54,17 +55,21 @@ public class ProjectileManager {
 
     private List<Projectile> projectiles = new ArrayList<>();
 
-    private List<Geometry> projectileGeometries = new LinkedList<>();
+    private final List<Geometry> projectileGeometries = new LinkedList<>();
+    private final List<Geometry> newProjectiles = new LinkedList<>();
 
     public synchronized void addProjectile(Bullet projectile) {
         Geometry newGeometry = dataManager.getBullet();
         projectileGeometries.add(newGeometry);
-        rootNode.attachChild(newGeometry);
+        newProjectiles.add(newGeometry);
         newGeometry.move(projectile.getLocation());
         projectiles.add(projectile);
     }
-
+    
     public synchronized void update(float tpf) {
+        sp(newProjectiles,p -> rootNode.attachChild(p));
+        newProjectiles.clear();
+        
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
         projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
         Iterator<Projectile> it = projectiles.iterator();
@@ -88,7 +93,7 @@ public class ProjectileManager {
         }
     }
 
-    public void checkCollision(Plane plane) {
+    public synchronized void checkCollision(Plane plane) {
         Node planeNode = plane.planeGeometry().outside();
         projectileGeometries.forEach(projectile -> {
             CollisionResults collisionResults = new CollisionResults();

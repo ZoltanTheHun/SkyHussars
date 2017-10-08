@@ -71,8 +71,20 @@ public class Plane {
     private final PlaneGeometry geom;
     private PlaneResponse planeResponse = new PlaneResponse();
 
-    public synchronized void tick(float tick, Environment environment) {
-        planeResponse = physics.update(tick, environment,planeResponse);
+    public void tick(float tick, Environment environment) {
+        PlaneResponse localResponse = physics.update(tick, environment,planeResponse);
+        synchronized(this){ planeResponse = localResponse;}
+        synchronized(this){ //let's eliminate this synchronized block later
+            if (!crashed) {
+                Vector3f startLocation = localResponse.translation;
+                Vector3f startVelocity = localResponse.velocity;
+                Quaternion startRotation = localResponse.rotation; 
+                pp(gunGroups,gunGroup -> {
+                    List<Bullet> bulletsFired = gunGroup.firing(firing, startLocation, startVelocity, startRotation);
+                    pp(bulletsFired, bullet -> projectileManager.addProjectile(bullet));
+                });
+            }
+        }
     }
 
     public void planeMissinDescriptor(PlaneMissionDescriptor planeMissionDescriptor) {
@@ -147,28 +159,16 @@ public class Plane {
 
     public void update(float tpf) {
         PlaneResponse localResponse;
-        synchronized(this){
-            localResponse = planeResponse;
-        }
+        synchronized(this){ localResponse = planeResponse; }
         velocityMs = localResponse.velocityMs();
         float ratio = 0;
         geom.root().setLocalRotation(localResponse.rotation);
         geom.root().setLocalTranslation(localResponse.translation);
         ratio = FastMath.PI * 2 * (localResponse.velicityKmh() / 900);
-
         geom.airspeedInd().setLocalRotation(new Quaternion().fromAngles(0, 0, ratio));
-        if (!crashed) {
-            Vector3f startLocation = localResponse.translation;
-            Vector3f startVelocity = localResponse.velocity;
-            Quaternion startRotation = localResponse.rotation; 
-            pp(gunGroups,gunGroup -> {
-                List<Bullet> bulletsFired = gunGroup.firing(firing, startLocation, startVelocity, startRotation);
-                pp(bulletsFired, bullet -> projectileManager.addProjectile(bullet));
-            });
-        }
     }
 
-    public void updateSound() {
+    public synchronized void updateSound() {
         if (!crashed) {
             engineSound.play();
             if (firing)gunSound.play(); else  gunSound.stop();
@@ -186,9 +186,7 @@ public class Plane {
      */
     public void setThrottle(float throttle) {
         /* maybe it would be better to normalize instead of throwing an exception*/
-        if (throttle < 0.0f || throttle > 1.0f) {
-            throw new IllegalArgumentException();
-        }
+        if (throttle < 0.0f || throttle > 1.0f) throw new IllegalArgumentException();
         pp(engines,e -> e.setThrottle(throttle));
         engineSound.setPitch(0.5f + throttle);
     }
@@ -219,7 +217,7 @@ public class Plane {
     }
 
     public void setLocation(int x, int z) { 
-        setLocation(x, (int) planeResponse.translation.getY(), z); 
+        setLocation(x, (int) planeResponse.height(), z); 
     }
 
     public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
@@ -242,8 +240,8 @@ public class Plane {
 
     public String velocityKmh() { return toMin3Integer0Fraction(velocityMs * 3.6f);}
     public void firing(boolean trigger) { firing = trigger; }
-    public void crashed(boolean crashed) { this.crashed = crashed; }
-    public boolean crashed() { return crashed; }
+    public synchronized void crashed(boolean crashed) { this.crashed = crashed; }
+    public synchronized boolean crashed() { return crashed; }
     public String getInfo() { return planeResponse.toString();}
     public PlaneGeometry planeGeometry() { return geom; }
     public void fireEffect(ParticleEmitter fireEffect) { this.fireEffect = fireEffect; }
