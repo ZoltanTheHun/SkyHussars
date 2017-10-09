@@ -26,6 +26,8 @@
 package skyhussars.engine.plane;
 
 import static com.jme3.math.FastMath.PI;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import skyhussars.engine.DataManager;
 import skyhussars.engine.ModelManager;
 import skyhussars.engine.physics.Aileron;
@@ -36,7 +38,6 @@ import skyhussars.engine.plane.instruments.BarometricAltimeter;
 import skyhussars.engine.plane.instruments.Instruments;
 import skyhussars.engine.sound.AudioHandler;
 import skyhussars.engine.sound.SoundManager;
-import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -45,7 +46,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import skyhussars.engine.physics.LiftCoefficient;
+import skyhussars.engine.physics.PlanePhysicsImpl;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
+import static skyhussars.utility.Streams.*;
 
 @Component
 public class PlaneFactory {
@@ -80,6 +83,17 @@ public class PlaneFactory {
                         planeDescriptor.getMassGross(),airspeedIndicator);
         plane.fireEffect(dataManager.fireEffect());
         return plane;
+    }
+    
+    public PlanePhysicsImpl createPlane(PlaneDescriptor planeDescriptor){
+        Quaternion rotation = Quaternion.IDENTITY.clone();
+        Vector3f translation = new Vector3f();
+        List<Engine> engines = engines(planeDescriptor.getEngineLocations());
+        pp(engines,e -> {e.setThrottle(1);});
+        return new PlanePhysicsImpl(rotation, translation,planeDescriptor.getMassGross(),
+                engines,
+                airfoils(planeDescriptor.getAirfolDescriptors()));
+
     }
     
     private List<Engine> engines(List<EngineLocation> engineLocations){

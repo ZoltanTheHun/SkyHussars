@@ -30,7 +30,6 @@ import skyhussars.SkyHussars;
 import static skyhussars.planeed.UiHelpers.*;
 import java.io.File;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -45,11 +44,8 @@ import javafx.stage.Stage;
 public class EditorView {
 
     private final FileChooser fileChooser = new FileChooser();
-
-    {
-        fileChooser.setTitle("Open Plane Definition");
-        fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
-    }
+    {fileChooser.setTitle("Open Plane Definition");}
+    {fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
 
     public MenuBar createMenuBar(Stage stage, PlaneEd planeEd) {
         MenuBar menuBar = new MenuBar();
@@ -64,17 +60,13 @@ public class EditorView {
 
     private MenuItem loadMenu(Stage stage, PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
-        loadMenu.setOnAction((ActionEvent t) -> {
-            planeEd.loadPlane(fileChooser.showOpenDialog(stage));
-        });
+        loadMenu.setOnAction(t -> planeEd.loadPlane(fileChooser.showOpenDialog(stage)));
         return loadMenu;
     }
 
     private MenuItem saveMenu(PlaneEd planeEd) {
         MenuItem saveMenu = new MenuItem("Save");
-        saveMenu.setOnAction((ActionEvent t) -> {
-            planeEd.save();
-        });
+        saveMenu.setOnAction(t -> planeEd.save());
         return saveMenu;
     }
 
@@ -85,6 +77,8 @@ public class EditorView {
                 new Label("Mass, Empty: "), numberFieldFor(planeProperties.getMassEmpty())
         );
     }
+    
+    XYChart.Series series = new XYChart.Series();
 
     public LineChart createChart() {
         NumberAxis xAxis = new NumberAxis();
@@ -94,24 +88,33 @@ public class EditorView {
                 = new LineChart<Number, Number>(xAxis, yAxis);
         lineChart.setTitle("Test Chart");
         //defining a series
-        XYChart.Series series = new XYChart.Series();
         series.setName("Test Value");
         //populating the series with data
-        series.getData().add(new XYChart.Data(1, 23));
-        series.getData().add(new XYChart.Data(2, 14));
-        series.getData().add(new XYChart.Data(3, 15));
-        series.getData().add(new XYChart.Data(4, 24));
-        series.getData().add(new XYChart.Data(5, 34));
-        series.getData().add(new XYChart.Data(6, 36));
-        series.getData().add(new XYChart.Data(7, 22));
-        series.getData().add(new XYChart.Data(8, 45));
-        series.getData().add(new XYChart.Data(9, 43));
-        series.getData().add(new XYChart.Data(10, 17));
-        series.getData().add(new XYChart.Data(11, 29));
-        series.getData().add(new XYChart.Data(12, 25));
+        series.getData().add(new XYChart.Data(100, 23));
+        series.getData().add(new XYChart.Data(200, 14));
+        series.getData().add(new XYChart.Data(300, 15));
+        series.getData().add(new XYChart.Data(400, 24));
+        series.getData().add(new XYChart.Data(500, 34));
+        series.getData().add(new XYChart.Data(600, 36));
+        series.getData().add(new XYChart.Data(700, 22));
+        series.getData().add(new XYChart.Data(800, 45));
+        series.getData().add(new XYChart.Data(900, 43));
+        series.getData().add(new XYChart.Data(1000, 17));
+        series.getData().add(new XYChart.Data(1100, 29));
+        series.getData().add(new XYChart.Data(1200, 25));
 
         lineChart.getData().add(series);
         return lineChart;
+    }
+    
+    public EditorView clearChart(){
+        series.getData().clear();
+        return this;
+    }
+    
+    public EditorView addChartElement(float x,float y){
+        series.getData().add(new XYChart.Data(x, y));
+        return this;
     }
 
 }
