@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.plane;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -120,6 +121,7 @@ public class PlaneGeometry {
 
     public Node root() {return root;}
     public Node outside() {return outside;}  
+    public Quaternion rotation(){return root.getLocalRotation();}
     public Vector3f translation(){return root.getLocalTranslation();}
     public Vector3f forwardNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
     public Vector3f upNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}

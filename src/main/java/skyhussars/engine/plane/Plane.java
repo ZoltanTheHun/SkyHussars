@@ -34,7 +34,6 @@ import skyhussars.engine.physics.Engine;
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.engine.plane.instruments.Instruments;
 import skyhussars.engine.sound.AudioHandler;
-import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.effect.ParticleEmitter;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
@@ -224,11 +223,10 @@ public class Plane {
 
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
-        return i * geom.root().getLocalRotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
+        return i * geom.rotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
 
-    public Vector2f getLocation2D() {  return new Vector2f(geom.root().getLocalTranslation().x, geom.root().getLocalTranslation().z); }
-
+    public Vector2f getLocation2D() {  return new Vector2f(geom.translation().x, geom.translation().z); }
     public String velocityKmh() { return toMin3Integer0Fraction(velocityMs * 3.6f);}
     public void firing(boolean trigger) { firing = trigger; }
     public synchronized void crashed(boolean crashed) { this.crashed = crashed; }
