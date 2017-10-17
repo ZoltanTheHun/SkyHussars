@@ -26,6 +26,7 @@
 package skyhussars.engine.physics;
 
 import com.jme3.math.*;
+import static java.util.Objects.requireNonNull;
 
 public final class PlaneResponse {
     public final Quaternion rotation;
@@ -51,15 +52,12 @@ public final class PlaneResponse {
     public PlaneResponse(Quaternion rotation,Vector3f translation,
             Vector3f velocity, float aoa,
             Vector3f angularAcceleration,Vector3f angularVelocity){
-        if(    rotation == null || translation == null
-            || velocity == null || angularAcceleration == null
-            || angularVelocity == null) throw new IllegalArgumentException();
-        this.rotation = rotation;
-        this.translation = translation;
-        this.velocity = velocity;
+        this.rotation = requireNonNull(rotation);
+        this.translation = requireNonNull(translation);
+        this.velocity = requireNonNull(velocity);
         this.aoa = aoa;
-        this.angularAcceleration = angularAcceleration;
-        this.angularVelocity = angularVelocity;
+        this.angularAcceleration = requireNonNull(angularAcceleration);
+        this.angularVelocity = requireNonNull(angularVelocity);
     }
         
     @Override

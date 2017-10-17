@@ -30,6 +30,7 @@ import com.jme3.math.*;
 import static com.jme3.math.Vector3f.*;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
 import java.util.*;
+import static java.util.Objects.requireNonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static skyhussars.utility.Streams.*;
@@ -50,10 +51,11 @@ public class PlanePhysicsImpl implements PlanePhysics {
     public PlanePhysicsImpl(float mass,
                             List<Engine> engines, 
                             List<Airfoil> airfoils,CylinderTensor tensor) {
+        requireNonNull(tensor);
         this.mass = mass;
         momentOfInertiaTensor = tensor.calculate(mass);
-        this.airfoils = airfoils;
-        this.engines = engines;
+        this.airfoils = requireNonNull(airfoils);
+        this.engines = requireNonNull(engines);
     }
            
     /* Other calculations */
