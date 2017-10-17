@@ -48,6 +48,7 @@ import static java.util.Collections.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import skyhussars.engine.physics.CylinderTensor;
+import skyhussars.engine.physics.PlanePhysics;
 import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 import skyhussars.engine.weapons.Bullet;
@@ -60,7 +61,7 @@ public class Plane {
 
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
-    private final PlanePhysicsImpl physics;
+    private final PlanePhysics physics;
     private final AudioHandler engineSound;
     private final AudioHandler gunSound;
     private final List<GunGroup> gunGroups;
@@ -97,8 +98,8 @@ public class Plane {
 
     public Plane(List<Airfoil> airfoils,
             AudioHandler engineSound, AudioHandler gunSound,PlaneGeometry planeGeometry,
-            Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups, float grossMass
-            , AnalogueAirspeedIndicator airspeedIndicator) {
+            Instruments instruments, List<Engine> engines, List<GunGroup> gunGroups
+            , AnalogueAirspeedIndicator airspeedIndicator, PlanePhysics physics) {
         this.engineSound = engineSound;
         engineSound.audioNode().setLocalTranslation(0, 0, - 5);
         this.gunSound = gunSound;
@@ -107,13 +108,7 @@ public class Plane {
         geom.attachSpatialToRootNode(gunSound.audioNode());
         this.gunGroups = gunGroups;
         sortoutAirfoils(airfoils);
-        
-        Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
-
-        Vector3f translation = geom.root().getLocalTranslation();
-        final float length = 10.49f;
-        final float rPlane = 1.3f;
-        this.physics = new PlanePhysicsImpl(grossMass, engines, airfoils,new CylinderTensor(rPlane, length));
+        this.physics = physics;
         float kmh = 300f;
         
         Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);

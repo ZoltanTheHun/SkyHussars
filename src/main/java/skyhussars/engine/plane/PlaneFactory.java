@@ -73,15 +73,21 @@ public class PlaneFactory {
         Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
         AnalogueAirspeedIndicator airspeedIndicator = new AnalogueAirspeedIndicator(0, 900, PI * 2f);
+        final float length = 10.49f;
+        final float rPlane = 1.3f;
+        List<Airfoil> airfoils = airfoils(planeDescriptor.getAirfolDescriptors());
+        List<Engine> engines = engines(planeDescriptor.getEngineLocations());
+        float mass = planeDescriptor.getMassGross();
         Plane plane = new Plane(
-                        airfoils(planeDescriptor.getAirfolDescriptors()),
+                        airfoils,
                         engineSound,
                         gunSound,
                         planeGeometry(airspeedIndicator),
                         instruments,
-                        engines(planeDescriptor.getEngineLocations()),
+                        engines,
                         gunGroups(planeDescriptor.getGunGroupDescriptors()),
-                        planeDescriptor.getMassGross(),airspeedIndicator);
+                        airspeedIndicator,
+                        new PlanePhysicsImpl(mass,engines, airfoils,new CylinderTensor(rPlane, length)));
         plane.fireEffect(dataManager.fireEffect());
         return plane;
     }
