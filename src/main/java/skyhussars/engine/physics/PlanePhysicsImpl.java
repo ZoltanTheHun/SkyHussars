@@ -31,14 +31,9 @@ import static com.jme3.math.Vector3f.*;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
 import java.util.*;
 import static java.util.Objects.requireNonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import static skyhussars.utility.Streams.*;
 
-
 public class PlanePhysicsImpl implements PlanePhysics {
-
-    private final static Logger logger = LoggerFactory.getLogger(PlanePhysicsImpl.class);
 
     private final float planeFactor = 0.2566f; // cross section and drag coeff together
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
