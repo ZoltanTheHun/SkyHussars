@@ -86,7 +86,7 @@ public class EditorView {
         xAxis.setLabel("Test Axis");
         final LineChart<Number, Number> lineChart
                 = new LineChart<Number, Number>(xAxis, yAxis);
-        lineChart.setTitle("Test Chart");
+        lineChart.setTitle("Level flight simulation");
         //defining a series
         series.setName("Test Value");
         //populating the series with data

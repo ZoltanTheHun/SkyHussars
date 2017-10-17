@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import static java.util.Collections.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import skyhussars.engine.physics.CylinderTensor;
 import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 import skyhussars.engine.weapons.Bullet;
@@ -110,7 +111,9 @@ public class Plane {
         Quaternion rotation = Quaternion.IDENTITY.clone();//geom.root() .getLocalRotation(); 
 
         Vector3f translation = geom.root().getLocalTranslation();
-        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils);
+        final float length = 10.49f;
+        final float rPlane = 1.3f;
+        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils,new CylinderTensor(rPlane, length));
         float kmh = 300f;
         
         Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);
@@ -215,17 +218,16 @@ public class Plane {
     public synchronized void setLocation(Vector3f translation) {
         planeResponse = planeResponse.translation(translation);
     }
-
-    public synchronized float getHeight() {return planeResponse.height();}
-    public Vector3f getLocation() { return geom.translation();}
-    public Vector3f forward() {return geom.forwardNormal();}
-    public Vector3f up() {return geom.upNormal();}
-
+    
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
         return i * geom.rotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
-
+    
+    public synchronized float getHeight() {return planeResponse.height();}
+    public Vector3f getLocation() { return geom.translation();}
+    public Vector3f forward() {return geom.forwardNormal();}
+    public Vector3f up() {return geom.upNormal();}
     public Vector2f getLocation2D() {  return new Vector2f(geom.translation().x, geom.translation().z); }
     public String velocityKmh() { return toMin3Integer0Fraction(velocityMs * 3.6f);}
     public void firing(boolean trigger) { firing = trigger; }

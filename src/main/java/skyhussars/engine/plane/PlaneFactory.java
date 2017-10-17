@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.engine.physics.CylinderTensor;
 import skyhussars.engine.physics.LiftCoefficient;
 import skyhussars.engine.physics.PlanePhysicsImpl;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
@@ -90,9 +91,12 @@ public class PlaneFactory {
         Vector3f translation = new Vector3f();
         List<Engine> engines = engines(planeDescriptor.getEngineLocations());
         pp(engines,e -> {e.setThrottle(1);});
+        final float length = 10.49f;
+        final float rPlane = 1.3f;
+        
         return new PlanePhysicsImpl(rotation, translation,planeDescriptor.getMassGross(),
                 engines,
-                airfoils(planeDescriptor.getAirfolDescriptors()));
+                airfoils(planeDescriptor.getAirfolDescriptors()),new CylinderTensor(rPlane, length));
 
     }
     

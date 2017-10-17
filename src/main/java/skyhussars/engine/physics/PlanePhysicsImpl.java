@@ -42,8 +42,6 @@ public class PlanePhysicsImpl implements PlanePhysics {
     private final float planeFactor = 0.2566f; // cross section and drag coeff together
     private final float mass; //actually the loaded weight is  57380N, the empty weight is 38190N
     
-    private final float length = 10.49f;
-    private final float rPlane = 1.3f;
     private final Matrix3f momentOfInertiaTensor;
         
     private List<Airfoil> airfoils = new ArrayList<>();
@@ -53,11 +51,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
                             Vector3f translation,
                             float mass,
                             List<Engine> engines, 
-                            List<Airfoil> airfoils) {
+                            List<Airfoil> airfoils,CylinderTensor tensor) {
         this.mass = mass;
-        momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
-                0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
-                0f, 0f, (mass / 2) * (rPlane * rPlane));
+        momentOfInertiaTensor = tensor.calculate(mass);
         this.airfoils = airfoils;
         this.engines = engines;
     }

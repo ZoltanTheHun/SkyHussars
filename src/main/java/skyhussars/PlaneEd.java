@@ -56,10 +56,10 @@ public class PlaneEd extends Application {
     private PlaneEdState state = new PlaneEdState();
     private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
     private File openFile;
-    private AirfoilTable airfoilTable = new AirfoilTable();
+    private final AirfoilTable airfoilTable = new AirfoilTable();
     private PlanePhysicsImpl planePhysics;
-    private Environment env = new Environment(10, new AtmosphereImpl());
-    private List<Float> heights = new LinkedList<>();
+    private final Environment env = new Environment(10, new AtmosphereImpl());
+    private final List<Float> heights = new LinkedList<>();
     private EditorView ev = new EditorView();
     
     @Override
