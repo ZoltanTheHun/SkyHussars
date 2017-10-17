@@ -113,7 +113,7 @@ public class Plane {
         Vector3f translation = geom.root().getLocalTranslation();
         final float length = 10.49f;
         final float rPlane = 1.3f;
-        this.physics = new PlanePhysicsImpl(rotation, translation,grossMass, engines, airfoils,new CylinderTensor(rPlane, length));
+        this.physics = new PlanePhysicsImpl(grossMass, engines, airfoils,new CylinderTensor(rPlane, length));
         float kmh = 300f;
         
         Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);

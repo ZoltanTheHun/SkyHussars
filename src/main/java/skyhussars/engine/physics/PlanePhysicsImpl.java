@@ -44,12 +44,10 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     private final Matrix3f momentOfInertiaTensor;
         
-    private List<Airfoil> airfoils = new ArrayList<>();
-    private List<Engine> engines = new ArrayList<>();
+    private final List<Airfoil> airfoils;
+    private final List<Engine> engines;
 
-    public PlanePhysicsImpl(Quaternion rotation,
-                            Vector3f translation,
-                            float mass,
+    public PlanePhysicsImpl(float mass,
                             List<Engine> engines, 
                             List<Airfoil> airfoils,CylinderTensor tensor) {
         this.mass = mass;

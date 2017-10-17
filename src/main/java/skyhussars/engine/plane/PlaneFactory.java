@@ -87,15 +87,12 @@ public class PlaneFactory {
     }
     
     public PlanePhysicsImpl createPlane(PlaneDescriptor planeDescriptor){
-        Quaternion rotation = Quaternion.IDENTITY.clone();
-        Vector3f translation = new Vector3f();
         List<Engine> engines = engines(planeDescriptor.getEngineLocations());
         pp(engines,e -> {e.setThrottle(1);});
         final float length = 10.49f;
         final float rPlane = 1.3f;
         
-        return new PlanePhysicsImpl(rotation, translation,planeDescriptor.getMassGross(),
-                engines,
+        return new PlanePhysicsImpl(planeDescriptor.getMassGross(),engines,
                 airfoils(planeDescriptor.getAirfolDescriptors()),new CylinderTensor(rPlane, length));
 
     }
