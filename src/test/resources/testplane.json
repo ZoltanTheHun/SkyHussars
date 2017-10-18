@@ -1,0 +1,129 @@
+{
+  "name" : "Lockheed P-80A-1-LO Shooting Star",
+  "engineLocations" : [ {
+    "engineDescriptor" : {
+      "name" : "Allison J33-A-9",
+      "thrustMax" : 17125
+    },
+    "location" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    }
+  } ],
+  "massEmpty" : 3593.0,
+  "massTakeOffMax" : 6350.0,
+  "massGross" : 5307.0,
+  "internalTank" : 1609.0,
+  "airfolDescriptors" : [ {
+    "name" : "WingLeft",
+    "cog" : {
+      "x" : -2.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "LEFT"
+  }, {
+    "name" : "WingOuterLeft",
+    "cog" : {
+      "x" : -4.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "LEFT"
+  }, {
+    "name" : "WingRight",
+    "cog" : {
+      "x" : 2.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "RIGHT"
+  }, {
+    "name" : "WingOuterRight",
+    "cog" : {
+      "x" : 4.0,
+      "y" : 0.0,
+      "z" : -0.2
+    },
+    "wingArea" : 5.5175,
+    "incidence" : 1.0,
+    "aspectRatio" : 6.37,
+    "damper" : true,
+    "dehidralDegree" : 0.0,
+    "direction" : "RIGHT"
+  }, {
+    "name" : "HorizontalStabilizer",
+    "cog" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -6.0
+    },
+    "wingArea" : 5.0,
+    "incidence" : -3.0,
+    "aspectRatio" : 4.2466664,
+    "damper" : false,
+    "dehidralDegree" : 0.0,
+    "direction" : "HORIZONTAL_STABILIZER"
+  }, {
+    "name" : "VerticalStabilizer",
+    "cog" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -6.0
+    },
+    "wingArea" : 5.0,
+    "incidence" : 0.0,
+    "aspectRatio" : 4.2466664,
+    "damper" : false,
+    "dehidralDegree" : 90.0,
+    "direction" : "VERTICAL_STABILIZER"
+  } ],
+  "gunGroupDescriptors" : [ {
+    "name" : "6x .50 M3 Browning",
+    "gunLocations" : [ {
+      "gunDescriptor" : {
+        "name" : ".50 M3 Browning",
+        "rateOfFire" : 20.0,
+        "bulletDescriptor" : null,
+        "muzzleVelocity" : 890.0,
+        "spread" : 0.5
+      },
+      "roundsMax" : 300,
+      "location" : {
+        "x" : 0.5,
+        "y" : 0.0,
+        "z" : 2.0
+      }
+    }, {
+      "gunDescriptor" : {
+        "name" : ".50 M3 Browning",
+        "rateOfFire" : 20.0,
+        "bulletDescriptor" : null,
+        "muzzleVelocity" : 890.0,
+        "spread" : 0.5
+      },
+      "roundsMax" : 300,
+      "location" : {
+        "x" : -0.5,
+        "y" : 0.0,
+        "z" : 2.0
+      }
+    } ]
+  } ]
+}

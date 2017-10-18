@@ -25,7 +25,6 @@
  */
 package skyhussars;
 
-import com.jme3.math.Vector3f;
 import skyhussars.engine.loader.PlaneDescriptorMarshal;
 import skyhussars.engine.plane.PlaneDescriptor;
 import skyhussars.planeed.EditorView;
@@ -71,7 +70,10 @@ public class PlaneEd extends Application {
         root.getChildren().add(ev.items(planeProperties));
         root.getChildren().add(airfoilTable.wingTable());
         root.getChildren().add(ev.createChart());
-        stage.setScene(new Scene(root, 500, 400));
+        Scene scene = new Scene(root, 500, 400);
+        scene.getStylesheets().add("editor/editor.css");
+        stage.setScene(scene);
+        
         stage.show();
     }
 
@@ -83,7 +85,7 @@ public class PlaneEd extends Application {
         ev.clearChart();
         ev.addChartElement(0, rsp.height());
         heights.add(rsp.height());
-        for(int i = 0;i< 18000;i++){
+        for(int i = 0;i< /*18000*/6000;i++){
             rsp = planePhysics.update(1f/60f, env, rsp); 
             
             if(i%60 == 0/* i>6240 && i< 6360*/) {
