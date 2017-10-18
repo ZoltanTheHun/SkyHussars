@@ -98,10 +98,7 @@ public class MissionState implements GameState {
         if (timer == null) {
             timer = new Timer(true);
             timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    worldThread.run();
-                }
+                @Override public void run() { worldThread.run(); }
             }, 0, 1000 / ticks);  // 16 = 60 tick, 50 = 20 tick
         }
     }

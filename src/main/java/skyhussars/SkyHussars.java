@@ -99,7 +99,5 @@ public class SkyHussars extends SimpleApplication {
     }
 
     @Override
-    public void simpleUpdate(float tpf) {
-        if((gameState = gameState.update(tpf)) == null) this.stop();
-    }
+    public void simpleUpdate(float tpf) {if((gameState = gameState.update(tpf)) == null) this.stop();}
 }
