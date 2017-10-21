@@ -100,7 +100,7 @@ public class SymmetricAirfoil implements Airfoil {
         float yaw = 0;
         if(damper) roll = dampDir * vAngularVelocity.z * dampCf;
         switch(direction){
-            case HORIZONTAL_STABILIZER : pitch = vAngularVelocity.x * 1f ; break;
+            case HORIZONTAL_STABILIZER : pitch = vAngularVelocity.x * 2f ; break;
             case VERTICAL_STABILIZER : yaw = vAngularVelocity.y * 1f; break;
         }
         float[] angles = new float[]{roll,-yaw,-pitch};
