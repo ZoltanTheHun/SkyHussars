@@ -113,6 +113,9 @@ public class Plane {
         this.airspeedIndicator = airspeedIndicator;
     }
     
+    private synchronized PlaneResponse planeResponse(){return planeResponse;}
+    private synchronized Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
+    
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
         ailerons.addAll(airfoils.stream() 
                 .filter(af -> af.direction().equals(ControlDir.LEFT) || af.direction().equals(ControlDir.RIGHT))
@@ -129,7 +132,7 @@ public class Plane {
         return this;
     }
     
-    public synchronized float aoa(){ return planeResponse.aoa; }
+    public float aoa(){ return planeResponse().aoa; }
     public BoundingVolume getHitBox() { return geom.root().getWorldBound(); }
 
     public void hit() {
@@ -195,26 +198,18 @@ public class Plane {
         verticalStabilizers.forEach(s -> s.controlAileron(rudder));
     }
 
-    public synchronized void setHeight(int height) {
-        planeResponse = planeResponse.height(height);
-    }
-
-    public synchronized void setLocation(int x, int z) { 
-        setLocation(x, (int) planeResponse.height(), z); 
-    }
-
+    public void setHeight(int height) {planeResponse(planeResponse().height(height));}
+    public void setLocation(int x, int z) {setLocation(x, (int) planeResponse().height(), z);}
     public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
 
-    public synchronized void setLocation(Vector3f translation) {
-        planeResponse = planeResponse.translation(translation);
-    }
+    public synchronized void setLocation(Vector3f translation) {planeResponse(planeResponse().translation(translation));}
     
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
         return i * geom.rotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
     
-    public synchronized float getHeight() {return planeResponse.height();}
+    public float getHeight() {return planeResponse().height();}
     public Vector3f getLocation() { return geom.translation();}
     public Vector3f forward() {return geom.forwardNormal();}
     public Vector3f up() {return geom.upNormal();}
