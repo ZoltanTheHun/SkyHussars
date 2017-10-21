@@ -122,6 +122,8 @@ public class PlaneGeometry {
     public Node root() {return root;}
     public Node outside() {return outside;}  
     public Quaternion rotation(){return root.getLocalRotation();}
+    public PlaneGeometry rotation(Quaternion rotation){root.setLocalRotation(rotation); return this;}
+    public PlaneGeometry translation(Vector3f translation){root.setLocalTranslation(translation); return this;}
     public Vector3f translation(){return root.getLocalTranslation();}
     public Vector3f forwardNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Z).normalize();}
     public Vector3f upNormal(){return root.getLocalRotation().mult(Vector3f.UNIT_Y).normalize();}

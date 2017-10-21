@@ -58,7 +58,7 @@ public class SymmetricAirfoilTest {
     public void tearDown() {
     }
     
-    private LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
+    private final LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
 
     @Test
     public void symmetricAirfoilTest(){
@@ -127,7 +127,7 @@ public class SymmetricAirfoilTest {
     private final float rPlane = 1.3f;
     private final float airDensity = 1.24f;
     private float length = length = 10.49f;
-    private Matrix3f  momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
+    private final Matrix3f  momentOfInertiaTensor = new Matrix3f((mass / 12) * (3 * rPlane * rPlane + length * length), 0f, 0f,
                 0f, (mass / 12) * (3 * rPlane * rPlane + length * length), 0f,
                 0f, 0f, (mass / 2) * (rPlane * rPlane));
     @Test
@@ -170,8 +170,8 @@ public class SymmetricAirfoilTest {
     }
         
     private void compare(Vector3f v1, Vector3f v2){
-        assertEquals(v1.x, v2.x, 0.02f);
-        assertEquals(v1.y, v2.y, 0.02f);
+        assertEquals(v1.x, v2.x, 0.01f);
+        assertEquals(v1.y, v2.y, 0.01f);
         assertEquals(v1.z, v2.z, 0.01f);
     }
 }

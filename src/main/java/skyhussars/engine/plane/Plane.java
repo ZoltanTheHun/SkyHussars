@@ -136,9 +136,7 @@ public class Plane {
         if (!shotdown) {
             geom.attachSpatialToRootNode(fireEffect);
             fireEffect.emitAllParticles();
-            for (Engine engine : engines) {
-                engine.damage(1.0f);
-            }
+            for (Engine engine : engines) {engine.damage(1.0f);}
         }
         shotdown = true;
     }
@@ -147,8 +145,8 @@ public class Plane {
         PlaneResponse localResponse;
         synchronized(this){ localResponse = planeResponse; }
         velocityMs = localResponse.velocityMs();
-        geom.root().setLocalRotation(localResponse.rotation);
-        geom.root().setLocalTranslation(localResponse.translation);
+        geom.translation(localResponse.translation)
+            .rotation(localResponse.rotation);
         airspeedIndicator.update(localResponse);
         geom.update();
     }

@@ -66,15 +66,13 @@ public class WorldThread extends TimerTask {
 
     private final AtomicLong cycle = new AtomicLong(0);
 
-    public long cycle() {
-        return cycle.get();
-    }
+    public long cycle() {return cycle.get();}
 
     @Override
-    public void run() {
+    public void run() {     
+        pp(aiPilots,aiPilot -> aiPilot.update(world));
         List<Bullet> bullets = flatList(pm(planes,plane -> plane.tick(tick, environment)));
         projectileManager.addProjectiles(bullets);
-        pp(aiPilots,airPilot -> airPilot.update(world));
         cycle.incrementAndGet();
     }
 
