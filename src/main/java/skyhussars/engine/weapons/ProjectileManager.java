@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.pp;
 import static skyhussars.utility.Streams.sp;
 
 @Component
@@ -74,7 +75,7 @@ public class ProjectileManager {
         newProjectiles.clear();
         
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
-        projectiles.parallelStream().forEach(projectile -> projectile.update(tpf));
+        pp(projectiles,projectile -> projectile.update(tpf));
         Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
             Projectile projectile = it.next();

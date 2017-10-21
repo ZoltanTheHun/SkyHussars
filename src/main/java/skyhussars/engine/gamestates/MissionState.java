@@ -40,14 +40,12 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import skyhussars.engine.physics.PlaneResponse;
 import static skyhussars.utility.Streams.pf;
 
 public class MissionState implements GameState {
 
-    private Pilot player;
+    private final Pilot player;
     private final CameraManager cameraManager;
     private final TerrainManager terrainManager;
     private final DayLightWeatherManager dayLightWeatherManager;
@@ -57,7 +55,6 @@ public class MissionState implements GameState {
     private final List<Plane> planes;
     private List<Pilot> pilots;
     private final SoundManager soundManager;
-    private final static Logger logger = LoggerFactory.getLogger(MissionState.class);
     private final WorldThread worldThread;
     private Timer timer;
     private GameState nextState = this;
@@ -84,16 +81,12 @@ public class MissionState implements GameState {
     private final int ticks = 30;
     private int cycles = 0;
 
-    public Pilot player() {
-        return player;
-    }
+    public Pilot player() { return player; }
 
     /**
      * This method is used to initialize a scene
      */
-    public void initializeScene() {
-        initPlayer();
-    }
+    public void initializeScene() { initPlayer();}
 
     private void startWorldThread() {
         if (timer == null) {
@@ -105,16 +98,11 @@ public class MissionState implements GameState {
     }
 
     private void stopWorldThread() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
+        if (timer != null) { timer.cancel(); timer = null; }
     }
 
     private void initiliazePlayer() {
-        Plane plane = player.plane();
         initPlayer();
-
     }
 
     private TextRenderer speedoMeterUI;
