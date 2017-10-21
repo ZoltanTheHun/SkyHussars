@@ -105,16 +105,12 @@ public class Plane {
         geom.attachSpatialToRootNode(gunSound.audioNode());
         this.gunGroups = gunGroups;
         sortoutAirfoils(airfoils);
-        this.physics = physics;
-        float kmh = 300f;
-        
-        Vector3f velocity =  planeResponse.forwardNorm().mult(kmh / 3.6f);
-        this.planeResponse = planeResponse.velocity(velocity);
+        this.physics = physics;        
         this.airspeedIndicator = airspeedIndicator;
     }
-    
+        
     private synchronized PlaneResponse planeResponse(){return planeResponse;}
-    private synchronized Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
+    public synchronized Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
     
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
         ailerons.addAll(airfoils.stream() 
@@ -198,9 +194,9 @@ public class Plane {
         verticalStabilizers.forEach(s -> s.controlAileron(rudder));
     }
 
-    public void setHeight(int height) {planeResponse(planeResponse().height(height));}
-    public void setLocation(int x, int z) {setLocation(x, (int) planeResponse().height(), z);}
-    public void setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); }
+    public Plane setHeight(int height) {planeResponse(planeResponse().height(height));return this;}
+    public Plane setLocation(int x, int z) {setLocation(x, (int) planeResponse().height(), z);return this;}
+    public Plane setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); return this;}
 
     public synchronized void setLocation(Vector3f translation) {planeResponse(planeResponse().translation(translation));}
     
@@ -216,7 +212,7 @@ public class Plane {
     public Vector2f getLocation2D() {  return new Vector2f(geom.translation().x, geom.translation().z); }
     public String velocityKmh() { return toMin3Integer0Fraction(velocityMs * 3.6f);}
     public void firing(boolean trigger) { firing = trigger; }
-    public synchronized void crashed(boolean crashed) { this.crashed = crashed; }
+    public synchronized Plane crashed(boolean crashed) { this.crashed = crashed; return this;}
     public synchronized boolean crashed() { return crashed; }
     public String getInfo() { return planeResponse.toString();}
     public PlaneGeometry planeGeometry() { return geom; }

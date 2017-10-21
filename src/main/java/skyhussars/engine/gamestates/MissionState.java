@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.gamestates;
 
+import com.jme3.math.Vector3f;
 import skyhussars.engine.Sky;
 import skyhussars.engine.DayLightWeatherManager;
 import skyhussars.engine.Pilot;
@@ -41,6 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skyhussars.engine.physics.PlaneResponse;
 import static skyhussars.utility.Streams.pf;
 
 public class MissionState implements GameState {
@@ -90,8 +92,7 @@ public class MissionState implements GameState {
      * This method is used to initialize a scene
      */
     public void initializeScene() {
-        initiliazePlayer();
-        ended = false;
+        initPlayer();
     }
 
     private void startWorldThread() {
@@ -112,26 +113,18 @@ public class MissionState implements GameState {
 
     private void initiliazePlayer() {
         Plane plane = player.plane();
-        cameraManager.disableCameraRotation(false);
-        cameraManager.moveCameraTo(plane.getLocation());
-        cameraManager.followWithCamera(plane.planeGeometry());
+        initPlayer();
+
     }
 
     private TextRenderer speedoMeterUI;
     private TextRenderer altimeterUI;
     private TextRenderer aoaUI;
 
-    public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) {
-        this.speedoMeterUI = speedoMeterUI;
-    }
-
-    public synchronized void altimeterUI(TextRenderer altimeterUI) {
-        this.altimeterUI = altimeterUI;
-    }
-
-    public synchronized void aoaUI(TextRenderer aoaUI){
-        this.aoaUI = aoaUI;
-    }
+    public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) { this.speedoMeterUI = speedoMeterUI;}
+    public synchronized void altimeterUI(TextRenderer altimeterUI) { this.altimeterUI = altimeterUI;}
+    public synchronized void aoaUI(TextRenderer aoaUI){ this.aoaUI = aoaUI;}
+    
     @Override
     public synchronized GameState update(float tpf) {
         if(nextState == null) initialize();
@@ -207,12 +200,19 @@ public class MissionState implements GameState {
         return paused;
     }
 
-    public void reinitPlayer() {
-        player.plane().setLocation(0, 0);
-        player.plane().setHeight(3000);
-        player.plane().crashed(false);
-        initiliazePlayer();
+    public void initPlayer() {
+        float kmh = 300f;
+        PlaneResponse pr  =  new PlaneResponse();
+        Vector3f velocity = pr.forwardNorm().mult(kmh / 3.6f);
+        pr = pr.velocity(velocity);
+        Plane plane = player.plane().planeResponse(pr)
+                                    .setLocation(0, 0)
+                                    .setHeight(3000)
+                                    .crashed(false);
         ended = false;
+        cameraManager.disableCameraRotation(false);
+        cameraManager.moveCameraTo(plane.getLocation());
+        cameraManager.followWithCamera(plane.planeGeometry());
     }
 
 }
