@@ -29,6 +29,8 @@ import skyhussars.PlaneEd;
 import skyhussars.SkyHussars;
 import static skyhussars.planeed.UiHelpers.*;
 import java.io.File;
+import java.util.Collection;
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -40,6 +42,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import static skyhussars.utility.Streams.list;
+import static skyhussars.utility.Streams.pm;
 
 public class EditorView {
 
@@ -77,21 +81,20 @@ public class EditorView {
                 new Label("Mass, Empty: "), numberFieldFor(planeProperties.getMassEmpty())
         );
     }
-    
-    XYChart.Series series = new XYChart.Series();
 
-    public LineChart createChart() {
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Test Axis");
-        final LineChart<Number, Number> lineChart
+    NumberAxis xAxis = new NumberAxis();
+    NumberAxis yAxis = new NumberAxis();
+    final LineChart<Number, Number> lineChart
                 = new LineChart<>(xAxis, yAxis);
+    
+    public LineChart createChart() {
+        xAxis.setLabel("Test Axis");
         lineChart.setTitle("Level flight simulation");
         lineChart.setCreateSymbols(false);
         //defining a series
-        series.setName("Test Value");
+      // series.setName("Test Value");
         //populating the series with data
-        series.getData().add(new XYChart.Data(100, 23));
+       /* series.getData().add(new XYChart.Data(100, 23));
         series.getData().add(new XYChart.Data(200, 14));
         series.getData().add(new XYChart.Data(300, 15));
         series.getData().add(new XYChart.Data(400, 24));
@@ -103,18 +106,25 @@ public class EditorView {
         series.getData().add(new XYChart.Data(1000, 17));
         series.getData().add(new XYChart.Data(1100, 29));
         series.getData().add(new XYChart.Data(1200, 25));
-
-        lineChart.getData().add(series);
+*/
+       // lineChart.getData().add(series);
         return lineChart;
     }
     
     public EditorView clearChart(){
-        series.getData().clear();
+        lineChart.getData().clear();
         return this;
     }
     
     public EditorView addChartElement(float x,float y){
-        series.getData().add(new XYChart.Data(x, y));
+        //series.getData().add(new XYChart.Data(x, y));
+        return this;
+    }
+    
+    public EditorView chart(String name,List<Float> data){
+        XYChart.Series series = new XYChart.Series();
+        for(int i=0; i<data.size();i++) series.getData().add(new XYChart.Data(i, data.get(i)));
+        lineChart.getData().add(series);
         return this;
     }
 

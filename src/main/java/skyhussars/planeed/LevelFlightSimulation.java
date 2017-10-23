@@ -42,7 +42,7 @@ public class LevelFlightSimulation {
         this.environment = requireNonNull(environment);
     }
     
-    public List<PlaneResponse> simulate(float tickrate,int iterations,float sampling,PlaneResponse initial){
+    public List<PlaneResponse> simulate(float tickrate,int iterations,int sampling,PlaneResponse initial){
         ArrayList<PlaneResponse> rsps = new ArrayList((int) (iterations/sampling)+1);
         rsps.add(initial);
         PlaneResponse simulated = initial;

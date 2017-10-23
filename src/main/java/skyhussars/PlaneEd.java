@@ -44,6 +44,8 @@ import skyhussars.engine.physics.environment.AtmosphereImpl;
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.engine.plane.PlaneFactory;
 import skyhussars.planeed.LevelFlightSimulation;
+import static skyhussars.utility.Streams.list;
+import static skyhussars.utility.Streams.pm;
 
 public class PlaneEd extends Application {
 
@@ -86,7 +88,9 @@ public class PlaneEd extends Application {
         int iterations = 6000;
         int sampling = 60;
         List<PlaneResponse> rsps = new LevelFlightSimulation(planePhysics,env).simulate(tickrate, iterations, sampling, initial);
-        for(int i=0; i<rsps.size();i++) ev.addChartElement(i, rsps.get(i).height());
+        ev.chart("Height",list(pm(rsps,PlaneResponse::height)));
+        ev.chart("AOA",list(pm(rsps,r -> r.aoa)));
+        //for(int i=0; i<rsps.size();i++) ev.addChartElement(i, rsps.get(i).height());
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
