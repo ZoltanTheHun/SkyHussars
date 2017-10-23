@@ -75,6 +75,10 @@ public final class PlaneResponse {
         return new PlaneResponse(rotation,translation, 
                 velocity,aoa,angularAcceleration,angularVelocity);
     }
+    public PlaneResponse velocity(float velocity){
+        return new PlaneResponse(rotation,translation, 
+                forwardNorm().mult(velocity),aoa,angularAcceleration,angularVelocity);
+    }
     
     public PlaneResponse height(float height){
         return new PlaneResponse(rotation,translation.setY(height),

@@ -43,6 +43,7 @@ import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.physics.environment.AtmosphereImpl;
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.engine.plane.PlaneFactory;
+import skyhussars.planeed.LevelFlightSimulation;
 
 public class PlaneEd extends Application {
 
@@ -58,7 +59,6 @@ public class PlaneEd extends Application {
     private final AirfoilTable airfoilTable = new AirfoilTable();
     private PlanePhysicsImpl planePhysics;
     private final Environment env = new Environment(10, new AtmosphereImpl());
-    private final List<Float> heights = new LinkedList<>();
     private EditorView ev = new EditorView();
     
     @Override
@@ -80,27 +80,13 @@ public class PlaneEd extends Application {
     public void loadPlane(File file) {
         state = state.planeDescriptor(pdl.unmarshal(file)).openFile(file);
         planePhysics = new PlaneFactory().createPlane(state.planeDescriptor().get());
-        PlaneResponse rsp = new PlaneResponse();
-        rsp = rsp.velocity(rsp.forwardNorm().mult(300)).height(1000);
         ev.clearChart();
-        ev.addChartElement(0, rsp.height());
-        heights.add(rsp.height());
-        for(int i = 0;i< /*18000*/6000;i++){
-            rsp = planePhysics.update(1f/60f, env, rsp); 
-            
-            if(i%60 == 0/* i>6240 && i< 6360*/) {
-               // System.out.println(rsp.toString());
-                /*6240 : Velocity: 1327.6056, aoa: 2.6079698, height: 2255.194
-6300 : Velocity: 1376.2584, aoa: 3.086545, height: 1916.9574
-6360 : Velocity: 1409.0471, aoa: 50.701897, height: 1641.993*/
-                System.out.println(i + " : Velocity: " + rsp.velicityKmh() 
-                + ", aoa: " + rsp.aoa
-                + ", height: " + rsp.height());
-                ev.addChartElement(i/60, rsp.height());
-            }
-        }
-
-        heights.add(rsp.height());
+        PlaneResponse initial = new PlaneResponse().velocity(300).height(1000);
+        float tickrate = 1f/60f;
+        int iterations = 6000;
+        int sampling = 60;
+        List<PlaneResponse> rsps = new LevelFlightSimulation(planePhysics,env).simulate(tickrate, iterations, sampling, initial);
+        for(int i=0; i<rsps.size();i++) ev.addChartElement(i, rsps.get(i).height());
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));

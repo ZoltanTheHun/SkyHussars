@@ -74,7 +74,7 @@
       "y" : 0.0,
       "z" : -6.0
     },
-    "wingArea" : 5.0,
+    "wingArea" : 2.5,
     "incidence" : -3.0,
     "aspectRatio" : 4.2466664,
     "damper" : false,
