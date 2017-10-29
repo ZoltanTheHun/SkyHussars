@@ -68,12 +68,12 @@ public class Plane {
     private boolean shotdown = false;
     private ParticleEmitter fireEffect;
     private final PlaneGeometry geom;
-    private PlaneResponse planeResponse = new PlaneResponse();
+    private volatile PlaneResponse planeResponse = new PlaneResponse();
     private final AnalogueAirspeedIndicator airspeedIndicator;
 
     public List<Bullet> tick(float tick, Environment environment) {
         PlaneResponse localResponse = physics.update(tick, environment,planeResponse);
-        synchronized(this){ planeResponse = localResponse;}
+        planeResponse = localResponse;
         return !crashed ? flatList(pm(gunGroups,gunGroup -> gunGroup.firing(firing, localResponse))) : emptyList();
     }
 
@@ -109,8 +109,8 @@ public class Plane {
         this.airspeedIndicator = airspeedIndicator;
     }
         
-    private synchronized PlaneResponse planeResponse(){return planeResponse;}
-    public synchronized Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
+    private PlaneResponse planeResponse(){return planeResponse;}
+    public Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
     
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
         ailerons.addAll(airfoils.stream() 
@@ -128,7 +128,7 @@ public class Plane {
         return this;
     }
     
-    public float aoa(){ return planeResponse().aoa; }
+    public float aoa(){ return planeResponse.aoa; }
     public BoundingVolume getHitBox() { return geom.root().getWorldBound(); }
 
     public void hit() {
@@ -187,25 +187,22 @@ public class Plane {
      * @param elevator must be between -1.0 and 1.0
      */
     public void setElevator(float elevator) {
-        horizontalStabilizers.forEach(s -> s.controlAileron(maxElevator * elevator));
-    }
+        horizontalStabilizers.forEach(s -> s.controlAileron(maxElevator * elevator));}
 
-    public void setRudder(float rudder) {
-        verticalStabilizers.forEach(s -> s.controlAileron(rudder));
-    }
+    public void setRudder(float rudder) { verticalStabilizers.forEach(s -> s.controlAileron(rudder)); }
 
-    public Plane setHeight(int height) {planeResponse(planeResponse().height(height));return this;}
-    public Plane setLocation(int x, int z) {setLocation(x, (int) planeResponse().height(), z);return this;}
+    public Plane setHeight(int height) { planeResponse = planeResponse.height(height);return this;}
+    public Plane setLocation(int x, int z) {setLocation(x, (int) planeResponse.height(), z);return this;}
     public Plane setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); return this;}
 
-    public synchronized void setLocation(Vector3f translation) {planeResponse(planeResponse().translation(translation));}
+    public synchronized void setLocation(Vector3f translation) {planeResponse = planeResponse.translation(translation);}
     
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
         return i * geom.rotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
     
-    public float getHeight() {return planeResponse().height();}
+    public float getHeight() {return planeResponse.height();}
     public Vector3f getLocation() { return geom.translation();}
     public Vector3f forward() {return geom.forwardNormal();}
     public Vector3f up() {return geom.upNormal();}

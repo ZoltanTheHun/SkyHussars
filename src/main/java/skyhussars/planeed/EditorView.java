@@ -29,7 +29,6 @@ import skyhussars.PlaneEd;
 import skyhussars.SkyHussars;
 import static skyhussars.planeed.UiHelpers.*;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
@@ -42,8 +41,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import static skyhussars.utility.Streams.list;
-import static skyhussars.utility.Streams.pm;
 
 public class EditorView {
 
@@ -91,23 +88,6 @@ public class EditorView {
         xAxis.setLabel("Test Axis");
         lineChart.setTitle("Level flight simulation");
         lineChart.setCreateSymbols(false);
-        //defining a series
-      // series.setName("Test Value");
-        //populating the series with data
-       /* series.getData().add(new XYChart.Data(100, 23));
-        series.getData().add(new XYChart.Data(200, 14));
-        series.getData().add(new XYChart.Data(300, 15));
-        series.getData().add(new XYChart.Data(400, 24));
-        series.getData().add(new XYChart.Data(500, 34));
-        series.getData().add(new XYChart.Data(600, 36));
-        series.getData().add(new XYChart.Data(700, 22));
-        series.getData().add(new XYChart.Data(800, 45));
-        series.getData().add(new XYChart.Data(900, 43));
-        series.getData().add(new XYChart.Data(1000, 17));
-        series.getData().add(new XYChart.Data(1100, 29));
-        series.getData().add(new XYChart.Data(1200, 25));
-*/
-       // lineChart.getData().add(series);
         return lineChart;
     }
     
@@ -116,13 +96,9 @@ public class EditorView {
         return this;
     }
     
-    public EditorView addChartElement(float x,float y){
-        //series.getData().add(new XYChart.Data(x, y));
-        return this;
-    }
-    
     public EditorView chart(String name,List<Float> data){
         XYChart.Series series = new XYChart.Series();
+        series.setName(name);
         for(int i=0; i<data.size();i++) series.getData().add(new XYChart.Data(i, data.get(i)));
         lineChart.getData().add(series);
         return this;
