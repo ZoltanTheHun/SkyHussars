@@ -78,17 +78,9 @@ public class CombinedViewport {
         return this;
     }
 
-    public Camera cam() {
-        return cam;
-    }
-
-    public ViewPort viewPort() {
-        return viewPort;
-    }
-
-    public String name() {
-        return name;
-    }
+    public Camera cam() { return cam; }
+    public ViewPort viewPort() { return viewPort; }
+    public String name() { return name; }
 
     public CombinedViewport fov(float fov) {
         this.fov = fov;
