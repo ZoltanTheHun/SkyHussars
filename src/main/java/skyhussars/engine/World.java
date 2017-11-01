@@ -29,6 +29,7 @@ import skyhussars.engine.terrain.TerrainManager;
 import skyhussars.engine.plane.Plane;
 import java.util.List;
 import java.util.Optional;
+import static skyhussars.utility.Streams.sf;
 
 public class World {
 
@@ -37,8 +38,7 @@ public class World {
 
     public World(List<Plane> planes, TerrainManager terrainManager) {
         this.terrainManager = terrainManager;
-        planes.stream().filter(p -> p.planeMissionDescriptor().player())
-                .findFirst().ifPresent(p -> target = p);
+        sf(planes,p -> p.planeMissionDescriptor().player()).findFirst().ifPresent(p -> target = p);
     }
 
     public Optional<Plane> lookAround() {

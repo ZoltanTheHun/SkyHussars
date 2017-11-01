@@ -33,6 +33,10 @@ import java.util.stream.Stream;
 
 public class Streams {
 
+    public static <T> Stream<T> sf(Collection<T> obj, Predicate<? super T> predicate) {
+        return obj.stream().filter(predicate);
+    }
+        
     public static <T> Stream<T> pf(Collection<T> obj, Predicate<? super T> predicate) {
         return obj.parallelStream().filter(predicate);
     }
@@ -47,7 +51,7 @@ public class Streams {
     
     public static <T,R> Stream<R> pm(Collection<T> obj, Function<? super T, ? extends R> mapper) {
         return obj.parallelStream().map(mapper);
-    }
+    }  
     
     public static <T,R> Stream<R> sm(Collection<T> obj, Function<? super T, ? extends R> mapper) {
         return  obj.parallelStream().map(mapper);
