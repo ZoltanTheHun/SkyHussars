@@ -70,7 +70,7 @@ public class PlaneEd extends Application {
         root.getChildren().add(ev.createMenuBar(stage, this));
         root.getChildren().add(ev.items(planeProperties));
         root.getChildren().add(airfoilTable.wingTable());
-        root.getChildren().add(ev.createChart());
+        root.getChildren().addAll(ev.createChart());
         Scene scene = new Scene(root, 500, 400);
         scene.getStylesheets().add("editor/editor.css");
         stage.setScene(scene);
@@ -87,8 +87,8 @@ public class PlaneEd extends Application {
         int iterations = 6000;
         int sampling = 60;
         List<PlaneResponse> rsps = new LevelFlightSimulation(planePhysics,env).simulate(tickrate, iterations, sampling, initial);
-        ev.chart("Height",list(pm(rsps,PlaneResponse::height)));
-        ev.chart("AOA",list(pm(rsps,r -> r.aoa)));
+        ev.heightChart(list(pm(rsps,PlaneResponse::height)));
+        ev.aoaChart(list(pm(rsps,r -> r.aoa)));
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
