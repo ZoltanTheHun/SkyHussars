@@ -38,6 +38,7 @@ import com.jme3.effect.ParticleEmitter;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.plugins.blender.math.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,10 +142,12 @@ public class Plane {
     }
 
     public void update(float tpf) {
-        PlaneResponse localResponse;
-        synchronized(this){ localResponse = planeResponse; }
+        PlaneResponse localResponse = planeResponse;
         velocityMs = localResponse.velocityMs();
-        geom.translation(localResponse.translation)
+        float x = (float) localResponse.translation.x;
+        float y = (float) localResponse.translation.y;
+        float z = (float) localResponse.translation.z;
+        geom.translation(new Vector3f(x,y,z))
             .rotation(localResponse.rotation);
         airspeedIndicator.update(localResponse);
         geom.update();
@@ -193,16 +196,16 @@ public class Plane {
 
     public Plane setHeight(int height) { planeResponse = planeResponse.height(height);return this;}
     public Plane setLocation(int x, int z) {setLocation(x, (int) planeResponse.height(), z);return this;}
-    public Plane setLocation(int x, int y, int z) { setLocation(new Vector3f(x, y, z)); return this;}
+    public Plane setLocation(int x, int y, int z) { setLocation(new Vector3d(x, y, z)); return this;}
 
-    public synchronized void setLocation(Vector3f translation) {planeResponse = planeResponse.translation(translation);}
+    public synchronized void setLocation(Vector3d translation) {planeResponse = planeResponse.translation(translation);}
     
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;
         return i * geom.rotation().mult(Vector3f.UNIT_Y).angleBetween(Vector3f.UNIT_Y) * RAD_TO_DEG;
     }
     
-    public float getHeight() {return planeResponse.height();}
+    public float getHeight() {return (float) planeResponse.height();}
     public Vector3f getLocation() { return geom.translation();}
     public Vector3f forward() {return geom.forwardNormal();}
     public Vector3f up() {return geom.upNormal();}

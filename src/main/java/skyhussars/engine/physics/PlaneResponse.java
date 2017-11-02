@@ -26,32 +26,34 @@
 package skyhussars.engine.physics;
 
 import com.jme3.math.*;
+import com.jme3.scene.plugins.blender.math.Vector3d;
 import static java.util.Objects.requireNonNull;
 
 public final class PlaneResponse {
     public final Quaternion rotation;
-    public final Vector3f translation;
+    public final Vector3d translation;
     public final Vector3f velocity;
     public final Vector3f angularAcceleration; 
     public final Vector3f angularVelocity; 
     public final float aoa;
-    public final float height(){return translation.y;}
+    public final double height(){return translation.y;}
     public final float velocityMs() {return velocity.length();}
     public final float velicityKmh() { return velocity.length()*3.6f;}
     public final Vector3f forwardNorm () {return rotation.mult(Vector3f.UNIT_Z).normalize();}
 
     public PlaneResponse(){
         rotation = new Quaternion();
-        translation = new Vector3f();
+        translation = new Vector3d();
         velocity = new Vector3f();
         angularAcceleration = new Vector3f();
         angularVelocity = new Vector3f();
         aoa = 0;
     }
     
-    public PlaneResponse(Quaternion rotation,Vector3f translation,
+    public PlaneResponse(Quaternion rotation,Vector3d translation,
             Vector3f velocity, float aoa,
             Vector3f angularAcceleration,Vector3f angularVelocity){
+        //this.rotation = requireNonNull(rotation).normalizeLocal();
         this.rotation = requireNonNull(rotation);
         this.translation = requireNonNull(translation);
         this.velocity = requireNonNull(velocity);
@@ -80,11 +82,12 @@ public final class PlaneResponse {
                 forwardNorm().mult(velocity),aoa,angularAcceleration,angularVelocity);
     }
     
-    public PlaneResponse height(float height){
-        return new PlaneResponse(rotation,translation.setY(height),
+    public PlaneResponse height(double height){
+        return new PlaneResponse(rotation,
+                translation.set(translation.x,height,translation.z),
                 velocity, aoa,angularAcceleration,angularVelocity); 
     }
-    public PlaneResponse translation(Vector3f translation){
+    public PlaneResponse translation(Vector3d translation){
         return new PlaneResponse(rotation,translation,
                 velocity, aoa,angularAcceleration,angularVelocity); 
     }

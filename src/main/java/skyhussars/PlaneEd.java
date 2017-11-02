@@ -89,6 +89,7 @@ public class PlaneEd extends Application {
         List<PlaneResponse> rsps = new LevelFlightSimulation(planePhysics,env).simulate(tickrate, iterations, sampling, initial);
         ev.heightChart(list(pm(rsps,PlaneResponse::height)));
         ev.aoaChart(list(pm(rsps,r -> r.aoa)));
+        ev.velocityChart(list(pm(rsps,PlaneResponse::velicityKmh)));
         planeProperties.getName().setValue(state.planeDescriptor().map(p -> p.getName()).orElse(""));
         planeProperties.getMassTakeOffMax().setValue(state.planeDescriptor().map(p -> p.getMassTakeOffMax()).orElse(0.f));
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));

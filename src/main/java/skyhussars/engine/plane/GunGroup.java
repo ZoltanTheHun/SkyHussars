@@ -65,7 +65,10 @@ public class GunGroup {
     }
 
     public List<Bullet> firing(boolean firing,PlaneResponse planeResponse) {
-        Vector3f startLocation = planeResponse.translation;
+        float x = (float) planeResponse.translation.x;
+        float y = (float) planeResponse.translation.y;
+        float z = (float) planeResponse.translation.z;
+        Vector3f startLocation = new Vector3f(x,y,z);
         Vector3f startVelocity = planeResponse.velocity;
         Quaternion startRotation = planeResponse.rotation; 
         return list(pm(gunLocations,gunLocation -> gunLocation.firing(firing,startLocation,startVelocity,startRotation))

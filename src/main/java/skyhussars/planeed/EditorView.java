@@ -84,8 +84,11 @@ public class EditorView {
     NumberAxis yAxis1 = new NumberAxis();
     NumberAxis xAxis2 = new NumberAxis();
     NumberAxis yAxis2 = new NumberAxis();
+    NumberAxis xAxis3 = new NumberAxis();
+    NumberAxis yAxis3 = new NumberAxis();
     final LineChart<Number, Number> heightChart = new LineChart<>(xAxis1, yAxis1);
     final LineChart<Number, Number> aoaChart = new LineChart<>(xAxis2, yAxis2);
+    final LineChart<Number, Number> velocityChart = new LineChart<>(xAxis3, yAxis3);
     
     public List<LineChart> createChart() {
         xAxis1.setLabel("Samples");
@@ -94,7 +97,9 @@ public class EditorView {
         heightChart.setCreateSymbols(false);
         aoaChart.setTitle("Level flight simulation");
         aoaChart.setCreateSymbols(false);
-        return asList(heightChart,aoaChart);
+        velocityChart.setTitle("Level flight simulation");
+        velocityChart.setCreateSymbols(false);
+        return asList(heightChart,aoaChart,velocityChart);
     }
     
     public EditorView clearChart(){
@@ -103,7 +108,7 @@ public class EditorView {
         return this;
     }
     
-    public EditorView heightChart(List<Float> data){
+    public EditorView heightChart(List<Double> data){
         chart(heightChart,"Height",data);
         return this;
     }
@@ -112,12 +117,16 @@ public class EditorView {
         return this;
     }
     
-    private EditorView chart(LineChart chart,String name,List<Float> data){
+    public EditorView velocityChart(List<Float> data){
+        chart(velocityChart,"Velocity (Kmh)",data);
+        return this;
+    }
+    private static <T> LineChart chart(LineChart chart,String name,List<T> data){
         XYChart.Series series = new XYChart.Series();
         series.setName(name);
         for(int i=0; i<data.size();i++) series.getData().add(new XYChart.Data(i, data.get(i)));
         chart.getData().add(series);
-        return this;
+        return chart;
     }
 
 }

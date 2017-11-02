@@ -40,7 +40,7 @@ public class AirfoilDescriptor {
     private float incidence;
     private float aspectRatio;
     private boolean damper;
-    private float dehidralDegree;
+    private float dihedralDegree;
     private Aileron.ControlDir direction;
 
     public String getName() {
@@ -75,8 +75,8 @@ public class AirfoilDescriptor {
     public boolean isDamper() {return damper;}
     public AirfoilDescriptor setDamper(boolean damper) {this.damper = damper;return this;}
     
-    public float getDehidralDegree() {return dehidralDegree; }
-    public AirfoilDescriptor setDehidralDegree(float dehidralDegree) {this.dehidralDegree = dehidralDegree;return this;}
+    public float getDehidralDegree() {return dihedralDegree; }
+    public AirfoilDescriptor setDehidralDegree(float dehidralDegree) {this.dihedralDegree = dehidralDegree;return this;}
     
     public Aileron.ControlDir getDirection() {return direction; }
     public AirfoilDescriptor setDirection(Aileron.ControlDir direction) {this.direction = direction;return this;}

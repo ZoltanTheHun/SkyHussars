@@ -37,6 +37,7 @@ import skyhussars.engine.plane.Plane;
 import skyhussars.engine.plane.PlaneFactory;
 import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.scene.Node;
+import com.jme3.scene.plugins.blender.math.Vector3d;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,7 +95,8 @@ public class MissionFactory {
         List<Plane> planes = new ArrayList<>();
         for (PlaneMissionDescriptor planeMission : missionDescriptor.planeMissionDescriptors()) {
             Plane plane = planeFactory.createPlane(planeMission.planeType());
-            plane.setLocation(planeMission.startLocation());
+            Vector3d startLocation = new Vector3d(planeMission.startLocation());
+            plane.setLocation(startLocation);
             plane.planeMissinDescriptor(planeMission);
             plane.setThrottle(0.6f);
             rootNode.attachChild(plane.planeGeometry().root());

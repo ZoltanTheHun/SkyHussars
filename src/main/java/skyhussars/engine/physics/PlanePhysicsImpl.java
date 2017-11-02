@@ -29,6 +29,7 @@ import skyhussars.engine.physics.environment.Environment;
 import com.jme3.math.*;
 import static com.jme3.math.Vector3f.*;
 import static com.jme3.math.FastMath.RAD_TO_DEG;
+import com.jme3.scene.plugins.blender.math.Vector3d;
 import java.util.*;
 import static java.util.Objects.requireNonNull;
 import static skyhussars.utility.Streams.*;
@@ -59,9 +60,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
     
     @Override
     public PlaneResponse update(float tick, Environment environment, PlaneResponse planeRsp) {
-        float airDensity = environment.airDensity(planeRsp.height());//1.2745f;
+        float airDensity = environment.airDensity((float)planeRsp.height());//1.2745f;
         Quaternion rotation = planeRsp.rotation;
-        Vector3f translation = planeRsp.translation;
+        Vector3d translation = planeRsp.translation;
         Vector3f velocity = planeRsp.velocity;
         Vector3f angularVelocity = planeRsp.angularVelocity;
         /* flow to local coordinate space*/
@@ -97,8 +98,9 @@ public class PlanePhysicsImpl implements PlanePhysics {
         
         Quaternion rotationQuaternion = new Quaternion().fromAngles(angularVelocity.x * tick, angularVelocity.y * tick, angularVelocity.z * tick);
 
-        rotation = rotation.mult(rotationQuaternion);
-        translation = translation.add(velocity.mult(tick));
+        rotation = new Quaternion(rotation.mult(rotationQuaternion)).normalizeLocal();
+        Vector3d distance = new Vector3d(velocity.mult(tick));
+        translation = translation.add(distance);
         
         return new PlaneResponse(rotation,translation,velocity,aoa,angularAcceleration,angularVelocity);
     }
