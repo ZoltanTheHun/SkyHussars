@@ -98,7 +98,7 @@ public class PlanePhysicsImpl implements PlanePhysics {
         
         Quaternion rotationQuaternion = new Quaternion().fromAngles(angularVelocity.x * tick, angularVelocity.y * tick, angularVelocity.z * tick);
 
-        rotation = new Quaternion(rotation.mult(rotationQuaternion)).normalizeLocal();
+        rotation = rotation.mult(rotationQuaternion).normalizeLocal();
         Vector3d distance = new Vector3d(velocity.mult(tick));
         translation = translation.add(distance);
         
