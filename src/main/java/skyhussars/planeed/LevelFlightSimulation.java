@@ -48,12 +48,13 @@ public class LevelFlightSimulation {
         PlaneResponse simulated = initial;
         for(int i = 1;i<= iterations;i++){ //it starts from 1 and goes to iterations
             PlaneResponse old = simulated;
-            simulated = physics.update(tickrate, environment, simulated); 
+            simulated = physics.update(tickrate, environment, simulated);          
             System.out.println("Distance: " + old.translation.distance(simulated.translation));
             System.out.println("Height: " + (old.height() - simulated.height()));
             System.out.println("Velocity diff: " + (old.velicityKmh() - simulated.velicityKmh()));
             System.out.println("Velocity Actual: " + (old.velicityKmh()));
-            if(i%sampling == 0) rsps.add(simulated);
+            System.out.println("Aoa:" + old.aoa);
+            if(i%sampling == 0) {rsps.add(simulated); System.out.println("Sample " + rsps.size());}
         }
 
         return rsps;
