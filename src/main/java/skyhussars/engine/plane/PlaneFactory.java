@@ -119,7 +119,9 @@ public class PlaneFactory {
                     .dehidralDegree(af.getDehidralDegree())
                     .direction(af.getDirection())
                     .liftCoefficient(testCoef)
-                    .dampingFactor(0.01f).build(),af.getDirection(),1f)
+                    .rollDamp(0.01f)
+                    .yawDamp(2f)
+                    .pitchDamp(2f).build(),af.getDirection(),1f)
         ).collect(Collectors.toList());
     }
     

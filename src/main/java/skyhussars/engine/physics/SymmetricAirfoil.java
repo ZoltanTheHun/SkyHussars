@@ -34,7 +34,9 @@ public class SymmetricAirfoil implements Airfoil {
     public static class Builder{
         private String name; 
         private Vector3f cog; 
-        private float wingArea,incidence,aspectRatio,dehidralDegree,dampingFactor = 2;
+        private float wingArea,incidence,aspectRatio,dehidralDegree,rollDamp = 2;
+        private float yawDamp = 2f;
+        private float pitchDamp = 2f;
         private boolean damper;
         private Aileron.ControlDir direction;
         private LiftCoefficient liftCoefficient;
@@ -46,11 +48,14 @@ public class SymmetricAirfoil implements Airfoil {
         public Builder dehidralDegree(float dehidralDegree){ this.dehidralDegree = dehidralDegree; return this;}
         public Builder damper(boolean damper){ this.damper = damper; return this;}
         public Builder direction(Aileron.ControlDir direction){ this.direction = direction; return this;} 
-        public Builder dampingFactor(float dampingFactor){ this.dampingFactor = dampingFactor; return this;} 
+        public Builder rollDamp(float rollDamp){ this.rollDamp = rollDamp; return this;} 
+        public Builder yawDamp(float yawDamp){ this.yawDamp = yawDamp; return this;} 
+        public Builder pitchDamp(float pitchDamp){ this.pitchDamp = pitchDamp; return this;} 
+
         public Builder liftCoefficient(LiftCoefficient liftCoefficient){this.liftCoefficient = liftCoefficient; return this;}
         public SymmetricAirfoil build(){
-            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction,dampingFactor
-                    ,liftCoefficient);
+            return new SymmetricAirfoil(name,cog,wingArea,incidence,aspectRatio,damper,dehidralDegree,direction
+                    ,liftCoefficient,rollDamp,pitchDamp,yawDamp);
         }
     }
        
@@ -62,7 +67,9 @@ public class SymmetricAirfoil implements Airfoil {
     private final Quaternion dehidral;
     private final Quaternion wingRotation;
     private final Vector3f upNorm;
-    private final float dampCf;
+    private final float rollDamp;
+    private final float yawDamp;
+    private final float pitchDamp;
     private final boolean damper;
     private final Aileron.ControlDir direction;
     private final float dampDir;
@@ -74,7 +81,10 @@ public class SymmetricAirfoil implements Airfoil {
     private SymmetricAirfoil(String name, Vector3f cog, 
             float wingArea, float incidence, float aspectRatio, 
             boolean damper, float dehidralDegree,
-            Aileron.ControlDir direction,float dampingFactor, LiftCoefficient cl) {
+            Aileron.ControlDir direction, LiftCoefficient cl, 
+            float rollDamp,
+            float pitchDamp,
+            float yawDamp) {
         this.wingArea = wingArea;
         this.cog = cog;
         this.name = name;
@@ -85,7 +95,10 @@ public class SymmetricAirfoil implements Airfoil {
         wingRotation = qIncidence.mult(dehidral);
         upNorm = wingRotation.mult(Vector3f.UNIT_Y).normalize();
         this.damper = damper;
-        this.dampCf = dampingFactor;
+        this.rollDamp = rollDamp;
+        this.pitchDamp = pitchDamp;
+        this.yawDamp = yawDamp;
+                
         dampDir = damper ? ( this.cog.dot(Vector3f.UNIT_X) < 0 ? 1 : -1 ) : 0; 
         this.direction = direction;
         this.cl = cl;
@@ -98,10 +111,10 @@ public class SymmetricAirfoil implements Airfoil {
         float roll = 0;
         float pitch = 0;
         float yaw = 0;
-        if(damper) roll = dampDir * vAngularVelocity.z * dampCf;
+        if(damper) roll = dampDir * vAngularVelocity.z * rollDamp;
         switch(direction){
-            case HORIZONTAL_STABILIZER : pitch = vAngularVelocity.x * 2f ; break;
-            case VERTICAL_STABILIZER : yaw = vAngularVelocity.y * 1f; break;
+            case HORIZONTAL_STABILIZER : pitch = vAngularVelocity.x * pitchDamp ; break;
+            case VERTICAL_STABILIZER : yaw = vAngularVelocity.y * yawDamp; break;
         }
         float[] angles = new float[]{roll,-yaw,-pitch};
         return new Quaternion(angles);
