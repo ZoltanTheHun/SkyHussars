@@ -75,7 +75,7 @@ public class MissionState implements GameState {
         Plane pilotedPlane = pf(planes,plane -> plane.planeMissionDescriptor().player()).findFirst().get();
         player = new Pilot(pilotedPlane);
         
-        initiliazePlayer();
+        initializeScene();
         worldThread = new WorldThread(planes, ticks, terrainManager,projectileManager);
     }
     private final int ticks = 30;
@@ -99,10 +99,6 @@ public class MissionState implements GameState {
 
     private void stopWorldThread() {
         if (timer != null) { timer.cancel(); timer = null; }
-    }
-
-    private void initiliazePlayer() {
-        initPlayer();
     }
 
     private TextRenderer speedoMeterUI;

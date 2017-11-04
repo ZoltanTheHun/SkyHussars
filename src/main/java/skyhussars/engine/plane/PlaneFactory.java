@@ -70,7 +70,6 @@ public class PlaneFactory {
 
         AudioHandler engineSound = soundManager.sound("engine");
         AudioHandler gunSound = soundManager.sound("gun");
-        Box box = new Box(6f, 1f, 4f);
         Instruments instruments = new Instruments(new BarometricAltimeter(0));
         AnalogueAirspeedIndicator airspeedIndicator = new AnalogueAirspeedIndicator(0, 900, PI * 2f);
         final float length = 10.49f;

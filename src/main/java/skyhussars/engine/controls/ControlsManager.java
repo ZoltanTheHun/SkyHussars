@@ -43,6 +43,7 @@ public class ControlsManager {
     @Autowired private CameraManager cameraManager;
 
     public void missionControls(MissionState mission) {
+        stripMissionControls();
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
         inFlightJoystickControls = new FlightJoystickControls(mission.player());
         gameFlowControls = new FlowControls(mission);
