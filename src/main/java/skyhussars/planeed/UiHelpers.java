@@ -59,4 +59,7 @@ public class UiHelpers {
         }
         return gp;
     }
+    
+    public static float kmhToMs(float kmh){ return kmh / 3.6f;}
+    public static float msToKmh(float ms) { return ms * 3.6f; }
 }

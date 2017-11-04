@@ -105,6 +105,7 @@ public class EditorView {
     public EditorView clearChart(){
         heightChart.getData().clear();
         aoaChart.getData().clear();
+        velocityChart.getData().clear();
         return this;
     }
     

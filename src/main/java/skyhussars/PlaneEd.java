@@ -43,6 +43,7 @@ import skyhussars.engine.physics.environment.AtmosphereImpl;
 import skyhussars.engine.physics.environment.Environment;
 import skyhussars.engine.plane.PlaneFactory;
 import skyhussars.planeed.LevelFlightSimulation;
+import static skyhussars.planeed.UiHelpers.kmhToMs;
 import static skyhussars.utility.Streams.list;
 import static skyhussars.utility.Streams.pm;
 
@@ -82,7 +83,7 @@ public class PlaneEd extends Application {
         state = state.planeDescriptor(pdl.unmarshal(file)).openFile(file);
         planePhysics = new PlaneFactory().createPlane(state.planeDescriptor().get());
         ev.clearChart();
-        PlaneResponse initial = new PlaneResponse().velocity(300).height(1000);
+        PlaneResponse initial = new PlaneResponse().velocity(kmhToMs(400)).height(1000);
         float tickrate = 1f/60f;
         int iterations = 6000;
         int sampling = 60;
