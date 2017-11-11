@@ -29,6 +29,8 @@ import static com.jme3.math.FastMath.*;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Random;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.slf4j.Logger;
@@ -141,7 +143,7 @@ public class SymmetricAirfoilTest {
                 .incidence(1f)
                 .wingArea(5.5175f)
                 .cog(new Vector3f(-4, 0, -0.2f))
-                .dampingFactor(2)
+                .rollDamp(2)
                 .liftCoefficient(testCoef)
                 .build();
         Aileron aileron = new Aileron(af, Aileron.ControlDir.RIGHT);
@@ -174,4 +176,5 @@ public class SymmetricAirfoilTest {
         assertEquals(v1.y, v2.y, 0.01f);
         assertEquals(v1.z, v2.z, 0.01f);
     }
+    
 }

@@ -26,8 +26,6 @@
 package skyhussars.engine.plane;
 
 import static com.jme3.math.FastMath.PI;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import skyhussars.engine.DataManager;
 import skyhussars.engine.ModelManager;
 import skyhussars.engine.physics.Aileron;
@@ -40,7 +38,6 @@ import skyhussars.engine.sound.AudioHandler;
 import skyhussars.engine.sound.SoundManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +100,7 @@ public class PlaneFactory {
     }
     
     private List<Engine> engines(List<EngineLocation> engineLocations){
-        return engineLocations.stream().map(el -> new Engine(el, 1.0f)).collect(Collectors.toList());
+        return  list(sm(engineLocations,el -> new Engine(el,1.0f)));
     }
 
     private List<Airfoil> airfoils(List<AirfoilDescriptor> afs){
@@ -118,7 +115,7 @@ public class PlaneFactory {
                     .dehidralDegree(af.getDehidralDegree())
                     .direction(af.getDirection())
                     .liftCoefficient(testCoef)
-                    .rollDamp(0.01f)
+                    .rollDamp(0.005f)
                     .yawDamp(2f)
                     .pitchDamp(2f).build(),af.getDirection(),1f)
         ).collect(Collectors.toList());
