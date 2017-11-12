@@ -60,7 +60,7 @@ public class PlaneFactory {
     @Autowired
     private SoundManager soundManager;
 
-    private LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
+    private final LiftCoefficient testCoef = new LiftCoefficient("Testshape",  new float[]{0, 2, 4, 6, 8, 10, 15, 30}, new float[]{0.5f}, new float[][]{{0f, 0.246f, 0.475f, 0.68f, 0.775f, 0.795f, 0.82f, 0.8f}});
 
     public Plane createPlane(String planeType) {
         PlaneDescriptor planeDescriptor = dataManager.planeRegistry().planeDescriptor(planeType);
@@ -104,21 +104,20 @@ public class PlaneFactory {
     }
 
     private List<Airfoil> airfoils(List<AirfoilDescriptor> afs){
-        return afs.stream().map(af -> 
-            new Aileron(new SymmetricAirfoil.Builder()
-                    .name(af.getName())
-                    .cog(af.getCog())
-                    .wingArea(af.getWingArea())
-                    .incidence(af.getIncidence())
-                    .aspectRatio(af.getAspectRatio())
-                    .damper(af.isDamper())
-                    .dehidralDegree(af.getDehidralDegree())
-                    .direction(af.getDirection())
-                    .liftCoefficient(testCoef)
-                    .rollDamp(0.005f)
-                    .yawDamp(2f)
-                    .pitchDamp(2f).build(),af.getDirection(),1f)
-        ).collect(Collectors.toList());
+        return list(sm(afs,af ->  
+                new Aileron(new SymmetricAirfoil.Builder()
+                                        .name(af.getName())
+                                        .cog(af.getCog())
+                                        .wingArea(af.getWingArea())
+                                        .incidence(af.getIncidence())
+                                        .aspectRatio(af.getAspectRatio())
+                                        .damper(af.isDamper())
+                                        .dehidralDegree(af.getDehidralDegree())
+                                        .direction(af.getDirection())
+                                        .liftCoefficient(testCoef)
+                                        .rollDamp(0.005f)
+                                        .yawDamp(1f)
+                                        .pitchDamp(2f).build(),af.getDirection(),1f)));
     }
     
     private PlaneGeometry planeGeometry(AnalogueAirspeedIndicator airspeedIndicator){
