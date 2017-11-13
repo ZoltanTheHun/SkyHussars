@@ -45,24 +45,35 @@ import javafx.stage.Stage;
 
 public class EditorView {
 
-    private final FileChooser fileChooser = new FileChooser();
-    {fileChooser.setTitle("Open Plane Definition");}
-    {fileChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
+    private final Stage stage;
+    public EditorView(Stage stage){
+        this.stage = stage;
+    }
+    
+    private final FileChooser openPlaneChooser = new FileChooser();
+    {openPlaneChooser.setTitle("Open a plane definition");}
+    {openPlaneChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
 
-    public MenuBar createMenuBar(Stage stage, PlaneEd planeEd) {
+    private final FileChooser saveAsPlaneChooser = new FileChooser();
+    {saveAsPlaneChooser.setTitle("Save a plane definition");}
+    {saveAsPlaneChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
+    {saveAsPlaneChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
+
+    public MenuBar createMenuBar(PlaneEd planeEd) {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
         ObservableList<MenuItem> mis = fileMenu.getItems();
-        mis.add(loadMenu(stage, planeEd));
+        mis.add(loadMenu(planeEd));
         mis.add(saveMenu(planeEd));
+        mis.add(saveAsMenu(planeEd));
         menuBar.getMenus().add(fileMenu);
         return menuBar;
     }
 
-    private MenuItem loadMenu(Stage stage, PlaneEd planeEd) {
+    private MenuItem loadMenu(PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
-        loadMenu.setOnAction(t -> planeEd.loadPlane(fileChooser.showOpenDialog(stage)));
+        loadMenu.setOnAction(t -> planeEd.loadPlane(openPlaneChooser.showOpenDialog(stage)));
         return loadMenu;
     }
 
@@ -70,6 +81,12 @@ public class EditorView {
         MenuItem saveMenu = new MenuItem("Save");
         saveMenu.setOnAction(t -> planeEd.save());
         return saveMenu;
+    }
+    
+    private MenuItem saveAsMenu(PlaneEd planeEd) {
+        MenuItem saveAsMenu = new MenuItem("Save As");
+        saveAsMenu.setOnAction(t -> planeEd.saveAs(saveAsPlaneChooser.showSaveDialog(stage)));
+        return saveAsMenu;
     }
 
     public GridPane items(PlaneProperties planeProperties) {

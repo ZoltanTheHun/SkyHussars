@@ -35,6 +35,8 @@ import java.io.File;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import static javafx.scene.control.Alert.AlertType.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import skyhussars.engine.physics.PlanePhysicsImpl;
@@ -46,7 +48,6 @@ import skyhussars.planeed.LevelFlightSimulation;
 import static skyhussars.planeed.UiHelpers.kmhToMs;
 import static skyhussars.utility.Streams.list;
 import static skyhussars.utility.Streams.pm;
-
 public class PlaneEd extends Application {
 
     private final PlaneProperties planeProperties = new PlaneProperties();
@@ -61,14 +62,14 @@ public class PlaneEd extends Application {
     private final AirfoilTable airfoilTable = new AirfoilTable();
     private PlanePhysicsImpl planePhysics;
     private final Environment env = new Environment(10, new AtmosphereImpl());
-    private EditorView ev = new EditorView();
+    private EditorView ev;
     
     @Override
     public void start(Stage stage) throws Exception {
-
+        ev = new EditorView(stage);
         stage.setTitle("SkyHussars PlaneEd");
         VBox root = new VBox();
-        root.getChildren().add(ev.createMenuBar(stage, this));
+        root.getChildren().add(ev.createMenuBar(this));
         root.getChildren().add(ev.items(planeProperties));
         root.getChildren().add(airfoilTable.wingTable());
         root.getChildren().addAll(ev.createChart());
@@ -101,12 +102,29 @@ public class PlaneEd extends Application {
     
 
     public void save() {
-        PlaneDescriptor pd = state.planeDescriptor().orElseThrow(IllegalStateException::new);
+       displayError("Unable to save, no plane selected yet");
+        state.planeDescriptor().map(pd -> save(pd)).orElseThrow(IllegalStateException::new);
+    }
+    private PlaneDescriptor save(PlaneDescriptor pd){
+        displayError("Test");
         PlaneProperties pp = planeProperties;
         pd.setName(pp.getName().getValue());
         pd.setMassTakeOffMax(pp.getMassTakeOffMax().getValue());
         pd.setMassGross(pp.getMassGross().getValue());
         pd.setMassEmpty(pp.getMassEmpty().getValue());
         if(openFile != null) pdl.marshal(pd, openFile); //this is fine for now
+        return pd;
+    }
+    
+    private void displayError(String error){
+        Alert alert = new Alert(ERROR);
+        alert.setTitle("Error occured");
+        alert.setHeaderText(null);
+        alert.setContentText("error");
+        alert.showAndWait();
+    }
+    
+    public void saveAs(File file){
+        
     }
 }
