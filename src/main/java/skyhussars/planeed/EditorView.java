@@ -59,9 +59,8 @@ public class EditorView {
     {saveAsPlaneChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
     {saveAsPlaneChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
 
-    public MenuBar createMenuBar(PlaneEd planeEd) {
+    public MenuBar menubar(PlaneEd planeEd) {
         MenuBar menuBar = new MenuBar();
-
         Menu fileMenu = new Menu("File");
         ObservableList<MenuItem> mis = fileMenu.getItems();
         mis.add(loadMenu(planeEd));
@@ -89,7 +88,7 @@ public class EditorView {
         return saveAsMenu;
     }
 
-    public GridPane items(PlaneProperties planeProperties) {
+    public GridPane planePropertyGrid(PlaneProperties planeProperties) {
         return populateGrid(2, new Label("Name:"), textFieldFor(planeProperties.getName()),
                 new Label("Mass, TakeOff Max: "), numberFieldFor(planeProperties.getMassTakeOffMax()),
                 new Label("Mass, Gross: "), numberFieldFor(planeProperties.getMassTakeOffMax()),

@@ -69,9 +69,9 @@ public class PlaneEd extends Application {
         ev = new EditorView(stage);
         stage.setTitle("SkyHussars PlaneEd");
         VBox root = new VBox();
-        root.getChildren().add(ev.createMenuBar(this));
-        root.getChildren().add(ev.items(planeProperties));
-        root.getChildren().add(airfoilTable.wingTable());
+        root.getChildren().add(ev.menubar(this));
+        root.getChildren().add(ev.planePropertyGrid(planeProperties));
+        root.getChildren().add(airfoilTable.airfoilTable());
         root.getChildren().addAll(ev.createChart());
         Scene scene = new Scene(root, 500, 400);
         scene.getStylesheets().add("editor/editor.css");

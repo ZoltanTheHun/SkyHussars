@@ -40,10 +40,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class AirfoilTable {
      
-    private  ObservableList<Airfoil> data = FXCollections.observableArrayList();
-    private  TableView table = new TableView();
+    private final ObservableList<Airfoil> data = FXCollections.observableArrayList();
+    private final TableView table = new TableView();
     
-    public TableView wingTable(){
+    public TableView airfoilTable(){
         table.setEditable(true);
         table.getColumns().addAll(column("Wing Name","name",Airfoil::setName), 
                 column("Direction","direction",Airfoil::setDirection),
