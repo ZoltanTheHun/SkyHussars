@@ -26,13 +26,14 @@
 package skyhussars.utility;
 
 import java.util.List;
+import static java.util.Objects.requireNonNull;
 
 public class Collections {
     
     public static class ZList<T> {
-        private List<T> list;
+        private final List<T> list;
         private ZList(List<T> list){
-            this.list = list;
+            this.list = requireNonNull(list);
         }
         
         public ZList add(T elem){
