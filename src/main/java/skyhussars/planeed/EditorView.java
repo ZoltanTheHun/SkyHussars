@@ -32,6 +32,8 @@ import java.io.File;
 import static java.util.Arrays.asList;
 import java.util.List;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -40,16 +42,48 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import static skyhussars.utility.Collections.zList;
 
 public class EditorView {
 
+    private final Scene scene; 
+    private final VBox mainView;
+    private final AirfoilTable airfoilTable;
+    
     private final Stage stage;
-    public EditorView(Stage stage){
+    public EditorView(Stage stage,int sizeX,int sizeY,AirfoilTable airfoilTable){
+        mainView = new VBox();
         this.stage = stage;
+        this.airfoilTable = airfoilTable;
+        scene = new Scene(mainView, sizeX, sizeY);
+        scene.getStylesheets().add("editor/editor.css");
     }
     
+    public Scene scene(PlaneEd planeEd,PlaneProperties props){
+        zList(mainView.getChildren())
+                .add(menubar(planeEd))
+                .add(planePropertyGrid(props))
+                .add(splitView());
+        return scene;
+    }
+    
+    private Node splitView(){
+        HBox splitView = new HBox();
+        zList(splitView.getChildren())
+                .add(airfoilTable.airfoilTable())
+                .add(simulations());
+        return splitView;
+    }
+    
+    private Node simulations(){
+        VBox verticalView = new VBox();
+        verticalView.getChildren().addAll(createChart());
+        return verticalView;
+    }
     private final FileChooser openPlaneChooser = new FileChooser();
     {openPlaneChooser.setTitle("Open a plane definition");}
     {openPlaneChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}

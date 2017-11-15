@@ -37,6 +37,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import skyhussars.engine.physics.PlanePhysicsImpl;
@@ -66,17 +67,9 @@ public class PlaneEd extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        ev = new EditorView(stage);
+        ev = new EditorView(stage,500, 400,airfoilTable);
         stage.setTitle("SkyHussars PlaneEd");
-        VBox root = new VBox();
-        root.getChildren().add(ev.menubar(this));
-        root.getChildren().add(ev.planePropertyGrid(planeProperties));
-        root.getChildren().add(airfoilTable.airfoilTable());
-        root.getChildren().addAll(ev.createChart());
-        Scene scene = new Scene(root, 500, 400);
-        scene.getStylesheets().add("editor/editor.css");
-        stage.setScene(scene);
-        
+        stage.setScene(ev.scene(this, planeProperties));    
         stage.show();
     }
 
