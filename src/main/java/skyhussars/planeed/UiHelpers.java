@@ -27,6 +27,8 @@ package skyhussars.planeed;
 
 import javafx.beans.property.Property;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.NumberStringConverter;
@@ -62,4 +64,12 @@ public class UiHelpers {
     
     public static float kmhToMs(float kmh){ return kmh / 3.6f;}
     public static float msToKmh(float ms) { return ms * 3.6f; }
+    
+    public static void displayError(String error){
+        Alert alert = new Alert(ERROR);
+        alert.setTitle("An error occured");
+        alert.setHeaderText(null);
+        alert.setContentText(error);
+        alert.showAndWait();
+    }
 }

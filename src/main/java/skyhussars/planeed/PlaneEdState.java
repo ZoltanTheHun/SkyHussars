@@ -27,12 +27,14 @@ package skyhussars.planeed;
 
 import skyhussars.engine.plane.PlaneDescriptor;
 import java.io.File;
+import static skyhussars.planeed.UiHelpers.*;
 import java.util.Optional;
-
+import skyhussars.engine.loader.PlaneDescriptorMarshal;
 public class PlaneEdState {
     
     private File openFile;
     private PlaneDescriptor planeDescriptor;
+    private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
     
     public PlaneEdState(){};
     public PlaneEdState(PlaneEdState state){
@@ -54,4 +56,27 @@ public class PlaneEdState {
     
     public Optional<PlaneDescriptor> planeDescriptor(){return Optional.ofNullable(planeDescriptor);}
     public Optional<File> openFile(){return Optional.ofNullable(openFile);}
+    
+    public PlaneEdState loadPlane(File file) {
+        if(file == null) {
+            displayError("An unexpected error occured while trying to load the file.");
+            throw new IllegalArgumentException("No file was provided to open.");
+        }
+        openFile = file;
+        planeDescriptor = pdl.unmarshal(openFile);
+        if( planeDescriptor == null) {
+            displayError("Unable to open file with name: " + openFile.getPath() + openFile.getName());
+            openFile = null;
+        }
+        return this;
+    }
+    
+    public PlaneEdState save(PlaneProperties pp){
+        planeDescriptor.setName(pp.getName().getValue());
+        planeDescriptor.setMassTakeOffMax(pp.getMassTakeOffMax().getValue());
+        planeDescriptor.setMassGross(pp.getMassGross().getValue());
+        planeDescriptor.setMassEmpty(pp.getMassEmpty().getValue());
+        if(openFile != null) pdl.marshal(planeDescriptor, openFile); //this is fine for now
+        return this;
+    }
 }

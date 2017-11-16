@@ -46,10 +46,7 @@ public class PlaneDescriptorMarshal {
         PlaneDescriptor planeDescriptor = null;
         try {
             planeDescriptor = mapper.readValue(descriptorFile, PlaneDescriptor.class);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Unable to unmarshall descriptor file at "
-                    + descriptorFile.getPath(), ex);
-        }
+        } catch (IOException ex) {}
         return planeDescriptor;
     }
 }

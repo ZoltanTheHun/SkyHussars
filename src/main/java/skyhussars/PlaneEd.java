@@ -34,11 +34,6 @@ import skyhussars.planeed.AirfoilTable;
 import java.io.File;
 import java.util.List;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import static javafx.scene.control.Alert.AlertType.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import skyhussars.engine.physics.PlanePhysicsImpl;
 import skyhussars.engine.physics.PlaneResponse;
@@ -74,7 +69,7 @@ public class PlaneEd extends Application {
     }
 
     public void loadPlane(File file) {
-        state = state.planeDescriptor(pdl.unmarshal(file)).openFile(file);
+        state.loadPlane(file);
         planePhysics = new PlaneFactory().createPlane(state.planeDescriptor().get());
         ev.clearChart();
         PlaneResponse initial = new PlaneResponse().velocity(kmhToMs(400)).height(1000);
@@ -93,28 +88,8 @@ public class PlaneEd extends Application {
         openFile = file; // we set this only if no issue unmarshalling the file      
     }
     
-
     public void save() {
-       displayError("Unable to save, no plane selected yet");
-        state.planeDescriptor().map(pd -> save(pd)).orElseThrow(IllegalStateException::new);
-    }
-    private PlaneDescriptor save(PlaneDescriptor pd){
-        displayError("Test");
-        PlaneProperties pp = planeProperties;
-        pd.setName(pp.getName().getValue());
-        pd.setMassTakeOffMax(pp.getMassTakeOffMax().getValue());
-        pd.setMassGross(pp.getMassGross().getValue());
-        pd.setMassEmpty(pp.getMassEmpty().getValue());
-        if(openFile != null) pdl.marshal(pd, openFile); //this is fine for now
-        return pd;
-    }
-    
-    private void displayError(String error){
-        Alert alert = new Alert(ERROR);
-        alert.setTitle("Error occured");
-        alert.setHeaderText(null);
-        alert.setContentText("error");
-        alert.showAndWait();
+        state.save(planeProperties);
     }
     
     public void saveAs(File file){
