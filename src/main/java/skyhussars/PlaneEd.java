@@ -60,7 +60,7 @@ public class PlaneEd extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        ev = new EditorView(stage,500, 400,airfoilTable);
+        ev = new EditorView(stage,800, 600,airfoilTable);
         stage.setTitle("SkyHussars PlaneEd");
         stage.setScene(ev.scene(this, planeProperties));    
         stage.show();
