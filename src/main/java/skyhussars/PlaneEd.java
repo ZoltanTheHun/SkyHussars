@@ -90,6 +90,6 @@ public class PlaneEd extends Application {
     }
     
     public void saveAs(File file){
-        
+        state.save(planeProperties,file);
     }
 }

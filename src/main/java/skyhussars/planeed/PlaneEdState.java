@@ -25,6 +25,7 @@
  */
 package skyhussars.planeed;
 
+import com.google.common.base.Preconditions;
 import skyhussars.engine.plane.PlaneDescriptor;
 import java.io.File;
 import static skyhussars.planeed.UiHelpers.*;
@@ -71,6 +72,11 @@ public class PlaneEdState {
         return this;
     }
     
+    /**
+     * Save the plane properties to the currently open file
+     * @param pp plane properties to be saved
+     * @return the current state
+     */     
     public PlaneEdState save(PlaneProperties pp){
         planeDescriptor.setName(pp.getName().getValue());
         planeDescriptor.setMassTakeOffMax(pp.getMassTakeOffMax().getValue());
@@ -78,5 +84,19 @@ public class PlaneEdState {
         planeDescriptor.setMassEmpty(pp.getMassEmpty().getValue());
         if(openFile != null) pdl.marshal(planeDescriptor, openFile); //this is fine for now
         return this;
+    }
+    
+    /**
+     * This call is used to change the current open file to a new one
+     * and save current plane information into this new file.
+     * 
+     * @param pp PlaneProporties to be saved into file
+     * @param file A new target file for the save
+     * @return the current state
+     */
+    public PlaneEdState save(PlaneProperties pp,File file){
+        Preconditions.checkNotNull(file);
+        openFile = file;
+        return save(pp);
     }
 }
