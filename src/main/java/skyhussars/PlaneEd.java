@@ -26,7 +26,6 @@
 package skyhussars;
 
 import skyhussars.engine.loader.PlaneDescriptorMarshal;
-import skyhussars.engine.plane.PlaneDescriptor;
 import skyhussars.planeed.EditorView;
 import skyhussars.planeed.PlaneEdState;
 import skyhussars.planeed.PlaneProperties;
@@ -52,9 +51,8 @@ public class PlaneEd extends Application {
         launch(args);
     }
 
-    private PlaneEdState state = new PlaneEdState();
+    private final PlaneEdState state = new PlaneEdState();
     private final PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
-    private File openFile;
     private final AirfoilTable airfoilTable = new AirfoilTable();
     private PlanePhysicsImpl planePhysics;
     private final Environment env = new Environment(10, new AtmosphereImpl());
@@ -85,7 +83,6 @@ public class PlaneEd extends Application {
         planeProperties.getMassGross().setValue(state.planeDescriptor().map(p -> p.getMassGross()).orElse(0.f));
         planeProperties.getMassEmpty().setValue(state.planeDescriptor().map(p -> p.getMassEmpty()).orElse(0.f));
         state.planeDescriptor().map(pd -> airfoilTable.airfoils(pd.getAirfolDescriptors()));
-        openFile = file; // we set this only if no issue unmarshalling the file      
     }
     
     public void save() {

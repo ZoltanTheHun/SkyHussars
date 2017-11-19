@@ -106,7 +106,11 @@ public class EditorView {
 
     private MenuItem loadMenu(PlaneEd planeEd) {
         MenuItem loadMenu = new MenuItem("Load plane");
-        loadMenu.setOnAction(t -> planeEd.loadPlane(openPlaneChooser.showOpenDialog(stage)));
+        loadMenu.setOnAction(t -> {
+                File file = openPlaneChooser.showOpenDialog(stage);
+                if(file == null) return; /* if load dialog is closed, nothing is selected */
+                planeEd.loadPlane(file);
+            });
         return loadMenu;
     }
 
