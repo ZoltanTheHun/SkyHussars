@@ -37,6 +37,7 @@ public class ControlsManager {
     private FlightJoystickControls inFlightJoystickControls;
     private FlowControls gameFlowControls;
     private CameraControls cameraControls;
+    private final float deadzone = 0.4f;
     
     @Autowired private MenuControls menuControls;
     @Autowired private ControlsMapper controlsMapper;
@@ -45,7 +46,7 @@ public class ControlsManager {
     public void missionControls(MissionState mission) {
         stripMissionControls();
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
-        inFlightJoystickControls = new FlightJoystickControls(mission.player());
+        inFlightJoystickControls = new FlightJoystickControls(mission.player(),deadzone);
         gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);

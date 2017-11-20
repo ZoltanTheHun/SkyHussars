@@ -35,13 +35,16 @@ public class FlightJoystickControls implements AnalogListener {
     private final static Logger logger = LoggerFactory.getLogger(FlightJoystickControls.class);
 
     private final Pilot pilot;
+    private final float deadzone;
 
-    public FlightJoystickControls(Pilot pilot) {
+    public FlightJoystickControls(Pilot pilot,float deadzone) {
         this.pilot = pilot;
+        this.deadzone = deadzone;
     }
 
     @Override
     public void onAnalog(String string, float axis, float tpf) {
+        if(axis/tpf < deadzone) axis = 0;
         if (ControlsMapper.JOY_ROLL_LEFT.equals(string)) {
             pilot.setAileron(-1 * axis / tpf);
         }
