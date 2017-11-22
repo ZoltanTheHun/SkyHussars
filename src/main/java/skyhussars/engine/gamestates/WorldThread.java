@@ -65,9 +65,7 @@ public class WorldThread extends TimerTask {
     }
 
     private final AtomicLong cycle = new AtomicLong(0);
-
-    public long cycle() {return cycle.get();}
-
+    
     @Override
     public void run() {     
         pp(aiPilots,aiPilot -> aiPilot.update(world));
@@ -76,8 +74,6 @@ public class WorldThread extends TimerTask {
         cycle.incrementAndGet();
     }
 
-    public void updatePlaneLocations() {
-        sp(planes,p -> p.update());
-    }
-
+    public long cycle() {return cycle.get();}
+    public void updatePlaneLocations() {sp(planes,p -> p.update());}
 }

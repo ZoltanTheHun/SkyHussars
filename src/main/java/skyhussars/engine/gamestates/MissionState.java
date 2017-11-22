@@ -79,7 +79,6 @@ public class MissionState implements GameState {
         worldThread = new WorldThread(planes, ticks, terrainManager,projectileManager);
     }
     private final int ticks = 30;
-    private int cycles = 0;
 
     public Pilot player() { return player; }
 
@@ -88,7 +87,7 @@ public class MissionState implements GameState {
      */
     public void initializeScene() { initPlayer();}
 
-    private void startWorldThread() {
+    private void keepWorldThreadRunning() {
         if (timer == null) {
             timer = new Timer(true);
             timer.schedule(new TimerTask() {
@@ -112,47 +111,41 @@ public class MissionState implements GameState {
     @Override
     public synchronized GameState update(float tpf) {
         if(nextState == null) initialize();
-        cycles++;
-        long millis = System.currentTimeMillis();
-        soundManager.update();
-        if (!paused && !ended) {
-            startWorldThread();
-            updatePlanes(tpf);
-            projectileManager.update(tpf);
-            if (player.plane().crashed()) {
-                ended = true;
-            }
-            /* take another look at it later to get rid of a chance of a null reference */
-            if (speedoMeterUI != null && altimeterUI != null) {
-                speedoMeterUI.setText(player.plane().velocityKmh() + "km/h");
-                altimeterUI.setText((player.plane().getHeight() + "m"));
-                aoaUI.setText("Aoa: "+(player.plane().aoa()));
-            }
-        } else {
-            stopWorldThread();
-            soundManager.muteAllSounds();
-        }
-        cameraManager.update(tpf);
-        // millis = System.currentTimeMillis() - millis;
-     /*   logger.info("Gamestate update complete in " + millis);
-         logger.info("Current cycle: {}", worldThread.cycle());
-         logger.info("Current render cycle: {}", cycles);*/
+        if (!paused && !ended) run(tpf); else stop();
+        auxiliaryUpdates(tpf);
         if(nextState != this) close();
         return nextState;
     }
-
-    public synchronized void switchState(GameState state) {
-        nextState = state;
-
+    
+    private void auxiliaryUpdates(float tpf){
+        soundManager.update();
+        cameraManager.update(tpf);
+    }
+    private void run(float tpf){
+        keepWorldThreadRunning();
+        updatePlanes(tpf);
+        projectileManager.update(tpf);
+        if (player.plane().crashed()) {
+            ended = true;
+        }
+        /* take another look at it later to get rid of a chance of a null reference */
+        if (speedoMeterUI != null && altimeterUI != null) {
+            speedoMeterUI.setText(player.plane().velocityKmh() + "km/h");
+            altimeterUI.setText((player.plane().getHeight() + "m"));
+            aoaUI.setText("Aoa: "+(player.plane().aoa()));
+        }
+    }
+    
+    private void stop(){
+        stopWorldThread();
+        soundManager.muteAllSounds();
     }
 
     private void updatePlanes(float tpf) {
         worldThread.updatePlaneLocations();
         planes.forEach(plane -> {
             //plane.update(tpf);
-            if (terrainManager.checkCollisionWithGround(plane)) {
-                plane.crashed(true);
-            };
+            if (terrainManager.checkCollisionWithGround(plane)) plane.crashed(true);
             plane.updateSound();
             projectileManager.checkCollision(plane);
         });
@@ -175,14 +168,9 @@ public class MissionState implements GameState {
         initializeScene();
         ended = false;
     }
-
-    public void paused(boolean paused) {
-        this.paused = paused;
-    }
-
-    public boolean paused() {
-        return paused;
-    }
+    public synchronized void switchState(GameState state) {nextState = state;}
+    public void paused(boolean paused) {this.paused = paused;}
+    public boolean paused() {return paused;}
 
     public void initPlayer() {
         float kmh = 300f;
