@@ -141,7 +141,7 @@ public class Plane {
         shotdown = true;
     }
 
-    public void update(float tpf) {
+    public void update() {
         PlaneResponse localResponse = planeResponse;
         velocityMs = localResponse.velocityMs();
         float x = (float) localResponse.translation.x;

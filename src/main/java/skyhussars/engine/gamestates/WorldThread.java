@@ -77,7 +77,7 @@ public class WorldThread extends TimerTask {
     }
 
     public void updatePlaneLocations() {
-        sp(planes,p -> p.update(tick));
+        sp(planes,p -> p.update());
     }
 
 }
