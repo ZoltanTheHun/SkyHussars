@@ -70,12 +70,11 @@ public class ProjectileManager {
         projectiles.add(projectile);
     }
     
-    public synchronized void update(float tpf) {
-        sp(newProjectiles,p -> rootNode.attachChild(p));
+    public synchronized void updateGeoms(){
+         sp(newProjectiles,p -> rootNode.attachChild(p));
         newProjectiles.clear();
         
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
-        pp(projectiles,projectile -> projectile.update(tpf));
         Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
             Projectile projectile = it.next();
@@ -95,6 +94,10 @@ public class ProjectileManager {
                 }
             }
         }
+    }
+    
+    public synchronized void update(float tpf) {
+        pp(projectiles,projectile -> projectile.update(tpf));
     }
 
     public synchronized void checkCollision(Plane plane) {

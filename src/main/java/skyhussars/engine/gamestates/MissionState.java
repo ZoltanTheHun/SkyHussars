@@ -124,7 +124,7 @@ public class MissionState implements GameState {
     private void run(float tpf){
         keepWorldThreadRunning();
         updatePlanes(tpf);
-        projectileManager.update(tpf);
+        projectileManager.updateGeoms();
         if (player.plane().crashed()) {
             ended = true;
         }

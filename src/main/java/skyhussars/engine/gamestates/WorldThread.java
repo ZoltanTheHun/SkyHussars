@@ -71,6 +71,7 @@ public class WorldThread extends TimerTask {
         pp(aiPilots,aiPilot -> aiPilot.update(world));
         List<Bullet> bullets = flatList(pm(planes,plane -> plane.tick(tick, environment)));
         projectileManager.addProjectiles(bullets);
+        projectileManager.update(tick);
         cycle.incrementAndGet();
     }
 
