@@ -35,16 +35,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import skyhussars.engine.weapons.Bullet;
 import skyhussars.engine.weapons.ProjectileManager;
 import static skyhussars.utility.Streams.*;
 
 public class WorldThread extends TimerTask {
-
-    private final static Logger logger = LoggerFactory.getLogger(WorldThread.class);
-
+    
     private final List<Plane> planes;
     private final float tick;
 
@@ -67,14 +63,19 @@ public class WorldThread extends TimerTask {
     private final AtomicLong cycle = new AtomicLong(0);
     
     @Override
-    public void run() {     
+    public synchronized void run() {     
         pp(aiPilots,aiPilot -> aiPilot.update(world));
         List<Bullet> bullets = flatList(pm(planes,plane -> plane.tick(tick, environment)));
         projectileManager.addProjectiles(bullets);
         projectileManager.update(tick);
         cycle.incrementAndGet();
     }
+    
+    public synchronized WorldThread updateView(){
+        sp(planes,p -> p.update());
+        projectileManager.updateGeoms();
+        return this;
+    }
 
     public long cycle() {return cycle.get();}
-    public void updatePlaneLocations() {sp(planes,p -> p.update());}
 }

@@ -123,8 +123,8 @@ public class MissionState implements GameState {
     }
     private void run(float tpf){
         keepWorldThreadRunning();
-        updatePlanes(tpf);
-        projectileManager.updateGeoms();
+        worldThread.updateView();
+        updatePlanes();
         if (player.plane().crashed()) {
             ended = true;
         }
@@ -141,8 +141,7 @@ public class MissionState implements GameState {
         soundManager.muteAllSounds();
     }
 
-    private void updatePlanes(float tpf) {
-        worldThread.updatePlaneLocations();
+    private void updatePlanes() {
         planes.forEach(plane -> {
             //plane.update(tpf);
             if (terrainManager.checkCollisionWithGround(plane)) plane.crashed(true);
