@@ -31,6 +31,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import static java.lang.Math.abs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static skyhussars.utility.Streams.create;
 import static skyhussars.utility.Streams.pp;
 import static skyhussars.utility.Streams.sp;
 
@@ -63,41 +65,42 @@ public class ProjectileManager {
         sp(bullets,bullet -> this.addProjectile(bullet));
     }
     public synchronized void addProjectile(Bullet projectile) {
-        Geometry newGeometry = dataManager.getBullet();
-        projectileGeometries.add(newGeometry);
-        newProjectiles.add(newGeometry);
-        newGeometry.move(projectile.getLocation());
         projectiles.add(projectile);
     }
     
     public synchronized void updateGeoms(){
-         sp(newProjectiles,p -> rootNode.attachChild(p));
-        newProjectiles.clear();
-        
+        int geometrySurplus = projectileGeometries.size() - projectiles.size();
+
+        if(geometrySurplus < 0) { 
+            //if we have more projectiles than geometries
+            //add as much geometry as necessary
+            List<Geometry> newGeoms = create(abs(geometrySurplus),() -> dataManager.getBullet());
+            projectileGeometries.addAll(newGeoms);
+            newGeoms.forEach(g -> rootNode.attachChild(g));
+            
+        } else if (geometrySurplus > 0){ 
+            // if we have less projectiles than geometries
+            // hide/remove the ones that are not needed
+            int lastActiveInd = projectileGeometries.size() - geometrySurplus;
+            List<Geometry> extraGeoms = new LinkedList<>(projectileGeometries.subList(lastActiveInd,  projectileGeometries.size()));
+            extraGeoms.forEach(g ->{rootNode.detachChild(g);});
+            projectileGeometries.removeAll(extraGeoms);
+        }
+        /*by this point both list should have same size*/
         Iterator<Geometry > geomIterator = projectileGeometries.iterator();
         Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
             Projectile projectile = it.next();
-            if (!projectile.isLive()) {
-                it.remove();
-                if (geomIterator.hasNext()) {
-                    Geometry geom = geomIterator.next();
-                    rootNode.detachChild(geom);
-                    geomIterator.remove();
-                }
-            } else {
-                if (geomIterator.hasNext()) {
-                    Geometry geom = geomIterator.next();
-                    geom.setLocalTranslation(projectile.getLocation());
-                    Vector3f direction = projectile.getVelocity().normalize();
-                    geom.lookAt(direction, Vector3f.UNIT_Y);
-                }
-            }
+            Geometry geom = geomIterator.next();
+            geom.setLocalTranslation(projectile.getLocation());
+            Vector3f direction = projectile.getVelocity().normalize();
+            geom.lookAt(direction, Vector3f.UNIT_Y);
         }
     }
     
     public synchronized void update(float tpf) {
         pp(projectiles,projectile -> projectile.update(tpf));
+        projectiles.removeIf(p -> !p.isLive());
     }
 
     public synchronized void checkCollision(Plane plane) {

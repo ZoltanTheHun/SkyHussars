@@ -29,6 +29,7 @@ import com.jme3.math.Vector3f;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Streams {
@@ -67,5 +68,14 @@ public class Streams {
     
     public static Vector3f sum(Stream<Vector3f> vectors){
         return vectors.reduce(Vector3f.ZERO,Vector3f::add);
+    }
+    
+    public static <T> List<T> create(int n,Supplier<T> supplier){
+        if(n < 0) throw new IllegalArgumentException();
+        List<T> list = new LinkedList<>();
+        for(int i = 0;i<n;i++){
+            list.add(supplier.get());
+        }
+        return list;
     }
 }
