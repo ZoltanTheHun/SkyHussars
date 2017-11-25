@@ -41,7 +41,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import skyhussars.engine.physics.PlaneResponse;
+import static skyhussars.utility.Streams.list;
 import static skyhussars.utility.Streams.pf;
+import static skyhussars.utility.Streams.pp;
 
 public class MissionState implements GameState {
 
@@ -85,7 +87,7 @@ public class MissionState implements GameState {
     /**
      * This method is used to initialize a scene
      */
-    public void initializeScene() { initPlayer();}
+    private void initializeScene() { initPlayer();}
 
     private void keepWorldThreadRunning() {
         if (timer == null) {
@@ -111,7 +113,7 @@ public class MissionState implements GameState {
     @Override
     public synchronized GameState update(float tpf) {
         if(nextState == null) initialize();
-        if (!paused && !ended) run(tpf); else stop();
+        if (!paused && !ended) run(); else stop();
         auxiliaryUpdates(tpf);
         if(nextState != this) close();
         return nextState;
@@ -121,7 +123,8 @@ public class MissionState implements GameState {
         soundManager.update();
         cameraManager.update(tpf);
     }
-    private void run(float tpf){
+    
+    private void run(){
         keepWorldThreadRunning();
         worldThread.updateView();
         updatePlanes();

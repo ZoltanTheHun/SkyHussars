@@ -50,12 +50,11 @@ import skyhussars.engine.physics.PlanePhysics;
 import skyhussars.engine.physics.PlaneResponse;
 import skyhussars.engine.plane.instruments.AnalogueAirspeedIndicator;
 import skyhussars.engine.weapons.Bullet;
+import static skyhussars.planeed.UiHelpers.kmhToMs;
 import static skyhussars.utility.NumberFormats.*;
 import static skyhussars.utility.Streams.*;
 
 public class Plane {
-
-    private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
     private PlaneMissionDescriptor planeMissionDescriptor;
     private String name;
@@ -110,7 +109,6 @@ public class Plane {
         this.airspeedIndicator = airspeedIndicator;
     }
         
-    private PlaneResponse planeResponse(){return planeResponse;}
     public Plane planeResponse(PlaneResponse pr){planeResponse = pr; return this;}
     
     private Plane sortoutAirfoils(List<Airfoil> airfoils){
@@ -197,8 +195,8 @@ public class Plane {
     public Plane setHeight(int height) { planeResponse = planeResponse.height(height);return this;}
     public Plane setLocation(int x, int z) {setLocation(x, (int) planeResponse.height(), z);return this;}
     public Plane setLocation(int x, int y, int z) { setLocation(new Vector3d(x, y, z)); return this;}
-
     public synchronized void setLocation(Vector3d translation) {planeResponse = planeResponse.translation(translation);}
+    public Plane velocityKmh(float kmh){planeResponse = planeResponse.velocity(kmhToMs(kmh)); return this;}
     
     public float roll() {
         int i = forward().cross(Vector3f.UNIT_Y).dot(up()) > 0 ? 1 : -1;

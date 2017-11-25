@@ -97,6 +97,7 @@ public class MissionFactory {
             Plane plane = planeFactory.createPlane(planeMission.planeType());
             Vector3d startLocation = new Vector3d(planeMission.startLocation());
             plane.setLocation(startLocation);
+            plane.velocityKmh(400);
             plane.planeMissinDescriptor(planeMission);
             plane.setThrottle(0.6f);
             rootNode.attachChild(plane.planeGeometry().root());

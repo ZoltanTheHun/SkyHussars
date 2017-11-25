@@ -48,6 +48,7 @@ public class AIPilot {
 
     public void update(World world) {
         plane.getLocation();
+        plane.setThrottle(1);
 
         // first simple decision tree like AI.
         // 1. don't get too close to earth

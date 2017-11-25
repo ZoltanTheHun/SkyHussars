@@ -77,6 +77,12 @@ public final class PlaneResponse {
         return new PlaneResponse(rotation,translation, 
                 velocity,aoa,angularAcceleration,angularVelocity);
     }
+    /**
+     * Copy the current plane response with a new velocity expressed in m/s
+     * 
+     * @param velocity of the plane in  m/s
+     * @return a new plane response
+     */
     public PlaneResponse velocity(float velocity){
         return new PlaneResponse(rotation,translation, 
                 forwardNorm().mult(velocity),aoa,angularAcceleration,angularVelocity);
