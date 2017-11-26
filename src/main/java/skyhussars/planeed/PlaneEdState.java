@@ -26,7 +26,7 @@
 package skyhussars.planeed;
 
 import com.google.common.base.Preconditions;
-import skyhussars.engine.plane.PlaneDescriptor;
+import skyhussars.persistence.PlaneDescriptor;
 import java.io.File;
 import static skyhussars.planeed.UiHelpers.*;
 import java.util.Optional;

@@ -26,7 +26,7 @@
 package skyhussars.planeed;
 
 import java.io.File;
-import skyhussars.engine.plane.PlaneDescriptor;
+import skyhussars.persistence.PlaneDescriptor;
 
 public interface PersistanceCallback {
     public PlaneDescriptor loadPlane(File file);

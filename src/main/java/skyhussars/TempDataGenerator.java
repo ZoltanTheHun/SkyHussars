@@ -32,7 +32,7 @@ import skyhussars.engine.plane.EngineLocation;
 import skyhussars.engine.plane.GunDescriptor;
 import skyhussars.engine.plane.GunGroupDescriptor;
 import skyhussars.engine.plane.GunLocationDescriptor;
-import skyhussars.engine.plane.PlaneDescriptor;
+import skyhussars.persistence.PlaneDescriptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jme3.math.Vector3f;
 import java.io.File;

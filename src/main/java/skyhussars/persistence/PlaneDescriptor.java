@@ -23,9 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.plane;
+package skyhussars.persistence;
 
 import java.util.List;
+import skyhussars.engine.plane.AirfoilDescriptor;
+import skyhussars.engine.plane.EngineLocation;
+import skyhussars.engine.plane.GunGroupDescriptor;
 
 public class PlaneDescriptor {
 

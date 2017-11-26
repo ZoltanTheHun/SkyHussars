@@ -27,45 +27,22 @@
 package skyhussars.engine.data;
 
 import skyhussars.engine.plane.GunDescriptor;
-
 import java.util.List;
 
 public class Plane {
     
     private String name;
     private List<ArmamentGroup> armamentGroups;
-
-    public List<ArmamentGroup> getArmamentGroups() {
-        return armamentGroups;
-    }
-
-    public void setArmamentGroups(List<ArmamentGroup> armamentGroups) {
-        this.armamentGroups = armamentGroups;
-    }
     private GunDescriptor gun;
     private Engine engine;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public GunDescriptor getGun() {
-        return gun;
-    }
-
-    public void setGun(GunDescriptor gun) {
-        this.gun = gun;
-    }
-
-    public Engine getEngine() {
-        return engine;
-    }
-
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }
+    
+    public List<ArmamentGroup> getArmamentGroups() { return armamentGroups; }
+    public void setArmamentGroups(List<ArmamentGroup> armamentGroups) { this.armamentGroups = armamentGroups; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public GunDescriptor getGun() { return gun; }
+    public void setGun(GunDescriptor gun) { this.gun = gun; }
+    public Engine getEngine() { return engine; }
+    public void setEngine(Engine engine) { this.engine = engine; }
+    
 }

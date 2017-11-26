@@ -26,7 +26,7 @@
 package skyhussars.engine.loader;
 
 import skyhussars.engine.data.PlaneRegistry;
-import skyhussars.engine.plane.PlaneDescriptor;
+import skyhussars.persistence.PlaneDescriptor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

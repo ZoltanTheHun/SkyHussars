@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.plane;
 
+import skyhussars.persistence.PlaneDescriptor;
 import static com.jme3.math.FastMath.PI;
 import skyhussars.engine.DataManager;
 import skyhussars.engine.ModelManager;
