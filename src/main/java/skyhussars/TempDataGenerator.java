@@ -25,6 +25,7 @@
  */
 package skyhussars;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import skyhussars.engine.physics.Aileron;
 import skyhussars.engine.plane.AirfoilDescriptor;
 import skyhussars.engine.plane.EngineDescriptor;
@@ -32,7 +33,7 @@ import skyhussars.engine.plane.EngineLocation;
 import skyhussars.engine.plane.GunDescriptor;
 import skyhussars.engine.plane.GunGroupDescriptor;
 import skyhussars.engine.plane.GunLocationDescriptor;
-import skyhussars.persistence.PlaneDescriptor;
+import skyhussars.persistence.plane.PlaneDescriptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jme3.math.Vector3f;
 import java.io.File;
@@ -43,9 +44,24 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class TempDataGenerator {
-
+    
+    public Optional<IOException> createTerrainAt(String folder){
+        IOException ioex = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            TerrainDescriptor terrain = new TerrainDescriptor(5);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(folder + "/terrain.json"), terrain);
+            System.out.println(mapper.writeValueAsString(terrain));
+        } catch (IOException ex) {
+            ioex = ex; 
+        }
+        return Optional.ofNullable(ioex);
+    }
+    
     private Map<String, PlaneDescriptor> planes = new HashMap<>();
     private Map<String, EngineDescriptor> engines = new HashMap<>();
 

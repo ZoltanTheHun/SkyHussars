@@ -48,8 +48,8 @@ public class SkyHussars extends SimpleApplication {
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);
 
-    public static void main(String[] args) {
-        AppSettings settings = new AppSettings(false);
+    public static void main(String[] args) { 
+       AppSettings settings = new AppSettings(false);
         settings.setTitle("SkyHussars");
         settings.setUseJoysticks(true);
         

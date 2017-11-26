@@ -23,11 +23,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.planeed;
+package skyhussars.persistence.terrain;
 
-import java.io.File;
-import skyhussars.persistence.plane.PlaneDescriptor;
-
-public interface PersistanceCallback {
-    public PlaneDescriptor loadPlane(File file);
+public class TerrainDescriptor {
+    
+    public final int size;
+    
+    public TerrainDescriptor(int size){
+        this.size = size;
+    }
+    
 }

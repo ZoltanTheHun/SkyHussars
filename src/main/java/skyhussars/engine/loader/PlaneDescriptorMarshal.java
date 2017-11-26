@@ -25,7 +25,7 @@
  */
 package skyhussars.engine.loader;
 
-import skyhussars.persistence.PlaneDescriptor;
+import skyhussars.persistence.plane.PlaneDescriptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;

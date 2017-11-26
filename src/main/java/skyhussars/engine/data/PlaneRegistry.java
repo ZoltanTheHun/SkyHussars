@@ -25,7 +25,7 @@
  */
 package skyhussars.engine.data;
 
-import skyhussars.persistence.PlaneDescriptor;
+import skyhussars.persistence.plane.PlaneDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

@@ -108,9 +108,7 @@ public class ProjectileManager {
         projectileGeometries.forEach(projectile -> {
             CollisionResults collisionResults = new CollisionResults();
             if (projectile.collideWith(planeNode.getWorldBound(), collisionResults) > 0) {
-                if (collisionResults.size() > 0) {
-                    plane.hit();
-                }
+                if (collisionResults.size() > 0) plane.hit();
             }
         });
     }
