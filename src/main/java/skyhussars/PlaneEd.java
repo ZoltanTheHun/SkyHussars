@@ -25,7 +25,7 @@
  */
 package skyhussars;
 
-import skyhussars.engine.loader.PlaneDescriptorMarshal;
+import skyhussars.persistence.plane.PlaneDescriptorMarshal;
 import skyhussars.planeed.EditorView;
 import skyhussars.planeed.PlaneEdState;
 import skyhussars.planeed.PlaneProperties;

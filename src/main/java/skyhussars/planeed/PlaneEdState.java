@@ -30,7 +30,7 @@ import skyhussars.persistence.plane.PlaneDescriptor;
 import java.io.File;
 import static skyhussars.planeed.UiHelpers.*;
 import java.util.Optional;
-import skyhussars.engine.loader.PlaneDescriptorMarshal;
+import skyhussars.persistence.plane.PlaneDescriptorMarshal;
 public class PlaneEdState {
     
     private File openFile;

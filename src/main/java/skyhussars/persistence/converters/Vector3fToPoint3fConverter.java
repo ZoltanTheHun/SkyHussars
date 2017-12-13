@@ -23,30 +23,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.loader;
+package skyhussars.persistence.converters;
 
-import skyhussars.persistence.plane.PlaneDescriptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.Converter;
+import com.jme3.math.Vector3f;
+import javax.vecmath.Point3f;
 
-public class PlaneDescriptorMarshal {
+public class Vector3fToPoint3fConverter implements Converter<Vector3f, Point3f> {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-    
-    public void marshal(PlaneDescriptor planeDescriptor,File file){
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, planeDescriptor);
-        } catch (IOException ex) {
-           throw new RuntimeException(ex);
-        }
+    @Override
+    public Point3f convert(Vector3f value) {
+        return new Point3f(value.x, value.y, value.z);
     }
 
-    public PlaneDescriptor unmarshal(File descriptorFile) {
-        PlaneDescriptor planeDescriptor = null;
-        try {
-            planeDescriptor = mapper.readValue(descriptorFile, PlaneDescriptor.class);
-        } catch (IOException ex) {}
-        return planeDescriptor;
+    @Override
+    public JavaType getInputType(TypeFactory typeFactory) {
+        return typeFactory.constructType(Vector3f.class);
     }
+
+    @Override
+    public JavaType getOutputType(TypeFactory typeFactory) {
+        return typeFactory.constructType(Point3f.class);    }
+
 }

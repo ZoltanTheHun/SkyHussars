@@ -28,7 +28,7 @@ package skyhussars;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.gamestates.GameState;
 import skyhussars.engine.gamestates.OptionsManager;
-import skyhussars.engine.loader.PlaneRegistryLoader;
+import skyhussars.persistence.plane.PlaneRegistryLoader;
 import skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;

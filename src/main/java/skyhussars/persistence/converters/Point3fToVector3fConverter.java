@@ -23,7 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.loader.converters;
+package skyhussars.persistence.converters;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -31,20 +31,21 @@ import com.fasterxml.jackson.databind.util.Converter;
 import com.jme3.math.Vector3f;
 import javax.vecmath.Point3f;
 
-public class Vector3fToPoint3fConverter implements Converter<Vector3f, Point3f> {
+public class Point3fToVector3fConverter implements Converter<Point3f, Vector3f> {
 
     @Override
-    public Point3f convert(Vector3f value) {
-        return new Point3f(value.x, value.y, value.z);
+    public Vector3f convert(Point3f value) {
+        return new Vector3f(value.x, value.y, value.z);
     }
 
     @Override
     public JavaType getInputType(TypeFactory typeFactory) {
-        return typeFactory.constructType(Vector3f.class);
+        return typeFactory.constructType(Point3f.class);
     }
 
     @Override
     public JavaType getOutputType(TypeFactory typeFactory) {
-        return typeFactory.constructType(Point3f.class);    }
+        return typeFactory.constructType(Vector3f.class);
+    }
 
 }

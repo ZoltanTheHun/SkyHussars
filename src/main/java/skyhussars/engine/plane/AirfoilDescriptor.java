@@ -25,8 +25,8 @@
  */
 package skyhussars.engine.plane;
 
-import skyhussars.engine.loader.converters.Point3fToVector3fConverter;
-import skyhussars.engine.loader.converters.Vector3fToPoint3fConverter;
+import skyhussars.persistence.converters.Point3fToVector3fConverter;
+import skyhussars.persistence.converters.Vector3fToPoint3fConverter;
 import skyhussars.engine.physics.Aileron;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

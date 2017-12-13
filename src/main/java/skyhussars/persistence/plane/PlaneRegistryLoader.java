@@ -23,10 +23,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.loader;
+package skyhussars.persistence.plane;
 
 import skyhussars.engine.data.PlaneRegistry;
-import skyhussars.persistence.plane.PlaneDescriptor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
