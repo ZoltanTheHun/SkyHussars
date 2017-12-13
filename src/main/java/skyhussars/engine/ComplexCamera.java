@@ -110,7 +110,7 @@ public class ComplexCamera implements InitializingBean {
     }
 
     /**
-     * TODO: getting nth viewport is unsafe
+     * @return returns the camera for the closest viewport
      */
     public Camera testCamera() {
         return viewPorts.get(0).cam();

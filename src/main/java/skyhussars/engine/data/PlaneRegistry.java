@@ -95,7 +95,7 @@ public class PlaneRegistry {
     }
     /**
      * Returns the planeDescriptor by name of the descriptor
-     * @param name
+     * @param name Name of the plane descriptor that needs to be retrieved
      * @return a planeDescriptor
      */
     public PlaneDescriptor planeDescriptor(String name){

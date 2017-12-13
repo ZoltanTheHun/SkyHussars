@@ -29,8 +29,6 @@ import static com.jme3.math.FastMath.*;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.slf4j.Logger;

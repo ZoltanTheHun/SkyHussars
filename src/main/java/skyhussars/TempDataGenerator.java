@@ -51,14 +51,14 @@ public class TempDataGenerator {
     
     public Optional<IOException> createTerrainAt(String folder){
         IOException ioex = null;
-        try {
+        /*try {
             ObjectMapper mapper = new ObjectMapper();
-            TerrainDescriptor terrain = new TerrainDescriptor(5);
+            TerrainDescriptor terrain = new TerrainDescriptor(5,"");
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(folder + "/terrain.json"), terrain);
             System.out.println(mapper.writeValueAsString(terrain));
         } catch (IOException ex) {
             ioex = ex; 
-        }
+        }*/
         return Optional.ofNullable(ioex);
     }
     

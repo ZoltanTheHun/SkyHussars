@@ -25,12 +25,29 @@
  */
 package skyhussars.persistence.terrain;
 
+import static com.google.common.base.Preconditions.*;
+
+
+/**
+ * This class is the representation of the Terrain datastructure in the filesystem
+ */
 public class TerrainDescriptor {
     
+    public final String name;
     public final int size;
+    public final String heightMapLocation;
     
-    public TerrainDescriptor(int size){
+    /**
+     * 
+     * @param name name of the Terrain
+     * @param size size of the Terrain in kms
+     * @param heightMapLocation location of the heightmap data for the terrain
+     */
+    public TerrainDescriptor(String name,int size,String heightMapLocation){
+        if(size < 1) throw new IllegalArgumentException();
+        this.name = checkNotNull(name);
         this.size = size;
+        this.heightMapLocation = checkNotNull(heightMapLocation);
     }
     
 }

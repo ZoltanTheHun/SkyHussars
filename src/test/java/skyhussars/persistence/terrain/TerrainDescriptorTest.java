@@ -23,44 +23,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.physics;
+package skyhussars.persistence.terrain;
 
-import static com.jme3.math.FastMath.abs;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-public class LiftCoefficient {
-
-    /**
-     * @param name Name of the lift coefficient table
-     * @param aoas List of angle of attacks
-     * @param machs List of machs speeds
-     * @param clfs  List of lift coefficients for angle of attacks and mach speeds
-     */
-    public LiftCoefficient(String name,float[] aoas, float[] machs,float[][] clfs){
-        this.name = name;
-        this.aoas = aoas;
-        this.machs = machs;
-        this.clfs = clfs;      
+public class TerrainDescriptorTest {
+    
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
+    
+    @Test
+    public void testInstantiation(){
+        TerrainDescriptor terrainDescriptor = new TerrainDescriptor("Test Terrain",10,"Test");
     }
     
-    private final String name;
-    private final float[] aoas;
-    private final float[] machs;
-    private final float[][] clfs;
-
-    public float calc(float aoa,float machSpeed) {
-        //abs is used for symmetric wings? not perfect
-        float absAoa = abs(aoa);
-        float liftCoefficient = 0f;
-        for (int i = 1; i < aoas.length; i++) {
-            if (absAoa < aoas[i]) {
-                float diff = aoas[i] - aoas[i - 1];
-                float real = absAoa - aoas[i - 1];
-                float a = real / diff;
-                float b = 1f - a;
-                liftCoefficient = clfs[0][i] * a + clfs[0][i - 1] * b;
-                break;
-            }
-        }
-        return liftCoefficient;
+    @Test 
+    public void testNegativeSize(){
+        expected.expect(IllegalArgumentException.class);
+        TerrainDescriptor test = new TerrainDescriptor("Test Terrain",-10,"Test");
     }
+
+    @Test 
+    public void testZeroSize(){
+        expected.expect(IllegalArgumentException.class);
+        TerrainDescriptor test = new TerrainDescriptor("Test Terrain",0,"Test");
+    }
+    @Test
+    public void testMissingName(){
+        expected.expect(NullPointerException.class);
+        TerrainDescriptor test = new TerrainDescriptor(null,10,"Test");
+    }
+    @Test
+    public void testMissingLocation(){
+        expected.expect(NullPointerException.class);
+        TerrainDescriptor test = new TerrainDescriptor("Test",10,null);
+    }
+    
 }
