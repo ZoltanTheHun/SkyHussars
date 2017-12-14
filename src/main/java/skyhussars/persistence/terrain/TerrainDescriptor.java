@@ -26,6 +26,7 @@
 package skyhussars.persistence.terrain;
 
 import static com.google.common.base.Preconditions.*;
+import java.util.Objects;
 
 
 /**
@@ -33,10 +34,12 @@ import static com.google.common.base.Preconditions.*;
  */
 public class TerrainDescriptor {
     
-    public final String name;
-    public final int size;
-    public final String heightMapLocation;
+    public String name;
+    public int size;
+    public String heightMapLocation;
     
+    /* For Jackson deserialization */
+    private TerrainDescriptor(){};
     /**
      * 
      * @param name name of the Terrain
@@ -49,5 +52,37 @@ public class TerrainDescriptor {
         this.size = size;
         this.heightMapLocation = checkNotNull(heightMapLocation);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + this.size;
+        hash = 97 * hash + Objects.hashCode(this.heightMapLocation);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TerrainDescriptor other = (TerrainDescriptor) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.size != other.size) {
+            return false;
+        }
+        if (!Objects.equals(this.heightMapLocation, other.heightMapLocation)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
 }
