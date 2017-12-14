@@ -120,7 +120,7 @@ public class SymmetricAirfoilTest {
         dampAngles = new float[3];
         afp.damp.toAngles(dampAngles);
         logger.info("Damp angles: " + Arrays.toString(dampAngles));
-        assertEquals(3f, afp.aoa, 0.1);
+        assertEquals(1f, afp.aoa, 0.1);
     }
 
     private final float mass = 5307.0f;
@@ -153,7 +153,7 @@ public class SymmetricAirfoilTest {
         logger.info("Rolling: 1 degree.");
         AirfoilResponse afp = aileron.tick(airDensity, Vector3f.UNIT_Z.negate().mult(300), new Vector3f(0,0,0.01745f));  // 1 degree of roll
         logger.info("Damping test: Actual AoA: " + afp.aoa);
-        assertEquals(1f, afp.aoa, 0.1);
+        assertEquals(3f, afp.aoa, 0.1);
         Vector3f angAcc = momentOfInertiaTensor.invert().mult(afp.torque);
         logger.info("Damping test: Angular Acceleration: " + angAcc);
         float[] dampAngles = new float[3];
