@@ -35,7 +35,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import skyhussars.persistence.base.Marshal;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class MarshalTest {

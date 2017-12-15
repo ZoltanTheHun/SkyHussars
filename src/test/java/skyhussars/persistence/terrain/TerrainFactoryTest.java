@@ -25,21 +25,14 @@
  */
 package skyhussars.persistence.terrain;
 
-import java.util.Arrays;
-import java.util.List;
+import org.junit.Test;
 
-/**
- * This class is responsible to create a Terrain for a game session and
- * to hide the details of the persistence system
- */
-public class TerrainFactory {
+public class TerrainFactoryTest {
     
-    private final TerrainDescriptor td = new TerrainDescriptor("Adria",500,"Maps/Adria/Adria4.bmp");
-    /**
-     * Provides a list of available terrains from the current factory
-     * @return a list of terrains
-     */
-    public List<String> availableTerrains(){
-        return Arrays.asList(td.name);
+    @Test
+    public void testThatTerrainIsAvailable(){
+        TerrainFactory tf = new TerrainFactory();
+        assert(tf.availableTerrains()!= null);
+        assert(tf.availableTerrains().size()>0);
     }
 }

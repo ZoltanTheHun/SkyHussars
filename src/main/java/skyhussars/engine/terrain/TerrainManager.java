@@ -39,6 +39,7 @@ import com.jme3.texture.Texture;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.persistence.terrain.TerrainFactory;
 
 @Component
 public class TerrainManager {
@@ -53,6 +54,8 @@ public class TerrainManager {
     private Node rootNode;
 
     private Optional<TerrainQuad> terrain;
+    
+    private final TerrainFactory terrainFactory = new TerrainFactory();
 
     public TerrainQuad getTerrain() {
         return terrain.get(); //yeah, this is unsafe for now
