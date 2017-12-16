@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Marshal {
-        private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     
     public static <T> void marshal(T descriptor,File file){
         try { mapper.writerWithDefaultPrettyPrinter().writeValue(file, descriptor); }

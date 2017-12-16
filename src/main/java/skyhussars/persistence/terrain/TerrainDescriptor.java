@@ -40,6 +40,7 @@ public class TerrainDescriptor {
     
     /* For Jackson deserialization */
     private TerrainDescriptor(){};
+    
     /**
      * 
      * @param name name of the Terrain
