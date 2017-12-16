@@ -29,6 +29,7 @@ import java.io.File;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class RegistryLoaderTest {
      
@@ -38,19 +39,24 @@ public class RegistryLoaderTest {
      @Test
     public void testNameNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader(null,new File(""));
+        RegistryLoader rl = new RegistryLoader(null,new File(""),TerrainDescriptor.class);
     }
     
     @Test
     public void testFileNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader("",null);
+        RegistryLoader rl = new RegistryLoader("Test",null,TerrainDescriptor.class);
     }
     
     @Test
+    public void testDescriptorClassNullCheck(){
+        expected.expect(NullPointerException.class);
+        RegistryLoader rl = new RegistryLoader("Test",new File(""),null);
+    }
+    @Test
     public void testDirectoryCheck(){
         expected.expect(IllegalArgumentException.class);
-        RegistryLoader rl = new RegistryLoader("Test",new File(""));
+        RegistryLoader rl = new RegistryLoader("Test",new File(""),TerrainDescriptor.class);
     }
     
 }

@@ -29,31 +29,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import skyhussars.persistence.plane.PlaneDescriptor;
-import skyhussars.persistence.plane.PlaneDescriptorMarshal;
 
 public class RegistryLoader<T> {
     
+    private String name;
+    private File registryLocation;
+    private Class<T> targetClass;
+    private String jsonName;
     private Registry<T> registry;
     
-    public RegistryLoader(String name,File registryLocation){
-        checkNotNull(name);
-        checkNotNull(registryLocation);
+    public RegistryLoader(String name,File registryLocation,Class<T> targetClass){
+        this.name = checkNotNull(name);
+        this.registryLocation = checkNotNull(registryLocation);
+        this.targetClass = checkNotNull(targetClass);
         if(!registryLocation.isDirectory()) 
             throw new IllegalArgumentException( 
                     name + " registry: Unable to open planes directory. " 
                             + registryLocation.getPath()
                             + " is not a directoy");
-        collectDirectories(name,registryLocation);
+        List<T> descriptors = loadDescriptors();
     }
     
-    private void loadDescriptors(String name,File registryLocation){
-        List<T> registry = new ArrayList();
-        for(File f : collectDirectories(name, registryLocation)){
-            
-        }
-    }
-    private File[] collectDirectories(String name,File registryLocation) {
+    
+    private File[] collectDirectories() {
         File[] directories = registryLocation.listFiles();
         if (directories == null) {
             throw new IllegalStateException(
@@ -68,17 +66,16 @@ public class RegistryLoader<T> {
         return directories;
     }
     
-        private List<PlaneDescriptor> loadDescriptor(File name) {
-        PlaneDescriptorMarshal pdl = new PlaneDescriptorMarshal();
-        List<PlaneDescriptor> planeDescriptors = new ArrayList<>();
-        for (File planeDirectory : collectPlaneDirectories(assetFolder)) {
-            PlaneDescriptor planeDescriptor = pdl.unmarshal(openDescriptorFile(planeDirectory));
-            planeDescriptors.add(planeDescriptor);
+    private List<T> loadDescriptors() {
+        List<T> descriptors = new ArrayList<>();
+        for (File dir : collectDirectories()) {
+            T descriptor = Marshal.unmarshal(openDescriptorFile(dir),targetClass);
+            descriptors.add(descriptor);
         }
-        return planeDescriptors;
+        return descriptors;
     }
     
-    private File openDescriptorFile(File planeDirectory,String jsonName) {
+    private File openDescriptorFile(File planeDirectory) {
         File descriptorFile = new File(planeDirectory.getPath() + jsonName);
         if (!descriptorFile.exists()) {
             throw new IllegalStateException(
