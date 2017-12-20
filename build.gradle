@@ -14,6 +14,7 @@ if (!hasProperty('mainClass')) {
 }
 
 //mainClassName = 'skyhussars.PlaneEd'
+//mainClassName = 'skyhussars.TerrainEd'
 mainClassName = 'skyhussars.SkyHussars'
 repositories {
     flatDir { dirs 'libs' }

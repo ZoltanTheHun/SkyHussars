@@ -8,9 +8,10 @@ The project can be easily built with gradle. There are 2 commands available to a
 ```
 gradle assemble - this will create the common distribution, with runscripts for Linux and Windows
 gradle launch4j -Ptargetexe=SkyHussars -  this will build the mane game and create a Windows executable
-gradle launch4j -Ptargetexe=PlaneEd -  this will build the plane edtior and create a Windows executable
+gradle launch4j -Ptargetexe=PlaneEd -  this will build the plane editor and create a Windows executable
+gradle launch4j -Ptargetexe=TerrainEd -  this will build the terrain editor and create a Windows executable
 ```
 Game assets are stored in the assets folder. All of them are licensed under some open source license or created by _ZoltanTheHun_, with the license indicated in the appropriate folder.
 
-Download the latest release [here](https://github.com/ZoltanTheHun/SkyHussars/releases/tag/R8)
+Download the latest release [here](https://github.com/ZoltanTheHun/SkyHussars/releases/tag/R11)
 
