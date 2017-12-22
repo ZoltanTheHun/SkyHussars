@@ -12,6 +12,10 @@ gradle launch4j -Ptargetexe=PlaneEd -  this will build the plane editor and crea
 gradle launch4j -Ptargetexe=TerrainEd -  this will build the terrain editor and create a Windows executable
 ```
 Game assets are stored in the assets folder. All of them are licensed under some open source license or created by _ZoltanTheHun_, with the license indicated in the appropriate folder.
+Due to site constraints, assets are going to be removed from GitHub. 
+Assets are available here:
+https://www.dropbox.com/sh/4bhwgvjuhryz3it/AADpq1R_zTMRDK1bVWTlV1Bsa?dl=0
+
 
 Download the latest release [here](https://github.com/ZoltanTheHun/SkyHussars/releases/tag/R11)
 
