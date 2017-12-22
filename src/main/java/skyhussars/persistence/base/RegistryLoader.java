@@ -106,7 +106,7 @@ public class RegistryLoader<T> {
     }
     
     /**
-     * To retrive the loaded registry from the loader
+     * To retrieve the loaded registry from the loader
      * @return a registry of type T
      */
     public Registry<T> registry(){ return registry; }
