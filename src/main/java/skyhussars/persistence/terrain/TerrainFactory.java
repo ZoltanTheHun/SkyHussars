@@ -34,12 +34,13 @@ import java.util.List;
  */
 public class TerrainFactory {
     
-    private final TerrainDescriptor td = new TerrainDescriptor("Adria",500,"Maps/Adria/Adria4.bmp");
+    private final TerrainDescriptor adria = new TerrainDescriptor("Adria",500,"Maps/Adria/Adria4.bmp");
+    private final TerrainDescriptor test = new TerrainDescriptor("Test",4,"Maps/Test/test.bmp");
     /**
      * Provides a list of available terrains from the current factory
      * @return a list of terrains
      */
     public List<String> availableTerrains(){
-        return Arrays.asList(td.name);
+        return Arrays.asList(adria.name,test.name);
     }
 }
