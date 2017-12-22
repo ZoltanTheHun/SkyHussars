@@ -26,6 +26,9 @@
 package skyhussars;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -37,6 +40,9 @@ public class TerrainEd extends Application  {
     @Override
     public void start(Stage stage) throws Exception {
         stage.show();
+        Parent root = FXMLLoader.load(getClass().getResource("/terrained/terrained_main.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
     }
     
     public static void main(String[] args) {
