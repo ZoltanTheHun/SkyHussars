@@ -30,16 +30,34 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RegistryLoader can create a registry of type T.
+ * In a given registryLocation it goes through all the subfolders and it looks 
+ * for json descriptors with a given jsonName. All the descriptors are marshaled to 
+ * the type specified with the targetClass
+ * 
+ * The registry is expected to be populated when the constructor runs.
+ * 
+ * @param <T> The type of the registry
+ */
 public class RegistryLoader<T> {
     
-    private String name;
-    private File registryLocation;
-    private Class<T> targetClass;
-    private String jsonName;
-    private Registry<T> registry;
+    private final String name;
+    private final File registryLocation;
+    private final Class<T> targetClass;
+    private final String jsonName; 
+    private final Registry<T> registry;
     
-    public RegistryLoader(String name,File registryLocation,Class<T> targetClass){
+    /**
+     * @param name A name that can identify this registry.
+     * @param registryLocation The location which contains the folders with the registry elements
+     * @param jsonName The name of the descriptors to be loaded
+     * @param targetClass The type of registry that should be created
+     */
+    public RegistryLoader(String name,File registryLocation,String jsonName,Class<T> targetClass){
         this.name = checkNotNull(name);
+        this.jsonName = checkNotNull(jsonName);
+        if(jsonName.length() == 0) throw new IllegalArgumentException();
         this.registryLocation = checkNotNull(registryLocation);
         this.targetClass = checkNotNull(targetClass);
         if(!registryLocation.isDirectory()) 
@@ -47,7 +65,9 @@ public class RegistryLoader<T> {
                     name + " registry: Unable to open planes directory. " 
                             + registryLocation.getPath()
                             + " is not a directoy");
+        
         List<T> descriptors = loadDescriptors();
+        registry = new Registry<>();
     }
     
     
@@ -76,7 +96,7 @@ public class RegistryLoader<T> {
     }
     
     private File openDescriptorFile(File planeDirectory) {
-        File descriptorFile = new File(planeDirectory.getPath() + jsonName);
+        File descriptorFile = new File(planeDirectory.getPath() + File.separator + jsonName);
         if (!descriptorFile.exists()) {
             throw new IllegalStateException(
                     "Unable to open plane descriptor at "
@@ -84,4 +104,10 @@ public class RegistryLoader<T> {
         }
         return descriptorFile;
     }
+    
+    /**
+     * To retrive the loaded registry from the loader
+     * @return a registry of type T
+     */
+    public Registry<T> registry(){ return registry; }
 }

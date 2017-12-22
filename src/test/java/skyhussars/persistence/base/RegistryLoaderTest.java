@@ -26,9 +26,12 @@
 package skyhussars.persistence.base;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class RegistryLoaderTest {
@@ -36,27 +39,69 @@ public class RegistryLoaderTest {
     @Rule
     public ExpectedException expected = ExpectedException.none();
     
-     @Test
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    
+    @Test
     public void testNameNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader(null,new File(""),TerrainDescriptor.class);
+        RegistryLoader rl = new RegistryLoader(null,new File(""),"test.json",TerrainDescriptor.class);
     }
     
     @Test
     public void testFileNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader("Test",null,TerrainDescriptor.class);
+        RegistryLoader rl = new RegistryLoader("Test",null,"test.json",TerrainDescriptor.class);
     }
     
     @Test
     public void testDescriptorClassNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader("Test",new File(""),null);
+        RegistryLoader rl = new RegistryLoader("Test",new File(""),"test.json",null);
     }
     @Test
     public void testDirectoryCheck(){
         expected.expect(IllegalArgumentException.class);
-        RegistryLoader rl = new RegistryLoader("Test",new File(""),TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),"test.json",TerrainDescriptor.class);
+    }
+    @Test
+    public void testJsonNameCheck(){
+        expected.expect(NullPointerException.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),null,TerrainDescriptor.class);
+    }
+    
+    @Test 
+    public void testJsonNameLengthCheck(){
+        expected.expect(IllegalArgumentException.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),"",TerrainDescriptor.class);
+    }
+    
+    @Test
+    public void testTerrainRegistryIsAvailable(){
+        try {
+            File root = folder.newFolder("root");
+            File child1 = new File(root, "child1");
+            child1.mkdir();
+            File child2 = new File(root, "child2");
+            child2.mkdir();
+            File target1 = new File(child1,"test.json");
+            File target2 = new File(child2,"test.json");
+            target1.createNewFile();
+            target2.createNewFile();                    
+            PrintWriter test1 = new PrintWriter(target1);
+            PrintWriter test2 = new PrintWriter(target2);
+            test1.print("{  \"name\" : \"Test Terrain 1\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+            test1.flush();
+            test1.close();
+            test2.print("{  \"name\" : \"Test Terrain 2\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+            test2.flush();
+            test2.close();
+            RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Terrain Registry",root,"test.json",TerrainDescriptor.class);
+            Registry<TerrainDescriptor> tr = rl.registry();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
     
 }
