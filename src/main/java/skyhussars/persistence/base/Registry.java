@@ -25,6 +25,34 @@
  */
 package skyhussars.persistence.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * A registry of T items. The specialty of the registry that all items are 
+ * identified by a unique name and no new item can be registered twice with the 
+ * same name
+ * 
+ * @param <T> 
+ */
 public class Registry<T> {
     
+    private final Map<String, T> descriptors;
+    
+    /**
+     * This constructor creates an empty registry that does not contain any item
+     */
+    public Registry(){
+        this.descriptors = new HashMap<>();
+    }
+    
+    /**
+     * Return an item by name, if no item exists the returned value is a null
+     * @param name name of the item, null is not permitted
+     * @return an item identified by the given name
+     */
+    public T item(String name){
+        return descriptors.get(checkNotNull(name));
+    }
 }

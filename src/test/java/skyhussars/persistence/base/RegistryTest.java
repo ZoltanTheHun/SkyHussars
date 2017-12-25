@@ -25,12 +25,25 @@
  */
 package skyhussars.persistence.base;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class RegistryTest {
     
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
+    
     @Test
-    public void testRegistryInstantiation(){
+    public void testCannotRetreiveByNullNameFromRegistry(){
+        expected.expect(NullPointerException.class);
         Registry registry = new Registry();
+        registry.item(null);
+    }
+    
+    @Test
+    public void testThatNoneExistingItemRetrievedAsNull(){
+        Registry registry = new Registry();
+        assert(registry.item("Test") == null);
     }
 }
