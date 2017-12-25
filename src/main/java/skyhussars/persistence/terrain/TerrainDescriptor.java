@@ -34,12 +34,16 @@ import java.util.Objects;
  */
 public class TerrainDescriptor {
     
-    public String name;
-    public int size;
-    public String heightMapLocation;
+    public final String name;
+    public final int size;
+    public final String heightMapLocation;
     
     /* For Jackson deserialization */
-    private TerrainDescriptor(){};
+    private TerrainDescriptor(){
+        this.name = null;
+        this.size = 0;
+        this.heightMapLocation = null;
+    };
     
     /**
      * 
