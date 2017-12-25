@@ -47,4 +47,18 @@ public class RegistryTest {
         Registry registry = new Registry();
         assert(registry.item("Test") == Optional.empty());
     }
+    
+    @Test
+    public void testThatSameNameCannotBeRegisteredTwice(){
+        Registry registry = new Registry();
+        assert(registry.register("Test", "Test1"));
+        assert(!registry.register("Test", "Test2"));
+    }
+    
+    @Test
+    public void testThatRegistryEntryCanBeRetrieved(){
+        Registry<String> registry = new Registry<>();
+        assert(registry.register("Test", "Test1"));
+        assert(registry.item("Test").map(s -> s.equals("Test1")).orElse(Boolean.FALSE));
+    }
 }

@@ -49,6 +49,20 @@ public class Registry<T> {
     }
     
     /**
+     * Register a new item to this registry. If the name is already associated 
+     * with this registry, return with false value
+     * @param name the name of the descriptor
+     * @param descriptor the new descriptor item of type T
+     * @return if the name already exists, return false, if the registration is
+     * successful, return true
+     */
+    public boolean register(String name,T descriptor){
+        if (descriptors.containsKey(name)) return false;
+        descriptors.put(name, descriptor);
+        return true;
+    }
+    
+    /**
      * Return an item by name, if no item exists the returned value is a null
      * @param name name of the item, null is not permitted
      * @return an item identified by the given name
