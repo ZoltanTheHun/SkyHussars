@@ -25,6 +25,7 @@
  */
 package skyhussars.persistence.base;
 
+import java.util.Optional;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,8 +43,8 @@ public class RegistryTest {
     }
     
     @Test
-    public void testThatNoneExistingItemRetrievedAsNull(){
+    public void testThatNoneExistingItemRetrievedAsNone(){
         Registry registry = new Registry();
-        assert(registry.item("Test") == null);
+        assert(registry.item("Test") == Optional.empty());
     }
 }

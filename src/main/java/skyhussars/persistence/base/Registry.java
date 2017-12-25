@@ -28,6 +28,7 @@ package skyhussars.persistence.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A registry of T items. The specialty of the registry that all items are 
@@ -52,7 +53,7 @@ public class Registry<T> {
      * @param name name of the item, null is not permitted
      * @return an item identified by the given name
      */
-    public T item(String name){
-        return descriptors.get(checkNotNull(name));
+    public Optional<T> item(String name){
+        return Optional.ofNullable(descriptors.get(checkNotNull(name)));
     }
 }
