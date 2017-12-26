@@ -25,6 +25,7 @@
  */
 package skyhussars.persistence.base;
 
+import static java.util.Arrays.*;
 import java.util.Optional;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,5 +61,24 @@ public class RegistryTest {
         Registry<String> registry = new Registry<>();
         assert(registry.register("Test", "Test1"));
         assert(registry.item("Test").map(s -> s.equals("Test1")).orElse(Boolean.FALSE));
+    }
+    
+    @Test
+    public void testThatRegistryItemNamesCanBeQueried(){
+        Registry<String> registry = new Registry<>();
+        assert(registry.register("Test a", "Test1"));
+        assert(registry.register("Test b", "Test2"));
+        assert(registry.register("Test c", "Test2"));
+        assert(registry.availableItems().containsAll(asList("Test a","Test b","Test c")));
+    }
+    
+    @Test
+    public void testThatSameDescriptorCanAppearMultipleTimes(){
+        Registry<String> registry = new Registry<>();
+        assert(registry.register("Test a", "Test1"));
+        assert(registry.register("Test b", "Test1"));
+        String item1 = registry.item("Test a").get();
+        String item2 = registry.item("Test b").get();
+        assert(item1.equals(item2));
     }
 }

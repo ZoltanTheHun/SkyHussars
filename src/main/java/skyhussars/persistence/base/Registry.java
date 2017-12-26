@@ -26,7 +26,9 @@
 package skyhussars.persistence.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -63,11 +65,20 @@ public class Registry<T> {
     }
     
     /**
-     * Return an item by name, if no item exists the returned value is a null
+     * Return an item by name, if no item exists the returned value is empty
      * @param name name of the item, null is not permitted
-     * @return an item identified by the given name
+     * @return an optional item identified by the given name
      */
     public Optional<T> item(String name){
         return Optional.ofNullable(descriptors.get(checkNotNull(name)));
+    }
+    
+    /**
+     * Lists the available items in this registry by name
+     *
+     * @return the list of item names stored in this registry
+     */
+    public List<String> availableItems() {
+        return new ArrayList<>(descriptors.keySet());
     }
 }
