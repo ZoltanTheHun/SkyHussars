@@ -29,6 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * RegistryLoader can create a registry of type T.
@@ -53,8 +55,10 @@ public class RegistryLoader<T> {
      * @param registryLocation The location which contains the folders with the registry elements
      * @param jsonName The name of the descriptors to be loaded
      * @param targetClass The type of registry that should be created
+     * @param nameOf A function that can provide a name for a given T
      */
-    public RegistryLoader(String name,File registryLocation,String jsonName,Class<T> targetClass){
+    public RegistryLoader(String name,File registryLocation,String jsonName,Class<T> targetClass,Function<T,String> nameOf){
+        checkNotNull(nameOf);
         this.name = checkNotNull(name);
         this.jsonName = checkNotNull(jsonName);
         if(jsonName.length() == 0) throw new IllegalArgumentException();
@@ -66,8 +70,10 @@ public class RegistryLoader<T> {
                             + registryLocation.getPath()
                             + " is not a directoy");
         
-        List<T> descriptors = loadDescriptors();
         registry = new Registry<>();
+        for(T descriptor : loadDescriptors()){
+            registry.register(nameOf.apply(descriptor), descriptor);
+        }
     }
     
     

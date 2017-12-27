@@ -28,6 +28,7 @@ package skyhussars.persistence.base;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.function.Function;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,38 +43,53 @@ public class RegistryLoaderTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
+    private Function<TerrainDescriptor,String> nameOf = t -> t.name;
+    
     @Test
     public void testNameNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader(null,new File(""),"test.json",TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor> rl = new RegistryLoader<>(null,new File(""),
+                "test.json",TerrainDescriptor.class,nameOf);
     }
     
     @Test
     public void testFileNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader("Test",null,"test.json",TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor> rl = new RegistryLoader<>("Test",null,
+                "test.json",TerrainDescriptor.class,nameOf);
     }
     
     @Test
     public void testDescriptorClassNullCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader rl = new RegistryLoader("Test",new File(""),"test.json",null);
+        RegistryLoader rl = new RegistryLoader("Test",new File(""),"test.json",
+                null,nameOf);
     }
     @Test
     public void testDirectoryCheck(){
         expected.expect(IllegalArgumentException.class);
-        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),"test.json",TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),
+                "test.json",TerrainDescriptor.class,nameOf);
     }
     @Test
     public void testJsonNameCheck(){
         expected.expect(NullPointerException.class);
-        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),null,TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),
+                null,TerrainDescriptor.class,nameOf);
     }
     
     @Test 
     public void testJsonNameLengthCheck(){
         expected.expect(IllegalArgumentException.class);
-        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),"",TerrainDescriptor.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),
+                "",TerrainDescriptor.class,nameOf);
+    }
+    
+    @Test 
+    public void testNamingFunctionNullCheck(){
+        expected.expect(NullPointerException.class);
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),
+                "",TerrainDescriptor.class,null);
     }
     
     @Test
@@ -88,16 +104,20 @@ public class RegistryLoaderTest {
             File target2 = new File(child2,"test.json");
             target1.createNewFile();
             target2.createNewFile();                    
-            PrintWriter test1 = new PrintWriter(target1);
-            PrintWriter test2 = new PrintWriter(target2);
-            test1.print("{  \"name\" : \"Test Terrain 1\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
-            test1.flush();
-            test1.close();
-            test2.print("{  \"name\" : \"Test Terrain 2\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
-            test2.flush();
-            test2.close();
-            RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Terrain Registry",root,"test.json",TerrainDescriptor.class);
+
+            try (PrintWriter test1 = new PrintWriter(target1)) {
+                
+                test1.print("{  \"name\" : \"Test Terrain 1\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+                test1.flush();
+            }
+            try (PrintWriter test2 = new PrintWriter(target2)) {
+                test2.print("{  \"name\" : \"Test Terrain 2\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+                test2.flush();
+            }
+            RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader<>("Terrain Registry",root,
+                    "test.json",TerrainDescriptor.class,nameOf);
             Registry<TerrainDescriptor> tr = rl.registry();
+            assert(tr.item("Test Terrain 1") != null);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
