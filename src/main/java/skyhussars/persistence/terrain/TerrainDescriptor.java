@@ -82,10 +82,7 @@ public class TerrainDescriptor {
         if (this.size != other.size) {
             return false;
         }
-        if (!Objects.equals(this.heightMapLocation, other.heightMapLocation)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.heightMapLocation, other.heightMapLocation);
     }
     
     

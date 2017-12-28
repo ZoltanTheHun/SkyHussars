@@ -23,29 +23,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+package skyhussars.terrained;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 
 /**
- * Terrain Editor application for SkyHussars
- * 
+ * Controller class for TerrainEd. The controller is defined from SceneBuilder
  */
-public class TerrainEd extends Application  {
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/terrained/terrained_main.fxml"));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+public class TerrainEdController implements Initializable{
+    
+    /**
+     * To handle the event when the user clicks on the About item in the menubar
+     */
+    public void handleAboutAction(){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("SkyHussars TerrainEd");
+        alert.setHeaderText("SkyHussars TerrainEd - A terrain editor for SkyHussars");
+        alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
+        alert.showAndWait();  
     }
     
-    public static void main(String[] args) {
-        launch(args);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
     }
 }
