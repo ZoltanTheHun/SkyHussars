@@ -117,7 +117,7 @@ public class RegistryLoaderTest {
             RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader<>("Terrain Registry",root,
                     "test.json",TerrainDescriptor.class,nameOf);
             Registry<TerrainDescriptor> tr = rl.registry();
-            assert(tr.item("Test Terrain 1") != null);
+            assert(tr.item("Test Terrain 1").isPresent());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
