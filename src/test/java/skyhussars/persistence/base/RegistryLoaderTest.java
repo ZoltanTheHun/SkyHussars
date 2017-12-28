@@ -71,6 +71,7 @@ public class RegistryLoaderTest {
         RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader("Test",new File(""),
                 "test.json",TerrainDescriptor.class,nameOf);
     }
+    
     @Test
     public void testJsonNameCheck(){
         expected.expect(NullPointerException.class);
@@ -93,7 +94,66 @@ public class RegistryLoaderTest {
     }
     
     @Test
+    public void testFailOnDirectoryWithoutDescriptor(){
+        expected.expect(IllegalStateException.class);
+        try {
+        File root = folder.newFolder("root");
+        File child1 = new File(root, "child1");
+        child1.mkdir();
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader<>("Terrain Registry",root,
+                    "test.json",TerrainDescriptor.class,nameOf);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    @Test
+    public void testFailOnEmptyRootDirectory(){
+        expected.expect(IllegalStateException.class);
+        try {
+        File root = folder.newFolder("root");
+        RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader<>("Terrain Registry",root,
+                    "test.json",TerrainDescriptor.class,nameOf);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    @Test
     public void testTerrainRegistryIsAvailable(){
+        try {
+            File root = folder.newFolder("root");
+            File child1 = new File(root, "child1");
+            child1.mkdir();
+            File child2 = new File(root, "child2");
+            child2.mkdir();
+            File target1 = new File(child1,"test.json");
+            File target2 = new File(child2,"test.json");
+            target1.createNewFile();
+            target2.createNewFile();                    
+
+            try (PrintWriter test1 = new PrintWriter(target1)) {
+                test1.print("{  \"name\" : \"Test Terrain 1\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+                test1.flush();
+            }
+            try (PrintWriter test2 = new PrintWriter(target2)) {
+                test2.print("{  \"name\" : \"Test Terrain 2\",  \"size\" : 10,  \"heightMapLocation\" : \"Test\"}");
+                test2.flush();
+            }
+            RegistryLoader<TerrainDescriptor>  rl = new RegistryLoader<>("Terrain Registry",root,
+                    "test.json",TerrainDescriptor.class,nameOf);
+            Registry<TerrainDescriptor> tr = rl.registry();
+            /* Test that that item can be retrieved */
+            assert(tr.item("Test Terrain 1").isPresent());
+            /* Test that empty folders are skipped */
+            assert(tr.availableItems().size() == 2);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    @Test
+    public void testThatEmptyRootReturnsEmptyRegistry(){
         try {
             File root = folder.newFolder("root");
             File child1 = new File(root, "child1");
@@ -121,7 +181,6 @@ public class RegistryLoaderTest {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-
     }
     
 }

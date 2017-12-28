@@ -44,10 +44,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataManager {
 
+    private final PlaneRegistry planeRegistry;
+    private final AssetManager assetManager;
+    
     @Autowired
-    private PlaneRegistry planeRegistry;
-    @Autowired
-    private AssetManager assetManager;
+    public DataManager(PlaneRegistry planeRegistry,AssetManager assetManager){
+        this.planeRegistry = planeRegistry;
+        this.assetManager = assetManager;
+    }
 
     private Geometry bulletTemplate;
 

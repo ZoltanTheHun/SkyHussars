@@ -30,7 +30,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * RegistryLoader can create a registry of type T.
