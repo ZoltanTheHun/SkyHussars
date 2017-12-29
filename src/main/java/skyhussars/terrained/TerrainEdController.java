@@ -39,7 +39,7 @@ import javafx.scene.control.Alert.AlertType;
 public class TerrainEdController implements Initializable{
     
     /**
-     * To handle the event when the user clicks on the About item in the menubar
+     * To handle the event when the user clicks on the About item in the menu
      */
     public void handleAboutAction(){
         Alert alert = new Alert(AlertType.INFORMATION);
@@ -47,6 +47,12 @@ public class TerrainEdController implements Initializable{
         alert.setHeaderText("TerrainEd - A terrain editor for SkyHussars");
         alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
         alert.showAndWait();  
+    }
+    
+    /**
+     * To handle the event when the user clicks on the Save item in the menu
+     */
+    public void handleSaveAction(){
     }
     
     @Override
