@@ -26,20 +26,35 @@
 
 package skyhussars.terrained;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import skyhussars.SkyHussars;
 
 
 /**
- * Controller class for TerrainEd. The controller is defined from SceneBuilder
+ * Controller class for TerrainEd. The controller is defined from SceneBuilder.
+ * This class is not thread safe
  */
 public class TerrainEdController implements Initializable{
     
+    @FXML
+    private TextField terrainName;
+    @FXML
+    private TextField terrainSize;
+    @FXML
+    private TextField terrainLocation;
+    
+    private Stage stage;
     /**
-     * To handle the event when the user clicks on the About item in the menu
+     *  This method handles the event when the user clicks on the About item in the menu
      */
     public void handleAboutAction(){
         Alert alert = new Alert(AlertType.INFORMATION);
@@ -50,10 +65,18 @@ public class TerrainEdController implements Initializable{
     }
     
     /**
-     * To handle the event when the user clicks on the Save item in the menu
+     * This method handles the event when the user clicks on the Save item in the menu
      */
     public void handleSaveAction(){
+        File file = saveAsChooser.showOpenDialog(stage);
     }
+    
+    private final FileChooser saveAsChooser = new FileChooser();
+    {saveAsChooser.setTitle("Save a terrain definition");}
+    {saveAsChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
+    {saveAsChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
+
+    public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
