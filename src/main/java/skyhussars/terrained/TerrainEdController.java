@@ -43,8 +43,8 @@ public class TerrainEdController implements Initializable{
      */
     public void handleAboutAction(){
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("SkyHussars TerrainEd");
-        alert.setHeaderText("SkyHussars TerrainEd - A terrain editor for SkyHussars");
+        alert.setTitle("SkyHussars - TerrainEd");
+        alert.setHeaderText("TerrainEd - A terrain editor for SkyHussars");
         alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
         alert.showAndWait();  
     }

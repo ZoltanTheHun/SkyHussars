@@ -41,6 +41,7 @@ public class TerrainEd extends Application  {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/terrained/terrained_main.fxml"));
         Scene scene = new Scene(root);
+        stage.setTitle("SkyHussars - TerrainEd");
         stage.setScene(scene);
         stage.show();
     }
