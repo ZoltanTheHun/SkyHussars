@@ -44,9 +44,9 @@
                   <Label prefHeight="17.0" prefWidth="198.0" text="Terrain Name:" />
                   <Label prefHeight="17.0" prefWidth="198.0" text="Terrain Size:" GridPane.rowIndex="1" />
                   <Label prefHeight="17.0" prefWidth="198.0" text="Terrain Location" GridPane.rowIndex="2" />
-                  <TextField id="terrainName" GridPane.columnIndex="1" />
-                  <TextField id="terrainSize" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField id="terrainLocation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField id="terrainName" fx:id="terrainName" GridPane.columnIndex="1" />
+                  <TextField id="terrainSize" fx:id="terrainSize" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField id="terrainLocation" fx:id="terrainLocation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
       </children>

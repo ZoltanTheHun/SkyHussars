@@ -85,6 +85,6 @@ public class TerrainEdController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         terrainName.textProperty().bindBidirectional(terrainProperties.name);
         terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
-        terrainName.textProperty().bindBidirectional(terrainProperties.location);
+        terrainLocation.textProperty().bindBidirectional(terrainProperties.location);
     }
 }
