@@ -26,16 +26,71 @@
 
 package skyhussars.terrained;
 
+import java.util.Objects;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 /**
- * This class separates between the UI and the persistence layer for terrains.
+ * This property container separates between the UI and the persistence layer
+ * for terrains.
  * 
  */
 public class TerrainProperties {
     public final StringProperty name = new SimpleStringProperty();
     public final IntegerProperty size = new SimpleIntegerProperty();
     public final StringProperty location = new SimpleStringProperty();
+    
+    /**
+     * Update all properties from a terrain descriptor.
+     * @param terrainDescriptor the terrain descriptor used to populate the properties
+     * @return returns the same TerrainProperties instance to allow method chaining
+     */
+    public TerrainProperties from(TerrainDescriptor terrainDescriptor){
+        name.set(terrainDescriptor.name);
+        size.set(terrainDescriptor.size);
+        location.set(terrainDescriptor.heightMapLocation);
+        return this;
+    }
+    
+    /**
+     * Create a new TerrainDescriptor from this property container
+     * @return a new terrain descriptor instance
+     */
+    public TerrainDescriptor asDescriptor(){
+        return new TerrainDescriptor(name.get(), size.get(), location.get());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.name);
+        hash = 23 * hash + Objects.hashCode(this.size);
+        hash = 23 * hash + Objects.hashCode(this.location);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TerrainProperties other = (TerrainProperties) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.size, other.size)) {
+            return false;
+        }
+        if (!Objects.equals(this.location, other.location)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

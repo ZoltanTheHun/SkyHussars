@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,36 +23,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
+package skyhussars.terrained;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import skyhussars.terrained.TerrainEdController;
+import org.junit.Test;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
-/**
- * Terrain Editor application for SkyHussars
- * 
- */
-public class TerrainEd extends Application  {
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        /* prepare the resource */
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
-        Parent root = loader.load();
-        /* setup the controller */
-        loader.<TerrainEdController>getController().stage(stage);
-        /* initialize the scene */
-        Scene scene = new Scene(root);
-        stage.setTitle("SkyHussars - TerrainEd");
-        stage.setScene(scene);
-        stage.show();
-    }
-    
-    public static void main(String[] args) {
-        launch(args);
+public class TerrainPropertiesTest {
+    @Test
+    public void testThatTerrainPropertiesConversionWorks(){
+        TerrainProperties terrainProperties = new TerrainProperties();
+        TerrainDescriptor terrainDescriptor = new TerrainDescriptor("Test", 3, "A location");
+        assert(terrainProperties.from(terrainDescriptor).asDescriptor().equals(terrainDescriptor));        
     }
 }

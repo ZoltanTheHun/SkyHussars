@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,36 +23,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import skyhussars.terrained.TerrainEdController;
+package skyhussars.terrained;
+
+import java.io.File;
 
 /**
- * Terrain Editor application for SkyHussars
- * 
+ * This class handles the persistence of the Terrain as created by the 
+ * TerrainEd UI
  */
-public class TerrainEd extends Application  {
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        /* prepare the resource */
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
-        Parent root = loader.load();
-        /* setup the controller */
-        loader.<TerrainEdController>getController().stage(stage);
-        /* initialize the scene */
-        Scene scene = new Scene(root);
-        stage.setTitle("SkyHussars - TerrainEd");
-        stage.setScene(scene);
-        stage.show();
-    }
-    
-    public static void main(String[] args) {
-        launch(args);
+public class Persistence {
+    public Persistence persist(String terrainName,
+            String terrainSize,
+            String location,File file) {
+        return this;
     }
 }
