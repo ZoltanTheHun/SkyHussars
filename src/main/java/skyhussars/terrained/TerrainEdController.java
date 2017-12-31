@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 import skyhussars.SkyHussars;
 
 
@@ -53,6 +54,7 @@ public class TerrainEdController implements Initializable{
     private TextField terrainLocation;
     
     private Stage stage;
+    private final TerrainProperties terrainProperties = new TerrainProperties();
     /**
      *  This method handles the event when the user clicks on the About item in the menu
      */
@@ -69,6 +71,7 @@ public class TerrainEdController implements Initializable{
      */
     public void handleSaveAction(){
         File file = saveAsChooser.showOpenDialog(stage);
+       // new Persistence().persist(terrainName, terrainSize, terrainLocation, file);
     }
     
     private final FileChooser saveAsChooser = new FileChooser();
@@ -80,5 +83,8 @@ public class TerrainEdController implements Initializable{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        terrainName.textProperty().bindBidirectional(terrainProperties.name);
+        terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
+        terrainName.textProperty().bindBidirectional(terrainProperties.location);
     }
 }
