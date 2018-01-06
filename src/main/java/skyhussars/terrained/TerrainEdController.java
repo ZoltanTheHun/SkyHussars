@@ -71,7 +71,7 @@ public class TerrainEdController implements Initializable{
      */
     public void handleSaveAction(){
         File file = saveAsChooser.showSaveDialog(stage);
-        new Persistence().persist(terrainProperties, file);
+        if(file != null) new Persistence().persist(terrainProperties, file);
     }
     
     private final FileChooser saveAsChooser = new FileChooser();
