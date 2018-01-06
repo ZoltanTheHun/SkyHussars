@@ -65,9 +65,9 @@ public class TerrainProperties {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 23 * hash + Objects.hashCode(this.name);
-        hash = 23 * hash + Objects.hashCode(this.size);
-        hash = 23 * hash + Objects.hashCode(this.location);
+        hash = 23 * hash + Objects.hashCode(this.name.getValue());
+        hash = 23 * hash + Objects.hashCode(this.size.getValue());
+        hash = 23 * hash + Objects.hashCode(this.location.getValue());
         return hash;
     }
 
@@ -80,13 +80,13 @@ public class TerrainProperties {
             return false;
         }
         final TerrainProperties other = (TerrainProperties) obj;
-        if (!Objects.equals(this.name, other.name)) {
+        if (!Objects.equals(this.name.getValue(), other.name.getValue())) {
             return false;
         }
-        if (!Objects.equals(this.size, other.size)) {
+        if (!Objects.equals(this.size.getValue(), other.size.getValue())) {
             return false;
         }
-        if (!Objects.equals(this.location, other.location)) {
+        if (!Objects.equals(this.location.getValue(), other.location.getValue())) {
             return false;
         }
         return true;

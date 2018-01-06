@@ -23,27 +23,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.terrained;
 
 import java.io.File;
-import skyhussars.persistence.base.Marshal;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import static skyhussars.persistence.base.Marshal.*;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
-/**
- * This class handles the persistence of the Terrain as created by the 
- * TerrainEd UI
- */
-public class Persistence {
+public class PersistenceTest {
     
-    /**
-    * This method saves the TerrainProperties into a file in TerrainDescriptor format.
-    * This method is threadsafe only if the files given as parameters are different.
-    * @param terrainProps The terrain properties to be persisted in descriptor format
-    * @param file The target file where the descriptor is written
-    * @return the same instance of persistence to be able to chain calls together
-    */
-    public Persistence persist(TerrainProperties terrainProps,File file) {
-        Marshal.marshal(terrainProps.asDescriptor(),file);
-        return this;
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    
+    @Test
+    public void terrainPersistenceTest(){
+        try {
+            TerrainProperties props = new TerrainProperties();
+            props.location.set("testLocation");
+            props.name.set("testName");
+            props.size.set(123);
+            File testFile = folder.newFile("test.txt");
+            new Persistence().persist(props, testFile);
+            TerrainProperties persisted = new TerrainProperties()
+                    .from(unmarshal(testFile, TerrainDescriptor.class));
+            
+            assertTrue(props.equals(persisted));
+        } catch (IOException ex) {
+            Logger.getLogger(PersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
 }
