@@ -70,8 +70,8 @@ public class TerrainEdController implements Initializable{
      * This method handles the event when the user clicks on the Save item in the menu
      */
     public void handleSaveAction(){
-        File file = saveAsChooser.showOpenDialog(stage);
-       // new Persistence().persist(terrainName, terrainSize, terrainLocation, file);
+        File file = saveAsChooser.showSaveDialog(stage);
+        new Persistence().persist(terrainProperties, file);
     }
     
     private final FileChooser saveAsChooser = new FileChooser();

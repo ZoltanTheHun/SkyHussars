@@ -33,9 +33,7 @@ import java.io.File;
  * TerrainEd UI
  */
 public class Persistence {
-    public Persistence persist(String terrainName,
-            String terrainSize,
-            String location,File file) {
+    public Persistence persist(TerrainProperties terrainProps,File file) {
         return this;
     }
 }
