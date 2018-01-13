@@ -85,7 +85,7 @@ public class TerrainManager {
         return texture;
     }
     
-    public void loadTerrain() {
+    public void loadTerrain(String name) {
         loadTerrain(adria);
     }
     public void loadTerrain(TerrainDefinition terrainDefinition) {
