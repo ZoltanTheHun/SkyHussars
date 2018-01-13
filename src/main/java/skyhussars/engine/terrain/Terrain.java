@@ -25,15 +25,8 @@
  */
 package skyhussars.engine.terrain;
 
-import com.jme3.material.Material;
-import com.jme3.texture.Texture;
-
 public class Terrain {
 
-    public Terrain(Material mat,Texture tx1, Texture tx2, Texture tx3) {
-        this.tx1 = tx1;
-        this.tx2 = tx2;
-        this.tx3 = tx3;
+    public Terrain() {
     }
-    private Texture tx1, tx2, tx3;
 }
