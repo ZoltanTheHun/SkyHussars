@@ -23,16 +23,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars.engine.terrain;
+package skyhussars.engine.physics.terrain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import skyhussars.engine.terrain.Terrain;
 
-public class Terrain {
-
-    private final TerrainQuad terrainQuad;
+public class TerrainTest {
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
     
-    public Terrain(TerrainQuad terrainQuad) {
-        this.terrainQuad = checkNotNull(terrainQuad);
+    @Test 
+    public void testInstantiation(){
+        Terrain terrain = new Terrain(new TerrainQuad());
+    }
+    @Test
+    public void testTerrainQuadMustNotBeNull() {
+        expected.expect(NullPointerException.class);
+        Terrain terrain = new Terrain(null);
     }
 }
