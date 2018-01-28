@@ -26,10 +26,6 @@
 
 package skyhussars.engine.weapons;
 
-/**
- *
- * @author ZoltanTheHun
- */
 public class Bomb {
 
 }
