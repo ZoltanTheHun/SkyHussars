@@ -85,11 +85,6 @@ public class PlaneEd extends Application {
         state.planeDescriptor().map(pd -> airfoilTable.airfoils(pd.getAirfolDescriptors()));
     }
     
-    public void save() {
-        state.save(planeProperties);
-    }
-    
-    public void saveAs(File file){
-        state.save(planeProperties,file);
-    }
+    public void save() {state.save(planeProperties);}
+    public void saveAs(File file){state.save(planeProperties,file);}
 }
