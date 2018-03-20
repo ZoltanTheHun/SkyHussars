@@ -145,7 +145,7 @@ public class SingleMissionMenu implements ScreenController {
         enemyCount = Integer.parseInt((String) event.getSelection());
     }
     
-    @NiftyEventSubscriber(id = "enemyCount")
+    @NiftyEventSubscriber(id = "theatre")
     public void setTheatre(final String id, final DropDownSelectionChangedEvent event) {
     }
 }
