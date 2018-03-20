@@ -74,6 +74,13 @@ public class TerrainEdController implements Initializable{
         if(file != null) new Persistence().persist(terrainProperties, file);
     }
     
+    /**
+     * This method handles the event when the user clicks on the Open item in the menu
+     */
+    public void handleOpenAction(){
+        
+    }
+    
     private final FileChooser saveAsChooser = new FileChooser();
     {saveAsChooser.setTitle("Save a terrain definition");}
     {saveAsChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
