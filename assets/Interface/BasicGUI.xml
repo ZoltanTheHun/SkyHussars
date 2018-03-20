@@ -132,6 +132,13 @@
                         <interact onChanged="setEnemyCount()"/>
                     </control>  
                 </panel>
+                <panel id="theatrePanel" width="50%"  childLayout="horizontal" padding="10px,10px,10px,10px">
+                    <text text="Theatre:" font="Interface/Fonts/Default.fnt" width="50%" height="100%" 
+                          wrap="true" textHAlign="left"/>
+                    <control id="theatre" width="50%" name="dropDown">
+                        <interact onChanged="setTheatre()"/>
+                    </control>  
+                </panel>
                 <panel id="button_panel" height="25%" width="50%" align="center" childLayout="horizontal" padding="25px">				
                     <panel id="okPanel" width="50%"  childLayout="vertical">
                         <control name="button" label="Start Flying" id="StartButton" 
