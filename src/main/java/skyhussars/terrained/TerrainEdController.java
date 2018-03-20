@@ -78,14 +78,19 @@ public class TerrainEdController implements Initializable{
      * This method handles the event when the user clicks on the Open item in the menu
      */
     public void handleOpenAction(){
-        
+        openChooser.showOpenDialog(stage);
     }
     
     private final FileChooser saveAsChooser = new FileChooser();
     {saveAsChooser.setTitle("Save a terrain definition");}
     {saveAsChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
     {saveAsChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
-
+    
+    private final FileChooser openChooser = new FileChooser();
+    {openChooser.setTitle("Open a terrain definition");}
+    {openChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
+    {openChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
+    
     public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
     
     @Override
