@@ -70,7 +70,7 @@ public class TerrainEdController implements Initializable{
      * This method handles the event when the user clicks on the Save item in the menu
      */
     public void handleSaveAction(){
-        File file = saveAsChooser.showSaveDialog(stage);
+        File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
         if(file != null) new Persistence().persist(terrainProperties, file);
     }
     
@@ -78,18 +78,16 @@ public class TerrainEdController implements Initializable{
      * This method handles the event when the user clicks on the Open item in the menu
      */
     public void handleOpenAction(){
-        openChooser.showOpenDialog(stage);
+        fileChooser("Open a terrain definition").showOpenDialog(stage);
     }
     
-    private final FileChooser saveAsChooser = new FileChooser();
-    {saveAsChooser.setTitle("Save a terrain definition");}
-    {saveAsChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
-    {saveAsChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
-    
-    private final FileChooser openChooser = new FileChooser();
-    {openChooser.setTitle("Open a terrain definition");}
-    {openChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
-    {openChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));}
+    private FileChooser fileChooser(String title){
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle(title);
+        chooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));
+        return chooser;
+    }
     
     public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
     
