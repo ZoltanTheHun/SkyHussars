@@ -54,13 +54,16 @@ public class TerrainManager {
 
     @Autowired
     private Node rootNode;
+    
+    @Autowired
+    private TheatreLoader theatreLoader;
 
     private Optional<TerrainQuad> terrain;
     
     private final TerrainFactory terrainFactory = new TerrainFactory();
 
     public List<String> terrainNames(){
-       return new ArrayList<>();
+       return theatreLoader.theatres();
     }
     public TerrainQuad getTerrain() {
         return terrain.get(); //yeah, this is unsafe for now

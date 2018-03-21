@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import skyhussars.engine.terrain.TheatreLoader;
 
 public class SkyHussars extends SimpleApplication {
 
@@ -80,6 +81,7 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("guiViewPort", getGuiViewPort());
         beanFactory.registerSingleton("listener", listener);
         beanFactory.registerSingleton("planeRegistry", new PlaneRegistryLoader(settingsManager.assetDirectory()).planeRegistry());
+        beanFactory.registerSingleton("theatreLoader",new TheatreLoader(settingsManager.assetDirectory()));
         OptionsManager optionsManager = new OptionsManager(APP_ROOT);
         beanFactory.registerSingleton("options",optionsManager.loadOptionsFromFileSystem());
         beanFactory.registerSingleton("optionsManager",optionsManager);
