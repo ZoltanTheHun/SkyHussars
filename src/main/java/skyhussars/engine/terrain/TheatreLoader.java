@@ -34,13 +34,14 @@ public class TheatreLoader {
     
     private final String theatresFolderName = "/Theatres";
     private final String jsonDescriptorname = "/theatre.json";
-    private final List<String> theatres = new ArrayList<>(); 
+    private final List<String> theatres; 
     private final File theatresFolder;
     
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
         theatresFolder.list ();
+        theatres = unmodifiableList(new ArrayList<>());
     }
-    public List<String> theatres(){ return unmodifiableList(theatres);}
+    public List<String> theatres(){ return theatres;}
     
 }
