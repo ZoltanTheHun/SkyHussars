@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.engine.terrain.TerrainManager;
 
 @Component
 public class SingleMissionMenu implements ScreenController {
@@ -58,6 +59,9 @@ public class SingleMissionMenu implements ScreenController {
 
     @Autowired
     private MissionFactory missionFactory;
+    
+    @Autowired
+    private TerrainManager terrainManager;
 
     private Nifty nifty;
     private Screen screen;
@@ -93,14 +97,23 @@ public class SingleMissionMenu implements ScreenController {
         }
         enemyCountBtn.selectItemByIndex(0);
     }
+    
+    private void populateTheatres(){
+        DropDown<String> theatres = screen.findNiftyControl("theatre", DropDown.class);
+        theatres.clear();
+        theatres.addAllItems(terrainManager.terrainNames());
+        if(theatres.itemCount() > 0) theatres.selectItemByIndex(0);
+    }
 
     @Override
     public void onStartScreen() {
         populateTimeControl();
         populatePlaneSelect();
         populateEnemyCount();
+        populateTheatres();
         inputManager.setCursorVisible(true);
     }
+    
 
     @Override
     public void onEndScreen() {

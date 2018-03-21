@@ -36,6 +36,9 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,6 +60,9 @@ public class TerrainManager {
     
     private final TerrainFactory terrainFactory = new TerrainFactory();
 
+    public List<String> terrainNames(){
+       return new ArrayList<>();
+    }
     public TerrainQuad getTerrain() {
         return terrain.get(); //yeah, this is unsafe for now
     }
