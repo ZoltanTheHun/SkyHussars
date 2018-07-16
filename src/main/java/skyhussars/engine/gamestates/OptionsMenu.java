@@ -47,7 +47,7 @@ public class OptionsMenu implements ScreenController {
     private Options options;
 
     @Autowired
-    private OptionsPersistence optionsManager;
+    private OptionsPersistence optionsPersistence;
 
     @Autowired
     private InputManager inputManager;
@@ -97,6 +97,6 @@ public class OptionsMenu implements ScreenController {
     private void setJoystick() {
         DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
         options.setJoy(Optional.of(joystickElement.getSelection()));
-        optionsManager.persistOptions(options);
+        optionsPersistence.persistOptions(options);
     }
 }
