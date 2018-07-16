@@ -54,7 +54,7 @@ public class TerrainDescriptor {
     public TerrainDescriptor(String name,int size,String heightMapLocation){
         if(size < 1) throw new IllegalArgumentException();
         this.name = checkNotNull(name);
-        this.size = size;
+        this.size = size; 
         this.heightMapLocation = checkNotNull(heightMapLocation);
     }
 

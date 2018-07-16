@@ -32,20 +32,20 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OptionsManager {
+public class OptionsPersistence {
 
-    private static final Logger log = LoggerFactory.getLogger(OptionsManager.class);
+    private static final Logger log = LoggerFactory.getLogger(OptionsPersistence.class);
     private final String location;
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new Jdk8Module());
     private final File file;
 
-    public OptionsManager(String optionsLocation) {
+    public OptionsPersistence(String optionsLocation) {
         location = optionsLocation;
         file = new File(location + "/options.txt");
     }
 
     public Options loadOptionsFromFileSystem() {
-        log.info("Loading options from: " + file.getAbsolutePath());
+        log.info("Loading options from: {}", file.getAbsolutePath());
         Options options = new Options();
         try {
             if (!file.exists()) {

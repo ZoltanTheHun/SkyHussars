@@ -27,7 +27,7 @@ package skyhussars;
 
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.gamestates.GameState;
-import skyhussars.engine.gamestates.OptionsManager;
+import skyhussars.engine.gamestates.OptionsPersistence;
 import skyhussars.persistence.plane.PlaneRegistryLoader;
 import skyhussars.engine.plane.Plane;
 import com.jme3.app.SimpleApplication;
@@ -82,7 +82,7 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("listener", listener);
         beanFactory.registerSingleton("planeRegistry", new PlaneRegistryLoader(settingsManager.assetDirectory()).planeRegistry());
         beanFactory.registerSingleton("theatreLoader",new TheatreLoader(settingsManager.assetDirectory()));
-        OptionsManager optionsManager = new OptionsManager(APP_ROOT);
+        OptionsPersistence optionsManager = new OptionsPersistence(APP_ROOT);
         beanFactory.registerSingleton("options",optionsManager.loadOptionsFromFileSystem());
         beanFactory.registerSingleton("optionsManager",optionsManager);
     }

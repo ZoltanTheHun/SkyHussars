@@ -32,7 +32,6 @@ import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class OptionsMenu implements ScreenController {
     private Options options;
 
     @Autowired
-    private OptionsManager optionsManager;
+    private OptionsPersistence optionsManager;
 
     @Autowired
     private InputManager inputManager;
