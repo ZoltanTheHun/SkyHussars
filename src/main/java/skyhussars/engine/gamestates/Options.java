@@ -30,7 +30,16 @@ import java.util.Optional;
 public class Options {
 
     private Optional<Integer> joyId = Optional.empty();
+    private Optional<String> joy = Optional.empty();
 
+    public Optional<String> getJoy() {
+        return joy;
+    }
+
+    public void setJoy(Optional<String> joy) {
+        this.joy = joy;
+    }
+    
     public Optional<Integer> getJoyId() {
         return joyId;
     }

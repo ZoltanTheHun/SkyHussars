@@ -31,6 +31,9 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,10 +52,7 @@ public class OptionsMenu implements ScreenController {
 
     @Autowired
     private InputManager inputManager;
-
-    private  Joystick[] joysticks;
-    private  boolean hasJoysticks;
-
+    
     @Override
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
@@ -61,21 +61,27 @@ public class OptionsMenu implements ScreenController {
 
     @Override
     public void onStartScreen() {
-        joysticks = inputManager.getJoysticks();
-        hasJoysticks = joysticks != null && joysticks.length > 0;
-        if (hasJoysticks) {
-            DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
-            int activeElement = 0; //we will default to first element if it is not set in options
-            for (int i = 0; i < joysticks.length; i++) {
-                joystickElement.addItem(joysticks[i].getName());
-                if (options.getJoyId().orElse(-1) == joysticks[i].getJoyId()) {
-                    activeElement = i;
-                }
-            }
-            joystickElement.selectItemByIndex(activeElement);
-        }
+        setupJoysticks();
     }
 
+    private void setupJoysticks(){
+        DropDown<String> dropdown = screen.findNiftyControl("joystickControl", DropDown.class);
+        dropdown.addAllItems(joys());
+        setActiveJoy(dropdown);
+    }
+    
+    private void setActiveJoy(DropDown<String> dropdown){
+        dropdown.selectItem(options.getJoy().orElse(""));
+    }
+    
+    private List<String> joys(){
+        List<String> joyIds =  new ArrayList<>();
+        Joystick[] joysticks = inputManager.getJoysticks();
+        if (joysticks != null)
+            for(Joystick joy : joysticks) joyIds.add(joy.getName());
+        return joyIds;
+    }
+    
     @Override
     public void onEndScreen() {
     }
@@ -90,10 +96,8 @@ public class OptionsMenu implements ScreenController {
     }
 
     private void setJoystick() {
-        if (hasJoysticks) {
-            DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
-            options.setJoyId(Optional.of(joysticks[joystickElement.getSelectedIndex()].getJoyId()));
-            optionsManager.persistOptions(options);
-        }
+        DropDown<String> joystickElement = screen.findNiftyControl("joystickControl", DropDown.class);
+        options.setJoy(Optional.of(joystickElement.getSelection()));
+        optionsManager.persistOptions(options);
     }
 }

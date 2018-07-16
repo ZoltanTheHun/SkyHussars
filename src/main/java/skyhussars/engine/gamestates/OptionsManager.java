@@ -45,7 +45,6 @@ public class OptionsManager {
     }
 
     public Options loadOptionsFromFileSystem() {
-
         log.info("Loading options from: " + file.getAbsolutePath());
         Options options = new Options();
         try {

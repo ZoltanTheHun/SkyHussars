@@ -40,6 +40,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import java.util.Arrays;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,20 +80,27 @@ public class ControlsMapper {
         inputManager.addListener(actionListener, PAUSE, CAMERA, RESET);
     }
     
-    public void setupFlightJoystickControls(FlightJoystickControls flightJoystrictControls) {
-        if (inputManager.getJoysticks() != null && options.getJoyId().isPresent()) {
-            for (Joystick joy : inputManager.getJoysticks()) {
-                if (joy.getJoyId() == options.getJoyId().orElse(-1)) {
-                    inputManager.addMapping(JOY_ROLL_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
-                    inputManager.addMapping(JOY_ROLL_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
-                    inputManager.addMapping(JOY_PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
-                    inputManager.addMapping(JOY_PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
-                    inputManager.addMapping(Trigger.FIRE.name(), new JoyButtonTrigger(joy.getJoyId(),0));
-                    break;
-                }
-            }
-        }
+    private Optional<Joystick> joy(String name){
+        if(inputManager.getJoysticks() != null)
+            for (Joystick joy : inputManager.getJoysticks()) 
+                if(name.equals(joy.getName())) return Optional.of(joy);
+        return Optional.empty();
+    }
+    
+    private void setupJoystickMapping(Joystick joy,FlightJoystickControls flightJoystrictControls){
+        inputManager.addMapping(JOY_ROLL_RIGHT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), false));
+        inputManager.addMapping(JOY_ROLL_LEFT, new JoyAxisTrigger(joy.getJoyId(), joy.getXAxisIndex(), true));
+        inputManager.addMapping(JOY_PITCH_UP, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), false));
+        inputManager.addMapping(JOY_PITCH_DOWN, new JoyAxisTrigger(joy.getJoyId(), joy.getYAxisIndex(), true));
+        inputManager.addMapping(Trigger.FIRE.name(), new JoyButtonTrigger(joy.getJoyId(),0));
         inputManager.addListener(flightJoystrictControls, JOY_PITCH_UP, JOY_PITCH_DOWN, JOY_ROLL_LEFT, JOY_ROLL_RIGHT);
+    }
+    
+    public void setupFlightJoystickControls(FlightJoystickControls flightJoystrictControls) {
+        if(options.getJoy().isPresent()){
+            Optional<Joystick> joy = joy(options.getJoy().get());
+            if(joy.isPresent()) setupJoystickMapping(joy.get(),flightJoystrictControls);
+        }
     }
     
     public void setupFlightKeyboardControls(FlightKeyboardControls flightKeyboardControls) {
