@@ -25,17 +25,14 @@
  */
 package skyhussars.engine.gamestates;
 
-import com.jme3.input.InputManager;
-import com.jme3.input.Joystick;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.engine.controls.ControlsMapper;
 
 @Component
 public class OptionsMenu implements ScreenController {
@@ -43,14 +40,9 @@ public class OptionsMenu implements ScreenController {
     private Nifty nifty;
     private Screen screen;
 
-    @Autowired
-    private Options options;
-
-    @Autowired
-    private OptionsPersistence optionsPersistence;
-
-    @Autowired
-    private InputManager inputManager;
+    @Autowired private Options options;
+    @Autowired private OptionsPersistence optionsPersistence;
+    @Autowired private ControlsMapper controlsMapper;
     
     @Override
     public void bind(Nifty nifty, Screen screen) {
@@ -63,22 +55,15 @@ public class OptionsMenu implements ScreenController {
         setupJoysticks();
     }
 
-    private void setupJoysticks(){
+    private DropDown<String> setupJoysticks(){
         DropDown<String> dropdown = screen.findNiftyControl("joystickControl", DropDown.class);
-        dropdown.addAllItems(joys());
+        dropdown.addAllItems(controlsMapper.joys());
         setActiveJoy(dropdown);
+        return dropdown;
     }
     
     private void setActiveJoy(DropDown<String> dropdown){
         dropdown.selectItem(options.getJoy().orElse(""));
-    }
-    
-    private List<String> joys(){
-        List<String> joyIds =  new ArrayList<>();
-        Joystick[] joysticks = inputManager.getJoysticks();
-        if (joysticks != null)
-            for(Joystick joy : joysticks) joyIds.add(joy.getName());
-        return joyIds;
     }
     
     @Override

@@ -40,9 +40,12 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import java.util.Arrays;
+import static java.util.Arrays.asList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static skyhussars.utility.Streams.*;
 
 @Component
 public class ControlsMapper {
@@ -133,6 +136,10 @@ public class ControlsMapper {
     }
     
     public void stripControl(InputListener... listeners){
-        for(InputListener l : listeners){ inputManager.removeListener(l);}
+        for(InputListener l : listeners) inputManager.removeListener(l);
+    }
+    
+    public List<String> joys(){ 
+        return list(sm(asList(inputManager.getJoysticks()), joy -> joy.getName()));
     }
 }
