@@ -26,8 +26,8 @@
 package skyhussars.engine.terrain;
 
 import java.io.File;
-import java.util.ArrayList;
 import static java.util.Collections.*;
+import static java.util.Arrays.*;
 import java.util.List;
 
 public class TheatreLoader {
@@ -39,8 +39,11 @@ public class TheatreLoader {
     
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
-        theatresFolder.list ();
-        theatres = unmodifiableList(new ArrayList<>());
+        theatres = loadAllTheatres();
+    }
+    
+    private List<String> loadAllTheatres(){
+        return unmodifiableList(asList(theatresFolder.list()));
     }
     public List<String> theatres(){ return theatres;}
     

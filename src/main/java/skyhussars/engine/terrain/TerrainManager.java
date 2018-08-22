@@ -36,7 +36,6 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ public class TerrainManager {
     
     private final TerrainFactory terrainFactory = new TerrainFactory();
 
-    public List<String> terrainNames(){
+    public List<String> theatreNames(){
        return theatreLoader.theatres();
     }
     public TerrainQuad getTerrain() {

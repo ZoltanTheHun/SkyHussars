@@ -101,7 +101,7 @@ public class SingleMissionMenu implements ScreenController {
     private void populateTheatres(){
         DropDown<String> theatres = screen.findNiftyControl("theatre", DropDown.class);
         theatres.clear();
-        theatres.addAllItems(terrainManager.terrainNames());
+        theatres.addAllItems(terrainManager.theatreNames());
         if(theatres.itemCount() > 0) theatres.selectItemByIndex(0);
     }
 
