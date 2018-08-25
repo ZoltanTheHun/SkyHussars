@@ -80,12 +80,12 @@ public class MissionFactory {
         return mission;
     }
 
-    public MissionState mission(String planeType, int enemyCount) {
+    public MissionState mission(String planeType, int enemyCount,String theatre) {
         MissionDescriptor missionDescriptor = dataModel.getNewMission(planeType, enemyCount);
         List<Plane> planes = planes(missionDescriptor);
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
-        terrainManager.loadTerrain("Adria");
+        terrainManager.loadTerrain(theatre);
         sky.init();
         dayLightWeatherManager.setLights();
         return mission;

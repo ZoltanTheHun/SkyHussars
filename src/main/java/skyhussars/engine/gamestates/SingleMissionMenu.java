@@ -124,7 +124,7 @@ public class SingleMissionMenu implements ScreenController {
     }
 
     public void startGame() {
-        menu.startMission(missionFactory.mission(planeType, enemyCount));
+        menu.startMission(missionFactory.mission(planeType, enemyCount,theatre));
         nifty.gotoScreen("main");
     }
 
@@ -152,6 +152,7 @@ public class SingleMissionMenu implements ScreenController {
 
     private int enemyCount = 0;
     private String planeType;
+    private String theatre;
 
     @NiftyEventSubscriber(id = "enemyCount")
     public void setEnemyCount(final String id, final DropDownSelectionChangedEvent event) {
@@ -160,5 +161,6 @@ public class SingleMissionMenu implements ScreenController {
     
     @NiftyEventSubscriber(id = "theatre")
     public void setTheatre(final String id, final DropDownSelectionChangedEvent event) {
+       theatre = (String) event.getSelection();
     }
 }
