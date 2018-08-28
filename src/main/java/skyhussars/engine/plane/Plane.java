@@ -39,8 +39,6 @@ import static com.jme3.math.FastMath.RAD_TO_DEG;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.plugins.blender.math.Vector3d;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import static java.util.Collections.*;

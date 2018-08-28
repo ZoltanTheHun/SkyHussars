@@ -92,9 +92,8 @@ public class SingleMissionMenu implements ScreenController {
     private void populateEnemyCount() {
         DropDown<String> enemyCountBtn = screen.findNiftyControl("enemyCount", DropDown.class);
         enemyCountBtn.clear();
-        for (int i = 0; i < 251; i++) {
-            enemyCountBtn.addItem("" + i);
-        }
+        for (int i = 0; i < 251; i++) enemyCountBtn.addItem("" + i);
+        
         enemyCountBtn.selectItemByIndex(0);
     }
     
