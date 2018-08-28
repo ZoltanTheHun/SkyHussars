@@ -74,7 +74,7 @@ public class MissionFactory {
         soundManager.clear();
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
-        terrainManager.loadTerrain("Adria");
+        terrainManager.loadTheatre("Adria");
         sky.init();
         dayLightWeatherManager.setLights();
         return mission;
@@ -85,7 +85,7 @@ public class MissionFactory {
         List<Plane> planes = planes(missionDescriptor);
         MissionState mission = new MissionState(planes, projectileManager, soundManager, cameraManager, terrainManager, dayLightWeatherManager, rootNode, sky);
         controlsManager.missionControls(mission);
-        terrainManager.loadTerrain(theatre);
+        terrainManager.loadTheatre(theatre);
         sky.init();
         dayLightWeatherManager.setLights();
         return mission;
