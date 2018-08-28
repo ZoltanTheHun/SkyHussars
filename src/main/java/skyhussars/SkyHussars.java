@@ -44,7 +44,7 @@ import skyhussars.engine.terrain.TheatreLoader;
 public class SkyHussars extends SimpleApplication {
 
     public static final String APP_ROOT = "./";
-    private final SettingsManager settingsManager = new SettingsManager();
+    private final SettingsManager settingsManager = new SettingsManager(System.getProperty("user.dir"));
     private GameState gameState; 
 
     private final static Logger logger = LoggerFactory.getLogger(Plane.class);

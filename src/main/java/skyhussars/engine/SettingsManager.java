@@ -32,13 +32,13 @@ public class SettingsManager {
     private File assetDirectory;
     public File assetDirectory() { return assetDirectory; }
 
-    public SettingsManager() {
-        setupAssetRoot();
+    public SettingsManager(String directoryPath) {
+        setupAssetRoot(directoryPath);
     }
            
-    private void setupAssetRoot() {
-        File dirs[] = new File[]{new File(System.getProperty("user.dir") + "/assets"),
-            new File(System.getProperty("user.dir") + "/../assets")};
+    private void setupAssetRoot(String directoryPath) {
+        File dirs[] = new File[]{new File(directoryPath + "/assets"),
+            new File(directoryPath + "/../assets")};
         for (File dir : dirs) { if (dir.exists()) assetDirectory = dir; }
         if (assetDirectory == null) throw new IllegalStateException("Cannot find asset directory"); 
     }
