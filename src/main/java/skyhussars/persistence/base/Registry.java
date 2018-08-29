@@ -26,6 +26,7 @@
 package skyhussars.persistence.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +43,17 @@ import java.util.Optional;
 public class Registry<T> {
     
     private final Map<String, T> descriptors;
+    private final File registryLocation;
     
     /**
      * This constructor creates an empty registry that does not contain any item
+     * 
+     * @param registryLocation the location of this registry. This can be used to
+     * locate the registry elements
      */
-    public Registry(){
+    public Registry(File registryLocation){
+        checkNotNull(registryLocation);
+        this.registryLocation = registryLocation;
         this.descriptors = new HashMap<>();
     }
     

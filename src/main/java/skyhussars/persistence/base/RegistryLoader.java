@@ -69,7 +69,7 @@ public class RegistryLoader<T> {
                             + registryLocation.getPath()
                             + " is not a directoy");
         
-        registry = new Registry<>();
+        registry = new Registry<>(registryLocation);
         for(T descriptor : loadDescriptors()){
             registry.register(nameOf.apply(descriptor), descriptor);
         }

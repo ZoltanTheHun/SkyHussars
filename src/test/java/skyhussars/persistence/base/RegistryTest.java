@@ -25,47 +25,67 @@
  */
 package skyhussars.persistence.base;
 
+import java.io.File;
+import java.io.IOException;
 import static java.util.Arrays.*;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 public class RegistryTest {
     
     @Rule
     public ExpectedException expected = ExpectedException.none();
     
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    
+    private File tmpFile(){
+        File tmp;
+        try {
+            tmp = folder.newFolder();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        return tmp;
+    }
+    
     @Test
     public void testCannotRetreiveByNullNameFromRegistry(){
         expected.expect(NullPointerException.class);
-        Registry registry = new Registry();
+        Registry registry = new Registry(null);
         registry.item(null);
     }
     
     @Test
     public void testThatNoneExistingItemRetrievedAsNone(){
-        Registry registry = new Registry();
-        assert(registry.item("Test") == Optional.empty());
+            Registry registry = new Registry(tmpFile());
+            assert(registry.item("Test") == Optional.empty());
     }
     
     @Test
     public void testThatSameNameCannotBeRegisteredTwice(){
-        Registry registry = new Registry();
+        
+        Registry registry = new Registry(tmpFile());
         assert(registry.register("Test", "Test1"));
         assert(!registry.register("Test", "Test2"));
     }
     
     @Test
     public void testThatRegistryEntryCanBeRetrieved(){
-        Registry<String> registry = new Registry<>();
+        Registry<String> registry = new Registry<>(tmpFile());
         assert(registry.register("Test", "Test1"));
         assert(registry.item("Test").map(s -> s.equals("Test1")).orElse(Boolean.FALSE));
     }
     
     @Test
     public void testThatRegistryItemNamesCanBeQueried(){
-        Registry<String> registry = new Registry<>();
+        Registry<String> registry = new Registry<>(tmpFile());
         assert(registry.register("Test a", "Test1"));
         assert(registry.register("Test b", "Test2"));
         assert(registry.register("Test c", "Test2"));
@@ -74,7 +94,7 @@ public class RegistryTest {
     
     @Test
     public void testThatSameDescriptorCanAppearMultipleTimes(){
-        Registry<String> registry = new Registry<>();
+        Registry<String> registry = new Registry<>(tmpFile());
         assert(registry.register("Test a", "Test1"));
         assert(registry.register("Test b", "Test1"));
         String item1 = registry.item("Test a").get();
