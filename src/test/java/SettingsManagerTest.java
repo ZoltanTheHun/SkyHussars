@@ -1,8 +1,6 @@
-
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,7 +40,8 @@ public class SettingsManagerTest {
     public TemporaryFolder folder = new TemporaryFolder();
     
     @Test 
-    public void testInstatiation(){
+    public void testInstatiation(){   
+        expected.expect(NullPointerException.class);
         SettingsManager settingsManager = new SettingsManager(null);
     }
         
@@ -58,28 +57,31 @@ public class SettingsManagerTest {
     }
     
     @Test 
-    public void testAssetFolderExistsUnderRoot(){
+    public void testAssetFolderExistsNextToRoot(){
         try {
             File root = folder.newFolder("test");
             File assets = new File(root, "assets");
             assets.mkdir();
+            File altAssets = new File(root.getParentFile(),"assets");
+            altAssets.mkdir();
             SettingsManager settingsManager = new SettingsManager(root.getCanonicalPath());
+            assertEquals("Asset folder should prefer sibling directory: ",settingsManager.assetDirectory().getCanonicalPath(),altAssets.getCanonicalPath());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
     
     @Test 
-    public void testAssetFolderExistsNextToRoot(){
+    public void testAssetFolderExistsUnderRoot(){
         try {
             File root = folder.newFolder("test");
-            File assets = new File(root.getParentFile(), "assets");
+            File assets = new File(root, "assets");
             assets.mkdir();
             SettingsManager settingsManager = new SettingsManager(root.getCanonicalPath());
+            assertEquals("Asset folder should be under root: ",settingsManager.assetDirectory().getCanonicalPath(),assets.getCanonicalPath());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
     
 }

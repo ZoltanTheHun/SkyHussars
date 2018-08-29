@@ -25,14 +25,30 @@ package skyhussars.engine;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
-
+/**
+ * 
+ * At this moment the only purpose of SettingManager is to store the location of the game assets.
+ */
 public class SettingsManager {
 
     private File assetDirectory;
+    /**
+     * 
+     * @return The root directory of all game assets
+     */
     public File assetDirectory() { return assetDirectory; }
-
+    
+    /**
+     * Initiate a settings manager. 
+     * @param directoryPath The directory path is used to find the asset folder. It is
+     * expected that the asset folder is a sibling of the given path. If that does 
+     * not exist, the asset folder should be a subdirectory of the given directory.
+     * If either the directory or  the asset directory not found, that results in exception.
+     */
     public SettingsManager(String directoryPath) {
+        checkNotNull(directoryPath);
         setupAssetRoot(directoryPath);
     }
            
