@@ -34,12 +34,16 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioListenerState;
 import com.jme3.system.AppSettings;
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.persistence.base.Registry;
+import skyhussars.persistence.base.RegistryLoader;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class SkyHussars extends SimpleApplication {
 
@@ -82,6 +86,9 @@ public class SkyHussars extends SimpleApplication {
         beanFactory.registerSingleton("listener", listener);
         beanFactory.registerSingleton("planeRegistry", new PlaneRegistryLoader(settingsManager.assetDirectory()).planeRegistry());
         beanFactory.registerSingleton("theatreLoader",new TheatreLoader(settingsManager.assetDirectory()));
+        Registry<TerrainDescriptor> theatreRegistry = new RegistryLoader<>("Theatre Registry",
+                        new File(settingsManager.assetDirectory().getPath() + "/Theatres"),"theatre.json",TerrainDescriptor.class,(desc,file)->file.getName()).registry();
+        System.out.println(theatreRegistry.toString());
         OptionsPersistence optionsManager = new OptionsPersistence(APP_ROOT);
         beanFactory.registerSingleton("options",optionsManager.loadOptionsFromFileSystem());
         beanFactory.registerSingleton("optionsManager",optionsManager);

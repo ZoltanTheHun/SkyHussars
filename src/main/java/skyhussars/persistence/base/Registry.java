@@ -88,4 +88,9 @@ public class Registry<T> {
     public List<String> availableItems() {
         return new ArrayList<>(descriptors.keySet());
     }
+
+    @Override
+    public String toString() {
+        return "Registry{" + "descriptors=" + descriptors + ", registryLocation=" + registryLocation + '}';
+    }
 }

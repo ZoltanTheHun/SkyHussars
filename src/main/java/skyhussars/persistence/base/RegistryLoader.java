@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * RegistryLoader can create a registry of type T.
@@ -56,7 +56,7 @@ public class RegistryLoader<T> {
      * @param targetClass The type of registry that should be created
      * @param nameOf A function that can provide a name for a given T
      */
-    public RegistryLoader(String name,File registryLocation,String jsonName,Class<T> targetClass,Function<T,String> nameOf){
+    public RegistryLoader(String name,File registryLocation,String jsonName,Class<T> targetClass,BiFunction<T,File,String> nameOf){
         checkNotNull(nameOf);
         this.name = checkNotNull(name);
         this.jsonName = checkNotNull(jsonName);
@@ -70,9 +70,7 @@ public class RegistryLoader<T> {
                             + " is not a directoy");
         
         registry = new Registry<>(registryLocation);
-        for(T descriptor : loadDescriptors()){
-            registry.register(nameOf.apply(descriptor), descriptor);
-        }
+        populateRegistry(registry,nameOf);
     }
     
     
@@ -91,11 +89,11 @@ public class RegistryLoader<T> {
         return directories;
     }
     
-    private List<T> loadDescriptors() {
+    private List<T> populateRegistry(Registry<T> registry,BiFunction<T,File,String> nameOf) {
         List<T> descriptors = new ArrayList<>();
         for (File dir : collectDirectories()) {
             T descriptor = Marshal.unmarshal(openDescriptorFile(dir),targetClass);
-            descriptors.add(descriptor);
+            registry.register(nameOf.apply(descriptor,dir),descriptor);
         }
         return descriptors;
     }

@@ -28,7 +28,7 @@ package skyhussars.persistence.base;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,7 +43,7 @@ public class RegistryLoaderTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
-    private Function<TerrainDescriptor,String> nameOf = t -> t.name;
+    private BiFunction<TerrainDescriptor,File,String> nameOf = (t,f) -> t.name;
     
     @Test
     public void testNameNullCheck(){
