@@ -26,25 +26,35 @@
 package skyhussars.engine.terrain;
 
 import java.io.File;
-import static java.util.Collections.*;
-import static java.util.Arrays.*;
+import java.util.LinkedHashMap;
 import java.util.List;
-
+import java.util.Map;
+import skyhussars.persistence.terrain.TerrainDescriptor;
+import static skyhussars.utility.Streams.*;
+/**
+ * TheatreLoader collects and manages the load of theatres from a dedicated Threatres 
+ * folder under an asset root. It is expected that all theatres have a descriptor file
+ * called theatre.json in their directory. The folder name is used to identify the unique theatres.
+ */
 public class TheatreLoader {
     
     private final String theatresFolderName = "/Theatres";
     private final String jsonDescriptorname = "/theatre.json";
-    private final List<String> theatres; 
+    private final Map<String,TerrainDescriptor> theatres; 
     private final File theatresFolder;
-    
+   
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
-        theatres = loadAllTheatres();
+        theatres = loadTheatres(theatresFolder.listFiles());
     }
     
-    private List<String> loadAllTheatres(){
-        return unmodifiableList(asList(theatresFolder.list()));
+    private Map<String,TerrainDescriptor> loadTheatres(File[] folders){
+        Map<String, TerrainDescriptor> terrainDescriptors = new LinkedHashMap<>();
+        for(File folder : folders){
+            if(folder.isDirectory()) terrainDescriptors.put(folder.getName(), null);
+        }
+        return terrainDescriptors;
     }
-    public List<String> theatres(){ return theatres;}
     
+    public List<String> theatres(){ return list(theatres.keySet().stream());}        
 }
