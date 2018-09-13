@@ -29,6 +29,9 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import skyhussars.persistence.base.Marshal;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 import static skyhussars.utility.Streams.*;
 /**
@@ -39,23 +42,31 @@ import static skyhussars.utility.Streams.*;
 public class TheatreLoader {
     
     private final String theatresFolderName = "/Theatres";
-    private final String jsonDescriptorname = "/theatre.json";
+    private final String jsonDescriptorname = "theatre.json";
     private final Map<String,TerrainDescriptor> theatres; 
     private final File theatresFolder;
+    private final static Logger logger = LoggerFactory.getLogger(TheatreLoader.class);
    
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
         if(!theatresFolder.exists()) throw new IllegalStateException("TheatreLoader could not found " + theatresFolder.getPath());
         if(theatresFolder.isFile()) throw new IllegalStateException("TheatreLoader expected a folder, but found a file: " + theatresFolder.getPath());
-        theatres = loadTheatres(theatresFolder.listFiles());
+        theatres = loadAllTheatres(theatresFolder.listFiles());
     }
     
-    private Map<String,TerrainDescriptor> loadTheatres(File[] folders){
+    private Map<String,TerrainDescriptor> loadAllTheatres(File[] folders){
         Map<String, TerrainDescriptor> terrainDescriptors = new LinkedHashMap<>();
         for(File folder : folders){
-            if(folder.isDirectory()) terrainDescriptors.put(folder.getName(), null);
+            if(folder.isDirectory()) terrainDescriptors.put(folder.getName(), loadTheatre(folder));
         }
         return terrainDescriptors;
+    }
+    
+    private TerrainDescriptor loadTheatre(File folder){
+        logger.info("Loading theatre " + folder.getPath());
+        File theatre = new File(folder,jsonDescriptorname);
+        if(!theatre.exists()) throw new IllegalStateException("TheatreLoader did not found theatre.json in " + folder.getPath());
+        return Marshal.unmarshal(theatre, TerrainDescriptor.class);
     }
     
     public List<String> theatres(){ return list(theatres.keySet().stream());}        
