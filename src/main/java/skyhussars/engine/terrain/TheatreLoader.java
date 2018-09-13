@@ -45,6 +45,8 @@ public class TheatreLoader {
    
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
+        if(!theatresFolder.exists()) throw new IllegalStateException("TheatreLoader could not found " + theatresFolder.getPath());
+        if(theatresFolder.isFile()) throw new IllegalStateException("TheatreLoader expected a folder, but found a file: " + theatresFolder.getPath());
         theatres = loadTheatres(theatresFolder.listFiles());
     }
     
