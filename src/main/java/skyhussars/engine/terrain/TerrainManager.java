@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 import skyhussars.persistence.terrain.TerrainFactory;
 
 @Component
@@ -93,9 +94,9 @@ public class TerrainManager {
     }
     
     public void loadTheatre(String name) {
-        loadTerrain(adria);
+        loadTerrain(adria,theatreLoader.theatre(name));
     }
-    public void loadTerrain(TerrainDefinition terrainDefinition) {
+    public void loadTerrain(TerrainDefinition terrainDefinition,TerrainDescriptor terrainDescriptor) {
         Texture grass = assetManager.loadTexture(terrainDefinition.tx1().path());
         grass.setWrap(Texture.WrapMode.Repeat);
 
@@ -104,7 +105,7 @@ public class TerrainManager {
 
         Texture land = assetManager.loadTexture(terrainDefinition.tx3().path());
         land.setWrap(Texture.WrapMode.Repeat);
-        float scale = 100;
+        float scale = terrainDescriptor.size;
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Maps/Adria/AdriaSmall_alpha.png"));
         mat_terrain.setTexture("DiffuseMap", texture(terrainDefinition.tx1().path()));

@@ -70,4 +70,6 @@ public class TheatreLoader {
     }
     
     public List<String> theatres(){ return list(theatres.keySet().stream());}        
+    
+    public TerrainDescriptor theatre(String theatre){ return theatres.get(theatre);}
 }
