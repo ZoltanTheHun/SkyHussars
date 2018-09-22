@@ -30,6 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import skyhussars.engine.SettingsManager;
 import skyhussars.terrained.TerrainEdController;
 
 /**
@@ -38,11 +39,15 @@ import skyhussars.terrained.TerrainEdController;
  */
 public class TerrainEd extends Application  {
 
+    private SettingsManager settingsManager;
+    
     @Override
     public void start(Stage stage) throws Exception {
         /* prepare the resource */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
         Parent root = loader.load();
+        /* initializes resources */
+        settingsManager = new SettingsManager(System.getProperty("user.dir"));
         /* setup the controller */
         loader.<TerrainEdController>getController().stage(stage);
         /* initialize the scene */
