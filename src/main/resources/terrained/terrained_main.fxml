@@ -11,12 +11,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skyhussars.terrained.TerrainEdController">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skyhussars.terrained.TerrainEdController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
+                  <MenuItem id="openTheatreMenuButton" mnemonicParsing="false" onAction="#handleOpenTheatreAction" text="Open Theatre" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" />
                   <MenuItem mnemonicParsing="false" onAction="#handleSaveAction" text="Save" />
           </items>

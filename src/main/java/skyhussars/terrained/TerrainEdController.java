@@ -81,6 +81,14 @@ public class TerrainEdController implements Initializable{
         fileChooser("Open a terrain definition").showOpenDialog(stage);
     }
     
+    /**
+     * This method handles the event when the user clicks on the Open Theater item in the menu
+    */
+    public void handleOpenTheatreAction(){
+        
+    }
+    
+    
     private FileChooser fileChooser(String title){
         FileChooser chooser = new FileChooser();
         chooser.setTitle(title);
