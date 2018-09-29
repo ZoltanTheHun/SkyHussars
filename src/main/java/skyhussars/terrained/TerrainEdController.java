@@ -27,10 +27,16 @@
 package skyhussars.terrained;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
@@ -45,6 +51,8 @@ import skyhussars.SkyHussars;
  * This class is not thread safe
  */
 public class TerrainEdController implements Initializable{
+    
+    private static final Logger logger = Logger.getLogger(TerrainEdController.class.getName());
     
     @FXML
     private TextField terrainName;
@@ -85,7 +93,17 @@ public class TerrainEdController implements Initializable{
      * This method handles the event when the user clicks on the Open Theater item in the menu
     */
     public void handleOpenTheatreAction(){
-        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/loadtheatre_combo.fxml"));
+        try {
+            Parent root = loader.load();
+            /* initialize the scene */
+            Scene scene = new Scene(root);
+            final Stage dialog = new Stage();
+            dialog.setTitle("Load Theatre");
+            dialog.setScene(scene);
+            dialog.show();
+        } catch (IOException ex) { logger.log(Level.SEVERE, null, ex);}
+        System.out.println("Test");
     }
     
     
