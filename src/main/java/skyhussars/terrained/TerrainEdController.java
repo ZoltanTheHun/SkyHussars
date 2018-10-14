@@ -103,7 +103,6 @@ public class TerrainEdController implements Initializable{
             dialog.setScene(scene);
             dialog.show();
         } catch (IOException ex) { logger.log(Level.SEVERE, null, ex);}
-        System.out.println("Test");
     }
     
     
