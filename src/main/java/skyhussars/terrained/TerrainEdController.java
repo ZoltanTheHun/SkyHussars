@@ -44,6 +44,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import skyhussars.SkyHussars;
+import skyhussars.engine.terrain.TheatreLoader;
 
 
 /**
@@ -61,6 +62,7 @@ public class TerrainEdController implements Initializable{
     @FXML
     private TextField terrainLocation;
     
+    private TheatreLoader theatreLoader;
     private Stage stage;
     private final TerrainProperties terrainProperties = new TerrainProperties();
     /**
@@ -98,6 +100,7 @@ public class TerrainEdController implements Initializable{
             Parent root = loader.load();
             /* initialize the scene */
             Scene scene = new Scene(root);
+            loader.<OpenTheatreController>getController().theatreLoader(theatreLoader);
             final Stage dialog = new Stage();
             dialog.setTitle("Load Theatre");
             dialog.setScene(scene);
@@ -115,6 +118,7 @@ public class TerrainEdController implements Initializable{
     }
     
     public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
+    public TerrainEdController theatreLoader(TheatreLoader theatreLoader){this.theatreLoader = theatreLoader; return this;}
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {

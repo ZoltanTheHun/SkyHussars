@@ -27,12 +27,11 @@ package skyhussars.terrained;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * Controller class for the Open Theatre menu window. 
@@ -43,8 +42,14 @@ public class OpenTheatreController implements Initializable {
     private ComboBox<String> theatreDropdown;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        theatreDropdown.setItems(FXCollections.observableArrayList("first","second"));
+    public void initialize(URL location, ResourceBundle resources) {}
+    
+    public OpenTheatreController theatreLoader(TheatreLoader theatreLoader){
+        if(!theatreLoader.theatres().isEmpty()){
+            theatreDropdown.setItems(FXCollections.observableArrayList(theatreLoader.theatres()));
+            theatreDropdown.setValue(theatreLoader.theatres().get(0));
+        }
+        return this;
     }
     
 }

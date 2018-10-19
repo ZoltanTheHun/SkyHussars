@@ -51,7 +51,7 @@ public class TerrainEd extends Application  {
         /* initializes resources */
         initializeResources();
         /* setup the controller */
-        loader.<TerrainEdController>getController().stage(stage);
+        loader.<TerrainEdController>getController().stage(stage).theatreLoader(theatreLoader);
         /* initialize the scene */
         Scene scene = new Scene(root);
         stage.setTitle("SkyHussars - TerrainEd");
