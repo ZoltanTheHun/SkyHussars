@@ -52,4 +52,11 @@ public class OpenTheatreController implements Initializable {
         return this;
     }
     
+    public void loadTheatre(){
+        
+    }
+    
+    public void cancel(){
+        
+    }
 }
