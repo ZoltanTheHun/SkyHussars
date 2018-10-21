@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
 import skyhussars.terrained.TerrainEdController;
+import skyhussars.terrained.TheatreSelectorPopup;
 
 /**
  * Terrain Editor application for SkyHussars
@@ -41,7 +42,7 @@ import skyhussars.terrained.TerrainEdController;
 public class TerrainEd extends Application  {
 
     private SettingsManager settingsManager;
-    private TheatreLoader theatreLoader;
+    private TheatreSelectorPopup theatreSelectorPopup;
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -51,7 +52,9 @@ public class TerrainEd extends Application  {
         /* initializes resources */
         initializeResources();
         /* setup the controller */
-        loader.<TerrainEdController>getController().stage(stage).theatreLoader(theatreLoader);
+        loader.<TerrainEdController>getController().
+                stage(stage).
+                theatreSelectorPopup(theatreSelectorPopup);
         /* initialize the scene */
         Scene scene = new Scene(root);
         stage.setTitle("SkyHussars - TerrainEd");
@@ -61,7 +64,8 @@ public class TerrainEd extends Application  {
     
     private void initializeResources(){
         settingsManager = new SettingsManager(System.getProperty("user.dir"));
-        theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
+        TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
+        theatreSelectorPopup = new TheatreSelectorPopup(theatreLoader);
     }
     
     public static void main(String[] args) {
