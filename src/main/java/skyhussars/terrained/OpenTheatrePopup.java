@@ -13,11 +13,11 @@ import skyhussars.engine.terrain.TheatreLoader;
  * This class displays the Theatre selector when loading a new theatre
  * 
  */
-public class TheatreSelectorPopup {
+public class OpenTheatrePopup {
     private static final Logger logger = Logger.getLogger(TerrainEdController.class.getName());
     private final TheatreLoader theatreLoader;
     
-    public TheatreSelectorPopup(TheatreLoader theatreLoader){
+    public OpenTheatrePopup(TheatreLoader theatreLoader){
         this.theatreLoader = theatreLoader;
     }
     

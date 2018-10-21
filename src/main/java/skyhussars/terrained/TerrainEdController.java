@@ -39,8 +39,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import skyhussars.SkyHussars;
-import skyhussars.engine.terrain.TheatreLoader;
-
 
 /**
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
@@ -58,7 +56,7 @@ public class TerrainEdController implements Initializable{
     @FXML
     private TextField terrainLocation;
     
-    private TheatreSelectorPopup theatreSelectorPopup;
+    private OpenTheatrePopup theatreSelectorPopup;
     private Stage stage;
     private final TerrainProperties terrainProperties = new TerrainProperties();
     /**
@@ -104,7 +102,7 @@ public class TerrainEdController implements Initializable{
     }
     
     public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
-    public TerrainEdController theatreSelectorPopup(TheatreSelectorPopup theatreSelectorPopup){
+    public TerrainEdController theatreSelectorPopup(OpenTheatrePopup theatreSelectorPopup){
         this.theatreSelectorPopup = theatreSelectorPopup; return this;}
     
     @Override
