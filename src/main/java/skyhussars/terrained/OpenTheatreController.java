@@ -41,6 +41,9 @@ public class OpenTheatreController implements Initializable {
     @FXML
     private ComboBox<String> theatreDropdown;
 
+    private TheatreLoader theatreLoader;
+    private TerrainProperties terrainProperties;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
     
@@ -49,11 +52,17 @@ public class OpenTheatreController implements Initializable {
             theatreDropdown.setItems(FXCollections.observableArrayList(theatreLoader.theatres()));
             theatreDropdown.setValue(theatreLoader.theatres().get(0));
         }
+        this.theatreLoader = theatreLoader;
+        return this;
+    }
+    
+    public OpenTheatreController terrainProperties(TerrainProperties terrainProperties){
+        this.terrainProperties = terrainProperties;
         return this;
     }
     
     public void loadTheatre(){
-        
+        this.terrainProperties.name.set("This is a test load");
     }
     
     public void cancel(){

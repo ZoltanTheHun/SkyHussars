@@ -58,7 +58,7 @@ public class TerrainEdController implements Initializable{
     
     private OpenTheatrePopup theatreSelectorPopup;
     private Stage stage;
-    private final TerrainProperties terrainProperties = new TerrainProperties();
+    private TerrainProperties terrainProperties;
     /**
      *  This method handles the event when the user clicks on the About item in the menu
      */
@@ -105,10 +105,14 @@ public class TerrainEdController implements Initializable{
     public TerrainEdController theatreSelectorPopup(OpenTheatrePopup theatreSelectorPopup){
         this.theatreSelectorPopup = theatreSelectorPopup; return this;}
     
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public TerrainEdController terrainProperties(TerrainProperties terrainProperties){
+        this.terrainProperties = terrainProperties;
         terrainName.textProperty().bindBidirectional(terrainProperties.name);
         terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
-        terrainLocation.textProperty().bindBidirectional(terrainProperties.location);
+        terrainLocation.textProperty().bindBidirectional(terrainProperties.location); 
+        return this;
     }
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) { }
 }
