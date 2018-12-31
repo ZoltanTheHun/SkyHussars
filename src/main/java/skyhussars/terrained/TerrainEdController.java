@@ -88,6 +88,12 @@ public class TerrainEdController implements Initializable {
     public void handleOpenAction() {
         fileChooser("Open a terrain definition").showOpenDialog(stage);
     }
+    
+    /**
+     * This method handles the event when the user clicks on the New Theater
+     * item in the menu
+     */
+    public void handleNewTheatreAction() {    }
 
     /**
      * This method handles the event when the user clicks on the Open Theater
