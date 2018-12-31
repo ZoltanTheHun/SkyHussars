@@ -36,8 +36,11 @@ import skyhussars.persistence.terrain.TerrainDescriptor;
  * This property container separates between the UI and the persistence layer
  * for terrains.
  * 
+ * The theatre is the root of the standard theatre folder structure followed by SkyHussars
+ * 
  */
 public class TerrainProperties {
+    public final StringProperty theatre = new SimpleStringProperty();
     public final StringProperty name = new SimpleStringProperty();
     public final IntegerProperty size = new SimpleIntegerProperty();
     public final StringProperty location = new SimpleStringProperty();
@@ -53,7 +56,7 @@ public class TerrainProperties {
         location.set(terrainDescriptor.heightMapLocation);
         return this;
     }
-    
+        
     /**
      * Create a new TerrainDescriptor from this property container
      * @return a new terrain descriptor instance
