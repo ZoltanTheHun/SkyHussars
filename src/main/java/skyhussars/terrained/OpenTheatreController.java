@@ -69,17 +69,14 @@ public class OpenTheatreController implements Initializable {
         populateFields(theatreLoader.theatre(theatreName));
         close();
     }
+        
+    public void cancel() {close();}
     
-    private void close(){
-        ((Stage) theatreDropdown.getScene().getWindow()).close();
-    }
-            
+    private void close(){((Stage) theatreDropdown.getScene().getWindow()).close();}
     
-    public void populateFields(TerrainDescriptor terrainDescriptor) {
+    private void populateFields(TerrainDescriptor terrainDescriptor) {
         terrainProperties.name.set(terrainDescriptor.name);
         terrainProperties.size.set(terrainDescriptor.size);
         terrainProperties.location.set(terrainDescriptor.heightMapLocation);
     }
-    
-    public void cancel() {close();}
 }
