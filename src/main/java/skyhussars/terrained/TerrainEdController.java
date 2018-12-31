@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.terrained;
 
 import java.io.File;
@@ -44,75 +43,87 @@ import skyhussars.SkyHussars;
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
  * This class is not thread safe
  */
-public class TerrainEdController implements Initializable{
-    
+public class TerrainEdController implements Initializable {
+
     private static final Logger logger = Logger.getLogger(TerrainEdController.class.getName());
-    
-    
+
     @FXML
     private TextField terrainName;
     @FXML
     private TextField terrainSize;
     @FXML
     private TextField terrainLocation;
-    
+
     private OpenTheatrePopup theatreSelectorPopup;
     private Stage stage;
     private TerrainProperties terrainProperties;
+
     /**
-     *  This method handles the event when the user clicks on the About item in the menu
+     * This method handles the event when the user clicks on the About item in
+     * the menu
      */
-    public void handleAboutAction(){
+    public void handleAboutAction() {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("SkyHussars - TerrainEd");
         alert.setHeaderText("TerrainEd - A terrain editor for SkyHussars");
         alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
-        alert.showAndWait();  
+        alert.showAndWait();
     }
-    
+
     /**
-     * This method handles the event when the user clicks on the Save item in the menu
+     * This method handles the event when the user clicks on the Save item in
+     * the menu
      */
-    public void handleSaveAction(){
+    public void handleSaveAction() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
-        if(file != null) new Persistence().persist(terrainProperties, file);
+        if (file != null) {
+            new Persistence().persist(terrainProperties, file);
+        }
     }
-    
+
     /**
-     * This method handles the event when the user clicks on the Open item in the menu
+     * This method handles the event when the user clicks on the Open item in
+     * the menu
      */
-    public void handleOpenAction(){
+    public void handleOpenAction() {
         fileChooser("Open a terrain definition").showOpenDialog(stage);
     }
-    
+
     /**
-     * This method handles the event when the user clicks on the Open Theater item in the menu
-    */
-    public void handleOpenTheatreAction(){
+     * This method handles the event when the user clicks on the Open Theater
+     * item in the menu
+     */
+    public void handleOpenTheatreAction() {
         theatreSelectorPopup.show();
     }
-    
-    
-    private FileChooser fileChooser(String title){
+
+    private FileChooser fileChooser(String title) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle(title);
         chooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json","*.json"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("json", "*.json"));
         return chooser;
     }
-    
-    public  TerrainEdController stage(Stage stage){this.stage = stage; return this;}
-    public TerrainEdController theatreSelectorPopup(OpenTheatrePopup theatreSelectorPopup){
-        this.theatreSelectorPopup = theatreSelectorPopup; return this;}
-    
-    public TerrainEdController terrainProperties(TerrainProperties terrainProperties){
+
+    public TerrainEdController stage(Stage stage) {
+        this.stage = stage;
+        return this;
+    }
+
+    public TerrainEdController theatreSelectorPopup(OpenTheatrePopup theatreSelectorPopup) {
+        this.theatreSelectorPopup = theatreSelectorPopup;
+        return this;
+    }
+
+    public TerrainEdController terrainProperties(TerrainProperties terrainProperties) {
         this.terrainProperties = terrainProperties;
         terrainName.textProperty().bindBidirectional(terrainProperties.name);
         terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
-        terrainLocation.textProperty().bindBidirectional(terrainProperties.location); 
+        terrainLocation.textProperty().bindBidirectional(terrainProperties.location);
         return this;
     }
-    
+
     @Override
-    public void initialize(URL location, ResourceBundle resources) { }
+    public void initialize(URL location, ResourceBundle resources) {
+    }
 }

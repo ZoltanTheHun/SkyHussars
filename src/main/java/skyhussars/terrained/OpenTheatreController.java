@@ -31,24 +31,27 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
- * Controller class for the Open Theatre menu window. 
+ * Controller class for the Open Theatre menu window.
  */
 public class OpenTheatreController implements Initializable {
     
     @FXML
     private ComboBox<String> theatreDropdown;
-
+    
     private TheatreLoader theatreLoader;
     private TerrainProperties terrainProperties;
     
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+    }
     
-    public OpenTheatreController theatreLoader(TheatreLoader theatreLoader){
-        if(!theatreLoader.theatres().isEmpty()){
+    public OpenTheatreController theatreLoader(TheatreLoader theatreLoader) {
+        if (!theatreLoader.theatres().isEmpty()) {
             theatreDropdown.setItems(FXCollections.observableArrayList(theatreLoader.theatres()));
             theatreDropdown.setValue(theatreLoader.theatres().get(0));
         }
@@ -56,16 +59,27 @@ public class OpenTheatreController implements Initializable {
         return this;
     }
     
-    public OpenTheatreController terrainProperties(TerrainProperties terrainProperties){
+    public OpenTheatreController terrainProperties(TerrainProperties terrainProperties) {
         this.terrainProperties = terrainProperties;
         return this;
     }
     
-    public void loadTheatre(){
-        this.terrainProperties.name.set("This is a test load");
+    public void loadTheatre() {
+        String theatreName = theatreDropdown.getValue();
+        populateFields(theatreLoader.theatre(theatreName));
+        close();
     }
     
-    public void cancel(){
-        
+    private void close(){
+        ((Stage) theatreDropdown.getScene().getWindow()).close();
     }
+            
+    
+    public void populateFields(TerrainDescriptor terrainDescriptor) {
+        terrainProperties.name.set(terrainDescriptor.name);
+        terrainProperties.size.set(terrainDescriptor.size);
+        terrainProperties.location.set(terrainDescriptor.heightMapLocation);
+    }
+    
+    public void cancel() {close();}
 }
