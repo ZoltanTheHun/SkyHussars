@@ -16,7 +16,7 @@ import skyhussars.engine.terrain.TheatreLoader;
 public class OpenTheatrePopup {
     private static final Logger logger = Logger.getLogger(TerrainEdController.class.getName());
     private final TheatreLoader theatreLoader;
-    private TerrainProperties terrainProperties;
+    private final TerrainProperties terrainProperties;
 
     public OpenTheatrePopup(TheatreLoader theatreLoader, TerrainProperties terrainProperties){
         this.theatreLoader = theatreLoader;
