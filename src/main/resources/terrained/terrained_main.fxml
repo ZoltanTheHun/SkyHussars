@@ -19,7 +19,7 @@
           <items>
                   <MenuItem id="openTheatreMenuButton" mnemonicParsing="false" onAction="#handleOpenTheatreAction" text="Open Theatre" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSaveAction" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSaveAction" text="Save As..." />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
