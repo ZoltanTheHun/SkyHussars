@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, ZoltanTheHun
+ * Copyright (c) 2017, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,39 +32,38 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import skyhussars.engine.terrain.TheatreLoader;
 
-/***
- * This class displays the Theatre selector when loading a new theatre
- * 
+/**
+ * The purpose of this class is to manage the New Theatre popup available from
+ * File Menu
+ *
  */
-public class OpenTheatrePopup {
-    private static final Logger LOGGER = Logger.getLogger(TerrainEdController.class.getName());
-    private final TheatreLoader theatreLoader;
-    private final TerrainProperties terrainProperties;
+public class NewTheatrePopup {
 
-    public OpenTheatrePopup(TheatreLoader theatreLoader, TerrainProperties terrainProperties){
-        this.theatreLoader = theatreLoader;
-        this.terrainProperties = terrainProperties;
-    }
+    private static final Logger LOGGER = Logger.getLogger(NewTheatrePopup.class.getName());
     
-    public void show(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/loadtheatre_combo.fxml"));
+    private Stage dialog;
+
+    public void show() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/newtheatrecombo.fxml"));
+            
         try {
             Parent root = loader.load();
             /* initialize the scene */
             Scene scene = new Scene(root);
-            loader.<OpenTheatreController>getController().
-                    theatreLoader(theatreLoader).
-                    terrainProperties(terrainProperties);
+            loader.<NewTheatreController>getController().popup(this);   
             final Stage dialog = new Stage();
-            dialog.setTitle("Load Theatre");
+            dialog.setTitle("New Theatre");
             dialog.setScene(scene);
             dialog.show();
-        } catch (IOException ex) { 
+            this.dialog = dialog;
+        } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             throw new RuntimeException();
         }
     }
     
+    public void close(){
+        dialog.close();
+    }
 }

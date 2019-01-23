@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.terrained.NewTheatrePopup;
 import skyhussars.terrained.TerrainEdController;
 import skyhussars.terrained.OpenTheatrePopup;
 import skyhussars.terrained.TerrainProperties;
@@ -44,6 +45,7 @@ public class TerrainEd extends Application  {
 
     private SettingsManager settingsManager;
     private OpenTheatrePopup theatreSelectorPopup;
+    private NewTheatrePopup newTheatrePopup;
     private TerrainProperties terrainProperties = new TerrainProperties();
     
     @Override
@@ -56,7 +58,7 @@ public class TerrainEd extends Application  {
         /* setup the controller */
         loader.<TerrainEdController>getController().
                 stage(stage).
-                theatreSelectorPopup(theatreSelectorPopup).
+                popups(theatreSelectorPopup,newTheatrePopup).
                 terrainProperties(terrainProperties);
         /* initialize the scene */
         Scene scene = new Scene(root);
@@ -69,6 +71,7 @@ public class TerrainEd extends Application  {
         settingsManager = new SettingsManager(System.getProperty("user.dir"));
         TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
         theatreSelectorPopup = new OpenTheatrePopup(theatreLoader,terrainProperties);
+        newTheatrePopup = new NewTheatrePopup();
     }
     
     public static void main(String[] args) {

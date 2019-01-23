@@ -55,6 +55,7 @@ public class TerrainEdController implements Initializable {
     private TextField terrainLocation;
 
     private OpenTheatrePopup theatreSelectorPopup;
+    private NewTheatrePopup newTheatrePopup;
     private Stage stage;
     private TerrainProperties terrainProperties;
 
@@ -93,7 +94,9 @@ public class TerrainEdController implements Initializable {
      * This method handles the event when the user clicks on the New Theater
      * item in the menu
      */
-    public void handleNewTheatreAction() {    }
+    public void handleNewTheatreAction() {  
+        newTheatrePopup.show();
+    }
 
     /**
      * This method handles the event when the user clicks on the Open Theater
@@ -116,8 +119,9 @@ public class TerrainEdController implements Initializable {
         return this;
     }
 
-    public TerrainEdController theatreSelectorPopup(OpenTheatrePopup theatreSelectorPopup) {
-        this.theatreSelectorPopup = theatreSelectorPopup;
+    public TerrainEdController popups(OpenTheatrePopup otp,NewTheatrePopup np) {
+        this.theatreSelectorPopup = otp;
+        this.newTheatrePopup = np;
         return this;
     }
 
