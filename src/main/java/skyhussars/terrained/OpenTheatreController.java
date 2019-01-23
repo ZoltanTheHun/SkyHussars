@@ -46,6 +46,8 @@ public class OpenTheatreController implements Initializable {
     private TheatreLoader theatreLoader;
     private TerrainProperties terrainProperties;
     
+    private Stage scene() { return ((Stage) theatreDropdown.getScene().getWindow());}
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
@@ -72,7 +74,7 @@ public class OpenTheatreController implements Initializable {
         
     public void cancel() {close();}
     
-    private void close(){((Stage) theatreDropdown.getScene().getWindow()).close();}
+    private void close(){ scene().close();}
     
     private void populateFields(TerrainDescriptor terrainDescriptor) {
         terrainProperties.name.set(terrainDescriptor.name);
