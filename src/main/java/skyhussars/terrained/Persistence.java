@@ -23,27 +23,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.terrained;
 
 import java.io.File;
 import skyhussars.persistence.base.Marshal;
 
 /**
- * This class handles the persistence of the Terrain as created by the 
- * TerrainEd UI
+ * This class handles the persistence of the Terrain as created by the TerrainEd
+ * UI
  */
 public class Persistence {
-    
+
     /**
-    * This method saves the TerrainProperties into a file in TerrainDescriptor format.
-    * This method is threadsafe only if the files given as parameters are different.
-    * @param terrainProps The terrain properties to be persisted in descriptor format
-    * @param file The target file where the descriptor is written
-    * @return the same instance of persistence to be able to chain calls together
-    */
-    public Persistence persist(TerrainProperties terrainProps,File file) {
-        Marshal.marshal(terrainProps.asDescriptor(),file);
+     * This method saves the TerrainProperties into a file in TerrainDescriptor
+     * format.
+     *
+     * @param terrainProps The terrain properties to be persisted in descriptor
+     * format
+     * @param file The target file where the descriptor is written
+     * @return the same instance of persistence to be able to chain calls
+     * together
+     */
+    public Persistence persist(TerrainProperties terrainProps, File file) {
+        Marshal.marshal(terrainProps.asDescriptor(), file);
         return this;
     }
 }
