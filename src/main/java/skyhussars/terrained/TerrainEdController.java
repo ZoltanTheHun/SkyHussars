@@ -28,7 +28,7 @@ package skyhussars.terrained;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -37,7 +37,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
+import org.slf4j.LoggerFactory;
 import skyhussars.SkyHussars;
+import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
@@ -45,7 +47,7 @@ import skyhussars.SkyHussars;
  */
 public class TerrainEdController implements Initializable {
 
-    private static final Logger logger = Logger.getLogger(TerrainEdController.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TheatreLoader.class);
 
     @FXML
     private TextField terrainName;
@@ -78,6 +80,7 @@ public class TerrainEdController implements Initializable {
     public void handleSaveAction() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
         if (file != null) {
+            LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
             new Persistence().persist(terrainProperties, file);
         }
     }
