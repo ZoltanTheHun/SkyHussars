@@ -39,7 +39,8 @@ import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.slf4j.LoggerFactory;
 import skyhussars.SkyHussars;
-import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.persistence.base.Marshal;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
@@ -47,7 +48,7 @@ import skyhussars.engine.terrain.TheatreLoader;
  */
 public class TerrainEdController implements Initializable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TheatreLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
 
     @FXML
     private TextField terrainName;
@@ -107,7 +108,14 @@ public class TerrainEdController implements Initializable {
      * the menu
      */
     public void handleOpenAction() {
-        fileChooser("Open a terrain definition").showOpenDialog(stage);
+        File file = fileChooser("Open a terrain definition").showOpenDialog(stage);
+        try { 
+            LOGGER.info("Loading theatre " + file.getAbsolutePath());
+            TerrainDescriptor td = Marshal.unmarshal(file, TerrainDescriptor.class);
+            terrainProperties.from(td);
+        } catch (Exception ex){
+            LOGGER.error("Error loading " + file.getAbsolutePath(), ex);
+        }
     }
     
     /**
