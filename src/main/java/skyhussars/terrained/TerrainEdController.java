@@ -72,12 +72,24 @@ public class TerrainEdController implements Initializable {
         alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
         alert.showAndWait();
     }
+    
+    private void unableToSaveAlert() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Unable to save");
+        alert.setHeaderText("Unable to save, not all properties set.");
+        alert.setContentText("Please set all properties before trying to save a new terrain.");
+        alert.showAndWait();
+    }
 
     /**
      * This method handles the event when the user clicks on the Save item in
      * the menu
      */
     public void handleSaveAction() {
+        if(canSave()) save(); else unableToSaveAlert();
+    }
+    
+    private void save(){
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
         if (file != null) {
             LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
@@ -85,6 +97,11 @@ public class TerrainEdController implements Initializable {
         }
     }
 
+    private boolean canSave(){
+        return terrainProperties.name.get() != null &&  
+                terrainProperties.size.get() >= 1 &&
+                terrainProperties.location.get() != null;
+    }
     /**
      * This method handles the event when the user clicks on the Open item in
      * the menu
