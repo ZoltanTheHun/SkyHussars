@@ -109,6 +109,10 @@ public class TerrainEdController implements Initializable {
      */
     public void handleOpenAction() {
         File file = fileChooser("Open a terrain definition").showOpenDialog(stage);
+        if(file != null) loadTheatre(file);
+    }
+    
+    private void loadTheatre(File file){
         try { 
             LOGGER.info("Loading theatre " + file.getAbsolutePath());
             TerrainDescriptor td = Marshal.unmarshal(file, TerrainDescriptor.class);
