@@ -45,7 +45,7 @@ public class TheatreLoader {
     private final String jsonDescriptorname = "theatre.json";
     private final Map<String,TerrainDescriptor> theatres; 
     private final File theatresFolder;
-    private final static Logger logger = LoggerFactory.getLogger(TheatreLoader.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TheatreLoader.class);
    
     public TheatreLoader(File assetFolder){
         theatresFolder = new File(assetFolder.getPath() + theatresFolderName);
@@ -63,7 +63,7 @@ public class TheatreLoader {
     }
     
     private TerrainDescriptor loadTheatre(File folder){
-        logger.info("Loading theatre " + folder.getPath());
+        LOGGER.info("Loading theatre " + folder.getPath());
         File theatre = new File(folder,jsonDescriptorname);
         if(!theatre.exists()) throw new IllegalStateException("TheatreLoader did not found theatre.json in " + folder.getPath());
         return Marshal.unmarshal(theatre, TerrainDescriptor.class);
