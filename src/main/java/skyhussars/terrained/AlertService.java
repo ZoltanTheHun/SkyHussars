@@ -23,7 +23,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.terrained;
 
 import javafx.scene.control.Alert;
@@ -31,12 +30,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AlertService {
-    public void info(String info, String detail){
+
+    public void info(String info, String detail) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("SkyHussars - TerrainEd");
         alert.setHeaderText(info);
         alert.setContentText(detail);
         alert.showAndWait();
-        
     }
 }
