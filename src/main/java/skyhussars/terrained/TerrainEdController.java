@@ -31,8 +31,6 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -65,10 +63,10 @@ public class TerrainEdController implements Initializable {
     private Stage stage;
     private final TerrainProperties terrainProperties;
     private final AlertService alertService;
-    
+
     @Autowired
     public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup,
-            TerrainProperties terrainProperties,AlertService alertService) {
+            TerrainProperties terrainProperties, AlertService alertService) {
         this.theatreSelectorPopup = theatreSelectorPopup;
         this.newTheatrePopup = newTheatrePopup;
         this.terrainProperties = terrainProperties;
@@ -83,7 +81,7 @@ public class TerrainEdController implements Initializable {
         alertService.info("TerrainEd - A terrain editor for SkyHussars",
                 "Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
     }
-    
+
     private void unableToSaveAlert() {
         alertService.info("Unable to save, not all properties set.",
                 "Please set all properties before trying to save a new terrain.");
@@ -94,10 +92,14 @@ public class TerrainEdController implements Initializable {
      * the menu
      */
     public void handleSaveAction() {
-        if(canSave()) save(); else unableToSaveAlert();
+        if (canSave()) {
+            save();
+        } else {
+            unableToSaveAlert();
+        }
     }
-    
-    private void save(){
+
+    private void save() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
         if (file != null) {
             LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
@@ -105,35 +107,38 @@ public class TerrainEdController implements Initializable {
         }
     }
 
-    private boolean canSave(){
-        return terrainProperties.name.get() != null &&  
-                terrainProperties.size.get() >= 1 &&
-                terrainProperties.location.get() != null;
+    private boolean canSave() {
+        return terrainProperties.name.get() != null
+                && terrainProperties.size.get() >= 1
+                && terrainProperties.location.get() != null;
     }
+
     /**
      * This method handles the event when the user clicks on the Open item in
      * the menu
      */
     public void handleOpenAction() {
         File file = fileChooser("Open a terrain definition").showOpenDialog(stage);
-        if(file != null) loadTheatre(file);
+        if (file != null) {
+            loadTheatre(file);
+        }
     }
-    
-    private void loadTheatre(File file){
-        try { 
+
+    private void loadTheatre(File file) {
+        try {
             LOGGER.info("Loading theatre " + file.getAbsolutePath());
             TerrainDescriptor td = Marshal.unmarshal(file, TerrainDescriptor.class);
             terrainProperties.from(td);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             LOGGER.error("Error loading " + file.getAbsolutePath(), ex);
         }
     }
-    
+
     /**
      * This method handles the event when the user clicks on the New Theater
      * item in the menu
      */
-    public void handleNewTheatreAction() {  
+    public void handleNewTheatreAction() {
         newTheatrePopup.show();
     }
 
