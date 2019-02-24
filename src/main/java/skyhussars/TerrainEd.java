@@ -43,13 +43,18 @@ public class TerrainEd extends Application  {
     
     @Override
     public void start(Stage stage) throws Exception {
-        /* prepare the resource */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
         loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
-        /* setup the controller */
+        prepareController(loader,stage);
+        prepareStage(root,stage);
+    }
+    
+    private void prepareController(FXMLLoader loader,Stage stage){
         loader.<TerrainEdController>getController().stage(stage);
-        /* initialize the scene */
+    }
+    
+    private void prepareStage(Parent root,Stage stage){
         Scene scene = new Scene(root);
         stage.setTitle("SkyHussars - TerrainEd");
         stage.setScene(scene);
