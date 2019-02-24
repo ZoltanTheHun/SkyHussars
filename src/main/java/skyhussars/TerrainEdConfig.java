@@ -29,13 +29,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.terrained.NewTheatrePopup;
+import skyhussars.terrained.OpenTheatrePopup;
+import skyhussars.terrained.TerrainEdController;
+import skyhussars.terrained.TerrainProperties;
 
 @Configuration
 public class TerrainEdConfig {
+
     private final SettingsManager settingsManager = new SettingsManager(System.getProperty("user.dir"));
     private final TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
-    
-    @Bean public SettingsManager settingsManager(){return settingsManager;}
-    @Bean public TheatreLoader theaterLoader(){return theatreLoader;}
-    
+    private final TerrainProperties terrainProperties = new TerrainProperties();
+    private final OpenTheatrePopup theatreSelectorPopup = new OpenTheatrePopup(theatreLoader, terrainProperties);
+    private final NewTheatrePopup newTheatrePopup = new NewTheatrePopup();
+
+    @Bean
+    public TerrainEdController terrainEdController() {
+        return new TerrainEdController(theatreSelectorPopup, newTheatrePopup, terrainProperties);
+    }
+
 }

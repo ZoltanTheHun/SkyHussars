@@ -32,46 +32,28 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import skyhussars.engine.terrain.TheatreLoader;
-import skyhussars.terrained.NewTheatrePopup;
 import skyhussars.terrained.TerrainEdController;
-import skyhussars.terrained.OpenTheatrePopup;
-import skyhussars.terrained.TerrainProperties;
-
 /**
  * Terrain Editor application for SkyHussars
  * 
  */
 public class TerrainEd extends Application  {
 
-    private OpenTheatrePopup theatreSelectorPopup;
-    private NewTheatrePopup newTheatrePopup;
-    private final TerrainProperties terrainProperties = new TerrainProperties();
     private final ApplicationContext context = new AnnotationConfigApplicationContext(TerrainEdConfig.class);
     
     @Override
     public void start(Stage stage) throws Exception {
         /* prepare the resource */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
+        loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
-        /* initializes resources */
-        initializeResources();
         /* setup the controller */
-        loader.<TerrainEdController>getController().
-                stage(stage).
-                popups(theatreSelectorPopup,newTheatrePopup).
-                terrainProperties(terrainProperties);
+        loader.<TerrainEdController>getController().stage(stage);
         /* initialize the scene */
         Scene scene = new Scene(root);
         stage.setTitle("SkyHussars - TerrainEd");
         stage.setScene(scene);
         stage.show();
-    }
-    
-    private void initializeResources(){
-        TheatreLoader theatreLoader = context.getBean(TheatreLoader.class);
-        theatreSelectorPopup = new OpenTheatrePopup(theatreLoader,terrainProperties);
-        newTheatrePopup = new NewTheatrePopup();
     }
     
     public static void main(String[] args) {

@@ -57,10 +57,16 @@ public class TerrainEdController implements Initializable {
     @FXML
     private TextField terrainLocation;
 
-    private OpenTheatrePopup theatreSelectorPopup;
-    private NewTheatrePopup newTheatrePopup;
+    private final OpenTheatrePopup theatreSelectorPopup;
+    private final NewTheatrePopup newTheatrePopup;
     private Stage stage;
-    private TerrainProperties terrainProperties;
+    private final TerrainProperties terrainProperties;
+
+    public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup, TerrainProperties terrainProperties) {
+        this.theatreSelectorPopup = theatreSelectorPopup;
+        this.newTheatrePopup = newTheatrePopup;
+        this.terrainProperties = terrainProperties;
+    }
 
     /**
      * This method handles the event when the user clicks on the About item in
@@ -151,21 +157,10 @@ public class TerrainEdController implements Initializable {
         return this;
     }
 
-    public TerrainEdController popups(OpenTheatrePopup otp,NewTheatrePopup np) {
-        this.theatreSelectorPopup = otp;
-        this.newTheatrePopup = np;
-        return this;
-    }
-
-    public TerrainEdController terrainProperties(TerrainProperties terrainProperties) {
-        this.terrainProperties = terrainProperties;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         terrainName.textProperty().bindBidirectional(terrainProperties.name);
         terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
         terrainLocation.textProperty().bindBidirectional(terrainProperties.location);
-        return this;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
     }
 }
