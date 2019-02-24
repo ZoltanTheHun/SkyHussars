@@ -33,34 +33,35 @@ import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import skyhussars.terrained.TerrainEdController;
+
 /**
  * Terrain Editor application for SkyHussars
- * 
+ *
  */
-public class TerrainEd extends Application  {
+public class TerrainEd extends Application {
 
     private final ApplicationContext context = new AnnotationConfigApplicationContext(TerrainEdConfig.class);
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/terrained_main.fxml"));
         loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
-        prepareController(loader,stage);
-        prepareStage(root,stage);
+        prepareController(loader, stage);
+        prepareStage(root, stage);
     }
-    
-    private void prepareController(FXMLLoader loader,Stage stage){
+
+    private void prepareController(FXMLLoader loader, Stage stage) {
         loader.<TerrainEdController>getController().stage(stage);
     }
-    
-    private void prepareStage(Parent root,Stage stage){
+
+    private void prepareStage(Parent root, Stage stage) {
         Scene scene = new Scene(root);
         stage.setTitle("SkyHussars - TerrainEd");
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
