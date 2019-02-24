@@ -23,28 +23,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package skyhussars.terrained;
 
 import java.util.logging.Logger;
 
 /**
  * Controller class for the New Theatre popup
- * 
+ *
  */
 public class NewTheatreController {
+
     private static final Logger LOGGER = Logger.getLogger(NewTheatreController.class.getName());
     private NewTheatrePopup popup;
-    public NewTheatreController popup(NewTheatrePopup popup){
+
+    public NewTheatreController popup(NewTheatrePopup popup) {
         this.popup = popup;
         return this;
     }
+
     /**
      * This method will create a new theatre.
      */
-    public void newTheatre(){
+    public void newTheatre() {
         LOGGER.info("Testing new theatre controller.");
         popup.close();
     }
-            
+
 }
