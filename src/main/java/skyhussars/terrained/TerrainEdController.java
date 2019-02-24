@@ -38,6 +38,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import skyhussars.SkyHussars;
 import skyhussars.persistence.base.Marshal;
 import skyhussars.persistence.terrain.TerrainDescriptor;
@@ -46,6 +48,7 @@ import skyhussars.persistence.terrain.TerrainDescriptor;
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
  * This class is not thread safe
  */
+@Component
 public class TerrainEdController implements Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
@@ -61,11 +64,15 @@ public class TerrainEdController implements Initializable {
     private final NewTheatrePopup newTheatrePopup;
     private Stage stage;
     private final TerrainProperties terrainProperties;
-
-    public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup, TerrainProperties terrainProperties) {
+    private final AlertService alertService;
+    
+    @Autowired
+    public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup,
+            TerrainProperties terrainProperties,AlertService alertService) {
         this.theatreSelectorPopup = theatreSelectorPopup;
         this.newTheatrePopup = newTheatrePopup;
         this.terrainProperties = terrainProperties;
+        this.alertService = alertService;
     }
 
     /**
@@ -73,19 +80,13 @@ public class TerrainEdController implements Initializable {
      * the menu
      */
     public void handleAboutAction() {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("SkyHussars - TerrainEd");
-        alert.setHeaderText("TerrainEd - A terrain editor for SkyHussars");
-        alert.setContentText("Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
-        alert.showAndWait();
+        alertService.info("TerrainEd - A terrain editor for SkyHussars",
+                "Thank you for using SkyHussars and SkyHussars TerrainEd. \n Greetings from ZoltanTheHun");
     }
     
     private void unableToSaveAlert() {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Unable to save");
-        alert.setHeaderText("Unable to save, not all properties set.");
-        alert.setContentText("Please set all properties before trying to save a new terrain.");
-        alert.showAndWait();
+        alertService.info("Unable to save, not all properties set.",
+                "Please set all properties before trying to save a new terrain.");
     }
 
     /**

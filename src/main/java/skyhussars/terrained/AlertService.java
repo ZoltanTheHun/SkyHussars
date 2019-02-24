@@ -23,36 +23,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import skyhussars.engine.SettingsManager;
-import skyhussars.engine.terrain.TheatreLoader;
-import skyhussars.terrained.NewTheatrePopup;
-import skyhussars.terrained.OpenTheatrePopup;
-import skyhussars.terrained.TerrainProperties;
+package skyhussars.terrained;
 
-@Configuration
-@ComponentScan(basePackages = {"skyhussars.terrained"})
-public class TerrainEdConfig {
+import javafx.scene.control.Alert;
+import org.springframework.stereotype.Service;
 
-    private final SettingsManager settingsManager = new SettingsManager(System.getProperty("user.dir"));
-    private final TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
-
-    @Bean
-    public TerrainProperties terrainProperties() {
-        return new TerrainProperties();
-    }
-
-    @Bean
-    public OpenTheatrePopup theatreSelectorPopup() {
-        return new OpenTheatrePopup(theatreLoader, terrainProperties());
-    }
-
-    @Bean
-    public NewTheatrePopup newTheatrePopup() {
-        return new NewTheatrePopup();
+@Service
+public class AlertService {
+    public void info(String info, String detail){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("SkyHussars - TerrainEd");
+        alert.setHeaderText(info);
+        alert.setContentText(detail);
+        alert.showAndWait();
+        
     }
 }
