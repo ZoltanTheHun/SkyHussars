@@ -30,6 +30,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
 import skyhussars.terrained.NewTheatrePopup;
@@ -46,7 +48,8 @@ public class TerrainEd extends Application  {
     private SettingsManager settingsManager;
     private OpenTheatrePopup theatreSelectorPopup;
     private NewTheatrePopup newTheatrePopup;
-    private TerrainProperties terrainProperties = new TerrainProperties();
+    private final TerrainProperties terrainProperties = new TerrainProperties();
+    private final ApplicationContext context = new AnnotationConfigApplicationContext(TerrainEdConfig.class);
     
     @Override
     public void start(Stage stage) throws Exception {
