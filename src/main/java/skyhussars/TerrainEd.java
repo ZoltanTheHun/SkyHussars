@@ -32,7 +32,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
 import skyhussars.terrained.NewTheatrePopup;
 import skyhussars.terrained.TerrainEdController;
@@ -45,7 +44,6 @@ import skyhussars.terrained.TerrainProperties;
  */
 public class TerrainEd extends Application  {
 
-    private SettingsManager settingsManager;
     private OpenTheatrePopup theatreSelectorPopup;
     private NewTheatrePopup newTheatrePopup;
     private final TerrainProperties terrainProperties = new TerrainProperties();
@@ -71,8 +69,7 @@ public class TerrainEd extends Application  {
     }
     
     private void initializeResources(){
-        settingsManager = new SettingsManager(System.getProperty("user.dir"));
-        TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
+        TheatreLoader theatreLoader = context.getBean(TheatreLoader.class);
         theatreSelectorPopup = new OpenTheatrePopup(theatreLoader,terrainProperties);
         newTheatrePopup = new NewTheatrePopup();
     }

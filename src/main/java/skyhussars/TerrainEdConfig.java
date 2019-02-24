@@ -25,9 +25,17 @@
  */
 package skyhussars;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import skyhussars.engine.SettingsManager;
+import skyhussars.engine.terrain.TheatreLoader;
 
 @Configuration
 public class TerrainEdConfig {
+    private final SettingsManager settingsManager = new SettingsManager(System.getProperty("user.dir"));
+    private final TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
+    
+    @Bean public SettingsManager settingsManager(){return settingsManager;}
+    @Bean public TheatreLoader theaterLoader(){return theatreLoader;}
     
 }
