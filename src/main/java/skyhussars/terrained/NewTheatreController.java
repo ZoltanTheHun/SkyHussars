@@ -26,6 +26,9 @@
 package skyhussars.terrained;
 
 import java.util.logging.Logger;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * Controller class for the New Theatre popup
@@ -35,9 +38,18 @@ public class NewTheatreController {
 
     private static final Logger LOGGER = Logger.getLogger(NewTheatreController.class.getName());
     private NewTheatrePopup popup;
+    private TheatreLoader loader;
+    
+    @FXML
+    private TextField theatreName;
 
     public NewTheatreController popup(NewTheatrePopup popup) {
         this.popup = popup;
+        return this;
+    }
+    
+    public NewTheatreController theatreLoader(TheatreLoader loader) {
+        this.loader = loader;
         return this;
     }
 
@@ -46,6 +58,7 @@ public class NewTheatreController {
      */
     public void newTheatre() {
         LOGGER.info("Testing new theatre controller.");
+        loader.createTheatre(theatreName.getText());
         popup.close();
     }
 

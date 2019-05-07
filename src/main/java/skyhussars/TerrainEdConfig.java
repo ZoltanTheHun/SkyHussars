@@ -53,6 +53,6 @@ public class TerrainEdConfig {
 
     @Bean
     public NewTheatrePopup newTheatrePopup() {
-        return new NewTheatrePopup();
+        return new NewTheatrePopup(theatreLoader);
     }
 }
