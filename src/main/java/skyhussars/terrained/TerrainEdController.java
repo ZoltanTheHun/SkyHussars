@@ -141,7 +141,7 @@ public class TerrainEdController implements Initializable {
     public void handleNewTheatreAction() {
         newTheatrePopup.show();
     }
-
+    
     /**
      * This method handles the event when the user clicks on the Open Theater
      * item in the menu
@@ -149,6 +149,14 @@ public class TerrainEdController implements Initializable {
     public void handleOpenTheatreAction() {
         theatreSelectorPopup.show();
     }
+    
+    /**
+     * This method handles the event when the user clicks on the New Theater
+     * item in the menu
+     */
+    public void handleSaveTheatreAction() {
+    }
+
 
     private FileChooser fileChooser(String title) {
         FileChooser chooser = new FileChooser();

@@ -17,8 +17,9 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-                  <MenuItem id="openTheatreMenuButton" mnemonicParsing="false" onAction="#handleNewTheatreAction" text="New Theatre" />
+                  <MenuItem id="newTheatreMenuButton" mnemonicParsing="false" onAction="#handleNewTheatreAction" text="New Theatre" />
                   <MenuItem id="openTheatreMenuButton" mnemonicParsing="false" onAction="#handleOpenTheatreAction" text="Open Theatre" />
+                  <MenuItem id="saveTheatreMenuButton" mnemonicParsing="false" onAction="#handleSaveTheatreAction" text="Save Theatre" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" />
                   <MenuItem mnemonicParsing="false" onAction="#handleSaveAction" text="Save As..." />
           </items>
