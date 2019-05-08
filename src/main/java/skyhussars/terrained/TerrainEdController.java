@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import skyhussars.SkyHussars;
+import skyhussars.engine.terrain.TheatreLoader;
 import skyhussars.persistence.base.Marshal;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 
@@ -63,14 +64,16 @@ public class TerrainEdController implements Initializable {
     private Stage stage;
     private final TerrainProperties terrainProperties;
     private final AlertService alertService;
+    private final TheatreLoader theatreLoader;
 
     @Autowired
     public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup,
-            TerrainProperties terrainProperties, AlertService alertService) {
+            TerrainProperties terrainProperties, AlertService alertService,TheatreLoader theatreLoader) {
         this.theatreSelectorPopup = theatreSelectorPopup;
         this.newTheatrePopup = newTheatrePopup;
         this.terrainProperties = terrainProperties;
         this.alertService = alertService;
+        this.theatreLoader = theatreLoader;
     }
 
     /**
@@ -91,13 +94,13 @@ public class TerrainEdController implements Initializable {
      * This method handles the event when the user clicks on the Save item in
      * the menu
      */
-    public void handleSaveAction() {
+    /*public void handleSaveAction() {
         if (canSave()) {
             save();
         } else {
             unableToSaveAlert();
         }
-    }
+    }*/
 
     private void save() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
@@ -117,13 +120,13 @@ public class TerrainEdController implements Initializable {
      * This method handles the event when the user clicks on the Open item in
      * the menu
      */
-    public void handleOpenAction() {
+    /*public void handleOpenAction() {
         File file = fileChooser("Open a terrain definition").showOpenDialog(stage);
         if (file != null) {
             loadTheatre(file);
         }
-    }
-
+    }*/
+    
     private void loadTheatre(File file) {
         try {
             LOGGER.info("Loading theatre " + file.getAbsolutePath());
@@ -151,11 +154,21 @@ public class TerrainEdController implements Initializable {
     }
     
     /**
-     * This method handles the event when the user clicks on the New Theater
+     * This method handles the event when the user clicks on the Save Theater
      * item in the menu
      */
     public void handleSaveTheatreAction() {
+        save();
     }
+    
+        
+    /**
+     * This method handles the event when the user clicks on the Delete Theater
+     * item in the menu
+     */
+    public void handleDeleteTheatreAction() {
+    }
+
 
 
     private FileChooser fileChooser(String title) {
