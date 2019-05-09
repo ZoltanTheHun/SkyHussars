@@ -37,10 +37,17 @@ import skyhussars.terrained.TerrainProperties;
 @Configuration
 @ComponentScan(basePackages = {"skyhussars.terrained"})
 public class TerrainEdConfig {
-
-    private final SettingsManager settingsManager = new SettingsManager(System.getProperty("user.dir"));
-    private final TheatreLoader theatreLoader = new TheatreLoader(settingsManager.assetDirectory());
-
+    
+    @Bean
+    public SettingsManager settingsManager() {
+        return new SettingsManager(System.getProperty("user.dir"));
+    }
+    
+    @Bean
+    public TheatreLoader theatreLoader() {
+        return new TheatreLoader(settingsManager().assetDirectory());
+    }
+    
     @Bean
     public TerrainProperties terrainProperties() {
         return new TerrainProperties();
@@ -48,11 +55,11 @@ public class TerrainEdConfig {
 
     @Bean
     public OpenTheatrePopup theatreSelectorPopup() {
-        return new OpenTheatrePopup(theatreLoader, terrainProperties());
+        return new OpenTheatrePopup(theatreLoader(), terrainProperties());
     }
 
     @Bean
     public NewTheatrePopup newTheatrePopup() {
-        return new NewTheatrePopup(theatreLoader);
+        return new NewTheatrePopup(theatreLoader());
     }
 }
