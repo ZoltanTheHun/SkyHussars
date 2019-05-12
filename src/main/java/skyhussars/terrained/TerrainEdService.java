@@ -43,12 +43,18 @@ public class TerrainEdService {
     
     public boolean saveToFile(File file, TerrainProperties terrainProperties){
         boolean success = false;
-        if (file != null) {
+        if (file != null && canSave(terrainProperties)) {
             LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
             new Persistence().persist(terrainProperties, file);
             success = true;
         }
         return success;
+    }
+    
+    private boolean canSave(TerrainProperties terrainProperties) {
+        return terrainProperties.name.get() != null
+                && terrainProperties.size.get() >= 1
+                && terrainProperties.location.get() != null;
     }
     
 }

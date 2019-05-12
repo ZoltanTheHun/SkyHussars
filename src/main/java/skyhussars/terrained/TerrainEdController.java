@@ -106,12 +106,6 @@ public class TerrainEdController implements Initializable {
         terrainEdService.saveToFile(file, terrainProperties);
     }
 
-    private boolean canSave() {
-        return terrainProperties.name.get() != null
-                && terrainProperties.size.get() >= 1
-                && terrainProperties.location.get() != null;
-    }
-
     /**
      * This method handles the event when the user clicks on the Open item in
      * the menu
