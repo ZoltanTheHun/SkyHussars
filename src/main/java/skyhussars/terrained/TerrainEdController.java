@@ -90,23 +90,6 @@ public class TerrainEdController implements Initializable {
     }
 
     /**
-     * This method handles the event when the user clicks on the Save item in
-     * the menu
-     */
-    /*public void handleSaveAction() {
-        if (canSave()) {
-            save();
-        } else {
-            unableToSaveAlert();
-        }
-    }*/
-
-    private void save() {
-        File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
-        terrainEdService.saveToFile(file, terrainProperties);
-    }
-
-    /**
      * This method handles the event when the user clicks on the Open item in
      * the menu
      */
@@ -148,7 +131,9 @@ public class TerrainEdController implements Initializable {
      * item in the menu
      */
     public void handleSaveTheatreAction() {
-        save();
+        File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
+        boolean saveSuccesful = terrainEdService.saveToFile(file, terrainProperties);
+        if(!saveSuccesful) unableToSaveAlert();
     }
     
         
