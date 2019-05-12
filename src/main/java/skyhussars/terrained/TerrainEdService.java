@@ -28,7 +28,10 @@ package skyhussars.terrained;
 import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.persistence.base.Marshal;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * State manager for the Theatre editor. 
@@ -41,9 +44,16 @@ public class TerrainEdService {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
     
-    public boolean saveToFile(File file, TerrainProperties terrainProperties){
+    private final TerrainProperties terrainProperties;
+    
+    @Autowired
+    public TerrainEdService(TerrainProperties terrainProperties){
+        this.terrainProperties = terrainProperties;
+    }
+    
+    public boolean saveToFile(File file){
         boolean success = false;
-        if (file != null && canSave(terrainProperties)) {
+        if (file != null && canSave()) {
             LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
             new Persistence().persist(terrainProperties, file);
             success = true;
@@ -51,10 +61,14 @@ public class TerrainEdService {
         return success;
     }
     
-    private boolean canSave(TerrainProperties terrainProperties) {
+    private boolean canSave() {
         return terrainProperties.name.get() != null
                 && terrainProperties.size.get() >= 1
                 && terrainProperties.location.get() != null;
     }
-    
+
+    public TerrainProperties getTerrainProperties() {
+        return terrainProperties;
+    }
+        
 }

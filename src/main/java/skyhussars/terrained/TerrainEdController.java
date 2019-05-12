@@ -61,16 +61,13 @@ public class TerrainEdController implements Initializable {
     private final OpenTheatrePopup theatreSelectorPopup;
     private final NewTheatrePopup newTheatrePopup;
     private Stage stage;
-    private final TerrainProperties terrainProperties;
     private final AlertService alertService;
     private TerrainEdService terrainEdService;
 
     @Autowired
-    public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup,
-            TerrainProperties terrainProperties, AlertService alertService,TerrainEdService terrainEdService) {
+    public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup, AlertService alertService,TerrainEdService terrainEdService) {
         this.theatreSelectorPopup = theatreSelectorPopup;
         this.newTheatrePopup = newTheatrePopup;
-        this.terrainProperties = terrainProperties;
         this.alertService = alertService;
         this.terrainEdService = terrainEdService;
     }
@@ -87,27 +84,6 @@ public class TerrainEdController implements Initializable {
     private void unableToSaveAlert() {
         alertService.info("Unable to save, not all properties set.",
                 "Please set all properties before trying to save a new terrain.");
-    }
-
-    /**
-     * This method handles the event when the user clicks on the Open item in
-     * the menu
-     */
-    /*public void handleOpenAction() {
-        File file = fileChooser("Open a terrain definition").showOpenDialog(stage);
-        if (file != null) {
-            loadTheatre(file);
-        }
-    }*/
-    
-    private void loadTheatre(File file) {
-        try {
-            LOGGER.info("Loading theatre " + file.getAbsolutePath());
-            TerrainDescriptor td = Marshal.unmarshal(file, TerrainDescriptor.class);
-            terrainProperties.from(td);
-        } catch (Exception ex) {
-            LOGGER.error("Error loading " + file.getAbsolutePath(), ex);
-        }
     }
 
     /**
@@ -132,7 +108,7 @@ public class TerrainEdController implements Initializable {
      */
     public void handleSaveTheatreAction() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
-        boolean saveSuccesful = terrainEdService.saveToFile(file, terrainProperties);
+        boolean saveSuccesful = terrainEdService.saveToFile(file);
         if(!saveSuccesful) unableToSaveAlert();
     }
     
@@ -161,8 +137,9 @@ public class TerrainEdController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        terrainName.textProperty().bindBidirectional(terrainProperties.name);
-        terrainSize.textProperty().bindBidirectional(terrainProperties.size, new NumberStringConverter());
-        terrainLocation.textProperty().bindBidirectional(terrainProperties.location);
+        TerrainProperties props = terrainEdService.getTerrainProperties();
+        terrainName.textProperty().bindBidirectional(props.name);
+        terrainSize.textProperty().bindBidirectional(props.size, new NumberStringConverter());
+        terrainLocation.textProperty().bindBidirectional(props.location);
     }
 }
