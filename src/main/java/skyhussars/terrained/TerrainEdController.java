@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import skyhussars.SkyHussars;
-import skyhussars.persistence.base.Marshal;
-import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * Controller class for TerrainEd. The controller is defined from SceneBuilder.
@@ -62,7 +60,7 @@ public class TerrainEdController implements Initializable {
     private final NewTheatrePopup newTheatrePopup;
     private Stage stage;
     private final AlertService alertService;
-    private TerrainEdService terrainEdService;
+    private final TerrainEdService terrainEdService;
 
     @Autowired
     public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup, AlertService alertService,TerrainEdService terrainEdService) {

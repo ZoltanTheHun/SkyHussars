@@ -30,8 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import skyhussars.persistence.base.Marshal;
-import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * State manager for the Theatre editor. 
