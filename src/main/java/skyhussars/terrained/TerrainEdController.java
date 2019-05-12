@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import skyhussars.SkyHussars;
-import skyhussars.engine.terrain.TheatreLoader;
 import skyhussars.persistence.base.Marshal;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 
@@ -104,10 +103,7 @@ public class TerrainEdController implements Initializable {
 
     private void save() {
         File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
-        if (file != null) {
-            LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
-            new Persistence().persist(terrainProperties, file);
-        }
+        terrainEdService.saveToFile(file, terrainProperties);
     }
 
     private boolean canSave() {
