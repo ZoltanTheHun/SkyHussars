@@ -25,6 +25,9 @@
  */
 package skyhussars.terrained;
 
+import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,5 +38,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TerrainEdService {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
+    
+    public boolean saveToFile(File file, TerrainProperties terrainProperties){
+        boolean success = false;
+        if (file != null) {
+            LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
+            new Persistence().persist(terrainProperties, file);
+            success = true;
+        }
+        return success;
+    }
     
 }
