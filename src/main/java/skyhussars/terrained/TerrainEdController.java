@@ -58,22 +58,22 @@ public class TerrainEdController implements Initializable {
     private TextField terrainSize;
     @FXML
     private TextField terrainLocation;
-
+    
     private final OpenTheatrePopup theatreSelectorPopup;
     private final NewTheatrePopup newTheatrePopup;
     private Stage stage;
     private final TerrainProperties terrainProperties;
     private final AlertService alertService;
-    private final TheatreLoader theatreLoader;
+    private TerrainEdService terrainEdService;
 
     @Autowired
     public TerrainEdController(OpenTheatrePopup theatreSelectorPopup, NewTheatrePopup newTheatrePopup,
-            TerrainProperties terrainProperties, AlertService alertService,TheatreLoader theatreLoader) {
+            TerrainProperties terrainProperties, AlertService alertService,TerrainEdService terrainEdService) {
         this.theatreSelectorPopup = theatreSelectorPopup;
         this.newTheatrePopup = newTheatrePopup;
         this.terrainProperties = terrainProperties;
         this.alertService = alertService;
-        this.theatreLoader = theatreLoader;
+        this.terrainEdService = terrainEdService;
     }
 
     /**
