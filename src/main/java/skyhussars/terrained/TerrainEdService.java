@@ -25,10 +25,15 @@
  */
 package skyhussars.terrained;
 
+import org.springframework.stereotype.Component;
+
 /**
- *  A service that functions as the base interface for state management in the theatre editor
+ * State manager for the Theatre editor. 
+ * 
+ * This class is the main interface between the UI and the underlying functionalities.
  * 
  */
+@Component
 public class TerrainEdService {
     
 }
