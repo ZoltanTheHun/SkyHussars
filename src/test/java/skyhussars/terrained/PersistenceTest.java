@@ -32,17 +32,21 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import static skyhussars.persistence.base.Marshal.*;
 import skyhussars.persistence.terrain.TerrainDescriptor;
 
 public class PersistenceTest {
-    
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
+
     @Test
-    public void terrainPersistenceTest(){
+    public void terrainPersistenceTest() {
         try {
             TerrainProperties props = new TerrainProperties();
             props.location.set("testLocation");
@@ -52,11 +56,70 @@ public class PersistenceTest {
             new Persistence().persist(props, testFile);
             TerrainProperties persisted = new TerrainProperties()
                     .from(unmarshal(testFile, TerrainDescriptor.class));
-            
+
+            assertTrue(props.equals(persisted));
+        } catch (IOException ex) {
+            Logger.getLogger(PersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Test
+    public void terrainPersistenceWithZeroSizeTest() {
+        expected.expect(IllegalArgumentException.class);
+        try {
+            TerrainProperties props = new TerrainProperties();
+            props.location.set("testLocation");
+            props.name.set("testName");
+            props.size.set(0);
+            File testFile = folder.newFile("test.txt");
+            new Persistence().persist(props, testFile);
+            TerrainProperties persisted = new TerrainProperties()
+                    .from(unmarshal(testFile, TerrainDescriptor.class));
+
             assertTrue(props.equals(persisted));
         } catch (IOException ex) {
             Logger.getLogger(PersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    
+    @Test
+    public void terrainPersistenceWithNullNameTest() {
+        expected.expect(NullPointerException.class);
+        try {
+            TerrainProperties props = new TerrainProperties();
+            props.location.set("test");
+            props.name.set(null);
+            props.size.set(12);
+            File testFile = folder.newFile("test.txt");
+            new Persistence().persist(props, testFile);
+            TerrainProperties persisted = new TerrainProperties()
+                    .from(unmarshal(testFile, TerrainDescriptor.class));
+
+            assertTrue(props.equals(persisted));
+        } catch (IOException ex) {
+            Logger.getLogger(PersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void terrainPersistenceWithNullLocationTest() {
+        expected.expect(NullPointerException.class);
+        try {
+            TerrainProperties props = new TerrainProperties();
+            props.location.set(null);
+            props.name.set("test");
+            props.size.set(12);
+            File testFile = folder.newFile("test.txt");
+            new Persistence().persist(props, testFile);
+            TerrainProperties persisted = new TerrainProperties()
+                    .from(unmarshal(testFile, TerrainDescriptor.class));
+
+            assertTrue(props.equals(persisted));
+        } catch (IOException ex) {
+            Logger.getLogger(PersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+
 }
