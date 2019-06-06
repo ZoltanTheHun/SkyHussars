@@ -45,7 +45,7 @@ import skyhussars.SkyHussars;
  * This class is not thread safe
  */
 @Component
-public class TerrainEdController implements Initializable {
+public class TerrainEdController implements Initializable,EditorController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
 
@@ -128,16 +128,17 @@ public class TerrainEdController implements Initializable {
         return chooser;
     }
 
-    public TerrainEdController stage(Stage stage) {
-        this.stage = stage;
-        return this;
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         TerrainProperties props = terrainEdService.getTerrainProperties();
         terrainName.textProperty().bindBidirectional(props.name);
         terrainSize.textProperty().bindBidirectional(props.size, new NumberStringConverter());
         terrainLocation.textProperty().bindBidirectional(props.location);
+    }
+
+    @Override
+    public EditorController with(Stage stage) {
+        this.stage = stage;
+        return this;
     }
 }

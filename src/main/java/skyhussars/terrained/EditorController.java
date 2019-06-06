@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, ZoltanTheHun
+ * Copyright (c) 2019, ZoltanTheHun
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,41 +23,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
+package skyhussars.terrained;
 
-import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import skyhussars.terrained.FXMLLoaderFactory;
-
 /**
- * Terrain Editor application for SkyHussars
- *
+ * An interface to standardize the behaviour of the controllers in the terrain editor
+ * 
  */
-public class TerrainEd extends Application {
-
-    private Stage stage;
-    
-    @Override
-    public void start(Stage stage) throws Exception {
-        this.stage = stage;
-        ApplicationContext context = new AnnotationConfigApplicationContext(TerrainEdConfig.class);
-        FXMLLoaderFactory loaderFactory = context.getBean(FXMLLoaderFactory.class);
-        loaderFactory.loadStage("/terrained/terrained_main.fxml",this::prepareStage,stage);
-    }
-
-    private Parent prepareStage(Parent root) {
-        Scene scene = new Scene(root);
-        stage.setTitle("SkyHussars - TerrainEd");
-        stage.setScene(scene);
-        stage.show();
-        return root;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+public interface EditorController {
+    /**
+     * This method collect all those components which cannot be added through dependency injection.
+     * @param stage
+     * @return 
+     */
+    public EditorController with(Stage stage);
 }
