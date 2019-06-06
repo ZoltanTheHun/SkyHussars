@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  * context when managing the controllers.
  */
 @Component
-public class FXMLLoaderFactory implements ApplicationContextAware {
+public class FXMLSceneFactory implements ApplicationContextAware {
     public Callback<Class<?>, Object> controllerFactory;
     private ApplicationContext ac;
     /**

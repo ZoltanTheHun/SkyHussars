@@ -31,7 +31,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import skyhussars.terrained.FXMLLoaderFactory;
+import skyhussars.terrained.FXMLSceneFactory;
 
 /**
  * Terrain Editor application for SkyHussars
@@ -45,8 +45,8 @@ public class TerrainEd extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         ApplicationContext context = new AnnotationConfigApplicationContext(TerrainEdConfig.class);
-        FXMLLoaderFactory loaderFactory = context.getBean(FXMLLoaderFactory.class);
-        loaderFactory.loadStage("/terrained/terrained_main.fxml",this::prepareStage,stage);
+        FXMLSceneFactory loaderFactory = context.getBean(FXMLSceneFactory.class);
+        loaderFactory.load("/terrained/terrained_main.fxml",this::prepareStage,stage);
     }
 
     private Parent prepareStage(Parent root) {
