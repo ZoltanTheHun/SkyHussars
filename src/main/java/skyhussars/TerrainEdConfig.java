@@ -30,7 +30,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
-import skyhussars.terrained.NewTheatrePopup;
 import skyhussars.terrained.OpenTheatrePopup;
 import skyhussars.terrained.TerrainProperties;
 
@@ -58,8 +57,4 @@ public class TerrainEdConfig {
         return new OpenTheatrePopup(theatreLoader(), terrainProperties());
     }
 
-    @Bean
-    public NewTheatrePopup newTheatrePopup() {
-        return new NewTheatrePopup(theatreLoader());
-    }
 }

@@ -28,38 +28,47 @@ package skyhussars.terrained;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * Controller class for the New Theatre popup
  *
  */
-public class NewTheatreController {
+@Component
+public class NewTheatreController implements EditorController{
 
     private static final Logger LOGGER = Logger.getLogger(NewTheatreController.class.getName());
     private NewTheatrePopup popup;
-    private TheatreLoader loader;
-    
+    private final TheatreLoader loader;
+    private Stage stage;
     @FXML
     private TextField theatreName;
 
+    @Autowired
+    public NewTheatreController(TheatreLoader loader){
+        this.loader = loader;
+    }
     public NewTheatreController popup(NewTheatrePopup popup) {
         this.popup = popup;
         return this;
     }
     
-    public NewTheatreController theatreLoader(TheatreLoader loader) {
-        this.loader = loader;
-        return this;
-    }
-
     /**
      * This method will create a new theatre.
      */
     public void newTheatre() {
         LOGGER.info("Testing new theatre controller.");
         loader.createTheatre(theatreName.getText());
-        popup.close();
+        stage.close();
+    }
+
+    @Override
+    public EditorController with(Stage stage) {
+        this.stage = stage;
+        return this;
     }
 
 }

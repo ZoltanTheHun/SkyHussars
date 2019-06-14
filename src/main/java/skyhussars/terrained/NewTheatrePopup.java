@@ -32,6 +32,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import skyhussars.engine.terrain.TheatreLoader;
 
 /**
@@ -39,34 +41,36 @@ import skyhussars.engine.terrain.TheatreLoader;
  * File Menu
  *
  */
+@Component
 public class NewTheatrePopup {
 
     private static final Logger LOGGER = Logger.getLogger(NewTheatrePopup.class.getName());
     
-    private Stage dialog;
-    private final TheatreLoader theatreLoader;
+    private Stage dialog = new Stage();
+    private final FXMLSceneFactory sceneFactory;
     
-    public NewTheatrePopup(TheatreLoader theatreLoader){
-        this.theatreLoader = theatreLoader;
+    @Autowired
+    public NewTheatrePopup(FXMLSceneFactory sceneFactory){
+        this.sceneFactory = sceneFactory;
     }
 
     public void show() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/terrained/newtheatrecombo.fxml"));
-            
-        try {
-            Parent root = loader.load();
-            /* initialize the scene */
-            Scene scene = new Scene(root);
-            loader.<NewTheatreController>getController().popup(this).theatreLoader(theatreLoader);   
-            final Stage dialog = new Stage();
-            dialog.setTitle("New Theatre");
-            dialog.setScene(scene);
-            dialog.show();
-            this.dialog = dialog;
+        try {          
+            sceneFactory.load("/terrained/newtheatrecombo.fxml", this::prepareStage, dialog);
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-            throw new RuntimeException();
+            LOGGER.severe(ex.getMessage());
         }
+    }
+    
+    private Parent prepareStage(Parent root) {
+        /* initialize the scene */
+        Scene scene = new Scene(root);
+       // loader.<NewTheatreController>getController().popup(this).theatreLoader(theatreLoader);   
+        //final Stage dialog = new Stage();
+        dialog.setTitle("New Theatre");
+        dialog.setScene(scene);
+        dialog.show();      
+        return root;
     }
     
     public void close(){
