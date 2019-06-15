@@ -26,15 +26,12 @@
 package skyhussars.terrained;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * The purpose of this class is to manage the New Theatre popup available from
@@ -46,12 +43,14 @@ public class NewTheatrePopup {
 
     private static final Logger LOGGER = Logger.getLogger(NewTheatrePopup.class.getName());
     
-    private Stage dialog = new Stage();
+    private final Stage dialog = new Stage();
     private final FXMLSceneFactory sceneFactory;
+    private final AlertService alertService;
     
     @Autowired
-    public NewTheatrePopup(FXMLSceneFactory sceneFactory){
+    public NewTheatrePopup(FXMLSceneFactory sceneFactory, AlertService alertService){
         this.sceneFactory = sceneFactory;
+        this.alertService = alertService;
     }
 
     public void show() {
@@ -59,6 +58,7 @@ public class NewTheatrePopup {
             sceneFactory.load("/terrained/newtheatrecombo.fxml", this::prepareStage, dialog);
         } catch (IOException ex) {
             LOGGER.severe(ex.getMessage());
+            alertService.info("An error occured.", "Unable to show New Theatre dialog.");
         }
     }
     
