@@ -65,15 +65,10 @@ public class NewTheatrePopup {
     private Parent prepareStage(Parent root) {
         /* initialize the scene */
         Scene scene = new Scene(root);
-       // loader.<NewTheatreController>getController().popup(this).theatreLoader(theatreLoader);   
-        //final Stage dialog = new Stage();
         dialog.setTitle("New Theatre");
         dialog.setScene(scene);
         dialog.show();      
         return root;
     }
     
-    public void close(){
-        dialog.close();
-    }
 }
