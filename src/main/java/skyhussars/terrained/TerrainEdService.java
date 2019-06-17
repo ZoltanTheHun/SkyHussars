@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import skyhussars.engine.terrain.TheatreLoader;
+import skyhussars.persistence.terrain.TerrainDescriptor;
 
 /**
  * State manager for the Theatre editor. 
@@ -43,10 +45,12 @@ public class TerrainEdService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerrainEdController.class);
     
     private final TerrainProperties terrainProperties;
+    private final TheatreLoader loader;
     
     @Autowired
-    public TerrainEdService(TerrainProperties terrainProperties){
+    public TerrainEdService(TerrainProperties terrainProperties,TheatreLoader loader){
         this.terrainProperties = terrainProperties;
+        this.loader = loader;
     }
     
     public boolean saveToFile(File file){
@@ -67,6 +71,12 @@ public class TerrainEdService {
 
     public TerrainProperties getTerrainProperties() {
         return terrainProperties;
+    }
+    
+    public TerrainEdService newTheatre(String name){
+        TerrainDescriptor terrain = loader.createTheatre(name);
+        terrainProperties.from(terrain);
+        return this;
     }
         
 }

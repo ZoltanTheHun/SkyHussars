@@ -31,7 +31,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import skyhussars.engine.terrain.TheatreLoader;
 
 /**
  * Controller class for the New Theatre popup
@@ -42,14 +41,14 @@ public class NewTheatreController implements EditorController{
 
     private static final Logger LOGGER = Logger.getLogger(NewTheatreController.class.getName());
     private NewTheatrePopup popup;
-    private final TheatreLoader loader;
+    private final TerrainEdService terrainEdService;
     private Stage stage;
     @FXML
     private TextField theatreName;
 
     @Autowired
-    public NewTheatreController(TheatreLoader loader){
-        this.loader = loader;
+    public NewTheatreController(TerrainEdService terrainEdService){
+        this.terrainEdService = terrainEdService;
     }
     public NewTheatreController popup(NewTheatrePopup popup) {
         this.popup = popup;
@@ -60,8 +59,8 @@ public class NewTheatreController implements EditorController{
      * This method will create a new theatre.
      */
     public void newTheatre() {
-        LOGGER.info("Testing new theatre controller.");
-        loader.createTheatre(theatreName.getText());
+        LOGGER.info("Creating a new theatre with name: " + theatreName.getText());
+        terrainEdService.newTheatre(theatreName.getText());
         stage.close();
     }
 
