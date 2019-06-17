@@ -31,11 +31,13 @@ import skyhussars.engine.gamestates.MenuState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 
 @Configuration
-@ComponentScan
+@ComponentScan(excludeFilters = {
+    @ComponentScan.Filter(type = FilterType.REGEX, pattern = "skyhussars.terrained.*"),})
 public class SkyHussarsContext {
-      
+
     @Autowired
     private GuiManager guiManager;
 

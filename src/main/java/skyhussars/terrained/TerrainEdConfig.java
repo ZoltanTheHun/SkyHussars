@@ -23,15 +23,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package skyhussars;
+package skyhussars.terrained;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import skyhussars.engine.SettingsManager;
 import skyhussars.engine.terrain.TheatreLoader;
-import skyhussars.terrained.OpenTheatrePopup;
-import skyhussars.terrained.TerrainProperties;
 
 @Configuration
 @ComponentScan(basePackages = {"skyhussars.terrained"})
