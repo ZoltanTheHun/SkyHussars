@@ -105,8 +105,7 @@ public class TerrainEdController implements Initializable,EditorController {
      * item in the menu
      */
     public void handleSaveTheatreAction() {
-        File file = fileChooser("Save a terrain definition").showSaveDialog(stage);
-        boolean saveSuccesful = terrainEdService.saveToFile(file);
+        boolean saveSuccesful = terrainEdService.saveToFile();
         if(!saveSuccesful) unableToSaveAlert();
     }
     

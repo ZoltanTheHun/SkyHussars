@@ -76,17 +76,23 @@ public class TheatreLoader {
     public TerrainDescriptor createTheatre(String theatreName){
         File theatreFolder = new File(theatresFolder + "/" + theatreName);
         theatreFolder.mkdir();
-        File theatre = new File(theatreFolder,jsonDescriptorname);
         TerrainDescriptor descriptor = new TerrainDescriptor(theatreName, 1, "");
-        Marshal.marshal(descriptor, theatre);
+        persist(descriptor,theatreFolder);
         theatres.put(theatreName, descriptor);
         return descriptor;
     }
     
-    public TerrainDescriptor saveTheatre(String theatreName){
+    public TerrainDescriptor persist(TerrainDescriptor descriptor,File theatreLocation){
+        File theatre = new File(theatreLocation,jsonDescriptorname);
+        Marshal.marshal(descriptor, theatre);
+        return descriptor;
+    }
+    
+    public TerrainDescriptor saveTheatre(String theatreName,TerrainDescriptor descriptor){
         File theatreFolder = new File(theatresFolder + "/" + theatreName);
-        theatreFolder.mkdir();
-        return null;
+        persist(descriptor,theatreFolder);
+        theatres.put(theatreName, descriptor);
+        return descriptor;
     }
     
     private TerrainDescriptor saveTheatre(File theatreDirectory){

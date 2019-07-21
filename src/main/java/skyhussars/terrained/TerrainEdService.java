@@ -25,7 +25,6 @@
  */
 package skyhussars.terrained;
 
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +52,10 @@ public class TerrainEdService {
         this.loader = loader;
     }
     
-    public boolean saveToFile(File file){
+    public boolean saveToFile(){
         boolean success = false;
-        if (file != null && canSave()) {
-            LOGGER.info("Saving " + terrainProperties.name.get() + " to " + file.getAbsolutePath());
-            new Persistence().persist(terrainProperties, file);
+        if (canSave()) {
+            loader.saveTheatre(terrainProperties.name.get(),terrainProperties.asDescriptor());
             success = true;
         }
         return success;
