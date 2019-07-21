@@ -73,33 +73,29 @@ public class TheatreLoader {
     
     public TerrainDescriptor theatre(String theatre){ return theatres.get(theatre);}
     
+    private static final int DEFAULT_SIZE = 1;
+    private static final String DEFAULT_LOCATION = "";
+    
     public TerrainDescriptor createTheatre(String theatreName){
-        File theatreFolder = new File(theatresFolder + "/" + theatreName);
-        theatreFolder.mkdir();
-        TerrainDescriptor descriptor = new TerrainDescriptor(theatreName, 1, "");
-        persist(descriptor,theatreFolder);
-        theatres.put(theatreName, descriptor);
-        return descriptor;
+        TerrainDescriptor descriptor = new TerrainDescriptor(theatreName, DEFAULT_SIZE, DEFAULT_LOCATION);
+        return saveTheatre(descriptor);
     }
     
-    public TerrainDescriptor persist(TerrainDescriptor descriptor,File theatreLocation){
+    private TerrainDescriptor persist(TerrainDescriptor descriptor,File theatreLocation){
         File theatre = new File(theatreLocation,jsonDescriptorname);
         Marshal.marshal(descriptor, theatre);
         return descriptor;
     }
     
-    public TerrainDescriptor saveTheatre(String theatreName,TerrainDescriptor descriptor){
+    private File theatreLocation(String theatreName){
         File theatreFolder = new File(theatresFolder + "/" + theatreName);
-        persist(descriptor,theatreFolder);
-        theatres.put(theatreName, descriptor);
+        if(!theatreFolder.exists()) theatreFolder.mkdir();
+        return theatreFolder;
+    }
+    public TerrainDescriptor saveTheatre(TerrainDescriptor descriptor){
+        persist(descriptor,theatreLocation(descriptor.name));
+        theatres.put(descriptor.name, descriptor);
         return descriptor;
     }
     
-    private TerrainDescriptor saveTheatre(File theatreDirectory){
-        File theatre = new File(theatreDirectory,jsonDescriptorname);
-        TerrainDescriptor descriptor = new TerrainDescriptor("", 1, "");
-        Marshal.marshal(descriptor, theatre);
-        theatres.put("", descriptor);
-        return descriptor;
-    }
 }
