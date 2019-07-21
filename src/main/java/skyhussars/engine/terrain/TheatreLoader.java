@@ -92,6 +92,11 @@ public class TheatreLoader {
         if(!theatreFolder.exists()) theatreFolder.mkdir();
         return theatreFolder;
     }
+    /**
+     * Save a theatre and update the inmemory theatre store with the saved descriptor.
+     * @param descriptor
+     * @return 
+     */
     public TerrainDescriptor saveTheatre(TerrainDescriptor descriptor){
         persist(descriptor,theatreLocation(descriptor.name));
         theatres.put(descriptor.name, descriptor);
