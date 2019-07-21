@@ -55,7 +55,7 @@ public class TerrainEdService {
     public boolean saveToFile(){
         boolean success = false;
         if (canSave()) {
-            loader.saveTheatre(terrainProperties.name.get(),terrainProperties.asDescriptor());
+            loader.saveTheatre(terrainProperties.asDescriptor());
             success = true;
         }
         return success;
