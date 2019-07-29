@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skyhussars.terrained.TerrainEdController">
   <children>
@@ -52,8 +54,12 @@
                   <TextField id="terrainLocation" fx:id="terrainLocation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <ImageView fitHeight="184.0" fitWidth="239.0" layoutX="401.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
-            <Label layoutX="465.0" layoutY="89.0" text="Click to add map" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="410.0" stroke="BLACK" strokeType="INSIDE" styleClass="custom-dashed-border" width="232.0" />
+            <ImageView fitHeight="184.0" fitWidth="239.0" layoutX="402.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" styleClass="custom-dashed-border" />
+            <Label layoutX="457.0" layoutY="86.0" text="Click to add map">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font></Label>
       </children>
     </AnchorPane>
   </children>
