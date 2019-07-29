@@ -5,6 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -51,6 +52,8 @@
                   <TextField id="terrainLocation" fx:id="terrainLocation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
+            <ImageView fitHeight="184.0" fitWidth="239.0" layoutX="401.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+            <Label layoutX="465.0" layoutY="89.0" text="Click to add map" />
       </children>
     </AnchorPane>
   </children>
