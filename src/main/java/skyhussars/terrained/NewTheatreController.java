@@ -25,6 +25,7 @@
  */
 package skyhussars.terrained;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -59,7 +60,7 @@ public class NewTheatreController implements EditorController{
      * This method will create a new theatre.
      */
     public void newTheatre() {
-        LOGGER.info("Creating a new theatre with name: " + theatreName.getText());
+        LOGGER.log(Level.INFO, "Creating a new theatre with name: {0}", theatreName.getText());
         terrainEdService.newTheatre(theatreName.getText());
         stage.close();
     }
