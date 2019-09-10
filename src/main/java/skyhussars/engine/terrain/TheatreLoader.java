@@ -26,9 +26,12 @@
 package skyhussars.engine.terrain;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skyhussars.persistence.base.Marshal;
@@ -86,7 +89,7 @@ public class TheatreLoader {
         Marshal.marshal(descriptor, theatre);
         return descriptor;
     }
-    
+        
     private File theatreLocation(String theatreName){
         File theatreFolder = new File(theatresFolder + "/" + theatreName);
         if(!theatreFolder.exists()) theatreFolder.mkdir();
@@ -102,5 +105,27 @@ public class TheatreLoader {
         theatres.put(descriptor.name, descriptor);
         return descriptor;
     }
+    
+    /**
+     * Delete a theatre and remove it from the theatre store
+     * @param descriptor
+     * @return if the deletion was successful
+     */
+    public boolean deleteTheatre(TerrainDescriptor descriptor){
+        LOGGER.info("Deleting theatre: " + descriptor.name);
+        boolean success = false;
+        try {
+            FileUtils.deleteDirectory(theatreLocation(descriptor.name));
+            success = true;
+        } catch (IOException ex) {
+            LOGGER.error("Failed to remove theatre theatre: " + descriptor.name , ex);
+        }
+        if(success) theatres.remove(descriptor.name);
+        return success;
+    }
+    
+    
+    
+    
     
 }

@@ -1,6 +1,6 @@
 plugins {
     id 'application'
-   id 'edu.sc.seis.launch4j' version '2.4.3'
+    id 'edu.sc.seis.launch4j' version '2.4.3'
 }
 
 group = 'com.codebetyars'
@@ -10,12 +10,12 @@ sourceCompatibility = 1.8
 
 //this for debugging
 /*if (!hasProperty('mainClass')) {
-    ext.mainClass = 'skyhussars.SkyHussars'
+ext.mainClass = 'skyhussars.SkyHussars'
 }*/
 
 //mainClassName = 'skyhussars.PlaneEd'
-//mainClassName = 'skyhussars.TerrainEd'
-mainClassName = 'skyhussars.SkyHussars'
+mainClassName = 'skyhussars.TerrainEd'
+//mainClassName = 'skyhussars.SkyHussars'
 repositories {
     flatDir { dirs 'libs' }
 
@@ -44,6 +44,7 @@ sourceSets {
 
 dependencies {
     compile fileTree(dir: 'lib', include: '*.jar')
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     compile group: 'org.jmonkeyengine', name: 'jme3-core',       version: versions.jme3
     compile group: 'org.jmonkeyengine', name: 'jme3-effects',    version: versions.jme3

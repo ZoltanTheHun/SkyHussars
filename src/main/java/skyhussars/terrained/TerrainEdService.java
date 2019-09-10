@@ -61,6 +61,12 @@ public class TerrainEdService {
         return success;
     }
     
+    public boolean delete(){ 
+        boolean success =  loader.deleteTheatre(terrainProperties.asDescriptor());
+        if(success) terrainProperties.clear();
+        return success;
+    }
+    
     private boolean canSave() {
         return terrainProperties.name.get() != null
                 && terrainProperties.size.get() >= 1

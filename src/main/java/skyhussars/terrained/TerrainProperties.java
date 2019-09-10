@@ -64,6 +64,13 @@ public class TerrainProperties {
     public TerrainDescriptor asDescriptor(){
         return new TerrainDescriptor(name.get(), size.get(), location.get());
     }
+    
+    public TerrainProperties clear(){
+        name.set("");
+        size.set(1);
+        location.set("");
+        return this;
+    }
 
     @Override
     public int hashCode() {

@@ -83,6 +83,11 @@ public class TerrainEdController implements Initializable,EditorController {
         alertService.info("Unable to save, not all properties set.",
                 "Please set all properties before trying to save a new terrain.");
     }
+    
+    private void unableToDeleteAlert() {
+        alertService.info("Unable to delete the current Theatre",
+                "An unexpected error happened when trying to delete the theater. Please try restarting the application.");
+    }
 
     /**
      * This method handles the event when the user clicks on the New Theater
@@ -115,6 +120,8 @@ public class TerrainEdController implements Initializable,EditorController {
      * item in the menu
      */
     public void handleDeleteTheatreAction() {
+        boolean deleteSuccesful = terrainEdService.delete();
+        if(!deleteSuccesful) unableToDeleteAlert();
     }
 
 
