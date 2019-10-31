@@ -31,7 +31,10 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.event.Event;
 import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -124,8 +127,16 @@ public class TerrainEdController implements Initializable,EditorController {
         if(!deleteSuccesful) unableToDeleteAlert();
     }
 
-
-
+    public void handleOnHeightMapDropped(DragEvent e) {
+    }
+    
+            
+    public void handleOnHeightMapEntered(DragEvent e) {   
+    }
+    
+    public void handleOnHeightMapExited(DragEvent e) {
+    }
+    
     private FileChooser fileChooser(String title) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle(title);

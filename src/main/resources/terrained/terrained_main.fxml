@@ -55,7 +55,7 @@
                </children>
             </GridPane>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="410.0" stroke="BLACK" strokeType="INSIDE" styleClass="custom-dashed-border" width="232.0" />
-            <ImageView fitHeight="184.0" fitWidth="239.0" layoutX="402.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" styleClass="custom-dashed-border" />
+            <ImageView fx:id="heightMapVIew" fitHeight="184.0" fitWidth="239.0" layoutX="402.0" layoutY="-3.0" onMouseDragEntered="#handleOnHeightMapEntered" onMouseDragExited="#handleOnHeightMapExited" onMouseDragReleased="#handleOnHeightMapDropped" pickOnBounds="true" preserveRatio="true" styleClass="custom-dashed-border" />
             <Label layoutX="419.0" layoutY="85.0" text="Click to add height map">
                <font>
                   <Font name="System Bold" size="19.0" />
