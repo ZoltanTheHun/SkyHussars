@@ -36,25 +36,31 @@ public class FlightJoystickControls implements AnalogListener {
 
     private final Pilot pilot;
     private final float deadzone;
+    private final JoyStatus joyStatus;
 
-    public FlightJoystickControls(Pilot pilot,float deadzone) {
+    public FlightJoystickControls(Pilot pilot,JoyStatus joyStatus,float deadzone) {
         this.pilot = pilot;
         this.deadzone = deadzone;
+        this.joyStatus = joyStatus;
     }
 
     @Override
     public void onAnalog(String string, float axis, float tpf) {
         if(axis/tpf < deadzone) axis = 0;
         if (ControlsMapper.JOY_ROLL_LEFT.equals(string)) {
+            joyStatus.setX(-1*axis/tpf);
             pilot.setAileron(-1 * axis / tpf);
         }
         if (ControlsMapper.JOY_ROLL_RIGHT.equals(string)) {
+            joyStatus.setX(axis/tpf);
             pilot.setAileron(axis / tpf);
         }
         if (ControlsMapper.JOY_PITCH_DOWN.equals(string)) {
+            joyStatus.setY(-1*axis/tpf);
             pilot.setElevator(-1 * axis / tpf);
         }
         if (ControlsMapper.JOY_PITCH_UP.equals(string)) {
+            joyStatus.setY(axis/tpf);
             pilot.setElevator(axis / tpf);
         }
     }

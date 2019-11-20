@@ -46,7 +46,7 @@ public class ControlsManager {
     public void missionControls(MissionState mission) {
         stripMissionControls();
         inFlightKeyboardControls = new FlightKeyboardControls(mission.player());
-        inFlightJoystickControls = new FlightJoystickControls(mission.player(),deadzone);
+        inFlightJoystickControls = new FlightJoystickControls(mission.player(),mission.joyStatus,deadzone);
         gameFlowControls = new FlowControls(mission);
         cameraControls = new CameraControls(cameraManager);
         controlsMapper.setupFlightKeyboardControls(inFlightKeyboardControls);

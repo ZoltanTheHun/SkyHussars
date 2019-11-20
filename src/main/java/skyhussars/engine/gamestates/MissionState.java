@@ -40,10 +40,9 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import skyhussars.engine.controls.JoyStatus;
 import skyhussars.engine.physics.PlaneResponse;
-import static skyhussars.utility.Streams.list;
 import static skyhussars.utility.Streams.pf;
-import static skyhussars.utility.Streams.pp;
 
 public class MissionState implements GameState {
 
@@ -62,6 +61,7 @@ public class MissionState implements GameState {
     private GameState nextState = this;
     private final Node rootNode;
     private final Sky sky;
+    public JoyStatus joyStatus = new JoyStatus();
 
     public MissionState(List<Plane> planes, ProjectileManager projectileManager, SoundManager soundManager,
             CameraManager cameraManager, TerrainManager terrainManager,
@@ -105,10 +105,13 @@ public class MissionState implements GameState {
     private TextRenderer speedoMeterUI;
     private TextRenderer altimeterUI;
     private TextRenderer aoaUI;
+    private TextRenderer joystatusUI;
 
     public synchronized void speedoMeterUI(TextRenderer speedoMeterUI) { this.speedoMeterUI = speedoMeterUI;}
     public synchronized void altimeterUI(TextRenderer altimeterUI) { this.altimeterUI = altimeterUI;}
     public synchronized void aoaUI(TextRenderer aoaUI){ this.aoaUI = aoaUI;}
+    public synchronized void joystatusUI(TextRenderer joystatusUI){ this.joystatusUI = joystatusUI;}
+    
     
     @Override
     public synchronized GameState update(float tpf) {
@@ -136,6 +139,7 @@ public class MissionState implements GameState {
             speedoMeterUI.setText(player.plane().velocityKmh() + "km/h");
             altimeterUI.setText((player.plane().getHeight() + "m"));
             aoaUI.setText("Aoa: "+(player.plane().aoa()));
+             joystatusUI.setText("X: "+ (int) (1000* joyStatus.getX()) + "   , Y: " +(int) (1000* joyStatus.getY()));
         }
     }
     
