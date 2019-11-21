@@ -69,15 +69,17 @@ public class TerrainManager {
         return terrain.get(); //yeah, this is unsafe for now
     }
 
-    private TerrainDefinition adria = new TerrainDefinition().heightMapPath("Maps/Adria/Adria4.bmp")
+    private TerrainDefinition adria(TerrainDescriptor td){
+        return new TerrainDefinition().heightMapPath("Theatres/" + td.name + "/map.bmp")
         .name("Adria")
         .size(500)
         .tx1(new TerrainTexture().description("Ground texture")
-                                .path("Maps/Adria/grass.png").scale(2048f))
+                                .path("Maps/Adria/grass.png").scale(3072f))
         .tx2(new TerrainTexture().description("Water texture")
                                 .path("Maps/Adria/water.png").scale(1024f))
         .tx3(new TerrainTexture().description("Grass texture")
-                                .path("Maps/Adria/grass.png").scale(1f));
+                                .path("Maps/Adria/grass.png").scale(3072f));
+    }
     
     public float getHeightAt(Vector2f at) {
         return terrain.get().getHeight(at); // unsafe for now
@@ -94,9 +96,10 @@ public class TerrainManager {
     }
     
     public void loadTheatre(String name) {
-        loadTerrain(adria,theatreLoader.theatre(name));
+        loadTerrain(theatreLoader.theatre(name));
     }
-    public void loadTerrain(TerrainDefinition terrainDefinition,TerrainDescriptor terrainDescriptor) {
+    public void loadTerrain(TerrainDescriptor terrainDescriptor) {
+        TerrainDefinition terrainDefinition = adria(terrainDescriptor);
         Texture grass = assetManager.loadTexture(terrainDefinition.tx1().path());
         grass.setWrap(Texture.WrapMode.Repeat);
 
