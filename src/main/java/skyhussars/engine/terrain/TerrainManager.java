@@ -130,7 +130,8 @@ public class TerrainManager {
                     tq.setLocalScale(scale, 1f, scale); // 1pixel 1m * scale * m
                     tq.addControl(new TerrainLodControl(tq, camera.testCamera()));
                     tq.setShadowMode(RenderQueue.ShadowMode.Receive);
-                    setLocation(tq,99,512,2048,scale);
+                    // terrain is shifted to be centered at (0,0) automatically
+                    // setLocation(tq,0,0,2048,scale);
                     rootNode.attachChild(tq);
                     return tq;
                 });
