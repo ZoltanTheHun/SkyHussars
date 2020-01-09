@@ -26,7 +26,6 @@
 package skyhussars.engine.plane;
 
 import skyhussars.engine.weapons.Bullet;
-import skyhussars.engine.weapons.ProjectileManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ring;
 import com.jme3.math.Vector3f;
