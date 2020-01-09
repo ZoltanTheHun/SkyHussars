@@ -69,16 +69,17 @@ public class TerrainManager {
         return terrain.get(); //yeah, this is unsafe for now
     }
 
-    private TerrainDefinition adria(TerrainDescriptor td){
+    private TerrainDefinition terrainDefinition(TerrainDescriptor td){
         return new TerrainDefinition().heightMapPath("Theatres/" + td.name + "/map.bmp")
         .name("Adria")
         .size(500)
         .tx1(new TerrainTexture().description("Ground texture")
-                                .path("Maps/Adria/grass.png").scale(3072f))
+                                .path("Theatres/" + td.name + "/tx1.png").scale(3072f))
         .tx2(new TerrainTexture().description("Water texture")
-                                .path("Maps/Adria/water.png").scale(1024f))
+                                .path("Theatres/" + td.name + "/tx2.png").scale(1024f))
         .tx3(new TerrainTexture().description("Grass texture")
-                                .path("Maps/Adria/grass.png").scale(3072f));
+                                .path("Theatres/" + td.name + "/tx3.png").scale(3072f))
+        .textureMap("Theatres/" + td.name + "/texture.png");
     }
     
     public float getHeightAt(Vector2f at) {
@@ -99,28 +100,21 @@ public class TerrainManager {
         loadTerrain(theatreLoader.theatre(name));
     }
     public void loadTerrain(TerrainDescriptor terrainDescriptor) {
-        TerrainDefinition terrainDefinition = adria(terrainDescriptor);
-        Texture grass = assetManager.loadTexture(terrainDefinition.tx1().path());
-        grass.setWrap(Texture.WrapMode.Repeat);
-
-        Texture water = assetManager.loadTexture(terrainDefinition.tx2().path());
-        water.setWrap(Texture.WrapMode.Repeat);
-
-        Texture land = assetManager.loadTexture(terrainDefinition.tx3().path());
-        land.setWrap(Texture.WrapMode.Repeat);
+        TerrainDefinition td = terrainDefinition(terrainDescriptor);
         float scale = terrainDescriptor.size;
         Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
-        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture("Maps/Adria/AdriaSmall_alpha.png"));
-        mat_terrain.setTexture("DiffuseMap", texture(terrainDefinition.tx1().path()));
-        mat_terrain.setFloat("DiffuseMap_0_scale", terrainDefinition.tx1().scale());  //playing with scales
-        mat_terrain.setTexture("DiffuseMap_2", texture(terrainDefinition.tx2().path()));
-        mat_terrain.setFloat("DiffuseMap_2_scale", terrainDefinition.tx2().scale());
-        mat_terrain.setTexture("DiffuseMap_1", texture(terrainDefinition.tx3().path()));
-        mat_terrain.setFloat("DiffuseMap_1_scale", terrainDefinition.tx3().scale());
+        String textureMap = td.textureMap().orElseThrow(RuntimeException::new);
+        mat_terrain.setTexture("AlphaMap", assetManager.loadTexture(textureMap));
+        mat_terrain.setTexture("DiffuseMap", texture(td.tx1().path()));
+        mat_terrain.setFloat("DiffuseMap_0_scale", td.tx1().scale());  //playing with scales
+        mat_terrain.setTexture("DiffuseMap_2", texture(td.tx2().path()));
+        mat_terrain.setFloat("DiffuseMap_2_scale", td.tx2().scale());
+        mat_terrain.setTexture("DiffuseMap_1", texture(td.tx3().path()));
+        mat_terrain.setFloat("DiffuseMap_1_scale", td.tx3().scale());
         
 
         int patchSize = 17;
-        terrain = terrainDefinition.heightMapPath().map(m -> assetManager.loadTexture(m)
+        terrain = td.heightMapPath().map(m -> assetManager.loadTexture(m)
                 .getImage()).map(i -> new ImageBasedHeightMap(i, 10f))
                 .map(hm -> {
                     hm.load();
