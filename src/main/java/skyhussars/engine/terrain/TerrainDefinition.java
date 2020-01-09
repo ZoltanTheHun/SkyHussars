@@ -32,10 +32,12 @@ public class TerrainDefinition {
     private String name;
     private int size; //km
     private String heightmapPath;
+    private String textureMap;
     private TerrainTexture tx1,tx2,tx3;    
     public TerrainDefinition(){};
     public TerrainDefinition(TerrainDefinition td){
         this.heightmapPath = td.heightmapPath;
+        this.textureMap = td.textureMap;
         this.size = td.size;
         this.name = td.name;
         this.tx1 = td.tx1;
@@ -46,6 +48,12 @@ public class TerrainDefinition {
     public TerrainDefinition heightMapPath(String path){
         TerrainDefinition td = new TerrainDefinition(this);
         td.heightmapPath = path;
+        return td;
+    }
+    
+    public TerrainDefinition textureMap(String path){
+        TerrainDefinition td = new TerrainDefinition(this);
+        td.textureMap = path;
         return td;
     }
     
@@ -85,4 +93,5 @@ public class TerrainDefinition {
     public TerrainTexture tx1(){return tx1;}
     public TerrainTexture tx2(){return tx2;}   
     public TerrainTexture tx3(){return tx3;}
+    public Optional<String> textureMap(){return Optional.ofNullable(textureMap);}
 }
