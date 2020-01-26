@@ -26,6 +26,7 @@
 package skyhussars.engine.weapons;
 
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
 public abstract class Projectile {
@@ -36,6 +37,8 @@ public abstract class Projectile {
 
     public abstract Vector3f getLocation();
 
+    public abstract Quaternion getOrientation();
+    
     public abstract BoundingVolume getHitbox();
 
     public abstract boolean isLive();

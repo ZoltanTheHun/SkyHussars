@@ -25,6 +25,7 @@
  */
 package skyhussars.engine.weapons;
 
+import com.jme3.math.Quaternion;
 import skyhussars.engine.plane.GunLocationDescriptor;
 import com.jme3.math.Vector3f;
 
@@ -47,12 +48,12 @@ public class Gun {
 
     //refine it later on, it is not enough to pass velocity only
     public List<Projectile> update(float tpf, boolean firing, Vector3f noseDirection,
-            Vector3f vPlaneVelocity, Vector3f vPlaneLocation) {
+            Vector3f vPlaneVelocity, Vector3f vPlaneLocation, Quaternion qOrientation) {
         bpslu += gunLocation.getGunDescriptor().getRateOfFire() * tpf;
         /*gunLocation.getGunDescriptor().getMuzzleVelocity();*/
         List<Projectile> projectiles = new LinkedList<>();
         while (bpslu-- > 1) {
-            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO);
+            Bullet bullet = new Bullet(Vector3f.ZERO, Vector3f.ZERO,qOrientation);
             projectiles.add(bullet);
             bpslu -= 1;
         }

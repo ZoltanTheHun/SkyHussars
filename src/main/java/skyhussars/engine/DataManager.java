@@ -60,7 +60,7 @@ public class DataManager {
             Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); // create material
             mat.setColor("Color", ColorRGBA.Green);
 
-            Geometry bullet = new Geometry("bullet", new Box(0.05f, 0.05f, 0.05f)); // wrap shape into geometry
+            Geometry bullet = new Geometry("bullet", new Box(0.01f, 0.01f, 2.0f)); // wrap shape into geometry
             bullet.setMaterial(mat);
 
             bulletTemplate = bullet;

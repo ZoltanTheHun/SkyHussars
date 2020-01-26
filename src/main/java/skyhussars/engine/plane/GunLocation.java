@@ -63,7 +63,7 @@ public class GunLocation {
             Vector3f vBulletLocation = vLocation.add(vOrientation.mult(location));
             Vector3f vMuzzleVelocity = vOrientation.mult(Vector3f.UNIT_Z).mult(muzzleVelocity);
             Vector3f vBulletVelocity = addSpread(vVelocity.add(vMuzzleVelocity));
-            bullet = new Bullet(vBulletLocation, vBulletVelocity);
+            bullet = new Bullet(vBulletLocation, vBulletVelocity, vOrientation);
         }
         return bullet;
     }

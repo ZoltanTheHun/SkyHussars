@@ -93,8 +93,7 @@ public class ProjectileManager {
             Projectile projectile = it.next();
             Geometry geom = geomIterator.next();
             geom.setLocalTranslation(projectile.getLocation());
-            Vector3f direction = projectile.getVelocity().normalize();
-            geom.lookAt(direction, Vector3f.UNIT_Y);
+            geom.setLocalRotation(projectile.getOrientation());
         }
     }
     
