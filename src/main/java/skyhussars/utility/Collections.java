@@ -45,6 +45,7 @@ public class Collections {
             return list;
         }
     }
+    
     public static <T> ZList zList(List<T> list){
         return new ZList(list);
     }

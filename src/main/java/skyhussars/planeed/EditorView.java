@@ -84,6 +84,7 @@ public class EditorView {
         verticalView.getChildren().addAll(createChart());
         return verticalView;
     }
+    
     private final FileChooser openPlaneChooser = new FileChooser();
     {openPlaneChooser.setTitle("Open a plane definition");}
     {openPlaneChooser.setInitialDirectory(new File(SkyHussars.APP_ROOT));}
@@ -176,6 +177,7 @@ public class EditorView {
         chart(velocityChart,"Velocity (Kmh)",data);
         return this;
     }
+    
     private static <T> LineChart chart(LineChart chart,String name,List<T> data){
         XYChart.Series series = new XYChart.Series();
         series.setName(name);
