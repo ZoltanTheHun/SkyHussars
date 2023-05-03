@@ -14,9 +14,9 @@ sourceCompatibility = 17
 ext.mainClass = 'skyhussars.SkyHussars'
 }*/
 
-mainClassName = 'skyhussars.PlaneEd'
+//mainClassName = 'skyhussars.PlaneEd'
 //mainClassName = 'skyhussars.TerrainEd'
-//mainClassName = 'skyhussars.SkyHussars'
+mainClassName = 'skyhussars.SkyHussars'
 repositories {
     flatDir { dirs 'libs' }
     mavenCentral()
@@ -31,10 +31,10 @@ javafx {
 ext.versions = [
     eventbus: '1.4',
     jackson: '2.8.5',
-    jme3: '3.1.0-stable',
+    jme3: '3.2.0-stable',
     junit: '4.12',
     logback: '1.1.5',
-    spring: '4.2.+',
+    spring: '5.3.+',
 ]
 
 sourceSets {
@@ -81,7 +81,7 @@ copy { from('assets') into 'build/launch4j/assets' }
 //sourceSets.main.runtimeClasspath = sourceSets.main.runtimeClasspath + files('.','../assets')
 
 //to make it work with gradle run
-run.classpath = run.classpath + files('asests','.')
+run.classpath = run.classpath + files('assets','.')
 
 if(!project.hasProperty('targetexe')) ext.targetexe = 'SkyHussars'
 
