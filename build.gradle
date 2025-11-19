@@ -31,7 +31,7 @@ javafx {
 ext.versions = [
     eventbus: '1.4',
     jackson: '2.8.5',
-    jme3: '3.2.0-stable',
+    jme3: '3.2.2-stable',
     junit: '4.12',
     logback: '1.1.5',
     spring: '5.3.+',
