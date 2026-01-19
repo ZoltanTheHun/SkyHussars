@@ -27,15 +27,12 @@ package skyhussars.engine.plane;
 
 import skyhussars.engine.weapons.Bullet;
 import com.jme3.math.Quaternion;
-import com.jme3.math.Ring;
 import com.jme3.math.Vector3f;
 
-import java.util.Random;
 
 public class GunLocation {
 
     private int rounds;
-    private final Random random;
 
     private final Vector3f location;
     private final float muzzleVelocity;
@@ -45,25 +42,19 @@ public class GunLocation {
     public GunLocation(GunLocationDescriptor gunLocationDescriptor, int rounds) {
         /*should check if rounnds > maxRounds*/
         this.rounds = rounds;
-        this.random = new Random();
         this.location = gunLocationDescriptor.getLocation();
         this.muzzleVelocity = gunLocationDescriptor.getGunDescriptor().getMuzzleVelocity();
         this.spread = gunLocationDescriptor.getGunDescriptor().getSpread();
         this.rof = gunLocationDescriptor.getGunDescriptor().getRateOfFire();
     }
 
-    public Vector3f addSpread(Vector3f vVelocity) {
-        float locSpread = spread * (float) random.nextGaussian() * vVelocity.length() / 100f;
-        return new Ring(vVelocity, vVelocity.normalize(), locSpread, locSpread).random();
-    }
 
     public Bullet firing(boolean firing, Vector3f vLocation, Vector3f vVelocity, Quaternion vOrientation) {
         Bullet bullet = null;
         if (firing) {
             Vector3f vBulletLocation = vLocation.add(vOrientation.mult(location));
             Vector3f vMuzzleVelocity = vOrientation.mult(Vector3f.UNIT_Z).mult(muzzleVelocity);
-            Vector3f vBulletVelocity = addSpread(vVelocity.add(vMuzzleVelocity));
-            bullet = new Bullet(vBulletLocation, vBulletVelocity, vOrientation);
+            bullet = new Bullet(vBulletLocation, vMuzzleVelocity, vOrientation);
         }
         return bullet;
     }

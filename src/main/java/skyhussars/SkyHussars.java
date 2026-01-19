@@ -103,7 +103,7 @@ public class SkyHussars extends SimpleApplication {
         appcontext.refresh();
         gameState = appcontext.getBean(SkyHussarsContext.class).init();
         flyCam.setEnabled(false);
-        setDisplayStatView(false);
+        setDisplayStatView(true);
         stateManager.getState(AudioListenerState.class).setEnabled(false);
     }
 
